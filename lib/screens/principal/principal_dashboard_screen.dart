@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_strings.dart';
-import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
-import '../profile/profile_screen.dart';
-import '../teacher/create_announcement_screen.dart';
-import 'school_analytics_screen.dart';
-import 'manage_teachers_screen.dart';
-import 'manage_classrooms_screen.dart';
-import 'school_leaderboard_screen.dart';
+import '../settings/settings_screen.dart';
+import 'comprehensive_leaderboard_screen.dart';
 import 'school_settings_screen.dart';
+import 'school_announcements_screen.dart';
 
 class PrincipalDashboardScreen extends StatefulWidget {
   const PrincipalDashboardScreen({super.key});
@@ -532,7 +527,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const CreateAnnouncementScreen(isSchoolWide: true),
+                              builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolId!),
                             ),
                           );
                         },
@@ -553,7 +548,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Post School Announcement',
+                                    'View Announcements',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -562,7 +557,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Send message to entire school',
+                                    'View, edit, or delete announcements',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -584,7 +579,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SchoolLeaderboardScreen(schoolId: _schoolId!),
+                              builder: (context) => ComprehensiveLeaderboardScreen(schoolId: _schoolId!),
                             ),
                           );
                         },
@@ -996,7 +991,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
           onRefresh: _loadTeachers,
           child: CustomScrollView(
             slivers: [
-              // Header
+              // Header with gradient
               SliverToBoxAdapter(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -1006,33 +1001,34 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(24),
+                      bottomRight: Radius.circular(24),
                     ),
                   ),
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.people, color: Colors.white, size: 32),
+                          Icon(Icons.people, color: Colors.white, size: 28),
                           SizedBox(width: 12),
                           Text(
                             'Teacher Management',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Text(
                         '${_approvedTeachers.length} approved • ${_pendingTeachers.length} pending',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           color: Colors.white70,
                         ),
                       ),
@@ -1393,7 +1389,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
           onRefresh: _loadClassrooms,
           child: CustomScrollView(
             slivers: [
-              // Header
+              // Header with gradient
               SliverToBoxAdapter(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -1403,33 +1399,34 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(24),
+                      bottomRight: Radius.circular(24),
                     ),
                   ),
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.class_, color: Colors.white, size: 32),
+                          Icon(Icons.class_, color: Colors.white, size: 28),
                           SizedBox(width: 12),
                           Text(
                             'School Classrooms',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
                       Text(
                         '${_classrooms.length} classroom${_classrooms.length == 1 ? '' : 's'} across all teachers',
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           color: Colors.white70,
                         ),
                       ),
@@ -1800,7 +1797,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
           onRefresh: _loadAnalytics,
           child: CustomScrollView(
             slivers: [
-              // Header
+              // Header with gradient
               SliverToBoxAdapter(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -1810,22 +1807,23 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+                      bottomLeft: Radius.circular(24),
+                      bottomRight: Radius.circular(24),
                     ),
                   ),
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
                   child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.analytics, color: Colors.white, size: 32),
+                          Icon(Icons.analytics, color: Colors.white, size: 28),
                           SizedBox(width: 12),
                           Text(
                             'School Analytics',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -1836,7 +1834,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                       Text(
                         'Performance insights across your school',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 13,
                           color: Colors.white70,
                         ),
                       ),
@@ -2210,6 +2208,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
   String? _displayName;
   String? _email;
   String? _avatarUrl;
+  String? _schoolId;
   String? _schoolName;
   String? _schoolCode;
   String? _state;
@@ -2243,6 +2242,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
         _avatarUrl = userData['avatarUrl'];
         
         final schoolId = userData['principalOfSchool'];
+        _schoolId = schoolId;
         
         if (schoolId != null) {
           // Get school data
@@ -2311,59 +2311,113 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            
-            // Profile Header
-            CleanCard(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                   children: [
-                    AvatarWidget(
-                      imageUrl: _avatarUrl,
-                      initials: _displayName?.substring(0, 1).toUpperCase() ?? 'P',
-                      size: 70,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _displayName ?? 'Principal',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _email ?? '',
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            // Header with gradient
+            SliverToBoxAdapter(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF6B46C1), Color(0xFF9333EA)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
+                  ),
+                ),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const Center(
+                          child: Text(
+                            'Profile',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              'Principal',
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            icon: const Icon(Icons.settings, color: Colors.white, size: 24),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                              ).then((_) => _loadData());
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Profile Card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          AvatarWidget(
+                            imageUrl: _avatarUrl,
+                            initials: _displayName?.substring(0, 1).toUpperCase() ?? 'P',
+                            size: 60,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _displayName ?? 'Principal',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  _email ?? '',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    'Principal',
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -2373,7 +2427,12 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+
+            // Content
+            SliverPadding(
+              padding: const EdgeInsets.all(20),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
 
             // School Info
             const Text(
@@ -2449,6 +2508,46 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
             ),
             const SizedBox(height: 20),
 
+            // Quick Links
+            const Text(
+              'Quick Links',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 12),
+            CleanCard(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolId!),
+                  ),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(Icons.campaign, color: AppColors.primary),
+                    SizedBox(width: 16),
+                    Text(
+                      'View Announcements',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            
             // Actions
             const Text(
               'Account Actions',
@@ -2481,7 +2580,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+                  const SizedBox(height: 40),
+                ]),
+              ),
+            ),
           ],
         ),
       ),

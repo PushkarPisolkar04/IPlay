@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_spacing.dart';
-import '../../core/constants/app_text_styles.dart';
-import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
-import '../../widgets/avatar_widget.dart';
-import '../../widgets/primary_button.dart';
 
 /// Edit Profile Screen - Edit user profile information
 class EditProfileScreen extends StatefulWidget {
@@ -156,189 +151,198 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Edit Profile'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+          : SafeArea(
               child: Form(
                 key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Avatar Selection
-                    Text(
-                      'Select Avatar',
-                      style: AppTextStyles.sectionHeader,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    CleanCard(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
+                child: CustomScrollView(
+                  slivers: [
+                    // Header with gradient
+                    SliverToBoxAdapter(
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF6B46C1), Color(0xFF9333EA)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
+                          ),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            // Current Avatar Preview
-                            if (_selectedAvatar != null)
-                              Center(
-                                child: AvatarWidget(
-                                  imageUrl: _selectedAvatar,
-                                  initials: _nameController.text.isNotEmpty 
-                                      ? _nameController.text.substring(0, 1).toUpperCase() 
-                                      : 'U',
-                                  size: 80,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: IconButton(
+                                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                            const Center(
+                              child: Text(
+                                'Edit Profile',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
-                            const SizedBox(height: 16),
-                            
-                            // Avatar Grid
-                            GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                              ),
-                              itemCount: _avatarOptions.length,
-                              itemBuilder: (context, index) {
-                                final avatar = _avatarOptions[index];
-                                final isSelected = _selectedAvatar == avatar;
-                                
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() => _selectedAvatar = avatar);
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: isSelected 
-                                            ? AppColors.primary 
-                                            : AppColors.border,
-                                        width: isSelected ? 3 : 2,
-                                      ),
-                                    ),
-                                    child: ClipOval(
-                                      child: Image.asset(
-                                        avatar,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) => const Icon(Icons.person),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
                             ),
                           ],
                         ),
                       ),
                     ),
-                    
-                    const SizedBox(height: AppSpacing.lg),
-                    
-                    // Display Name
-                    Text(
-                      'Display Name',
-                      style: AppTextStyles.sectionHeader,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    CleanCard(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: TextFormField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter your display name',
-                            prefixIcon: Icon(Icons.person),
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Please enter your display name';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: AppSpacing.lg),
-                    
-                    // State Selection
-                    Text(
-                      'State',
-                      style: AppTextStyles.sectionHeader,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    CleanCard(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: DropdownButtonFormField<String>(
-                          value: _selectedState,
-                          decoration: const InputDecoration(
-                            hintText: 'Select your state',
-                            prefixIcon: Icon(Icons.location_on),
-                            border: OutlineInputBorder(),
-                          ),
-                          items: _indianStates.map((state) {
-                            return DropdownMenuItem(
-                              value: state,
-                              child: Text(state),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() => _selectedState = value);
-                          },
-                          validator: (value) {
-                            if (value == null) {
-                              return 'Please select your state';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: AppSpacing.xl),
-                    
-                    // Save Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _isSaving ? null : _saveProfile,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: _isSaving
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+
+                    // Content
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          // Avatar Selection
+                          const SizedBox(height: 8),
+                          CleanCard(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
                                 ),
-                              )
-                            : const Text(
-                                'Save Changes',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                itemCount: _avatarOptions.length,
+                                itemBuilder: (context, index) {
+                                  final avatar = _avatarOptions[index];
+                                  final isSelected = _selectedAvatar == avatar;
+                                  
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() => _selectedAvatar = avatar);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isSelected 
+                                              ? AppColors.primary 
+                                              : Colors.grey.shade300,
+                                          width: isSelected ? 3 : 2,
+                                        ),
+                                      ),
+                                      child: ClipOval(
+                                        child: Image.asset(
+                                          avatar,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (_, __, ___) => const Icon(Icons.person),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 20),
+                          
+                          // Display Name
+                          CleanCard(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: TextFormField(
+                                controller: _nameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Display Name',
+                                  hintText: 'Enter your display name',
+                                  prefixIcon: Icon(Icons.person),
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please enter your display name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 20),
+                          
+                          // State Selection
+                          CleanCard(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: DropdownButtonFormField<String>(
+                                value: _selectedState,
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'State',
+                                  hintText: 'Select your state',
+                                  prefixIcon: Icon(Icons.location_on),
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: _indianStates.map((state) {
+                                  return DropdownMenuItem(
+                                    value: state,
+                                    child: Text(
+                                      state,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() => _selectedState = value);
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select your state';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Save Button
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: _isSaving ? null : _saveProfile,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
+                              child: _isSaving
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text('Save Changes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 24),
+                        ]),
                       ),
                     ),
-                    
-                    const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
               ),

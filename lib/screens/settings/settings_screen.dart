@@ -89,19 +89,57 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Settings'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: const Color(0xFFF5F7FA),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          : SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  // Header with gradient
+                  SliverToBoxAdapter(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xFF6B46C1), Color(0xFF9333EA)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(24),
+                          bottomRight: Radius.circular(24),
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ),
+                          const Center(
+                            child: Text(
+                              'Settings',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Content
+                  SliverPadding(
+                    padding: const EdgeInsets.all(20),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
                   // Account Section
                   Text(
                     'Account',
@@ -290,9 +328,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         _SettingsTile(
                           icon: Icons.email,
                           title: 'Contact Support',
-                          subtitle: 'support@iplay.example.com',
+                          subtitle: 'pushkarppisolkar@gmail.com',
                           trailing: const Icon(Icons.open_in_new, size: 20),
-                          onTap: () => _launchURL('mailto:support@iplay.example.com'),
+                          onTap: () => _launchURL('mailto:pushkarppisolkar@gmail.com'),
                         ),
                       ],
                     ),
@@ -351,7 +389,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   
-                  const SizedBox(height: AppSpacing.xl),
+                        const SizedBox(height: 40),
+                      ]),
+                    ),
+                  ),
                 ],
               ),
             ),

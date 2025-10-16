@@ -64,9 +64,13 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         
         announcementData['schoolId'] = schoolId;
         
-        await FirebaseFirestore.instance
+        print('Creating announcement: $announcementData');
+        
+        final docRef = await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
+        
+        print('Announcement created with ID: ${docRef.id}');
       } else {
         // Classroom announcement (for teachers)
         // You can add classroom-specific logic here
