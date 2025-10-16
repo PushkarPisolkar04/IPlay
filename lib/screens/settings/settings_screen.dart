@@ -100,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     child: Container(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0xFF6B46C1), Color(0xFF9333EA)],
+                          colors: [Color(0xFF3B82F6), Color(0xFF6366F1)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),

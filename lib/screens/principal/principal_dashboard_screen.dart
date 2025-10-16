@@ -180,7 +180,14 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
             // Get teachers count (excluding principal)
             final teacherIdsCount = ((_schoolData?['teacherIds'] as List?)?.length ?? 0);
             _totalTeachers = teacherIdsCount > 0 ? teacherIdsCount - 1 : 0;
-            _pendingTeachers = ((_schoolData?['pendingTeacherIds'] as List?)?.length ?? 0);
+            
+            // Get pending teacher requests count from teacher_join_requests collection
+            final pendingRequestsSnapshot = await FirebaseFirestore.instance
+                .collection('teacher_join_requests')
+                .where('schoolId', isEqualTo: _schoolId)
+                .where('status', isEqualTo: 'pending')
+                .get();
+            _pendingTeachers = pendingRequestsSnapshot.docs.length;
           
           // Get all classrooms in school
           final classroomsSnapshot = await FirebaseFirestore.instance
@@ -828,20 +835,23 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
         if (schoolDoc.exists) {
           final schoolData = schoolDoc.data();
           
-          // Load pending teachers
-          final pendingIds = List<String>.from(schoolData?['pendingTeacherIds'] ?? []);
+          // Load pending teacher requests from teacher_join_requests collection
+          final pendingRequestsSnapshot = await FirebaseFirestore.instance
+              .collection('teacher_join_requests')
+              .where('schoolId', isEqualTo: _schoolId)
+              .where('status', isEqualTo: 'pending')
+              .get();
+          
           _pendingTeachers = [];
-          for (var teacherId in pendingIds) {
-            final teacherDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(teacherId)
-                .get();
-            if (teacherDoc.exists) {
-              _pendingTeachers.add({
-                'id': teacherId,
-                ...teacherDoc.data()!,
-              });
-            }
+          for (var requestDoc in pendingRequestsSnapshot.docs) {
+            final requestData = requestDoc.data();
+            _pendingTeachers.add({
+              'id': requestData['teacherId'],
+              'requestId': requestDoc.id, // Store request ID for approval/rejection
+              'displayName': requestData['teacherName'],
+              'email': requestData['teacherEmail'],
+              'createdAt': requestData['createdAt'],
+            });
           }
           
           // Load approved teachers
@@ -874,13 +884,22 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
     }
   }
 
-  Future<void> _approveTeacher(String teacherId) async {
+  Future<void> _approveTeacher(String teacherId, String requestId) async {
     try {
+      // Update the join request status
+      await FirebaseFirestore.instance
+          .collection('teacher_join_requests')
+          .doc(requestId)
+          .update({
+        'status': 'approved',
+        'approvedAt': Timestamp.now(),
+      });
+      
+      // Add teacher to school's teacher list
       await FirebaseFirestore.instance
           .collection('schools')
           .doc(_schoolId)
           .update({
-        'pendingTeacherIds': FieldValue.arrayRemove([teacherId]),
         'teacherIds': FieldValue.arrayUnion([teacherId]),
       });
       
@@ -902,13 +921,14 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
     }
   }
 
-  Future<void> _rejectTeacher(String teacherId) async {
+  Future<void> _rejectTeacher(String requestId) async {
     try {
       await FirebaseFirestore.instance
-          .collection('schools')
-          .doc(_schoolId)
+          .collection('teacher_join_requests')
+          .doc(requestId)
           .update({
-        'pendingTeacherIds': FieldValue.arrayRemove([teacherId]),
+        'status': 'rejected',
+        'rejectedAt': Timestamp.now(),
       });
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1140,7 +1160,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                                 children: [
                                   Expanded(
                                     child: ElevatedButton.icon(
-                                      onPressed: () => _approveTeacher(teacher['id']),
+                                      onPressed: () => _approveTeacher(teacher['id'], teacher['requestId']),
                                       icon: const Icon(Icons.check, size: 18),
                                       label: const Text('Approve'),
                                       style: ElevatedButton.styleFrom(
@@ -1156,7 +1176,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: OutlinedButton.icon(
-                                      onPressed: () => _rejectTeacher(teacher['id']),
+                                      onPressed: () => _rejectTeacher(teacher['requestId']),
                                       icon: const Icon(Icons.close, size: 18),
                                       label: const Text('Reject'),
                                       style: OutlinedButton.styleFrom(

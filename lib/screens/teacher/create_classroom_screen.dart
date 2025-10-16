@@ -276,18 +276,62 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Create Classroom'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      body: CustomScrollView(
+        slivers: [
+          // Gradient Header
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ),
+                      const Center(
+                        child: Text(
+                          'Create Classroom',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // Form Content
+          SliverPadding(
+            padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
               CleanCard(
                 color: AppColors.primary.withOpacity(0.1),
                 child: Row(
@@ -534,9 +578,13 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
               ),
               
               const SizedBox(height: AppSpacing.xl),
-            ],
+                    ],
+                  ),
+                ),
+              ]),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

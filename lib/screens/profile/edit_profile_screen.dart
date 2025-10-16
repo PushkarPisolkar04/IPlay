@@ -162,11 +162,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     SliverToBoxAdapter(
                       child: Container(
                         decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xFF6B46C1), Color(0xFF9333EA)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                gradient: LinearGradient(
+                  colors: [Color(0xFF3B82F6), Color(0xFF6366F1)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(24),
                             bottomRight: Radius.circular(24),

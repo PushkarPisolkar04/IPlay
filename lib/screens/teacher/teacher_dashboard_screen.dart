@@ -9,6 +9,8 @@ import '../settings/settings_screen.dart';
 import 'teacher_comprehensive_leaderboard_screen.dart';
 import 'create_classroom_screen.dart';
 import 'classroom_detail_screen.dart';
+import 'all_students_screen.dart';
+import '../principal/school_announcements_screen.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
@@ -117,7 +119,7 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
 }
 
 // =================================================================
-// TEACHER OVERVIEW TAB
+// TEACHER OVERVIEW TAB - Matches Principal Structure
 // =================================================================
 
 class _TeacherOverviewTab extends StatefulWidget {
@@ -131,8 +133,9 @@ class _TeacherOverviewTab extends StatefulWidget {
 
 class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
   UserModel? _user;
-  String? _schoolId; // From Firestore user document
+  String? _schoolId;
   String? _schoolName;
+  Map<String, dynamic>? _schoolData;
   
   int _totalClassrooms = 0;
   int _totalStudents = 0;
@@ -152,7 +155,6 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
 
-      // Load user data
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
@@ -160,20 +162,21 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
       
       if (userDoc.exists) {
         _user = UserModel.fromMap(userDoc.data()!);
-        // Get schoolId from Firestore document (not in UserModel)
         _schoolId = userDoc.data()!['schoolId'] as String?;
         
-        // Get school name
         if (_schoolId != null) {
           final schoolDoc = await FirebaseFirestore.instance
               .collection('schools')
               .doc(_schoolId)
               .get();
-          _schoolName = schoolDoc.data()?['name'];
+          if (schoolDoc.exists) {
+            _schoolData = schoolDoc.data();
+            _schoolData!['id'] = schoolDoc.id;
+            _schoolName = _schoolData?['name'];
+          }
         }
       }
 
-      // Load teacher's classrooms
       final classroomsSnapshot = await FirebaseFirestore.instance
           .collection('classrooms')
           .where('teacherId', isEqualTo: currentUser.uid)
@@ -181,7 +184,6 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
       
       _totalClassrooms = classroomsSnapshot.docs.length;
 
-      // Load students from teacher's classrooms
       int totalStudentsCount = 0;
       int activeCount = 0;
       double totalXP = 0;
@@ -211,28 +213,28 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
 
       setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading teacher overview: $e');
       setState(() => _isLoading = false);
     }
+  }
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good Morning!';
+    if (hour < 17) return 'Good Afternoon!';
+    return 'Good Evening!';
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: Color(0xFF10B981))),
       );
     }
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFFF5F7FA), Color(0xFFFFFFFF)],
-        ),
-      ),
-      child: SafeArea(
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadData,
           child: SingleChildScrollView(
@@ -240,7 +242,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with Teacher Badge
+                // Compact Header - Matching Principal
                 Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -253,7 +255,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                       bottomRight: Radius.circular(30),
                     ),
                   ),
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24), // Reduced padding
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -264,53 +266,74 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Welcome back,',
-                                style: TextStyle(
+                                _getGreeting(),
+                                style: const TextStyle(
                                   fontSize: 16,
-                                  color: Colors.white.withValues(alpha: 0.9),
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 _user?.displayName ?? 'Teacher',
                                 style: const TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
                                   color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Row(
-                              children: [
-                                Icon(Icons.school, color: Colors.white, size: 18),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Teacher',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 13,
-                                  ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.15),
+                                  blurRadius: 8,
+                                  spreadRadius: 0,
                                 ),
                               ],
+                            ),
+                            child: const Text(
+                              'Teacher',
+                              style: TextStyle(
+                                color: Color(0xFF10B981),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                           ),
                         ],
                       ),
+                      
                       if (_schoolName != null) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          _schoolName!,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white.withValues(alpha: 0.9),
+                        const SizedBox(height: 14),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.school, color: Colors.white, size: 18),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  _schoolName!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -318,64 +341,133 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
-
-                // Stats Cards
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: _buildStatCard(
-                            'Classrooms',
-                            _totalClassrooms.toString(),
-                            Icons.class_,
-                            const Color(0xFF10B981),
-                            const Color(0xFF14B8A6),
-                          )),
-                          const SizedBox(width: 12),
-                          Expanded(child: _buildStatCard(
-                            'Students',
-                            _totalStudents.toString(),
-                            Icons.people,
-                            const Color(0xFF3B82F6),
-                            const Color(0xFF06B6D4),
-                          )),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(child: _buildStatCard(
-                            'Active (7d)',
-                            _activeStudents.toString(),
-                            Icons.trending_up,
-                            const Color(0xFFF59E0B),
-                            const Color(0xFFF97316),
-                          )),
-                          const SizedBox(width: 12),
-                          Expanded(child: _buildStatCard(
-                            'Avg XP',
-                            _avgClassXP.toStringAsFixed(0),
-                            Icons.stars,
-                            const Color(0xFFEC4899),
-                            const Color(0xFF8B5CF6),
-                          )),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
                 const SizedBox(height: 24),
 
-                // Quick Actions
+                // Overview Section - Matching Principal
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // School Information Card (if teacher is part of a school)
+                      if (_schoolData != null) ...[
+                        CleanCard(
+                          color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF10B981),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Icon(Icons.school, color: Colors.white, size: 24),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _schoolData!['name'] ?? 'School',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xFF1F2937),
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Row(
+                                            children: [
+                                              const Icon(Icons.location_on, size: 14, color: Color(0xFF10B981)),
+                                              const SizedBox(width: 4),
+                                              Expanded(
+                                                child: Text(
+                                                  '${_schoolData!['city'] ?? ''}, ${_schoolData!['state'] ?? ''}',
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: Colors.grey[700],
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                      
+                      const Text(
+                        'Teaching Overview',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1F2937),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      // Stats Grid
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 1.0,
+                        children: [
+                          _buildStatCard(
+                            icon: Icons.class_,
+                            title: 'My Classes',
+                            value: _totalClassrooms.toString(),
+                            color: const Color(0xFF10B981),
+                            subtitle: 'Active classrooms',
+                          ),
+                          _buildStatCard(
+                            icon: Icons.people,
+                            title: 'Students',
+                            value: _totalStudents.toString(),
+                            color: const Color(0xFF3B82F6),
+                            subtitle: '$_activeStudents active',
+                          ),
+                          _buildStatCard(
+                            icon: Icons.trending_up,
+                            title: 'Active Rate',
+                            value: _totalStudents > 0 
+                                ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
+                                : '0%',
+                            color: const Color(0xFFF59E0B),
+                            subtitle: 'Last 7 days',
+                          ),
+                          _buildStatCard(
+                            icon: Icons.stars,
+                            title: 'Avg XP',
+                            value: _avgClassXP.toStringAsFixed(0),
+                            color: const Color(0xFF8B5CF6),
+                            subtitle: 'Per student',
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Quick Actions - Compact Cards Like Principal
                       const Text(
                         'Quick Actions',
                         style: TextStyle(
@@ -384,103 +476,253 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                           color: Color(0xFF1F2937),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(child: _buildQuickAction(
-                            'View Leaderboards',
-                            Icons.leaderboard,
-                            const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFEF4444)]),
-                            () async {
-                              try {
-                                final user = FirebaseAuth.instance.currentUser;
-                                if (user == null) return;
-                                
-                                final userDoc = await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(user.uid)
-                                    .get();
-                                
-                                if (userDoc.exists) {
-                                  final userData = userDoc.data()!;
-                                  final schoolId = userData['schoolId'];
-                                  
-                                  final classroomsSnapshot = await FirebaseFirestore.instance
-                                      .collection('classrooms')
-                                      .where('teacherId', isEqualTo: user.uid)
-                                      .get();
-                                  
-                                  final classroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
-                                  
-                                  if (schoolId != null && mounted) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => TeacherComprehensiveLeaderboardScreen(
-                                          schoolId: schoolId,
-                                          classroomIds: classroomIds,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              } catch (e) {
-                                print('Error navigating to leaderboards: $e');
-                              }
-                            },
-                          )),
-                          const SizedBox(width: 12),
-                          Expanded(child: _buildQuickAction(
-                            'Announcements',
-                            Icons.campaign,
-                            const LinearGradient(colors: [Color(0xFFEC4899), Color(0xFFF97316)]),
-                            () {
-                              if (_totalClassrooms == 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Create a classroom first!')),
-                                );
-                                return;
-                              }
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Select a classroom to view announcements')),
-                              );
-                            },
-                          )),
-                        ],
+                      const SizedBox(height: 16),
+
+                      // Create Classroom
+                      CleanCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CreateClassroomScreen(),
+                            ),
+                          ).then((_) => _loadData());
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.add_box, color: Color(0xFF10B981), size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Create Classroom',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Set up a new class',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                          ],
+                        ),
                       ),
+                      const SizedBox(height: 10),
+
+                      // View Announcements
+                      if (_schoolData != null)
+                        CleanCard(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolData!['id']),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Icon(Icons.campaign, color: Color(0xFF8B5CF6), size: 20),
+                              ),
+                              const SizedBox(width: 12),
+                              const Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'School Announcements',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      'View school updates',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                            ],
+                          ),
+                        ),
+                      if (_schoolData != null) const SizedBox(height: 10),
+
+                      // All Students
+                      CleanCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AllStudentsScreen(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.people, color: Color(0xFF3B82F6), size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'All Students',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'View all student summary',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+
+                      // View Leaderboards
+                      CleanCard(
+                        onTap: () async {
+                          try {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user == null) return;
+                            
+                            final userDoc = await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(user.uid)
+                                .get();
+                            
+                            if (userDoc.exists && mounted) {
+                              final userData = userDoc.data()!;
+                              final schoolId = userData['schoolId'];
+                              
+                              final classroomsSnapshot = await FirebaseFirestore.instance
+                                  .collection('classrooms')
+                                  .where('teacherId', isEqualTo: user.uid)
+                                  .get();
+                              
+                              final classroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
+                              
+                              if (schoolId != null && mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TeacherComprehensiveLeaderboardScreen(
+                                      schoolId: schoolId,
+                                      classroomIds: classroomIds,
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          } catch (e) {
+                            // Error handling
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.leaderboard, color: Color(0xFFF59E0B), size: 20),
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'View Leaderboards',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'School, Class, State & Country',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 24),
-
-                // My Classrooms Preview
-                if (_totalClassrooms > 0) ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'My Classrooms',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1F2937),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => widget.onNavigate(1),
-                          child: const Text('View All'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _buildClassroomsPreview(),
-                ],
-
-                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -489,207 +731,72 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color1, Color color2) {
+  Widget _buildStatCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color color,
+    required String subtitle,
+  }) {
     return CleanCard(
       child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [color1.withValues(alpha: 0.1), color2.withValues(alpha: 0.05)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
+        padding: const EdgeInsets.all(14),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [color1, color2]),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: Colors.white, size: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: color, size: 20),
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1F2937),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
+            const Spacer(),
             Text(
-              value,
+              title,
               style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
                 color: Color(0xFF1F2937),
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              label,
+              subtitle,
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey[600],
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildQuickAction(String label, IconData icon, LinearGradient gradient, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: CleanCard(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: gradient.colors.length == 2 
-                ? LinearGradient(
-                    colors: [
-                      gradient.colors[0].withValues(alpha: 0.1),
-                      gradient.colors[1].withValues(alpha: 0.05)
-                    ],
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: gradient,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: Colors.white, size: 24),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF1F2937),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildClassroomsPreview() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('classrooms')
-          .where('teacherId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .limit(3)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final classrooms = snapshot.data!.docs;
-
-        return SizedBox(
-          height: 140,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: classrooms.length,
-            itemBuilder: (context, index) {
-              final classroom = classrooms[index].data() as Map<String, dynamic>;
-              final classroomId = classrooms[index].id;
-              
-              return GestureDetector(
-                onTap: () {
-                  // Convert to ClassroomModel
-                  final classroomModel = ClassroomModel.fromMap({
-                    'id': classroomId,
-                    ...classroom,
-                  });
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ClassroomDetailScreen(classroom: classroomModel),
-                    ),
-                  );
-                },
-                child: Container(
-                  width: 160,
-                  margin: const EdgeInsets.only(right: 12),
-                  child: CleanCard(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.class_, color: Colors.white, size: 20),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            classroom['name'] ?? 'Unnamed',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${classroom['grade']} ${classroom['section']}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${(classroom['studentIds'] as List?)?.length ?? 0} students',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF10B981),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
 }
 
 // =================================================================
-// TEACHER CLASSROOMS TAB (will continue in next part)
+// TEACHER CLASSROOMS TAB
 // =================================================================
 
-class _TeacherClassroomsTab extends StatefulWidget {
+class _TeacherClassroomsTab extends StatelessWidget {
   const _TeacherClassroomsTab();
-
-  @override
-  State<_TeacherClassroomsTab> createState() => _TeacherClassroomsTabState();
-}
-
-class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -698,7 +805,7 @@ class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
       body: SafeArea(
         child: Column(
           children: [
-            // Gradient Header
+            // Compact Gradient Header
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -711,7 +818,7 @@ class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
                   bottomRight: Radius.circular(24),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 14), // Reduced from 16
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -753,7 +860,7 @@ class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)));
                   }
 
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -845,7 +952,6 @@ class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
                             ),
                             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                             onTap: () {
-                              // Convert to ClassroomModel
                               final classroomModel = ClassroomModel.fromMap({
                                 'id': classroomId,
                                 ...classroom,
@@ -873,20 +979,101 @@ class _TeacherClassroomsTabState extends State<_TeacherClassroomsTab> {
 }
 
 // =================================================================
-// TEACHER ANALYTICS TAB (Placeholder - similar to principal)
+// TEACHER ANALYTICS TAB - Now Functional
 // =================================================================
 
-class _TeacherAnalyticsTab extends StatelessWidget {
+class _TeacherAnalyticsTab extends StatefulWidget {
   const _TeacherAnalyticsTab();
 
   @override
+  State<_TeacherAnalyticsTab> createState() => _TeacherAnalyticsTabState();
+}
+
+class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
+  bool _isLoading = true;
+  int _totalStudents = 0;
+  int _activeStudents = 0;
+  int _totalClasses = 0;
+  double _avgCompletion = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAnalytics();
+  }
+
+  Future<void> _loadAnalytics() async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+
+      // Get teacher's classrooms
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: currentUser.uid)
+          .get();
+
+      _totalClasses = classroomsSnapshot.docs.length;
+
+      int totalStudentsCount = 0;
+      int activeCount = 0;
+      double totalCompletion = 0;
+
+      for (var classroomDoc in classroomsSnapshot.docs) {
+        final studentsSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('role', isEqualTo: 'student')
+            .where('classroomId', isEqualTo: classroomDoc.id)
+            .get();
+
+        totalStudentsCount += studentsSnapshot.docs.length;
+
+        for (var studentDoc in studentsSnapshot.docs) {
+          final lastActive = studentDoc.data()['lastActiveDate'] as Timestamp?;
+          if (lastActive != null) {
+            final daysSinceActive = DateTime.now().difference(lastActive.toDate()).inDays;
+            if (daysSinceActive <= 7) activeCount++;
+          }
+
+          // Calculate average completion
+          final progressSummary = studentDoc.data()['progressSummary'] as Map<String, dynamic>?;
+          if (progressSummary != null) {
+            int completed = 0;
+            int total = progressSummary.length;
+            progressSummary.forEach((key, value) {
+              if (value['completed'] == true) completed++;
+            });
+            if (total > 0) {
+              totalCompletion += (completed / total) * 100;
+            }
+          }
+        }
+      }
+
+      _totalStudents = totalStudentsCount;
+      _activeStudents = activeCount;
+      _avgCompletion = _totalStudents > 0 ? totalCompletion / _totalStudents : 0;
+
+      setState(() => _isLoading = false);
+    } catch (e) {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(color: Color(0xFF10B981))),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: SafeArea(
         child: Column(
           children: [
-            // Gradient Header
+            // Compact Gradient Header
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -899,7 +1086,7 @@ class _TeacherAnalyticsTab extends StatelessWidget {
                   bottomRight: Radius.circular(24),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 18),
               child: const Center(
                 child: Text(
                   'Analytics',
@@ -911,26 +1098,120 @@ class _TeacherAnalyticsTab extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             Expanded(
-              child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.analytics, size: 80, color: Colors.grey[300]),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Analytics Coming Soon',
+                    const Text(
+                      'Overview',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1F2937),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Track student progress and performance',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                    const SizedBox(height: 16),
+
+                    // Analytics Cards
+                    GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.4,
+                      children: [
+                        _buildAnalyticsCard(
+                          'Total Students',
+                          _totalStudents.toString(),
+                          Icons.people,
+                          const Color(0xFF3B82F6),
+                        ),
+                        _buildAnalyticsCard(
+                          'Active (7d)',
+                          _activeStudents.toString(),
+                          Icons.trending_up,
+                          const Color(0xFF10B981),
+                        ),
+                        _buildAnalyticsCard(
+                          'Total Classes',
+                          _totalClasses.toString(),
+                          Icons.class_,
+                          const Color(0xFF8B5CF6),
+                        ),
+                        _buildAnalyticsCard(
+                          'Avg Completion',
+                          '${_avgCompletion.toStringAsFixed(1)}%',
+                          Icons.check_circle,
+                          const Color(0xFFF59E0B),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    const Text(
+                      'Engagement Metrics',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    CleanCard(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Active Students Rate',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: LinearProgressIndicator(
+                                    value: _totalStudents > 0 ? _activeStudents / _totalStudents : 0,
+                                    backgroundColor: Colors.grey[200],
+                                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF10B981)),
+                                    minHeight: 10,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  _totalStudents > 0
+                                      ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
+                                      : '0%',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF10B981),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '$_activeStudents out of $_totalStudents students active in last 7 days',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -941,10 +1222,49 @@ class _TeacherAnalyticsTab extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildAnalyticsCard(String title, String value, IconData icon, Color color) {
+    return CleanCard(
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: color, size: 18),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1F2937),
+              ),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // =================================================================
-// TEACHER PROFILE TAB (Similar to principal)
+// TEACHER PROFILE TAB - Matches Principal with Data
 // =================================================================
 
 class _TeacherProfileTab extends StatefulWidget {
@@ -956,7 +1276,11 @@ class _TeacherProfileTab extends StatefulWidget {
 
 class _TeacherProfileTabState extends State<_TeacherProfileTab> {
   UserModel? _user;
+  String? _schoolId;
   String? _schoolName;
+  Map<String, dynamic>? _schoolData;
+  int _totalClassrooms = 0;
+  int _totalStudents = 0;
   bool _isLoading = true;
 
   @override
@@ -974,26 +1298,45 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
           .collection('users')
           .doc(currentUser.uid)
           .get();
-      
+
       if (userDoc.exists) {
         _user = UserModel.fromMap(userDoc.data()!);
-        
-        // Get schoolId from Firestore document (not in UserModel)
-        final schoolId = userDoc.data()!['schoolId'] as String?;
-        
-        // Get school name
-        if (schoolId != null) {
+        _schoolId = userDoc.data()!['schoolId'] as String?;
+
+        if (_schoolId != null) {
           final schoolDoc = await FirebaseFirestore.instance
               .collection('schools')
-              .doc(schoolId)
+              .doc(_schoolId)
               .get();
-          _schoolName = schoolDoc.data()?['name'];
+          if (schoolDoc.exists) {
+            _schoolData = schoolDoc.data();
+            _schoolData!['id'] = schoolDoc.id;
+            _schoolName = _schoolData?['name'];
+          }
         }
       }
 
+      // Get stats
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: currentUser.uid)
+          .get();
+
+      _totalClassrooms = classroomsSnapshot.docs.length;
+
+      int totalStudentsCount = 0;
+      for (var classroomDoc in classroomsSnapshot.docs) {
+        final studentsSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('role', isEqualTo: 'student')
+            .where('classroomId', isEqualTo: classroomDoc.id)
+            .get();
+        totalStudentsCount += studentsSnapshot.docs.length;
+      }
+      _totalStudents = totalStudentsCount;
+
       setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading profile: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -1001,7 +1344,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: Color(0xFF10B981)));
     }
 
     return Scaffold(
@@ -1009,7 +1352,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            // Header with gradient
+            // Compact Header with gradient
             SliverToBoxAdapter(
               child: Container(
                 decoration: const BoxDecoration(
@@ -1023,7 +1366,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                     bottomRight: Radius.circular(24),
                   ),
                 ),
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 14, 20, 18), // Reduced padding
                 child: Column(
                   children: [
                     Stack(
@@ -1033,7 +1376,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                           child: Text(
                             'Profile',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 22, // Reduced from 24
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -1042,7 +1385,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: IconButton(
-                            icon: const Icon(Icons.settings, color: Colors.white, size: 24),
+                            icon: const Icon(Icons.settings, color: Colors.white, size: 22),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -1053,10 +1396,10 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14), // Reduced from 16
                     // Profile Card
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(14), // Reduced from 16
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
@@ -1072,10 +1415,10 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                         children: [
                           AvatarWidget(
                             imageUrl: _user?.avatarUrl,
-                            initials: (_user?.displayName != null && _user!.displayName.isNotEmpty) 
-                                ? _user!.displayName.substring(0, 1).toUpperCase() 
+                            initials: (_user?.displayName != null && _user!.displayName.isNotEmpty)
+                                ? _user!.displayName.substring(0, 1).toUpperCase()
                                 : 'T',
-                            size: 60,
+                            size: 56, // Reduced from 60
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -1085,7 +1428,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                                 Text(
                                   _user?.displayName ?? 'Teacher',
                                   style: const TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -1093,18 +1436,22 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                                 Text(
                                   _user?.email ?? '',
                                   style: TextStyle(
-                                    fontSize: 13,
+                                    fontSize: 12,
                                     color: Colors.grey[600],
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 if (_schoolName != null) ...[
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 4),
                                   Text(
                                     _schoolName!,
                                     style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
+                                      fontSize: 11,
+                                      color: Colors.grey[500],
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                                 const SizedBox(height: 6),
@@ -1119,7 +1466,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                     ),
                                   ),
                                 ),
@@ -1133,12 +1480,118 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                 ),
               ),
             ),
-            
-            // Quick Links - same as principal but teacher-specific
+
+            // Stats Overview
             SliverPadding(
               padding: const EdgeInsets.all(20),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
+                  const Text(
+                    'Teaching Stats',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1F2937),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CleanCard(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(
+                              children: [
+                                const Icon(Icons.class_, color: Color(0xFF10B981), size: 28),
+                                const SizedBox(height: 8),
+                                Text(
+                                  _totalClassrooms.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1F2937),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Classes',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: CleanCard(
+                          child: Padding(
+                            padding: const EdgeInsets.all(14),
+                            child: Column(
+                              children: [
+                                const Icon(Icons.people, color: Color(0xFF3B82F6), size: 28),
+                                const SizedBox(height: 8),
+                                Text(
+                                  _totalStudents.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1F2937),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Students',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // School Information (if teacher is part of a school)
+                  if (_schoolData != null) ...[
+                    const Text(
+                      'School Information',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    CleanCard(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildInfoRow(Icons.school, 'School Name', _schoolData!['name'] ?? 'N/A'),
+                            const Divider(height: 24),
+                            _buildInfoRow(Icons.location_on, 'Location', 
+                                '${_schoolData!['city'] ?? 'N/A'}, ${_schoolData!['state'] ?? 'N/A'}'),
+                            const Divider(height: 24),
+                            _buildInfoRow(Icons.qr_code, 'School Code', _schoolData!['schoolCode'] ?? 'N/A'),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+
+                  // Quick Links
                   const Text(
                     'Quick Links',
                     style: TextStyle(
@@ -1151,17 +1604,6 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                   Row(
                     children: [
                       Expanded(child: _buildQuickLinkCard(
-                        'View\nAnnouncements',
-                        Icons.campaign,
-                        const Color(0xFFEC4899),
-                        () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Select a classroom to view announcements')),
-                          );
-                        },
-                      )),
-                      const SizedBox(width: 12),
-                      Expanded(child: _buildQuickLinkCard(
                         'View\nLeaderboard',
                         Icons.leaderboard,
                         const Color(0xFFF59E0B),
@@ -1169,23 +1611,23 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                           try {
                             final user = FirebaseAuth.instance.currentUser;
                             if (user == null) return;
-                            
+
                             final userDoc = await FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(user.uid)
                                 .get();
-                            
-                            if (userDoc.exists) {
+
+                            if (userDoc.exists && mounted) {
                               final userData = userDoc.data()!;
                               final schoolId = userData['schoolId'];
-                              
+
                               final classroomsSnapshot = await FirebaseFirestore.instance
                                   .collection('classrooms')
                                   .where('teacherId', isEqualTo: user.uid)
                                   .get();
-                              
+
                               final classroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
-                              
+
                               if (schoolId != null && mounted) {
                                 Navigator.push(
                                   context,
@@ -1199,8 +1641,19 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                               }
                             }
                           } catch (e) {
-                            print('Error: $e');
+                            // Error handling
                           }
+                        },
+                      )),
+                      const SizedBox(width: 12),
+                      Expanded(child: _buildQuickLinkCard(
+                        'View\nAnalytics',
+                        Icons.analytics,
+                        const Color(0xFF3B82F6),
+                        () {
+                          // Navigate to analytics tab
+                          Navigator.pop(context);
+                          // This would need a callback to change tab, but for now just pop
                         },
                       )),
                     ],
@@ -1220,7 +1673,7 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
       onTap: onTap,
       child: CleanCard(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(14),
           child: Column(
             children: [
               Container(
@@ -1229,14 +1682,14 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
                   color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: color, size: 28),
+                child: Icon(icon, color: color, size: 26),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               Text(
                 title,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF1F2937),
                 ),
@@ -1245,6 +1698,38 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFF10B981), size: 20),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1F2937),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
