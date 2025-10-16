@@ -1,0 +1,216 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper Functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isTeacher() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+    
+    function isPrincipal() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPrincipal == true;
+    }
+    
+    function isStudent() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'student';
+    }
+    
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isTeacher() || isPrincipal();
+      allow delete: if isOwner(userId);
+    }
+    
+    // Classrooms Collection
+    match /classrooms/{classroomId} {
+      allow read: if isSignedIn();
+      allow create: if isTeacher() || isPrincipal();
+      allow update: if isTeacher() || isPrincipal() || 
+        (isStudent() && request.auth.uid in resource.data.pendingStudentIds);
+      allow delete: if isTeacher() || isPrincipal();
+    }
+    
+    // Realms Collection (Read-only for students, writable by admins)
+    match /realms/{realmId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal(); // Only principals can modify content
+    }
+    
+    // Levels Collection (Read-only for students, writable by admins)
+    match /levels/{levelId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+    
+    // Quizzes Collection (Read-only for students, writable by admins)
+    match /quizzes/{quizId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+    
+    // Progress Collection
+    match /progress/{progressId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || 
+        isTeacher() || 
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow update: if isSignedIn() && (
+        isOwner(resource.data.userId) || 
+        isTeacher() || 
+        isPrincipal()
+      );
+      allow delete: if isOwner(resource.data.userId);
+    }
+    
+    // Badges Collection (Read-only)
+    match /badges/{badgeId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+    
+    // Certificates Collection
+    match /certificates/{certificateId} {
+      allow read: if isSignedIn() && (
+        isOwner(resource.data.userId) || 
+        isTeacher() || 
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow write: if isPrincipal();
+    }
+    
+    // Leaderboards Collection
+    match /leaderboards/{entryId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn(); // Users can update their own scores
+    }
+    
+    // Announcements Collection
+    match /announcements/{announcementId} {
+      allow read: if isSignedIn();
+      allow create: if isTeacher() || isPrincipal();
+      allow update, delete: if isTeacher() || isPrincipal();
+    }
+    
+    // News Collection (Read-only for students)
+    match /news/{newsId} {
+      allow read: if isSignedIn();
+      allow write: if isPrincipal();
+    }
+    
+    // Schools Collection
+    match /schools/{schoolId} {
+      allow read: if isSignedIn();
+      allow create: if isPrincipal();
+      allow update: if isPrincipal() && 
+        get(/databases/$(database)/documents/schools/$(schoolId)).data.principalId == request.auth.uid;
+      allow delete: if false; // Schools cannot be deleted, only deactivated
+    }
+    
+    // Join Requests Collection
+    match /join_requests/{requestId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.studentId ||
+        isTeacher() ||
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && isStudent() && 
+        request.resource.data.studentId == request.auth.uid;
+      allow update: if isTeacher() || isPrincipal();
+      allow delete: if request.auth.uid == resource.data.studentId || isTeacher();
+    }
+    
+    // Assignments Collection
+    match /assignments/{assignmentId} {
+      allow read: if isSignedIn();
+      allow create: if isTeacher() || isPrincipal();
+      allow update: if isTeacher() || isPrincipal();
+      allow delete: if isTeacher() || isPrincipal();
+    }
+    
+    // Assignment Submissions Collection
+    match /assignment_submissions/{submissionId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.studentId ||
+        isTeacher() ||
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && isStudent() &&
+        request.resource.data.studentId == request.auth.uid;
+      allow update: if (isStudent() && request.auth.uid == resource.data.studentId && 
+        resource.data.gradedAt == null) || isTeacher() || isPrincipal();
+      allow delete: if false; // Submissions cannot be deleted
+    }
+    
+    // Certificates Collection (Cloud Functions only)
+    match /certificates/{certificateId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.userId ||
+        isTeacher() ||
+        isPrincipal()
+      );
+      allow write: if false; // Only Cloud Functions can create/update certificates
+    }
+    
+    // Daily Challenges Collection
+    match /daily_challenges/{challengeId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only Cloud Functions can create challenges
+    }
+    
+    // Daily Challenge Attempts Collection
+    match /daily_challenge_attempts/{attemptId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.userId ||
+        isTeacher() ||
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if false; // Attempts are immutable
+    }
+    
+    // Reports Collection
+    match /reports/{reportId} {
+      allow read: if isPrincipal(); // Only principals/admins can view reports
+      allow create: if isSignedIn() && request.resource.data.reporterId == request.auth.uid;
+      allow update: if isPrincipal(); // Only principals can review/resolve
+      allow delete: if false; // Reports cannot be deleted
+    }
+    
+    // Feedback Collection
+    match /feedback/{feedbackId} {
+      allow read: if isPrincipal() || request.auth.uid == resource.data.userId;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isPrincipal(); // Only principals can respond
+      allow delete: if false; // Feedback cannot be deleted
+    }
+    
+    // Leaderboard Cache Collection (Cloud Functions only)
+    match /leaderboard_cache/{cacheId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only Cloud Functions can update leaderboard cache
+    }
+    
+    // Badges Collection (Read-only, Cloud Functions write)
+    match /badges/{badgeId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only Cloud Functions/Admin setup
+    }
+  }
+}
+
