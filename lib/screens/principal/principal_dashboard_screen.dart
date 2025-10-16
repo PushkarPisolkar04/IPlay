@@ -6,6 +6,7 @@ import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/avatar_widget.dart';
 import '../profile/profile_screen.dart';
 import '../teacher/create_announcement_screen.dart';
 import 'school_analytics_screen.dart';
@@ -2323,9 +2324,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Row(
-                  children: [
+                   children: [
                     AvatarWidget(
-                      avatarUrl: _avatarUrl,
+                      imageUrl: _avatarUrl,
+                      initials: _displayName?.substring(0, 1).toUpperCase() ?? 'P',
                       size: 70,
                     ),
                     const SizedBox(width: 16),

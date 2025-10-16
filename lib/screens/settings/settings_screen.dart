@@ -8,6 +8,9 @@ import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
 import '../profile/edit_profile_screen.dart';
+import 'privacy_policy_screen.dart';
+import 'terms_screen.dart';
+import 'data_security_screen.dart';
 
 /// Settings Screen - App settings, privacy, terms, logout
 class SettingsScreen extends StatefulWidget {
@@ -212,24 +215,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           icon: Icons.privacy_tip,
                           title: 'Privacy Policy',
                           subtitle: 'Read our privacy policy',
-                          trailing: const Icon(Icons.open_in_new, size: 20),
-                          onTap: () => _launchURL('https://iplay.example.com/privacy'),
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PrivacyPolicyScreen(),
+                              ),
+                            );
+                          },
                         ),
                         const Divider(height: 1),
                         _SettingsTile(
                           icon: Icons.description,
                           title: 'Terms & Conditions',
                           subtitle: 'Read our terms and conditions',
-                          trailing: const Icon(Icons.open_in_new, size: 20),
-                          onTap: () => _launchURL('https://iplay.example.com/terms'),
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TermsScreen(),
+                              ),
+                            );
+                          },
                         ),
                         const Divider(height: 1),
                         _SettingsTile(
                           icon: Icons.shield,
                           title: 'Data & Security',
                           subtitle: 'How we protect your data',
-                          trailing: const Icon(Icons.open_in_new, size: 20),
-                          onTap: () => _launchURL('https://iplay.example.com/security'),
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const DataSecurityScreen(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
