@@ -115,14 +115,15 @@ service cloud.firestore {
     
     // Schools Collection
     match /schools/{schoolId} {
-      allow read: if isSignedIn();
-      allow create: if isPrincipal();
+      // Allow read only for authenticated users
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
       allow update: if isPrincipal() && 
         get(/databases/$(database)/documents/schools/$(schoolId)).data.principalId == request.auth.uid;
       allow delete: if false; // Schools cannot be deleted, only deactivated
     }
     
-    // Join Requests Collection
+    // Join Requests Collection (for students)
     match /join_requests/{requestId} {
       allow read: if isSignedIn() && (
         request.auth.uid == resource.data.studentId ||
@@ -133,6 +134,18 @@ service cloud.firestore {
         request.resource.data.studentId == request.auth.uid;
       allow update: if isTeacher() || isPrincipal();
       allow delete: if request.auth.uid == resource.data.studentId || isTeacher();
+    }
+    
+    // Teacher Join Requests Collection (for teachers joining schools)
+    match /teacher_join_requests/{requestId} {
+      allow read: if isSignedIn() && (
+        request.auth.uid == resource.data.teacherId ||
+        isPrincipal()
+      );
+      allow create: if isSignedIn() && 
+        request.resource.data.teacherId == request.auth.uid;
+      allow update: if isPrincipal();
+      allow delete: if isPrincipal();
     }
     
     // Assignments Collection

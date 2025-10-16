@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../models/classroom_model.dart';
+import '../../widgets/clean_card.dart';
+import 'teacher_leaderboard_screen.dart';
+import 'teacher_announcements_screen.dart';
 
 class ClassroomDetailScreen extends StatelessWidget {
   final ClassroomModel classroom;
@@ -35,7 +38,11 @@ class ClassroomDetailScreen extends StatelessWidget {
                   ),
                   background: Container(
                     decoration: const BoxDecoration(
-                      gradient: AppColors.primaryGradient,
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -127,7 +134,88 @@ class ClassroomDetailScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
+                    
+                    const SizedBox(height: 20),
+                    
+                    // Quick Actions
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CleanCard(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeacherAnnouncementsScreen(classroomId: classroom.id),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF10B981).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(Icons.campaign, color: Color(0xFF10B981), size: 28),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Announcements',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: CleanCard(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeacherLeaderboardScreen(classroomId: classroom.id),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF59E0B).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(Icons.leaderboard, color: Color(0xFFF59E0B), size: 28),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    'Leaderboard',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
                     const SizedBox(height: 20),
 
                     // Stats

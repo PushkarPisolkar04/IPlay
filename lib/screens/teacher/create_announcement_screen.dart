@@ -6,8 +6,9 @@ import '../../widgets/clean_card.dart';
 
 class CreateAnnouncementScreen extends StatefulWidget {
   final bool isSchoolWide;
+  final String? classroomId;
   
-  const CreateAnnouncementScreen({super.key, this.isSchoolWide = false});
+  const CreateAnnouncementScreen({super.key, this.isSchoolWide = false, this.classroomId});
 
   @override
   State<CreateAnnouncementScreen> createState() => _CreateAnnouncementScreenState();
@@ -73,8 +74,17 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         print('Announcement created with ID: ${docRef.id}');
       } else {
         // Classroom announcement (for teachers)
-        // You can add classroom-specific logic here
-        throw Exception('Classroom announcements not yet implemented');
+        if (widget.classroomId == null) throw Exception('No classroom specified');
+        
+        announcementData['classroomId'] = widget.classroomId;
+        
+        print('Creating classroom announcement: $announcementData');
+        
+        final docRef = await FirebaseFirestore.instance
+            .collection('announcements')
+            .add(announcementData);
+        
+        print('Classroom announcement created with ID: ${docRef.id}');
       }
 
       if (mounted) {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 

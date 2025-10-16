@@ -563,6 +563,55 @@ exports.generateSchoolCode = onCall(async (request) => {
   throw new Error("Failed to generate unique code");
 });
 
+// Validate school code (callable - for secure teacher/student signup)
+exports.validateSchoolCode = onCall(async (request) => {
+  const {schoolCode} = request.data;
+  
+  if (!schoolCode) {
+    throw new HttpsError("invalid-argument", "School code is required");
+  }
+
+  try {
+    const schoolSnapshot = await db.collection("schools")
+        .where("schoolCode", "==", schoolCode)
+        .limit(1)
+        .get();
+
+    if (schoolSnapshot.empty) {
+      return {
+        valid: false,
+        message: "Invalid school code",
+      };
+    }
+
+    const schoolDoc = schoolSnapshot.docs[0];
+    const schoolData = schoolDoc.data();
+
+    // Check if school is active (backwards compatible with old schools)
+    const isActive = schoolData.status ? 
+      schoolData.status === "active" : 
+      schoolData.isActive === true;
+    
+    if (!isActive) {
+      return {
+        valid: false,
+        message: "This school is currently inactive",
+      };
+    }
+
+    return {
+      valid: true,
+      schoolId: schoolDoc.id,
+      schoolName: schoolData.name,
+      state: schoolData.state,
+      city: schoolData.city,
+    };
+  } catch (error) {
+    console.error("Error validating school code:", error);
+    throw new HttpsError("internal", "Failed to validate school code");
+  }
+});
+
 // Moderate content (callable, admin only)
 exports.moderateContent = onCall(async (request) => {
   const {reportId, action, resolution} = request.data;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
@@ -109,30 +110,39 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
       if (_hasSchoolCode && _schoolCodeController.text.trim().isNotEmpty) {
         final code = _schoolCodeController.text.trim().toUpperCase();
         
-        // Find school by code
-        final schoolQuery = await FirebaseFirestore.instance
-            .collection('schools')
-            .where('schoolCode', isEqualTo: code)
-            .limit(1)
-            .get();
-        
-        if (schoolQuery.docs.isEmpty) {
+        // Validate school code using Cloud Function (secure)
+        try {
+          final callable = FirebaseFunctions.instance.httpsCallable('validateSchoolCode');
+          final result = await callable.call<Map<String, dynamic>>({'schoolCode': code});
+          final data = result.data as Map<String, dynamic>;
+          
+          if (data['valid'] != true) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(data['message'] ?? 'Invalid school code'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            setState(() => _isLoading = false);
+            return;
+          }
+          
+          schoolId = data['schoolId'];
+          fetchedState = data['state'];
+          fetchedSchoolName = data['schoolName'];
+          isPrincipal = false; // Not principal if joining
+        } catch (e) {
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Invalid school code'),
+            SnackBar(
+              content: Text('Error validating school code: $e'),
               backgroundColor: Colors.red,
             ),
           );
           setState(() => _isLoading = false);
           return;
         }
-        
-        schoolId = schoolQuery.docs.first.id;
-        final schoolData = schoolQuery.docs.first.data();
-        fetchedState = schoolData['state'];
-        fetchedSchoolName = schoolData['name'];
-        isPrincipal = false; // Not principal if joining
       }
       // OPTION B: Creating new school (become principal)
       else {
@@ -162,6 +172,8 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
         fetchedState = _selectedState;
         fetchedSchoolName = _schoolNameController.text.trim();
         isPrincipal = true; // First teacher = principal
+        // Generate schoolId now so we can use it in user document
+        schoolId = FirebaseFirestore.instance.collection('schools').doc().id;
       }
 
       // Create Firebase user
@@ -186,6 +198,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
         'avatarUrl': _selectedAvatar,
         'role': 'teacher',
         'state': fetchedState,
+        'schoolId': schoolId, // Important for leaderboards
         'schoolTag': fetchedSchoolName,
         'isPrincipal': isPrincipal,
         'principalOfSchool': null,  // Will be updated after school creation
@@ -203,10 +216,9 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
       });
 
       // If creating new school, create it AFTER user document exists
-      if (isPrincipal) {
+      if (isPrincipal && schoolId != null) {
         final schoolCode = _generateSchoolCode();
-        final schoolRef = FirebaseFirestore.instance.collection('schools').doc();
-        schoolId = schoolRef.id;
+        final schoolRef = FirebaseFirestore.instance.collection('schools').doc(schoolId);
         
         // Update user document with school ID before creating school
         await FirebaseFirestore.instance
@@ -228,17 +240,22 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
           'studentCount': 0,
           'logoUrl': null,
           'description': '',
+          'status': 'active', // Required for school code validation
           'isActive': true,
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });
       } else if (schoolId != null) {
-        // If joining existing school, add to PENDING list (requires principal approval)
+        // If joining existing school, create a join request for principal approval
         await FirebaseFirestore.instance
-            .collection('schools')
-            .doc(schoolId)
-            .update({
-          'pendingTeacherIds': FieldValue.arrayUnion([user.uid]),
+            .collection('teacher_join_requests')
+            .add({
+          'teacherId': user.uid,
+          'teacherName': _nameController.text.trim(),
+          'teacherEmail': user.email,
+          'schoolId': schoolId,
+          'status': 'pending', // pending, approved, rejected
+          'createdAt': Timestamp.now(),
         });
       }
 

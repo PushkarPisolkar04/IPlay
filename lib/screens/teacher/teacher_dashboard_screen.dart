@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../core/constants/app_spacing.dart';
 import '../../core/models/user_model.dart';
 import '../../models/classroom_model.dart';
 import '../../widgets/clean_card.dart';
-import '../profile/profile_screen.dart';
 import 'create_classroom_screen.dart';
 import 'classroom_detail_screen.dart';
 import 'student_progress_screen.dart';
 import 'all_students_screen.dart';
 import 'quiz_performance_screen.dart';
 import 'generate_report_screen.dart';
+import 'teacher_comprehensive_leaderboard_screen.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
@@ -254,10 +252,14 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header with gradient
+              // Header with green gradient
               Container(
                   decoration: const BoxDecoration(
-                    gradient: AppColors.primaryGradient,
+                    gradient: LinearGradient(
+                      colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30),
                     bottomRight: Radius.circular(30),
@@ -346,13 +348,12 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
                           if (result != null) _loadData();
                         })),
                         const SizedBox(width: 12),
-                        Expanded(child: _buildActionButton('Post\nAnnouncement', Icons.campaign, const LinearGradient(colors: [Color(0xFFEC4899), Color(0xFFF97316)]), () async {
+                        Expanded(child: _buildActionButton('View\nAnnouncements', Icons.campaign, const LinearGradient(colors: [Color(0xFFEC4899), Color(0xFFF97316)]), () {
                           if (_totalClassrooms == 0) {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create a classroom first!')));
                             return;
                           }
-                          await Navigator.pushNamed(context, '/create-announcement');
-                          _loadData();
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select a classroom to view announcements')));
                         })),
                         const SizedBox(width: 12),
                         Expanded(child: _buildActionButton('View\nStudents', Icons.people, const LinearGradient(colors: [Color(0xFF10B981), Color(0xFF14B8A6)]), () {
@@ -363,6 +364,53 @@ class _DashboardOverviewState extends State<_DashboardOverview> {
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Go to Classes tab to view students')));
                         })),
                       ],
+                    ),
+                    
+                    const SizedBox(height: 12),
+                    
+                    // Leaderboard Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: _buildActionButton('View\nLeaderboards', Icons.leaderboard, const LinearGradient(colors: [Color(0xFFF59E0B), Color(0xFFEF4444)]), () async {
+                        // Get teacher's data
+                        try {
+                          final user = FirebaseAuth.instance.currentUser;
+                          if (user == null) return;
+                          
+                          final userDoc = await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(user.uid)
+                              .get();
+                          
+                          if (userDoc.exists) {
+                            final userData = userDoc.data()!;
+                            final schoolId = userData['schoolId'];
+                            
+                            // Get teacher's classrooms
+                            final classroomsSnapshot = await FirebaseFirestore.instance
+                                .collection('classrooms')
+                                .where('teacherId', isEqualTo: user.uid)
+                                .get();
+                            
+                            final classroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
+                            
+                            if (schoolId != null) {
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TeacherComprehensiveLeaderboardScreen(
+                                    schoolId: schoolId,
+                                    classroomIds: classroomIds,
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          print('Error navigating to leaderboards: $e');
+                        }
+                      }),
                     ),
               
                     const SizedBox(height: 24),
