@@ -7,6 +7,7 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
+import '../profile/edit_profile_screen.dart';
 
 /// Settings Screen - App settings, privacy, terms, logout
 class SettingsScreen extends StatefulWidget {
@@ -113,11 +114,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           title: _user?.displayName ?? 'User',
                           subtitle: _user?.email ?? '',
                           trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () {
+                          onTap: () async {
                             // Navigate to edit profile
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Edit profile coming soon!')),
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const EditProfileScreen(),
+                              ),
                             );
+                            // Reload user data after editing
+                            _loadUserData();
                           },
                         ),
                         const Divider(height: 1),
@@ -126,11 +132,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           title: 'State',
                           subtitle: _user?.state ?? '',
                           trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () {
-                            // Change state
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Change state coming soon!')),
+                          onTap: () async {
+                            // Change state via edit profile screen
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const EditProfileScreen(),
+                              ),
                             );
+                            // Reload user data after editing
+                            _loadUserData();
                           },
                         ),
                       ],
@@ -463,6 +474,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Show Delete Account Dialog
   void _showDeleteAccountDialog() {
+    final TextEditingController confirmController = TextEditingController();
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -474,23 +487,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Text('Delete Account'),
             ],
           ),
-          content: const Text(
-            'This action is permanent and cannot be undone. All your progress, badges, and certificates will be lost.\n\nAre you absolutely sure?',
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'This action is permanent and cannot be undone. All your progress, badges, and certificates will be lost.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              const Text('Type "DELETE" to confirm:'),
+              const SizedBox(height: 8),
+              TextField(
+                controller: confirmController,
+                decoration: const InputDecoration(
+                  hintText: 'DELETE',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                confirmController.dispose();
+                Navigator.of(context).pop();
+              },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Account deletion coming soon. Please contact support.'),
-                    backgroundColor: AppColors.warning,
-                  ),
-                );
+                if (confirmController.text.trim() == 'DELETE') {
+                  confirmController.dispose();
+                  Navigator.of(context).pop();
+                  _performDeleteAccount();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please type DELETE to confirm'),
+                      backgroundColor: AppColors.warning,
+                    ),
+                  );
+                }
               },
               child: const Text(
                 'Delete',
@@ -501,6 +539,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
+  }
+
+  // Perform Account Deletion
+  Future<void> _performDeleteAccount() async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+
+      // Delete user data from Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .delete();
+
+      // Delete the user's authentication account
+      await currentUser.delete();
+
+      if (!mounted) return;
+      Navigator.of(context).pop(); // Close loading
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/auth',
+        (Route<dynamic> route) => false,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account deleted successfully'),
+          backgroundColor: AppColors.success,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error during account deletion: $e');
+      if (!mounted) return;
+      Navigator.of(context).pop(); // Close loading
+
+      // If error is due to recent sign-in requirement
+      if (e.toString().contains('requires-recent-login')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please sign out and sign in again before deleting your account'),
+            backgroundColor: AppColors.error,
+            duration: Duration(seconds: 4),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Account deletion failed: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
   }
 }
 

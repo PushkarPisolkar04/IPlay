@@ -9,6 +9,7 @@ import '../games/play_screen.dart';
 import '../leaderboard/leaderboard_screen.dart';
 import '../profile/profile_screen.dart';
 import '../teacher/teacher_dashboard_screen.dart';
+import '../principal/principal_dashboard_screen.dart';
 import '../announcements/announcements_screen.dart';
 
 /// Main screen with bottom navigation - Role-based tabs
@@ -109,6 +110,11 @@ class _MainScreenState extends State<MainScreen> {
 
     // If teacher/principal, show their dedicated dashboard
     if (_user != null && _user!.role != 'student') {
+      // Show Principal Dashboard if user is a principal
+      if (_user!.isPrincipal == true) {
+        return const PrincipalDashboardScreen();
+      }
+      // Otherwise show regular Teacher Dashboard
       return const TeacherDashboardScreen();
     }
 

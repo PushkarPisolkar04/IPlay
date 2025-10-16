@@ -175,11 +175,46 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
         throw Exception('Failed to create user');
       }
 
-      // If creating new school, do it now
+      // Create user document FIRST (required for Firestore security rules)
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({
+        'uid': user.uid,
+        'email': user.email,
+        'displayName': _nameController.text.trim(),
+        'avatarUrl': _selectedAvatar,
+        'role': 'teacher',
+        'state': fetchedState,
+        'schoolTag': fetchedSchoolName,
+        'isPrincipal': isPrincipal,
+        'principalOfSchool': null,  // Will be updated after school creation
+        'classroomIds': [],
+        'totalXP': 0,
+        'currentStreak': 0,
+        'lastActiveDate': Timestamp.now(),
+        'badges': [],
+        'progressSummary': {},
+        'pendingClassroomRequests': [],
+        'storageUsedMB': 0.0,
+        'isActive': true,
+        'createdAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+      });
+
+      // If creating new school, create it AFTER user document exists
       if (isPrincipal) {
         final schoolCode = _generateSchoolCode();
         final schoolRef = FirebaseFirestore.instance.collection('schools').doc();
         schoolId = schoolRef.id;
+        
+        // Update user document with school ID before creating school
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'principalOfSchool': schoolId,
+        });
         
         await schoolRef.set({
           'id': schoolId,
@@ -206,33 +241,6 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
           'pendingTeacherIds': FieldValue.arrayUnion([user.uid]),
         });
       }
-
-      // Create user document
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({
-        'uid': user.uid,
-        'email': user.email,
-        'displayName': _nameController.text.trim(),
-        'avatarUrl': _selectedAvatar,
-        'role': 'teacher',
-        'state': fetchedState,
-        'schoolTag': fetchedSchoolName,
-        'isPrincipal': isPrincipal,
-        'principalOfSchool': isPrincipal ? schoolId : null,
-        'classroomIds': [],
-        'totalXP': 0,
-        'currentStreak': 0,
-        'lastActiveDate': Timestamp.now(),
-        'badges': [],
-        'progressSummary': {},
-        'pendingClassroomRequests': [],
-        'storageUsedMB': 0.0,
-        'isActive': true,
-        'createdAt': Timestamp.now(),
-        'updatedAt': Timestamp.now(),
-      });
 
       if (!mounted) return;
 
