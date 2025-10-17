@@ -37,13 +37,13 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
   }
 
   Future<void> _loadUserInfo() async {
-    try {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
+      try {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
           .doc(_currentUserId)
-          .get();
-      
-      if (userDoc.exists) {
+            .get();
+        
+        if (userDoc.exists) {
         final userData = userDoc.data()!;
         final classroomIds = userData['classroomIds'] as List?;
         
@@ -93,11 +93,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
         
         // Load initial data
         _loadDataForTab(0);
-      }
-    } catch (e) {
-      print('Error loading user info: $e');
+        }
+      } catch (e) {
+        print('Error loading user info: $e');
       if (mounted) {
-        setState(() => _isLoading = false);
+      setState(() => _isLoading = false);
       }
     }
   }
@@ -106,12 +106,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     setState(() => _isLoading = true);
     
     final tabName = _availableTabs[index];
-    
+      
     switch (tabName) {
-      case 'Class':
+        case 'Class':
         await _loadClassLeaderboard();
-        break;
-      case 'School':
+          break;
+        case 'School':
         await _loadSchoolLeaderboard();
         break;
       case 'State':
@@ -129,12 +129,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     if (_userClassroomId == null) return;
     
     try {
-      final classroomDoc = await FirebaseFirestore.instance
-          .collection('classrooms')
-          .doc(_userClassroomId)
-          .get();
-      
-      if (classroomDoc.exists) {
+            final classroomDoc = await FirebaseFirestore.instance
+                .collection('classrooms')
+                .doc(_userClassroomId)
+                .get();
+            
+            if (classroomDoc.exists) {
         final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
         
         _classStudents = [];
@@ -260,7 +260,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     _tabController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     if (_availableTabs.isEmpty) {
@@ -289,33 +289,33 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
               ),
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               child: Column(
-                children: [
+                  children: [
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                        children: [
                       Icon(Icons.emoji_events, color: Colors.white, size: 28),
                       SizedBox(width: 8),
-                      Text(
+                          Text(
                         'Leaderboard',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                              color: Colors.white,
+                            ),
+                          ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                          Text(
                     'Compete with others and climb the ranks!',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withOpacity(0.9),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
             
             // Tabs
             Container(
@@ -335,7 +335,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             ),
             
             // Tab content
-            Expanded(
+                        Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : TabBarView(
@@ -396,7 +396,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
+          decoration: BoxDecoration(
         gradient: isCurrentUser
             ? const LinearGradient(
                 colors: [Color(0xFF10B981), Color(0xFF34D399)],
@@ -424,49 +424,49 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             onTap: () {},
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  // Rank
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
+      child: Row(
+        children: [
+          // Rank
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
                       color: rankColor ?? (isCurrentUser ? Colors.white.withOpacity(0.3) : Colors.grey[100]),
                       shape: BoxShape.circle,
-                    ),
-                    child: Center(
+            ),
+            child: Center(
                       child: medalIcon != null
                           ? Icon(medalIcon, color: Colors.white, size: 20)
                           : Text(
-                              '$rank',
+                '$rank',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: isCurrentUser ? Colors.white : Colors.black87,
-                              ),
-                            ),
-                    ),
-                  ),
+                ),
+              ),
+            ),
+          ),
                   const SizedBox(width: 16),
-                  // Avatar
-                  AvatarWidget(
+          // Avatar
+          AvatarWidget(
                     imageUrl: student['avatarUrl'],
                     initials: _getInitials(student['displayName']),
                     size: 48,
-                  ),
-                  const SizedBox(width: 12),
+          ),
+          const SizedBox(width: 12),
                   // Name and Level
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                         Row(
                           children: [
                             Flexible(
                               child: Text(
                                 student['displayName'] ?? 'Unknown',
                                 style: TextStyle(
-                                  fontSize: 16,
+                    fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: isCurrentUser ? Colors.white : Colors.black87,
                                 ),
@@ -494,17 +494,17 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(
+              Text(
                           'Level ${student['level']} • ${student['totalXP']} XP',
                           style: TextStyle(
                             fontSize: 13,
                             color: isCurrentUser ? Colors.white.withOpacity(0.9) : Colors.grey[600],
-                          ),
-                        ),
-                      ],
+                ),
+              ),
+            ],
                     ),
-                  ),
-                ],
+          ),
+        ],
               ),
             ),
           ),

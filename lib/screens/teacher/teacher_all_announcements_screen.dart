@@ -53,9 +53,9 @@ class _TeacherAllAnnouncementsScreenState extends State<TeacherAllAnnouncementsS
 
       _announcements = [];
 
-      // Load school-wide announcements if teacher is in a school
+      // Load school-wide announcements (from principal) if teacher is in a school
       if (_schoolId != null && _schoolId!.isNotEmpty) {
-        print('🔍 Fetching school-wide announcements...');
+        print('🔍 Fetching school-wide announcements from principal...');
         final schoolQuery = await FirebaseFirestore.instance
             .collection('announcements')
             .where('schoolId', isEqualTo: _schoolId)
@@ -89,7 +89,10 @@ class _TeacherAllAnnouncementsScreenState extends State<TeacherAllAnnouncementsS
         final classroomName = classroomDoc.data()?['name'] ?? 'Unknown Class';
 
         for (var doc in classroomQuery.docs) {
-          await _addAnnouncementWithAuthor(doc, classroomName);
+          // Avoid duplicates
+          if (!_announcements.any((a) => a['id'] == doc.id)) {
+            await _addAnnouncementWithAuthor(doc, classroomName);
+          }
         }
       }
 
@@ -316,79 +319,88 @@ class _TeacherAllAnnouncementsScreenState extends State<TeacherAllAnnouncementsS
                                 margin: const EdgeInsets.only(bottom: 16),
                                 child: CleanCard(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(16),
+                                    padding: const EdgeInsets.all(12),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // Header
-                                        Row(
+                                        // Header - Responsive layout
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                color: isSchoolWide
-                                                    ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
-                                                    : const Color(0xFFEF4444).withValues(alpha: 0.1),
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: Icon(
-                                                Icons.campaign,
-                                                color: isSchoolWide
-                                                    ? const Color(0xFF8B5CF6)
-                                                    : const Color(0xFFEF4444),
-                                                size: 24,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    announcement['title'] ?? 'Untitled',
-                                                    style: const TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    color: isSchoolWide
+                                                        ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+                                                        : const Color(0xFFEF4444).withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(8),
                                                   ),
-                                                  const SizedBox(height: 4),
-                                                  Row(
+                                                  child: Icon(
+                                                    Icons.campaign,
+                                                    color: isSchoolWide
+                                                        ? const Color(0xFF8B5CF6)
+                                                        : const Color(0xFFEF4444),
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Icon(
-                                                        announcement['authorRole'] == 'principal'
-                                                            ? Icons.admin_panel_settings
-                                                            : Icons.person,
-                                                        size: 14,
-                                                        color: Colors.grey,
+                                                      Text(
+                                                        announcement['title'] ?? 'Untitled',
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
                                                       ),
-                                                      const SizedBox(width: 4),
-                                                      Expanded(
-                                                        child: Text(
-                                                          '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
+                                                      const SizedBox(height: 4),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            announcement['authorRole'] == 'principal'
+                                                                ? Icons.admin_panel_settings
+                                                                : Icons.person,
+                                                            size: 12,
                                                             color: Colors.grey,
                                                           ),
-                                                          overflow: TextOverflow.ellipsis,
-                                                        ),
+                                                          const SizedBox(width: 4),
+                                                          Expanded(
+                                                            child: Text(
+                                                              '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
+                                                              style: const TextStyle(
+                                                                fontSize: 11,
+                                                                color: Colors.grey,
+                                                              ),
+                                                              maxLines: 1,
+                                                              overflow: TextOverflow.ellipsis,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
+                                            const SizedBox(height: 8),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                               decoration: BoxDecoration(
                                                 color: isSchoolWide
                                                     ? Colors.amber.withOpacity(0.2)
                                                     : const Color(0xFFEF4444).withOpacity(0.1),
-                                                borderRadius: BorderRadius.circular(8),
+                                                borderRadius: BorderRadius.circular(6),
                                               ),
                                               child: Text(
                                                 scope,
                                                 style: TextStyle(
-                                                  fontSize: 11,
+                                                  fontSize: 10,
                                                   fontWeight: FontWeight.bold,
                                                   color: isSchoolWide ? Colors.orange : const Color(0xFFEF4444),
                                                 ),
@@ -396,15 +408,16 @@ class _TeacherAllAnnouncementsScreenState extends State<TeacherAllAnnouncementsS
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 16),
+                                        const SizedBox(height: 12),
 
-                                        // Message
+                                        // Message - with proper wrapping
                                         Text(
                                           announcement['message'] ?? '',
                                           style: const TextStyle(
-                                            fontSize: 15,
+                                            fontSize: 14,
                                             height: 1.5,
                                           ),
+                                          softWrap: true,
                                         ),
 
                                         // Actions (only for teacher's own announcements)

@@ -138,8 +138,34 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
           'lastAttemptAt': Timestamp.now(),
           'completedAt': Timestamp.now(),
         }, SetOptions(merge: true));
+        
+        // Update user's gameProgress field
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        
+        final currentGameProgress = userDoc.data()?['gameProgress'] as Map<String, dynamic>? ?? {};
+        final currentScores = currentGameProgress['scores'] as Map<String, dynamic>? ?? {};
+        final currentBestScore = currentScores['quiz_master'] as int? ?? 0;
+        
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .set({
+          'gameProgress': {
+            'totalXP': FieldValue.increment(xpEarned),
+            'gamesPlayed': FieldValue.increment(1),
+            'scores': {
+              'quiz_master': _score > currentBestScore ? _score : currentBestScore,
+            },
+            'lastPlayedAt': Timestamp.now(),
+          },
+        }, SetOptions(merge: true));
+        
+        print('✅ Game score saved: $_score, XP earned: $xpEarned');
       } catch (e) {
-        print('Error saving game score: $e');
+        print('❌ Error saving game score: $e');
       }
     }
   }

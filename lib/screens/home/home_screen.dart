@@ -11,6 +11,7 @@ import '../../widgets/progress_bar.dart';
 import '../../widgets/primary_button.dart';
 import '../announcements/announcements_screen.dart';
 import '../student/student_progress_screen.dart';
+import '../learn/learn_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
 class HomeScreen extends StatefulWidget {
@@ -165,10 +166,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppColors.primary,
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.screenHorizontal,
-                        ),
-                        child: Column(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.screenHorizontal,
+                      ),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
@@ -448,8 +449,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 40,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      // Navigate to learn tab (index 1)
-                                      DefaultTabController.of(context).animateTo(1);
+                                      // Navigate to Learn Screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const LearnScreen(),
+                                        ),
+                                      );
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
@@ -596,7 +602,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: const Icon(
-                                          Icons.emoji_events,
+                                        Icons.emoji_events,
                                           size: 28,
                                           color: Color(0xFFF59E0B),
                                         ),
@@ -644,7 +650,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: const Icon(
-                                          Icons.workspace_premium,
+                                        Icons.workspace_premium,
                                           size: 28,
                                           color: Color(0xFF8B5CF6),
                                         ),
@@ -756,7 +762,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
-              ),
+                    ),
             ),
           ],
         ),

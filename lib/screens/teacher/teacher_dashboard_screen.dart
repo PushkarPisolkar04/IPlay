@@ -433,7 +433,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        childAspectRatio: 1.15,
+                        childAspectRatio: 0.85,
                         children: [
                           _buildStatCard(
                             icon: Icons.class_,
@@ -921,7 +921,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                   Text(
                   value,
                   style: const TextStyle(
-                    fontSize: 32,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1F2937),
                   ),
@@ -1345,7 +1345,7 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      childAspectRatio: 1.5,
+                      childAspectRatio: 1.15,
                       children: [
                         _buildAnalyticsCard(
                           'Total Students',

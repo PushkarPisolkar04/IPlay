@@ -54,6 +54,28 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
           if (classroomIds.isNotEmpty) {
             _classroomId = classroomIds.first;
             print('🏫 Selected classroomId: $_classroomId');
+            
+            // If student doesn't have schoolId in profile, fetch it from classroom
+            if (_schoolId == null || _schoolId!.isEmpty) {
+              print('⚠️ Student missing schoolId, fetching from classroom...');
+              final classroomDoc = await FirebaseFirestore.instance
+                  .collection('classrooms')
+                  .doc(_classroomId)
+                  .get();
+              if (classroomDoc.exists) {
+                _schoolId = classroomDoc.data()?['schoolId'];
+                print('✅ Fetched schoolId from classroom: $_schoolId');
+                
+                // Update user document with schoolId for future use
+                if (_schoolId != null && _schoolId!.isNotEmpty) {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(_currentUserId)
+                      .update({'schoolId': _schoolId});
+                  print('✅ Updated user profile with schoolId');
+                }
+              }
+            }
           }
         }
       }
@@ -61,9 +83,9 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
       _announcements = [];
 
       // Load announcements
-      // Get school-wide announcements if user is in a school
+      // STUDENTS: Get school-wide announcements (from principal) if user is in a school
       if (_schoolId != null && _schoolId!.isNotEmpty) {
-        print('🔍 Fetching school-wide announcements...');
+        print('🔍 Fetching school-wide announcements from principal...');
         final schoolQuery = await FirebaseFirestore.instance
             .collection('announcements')
             .where('schoolId', isEqualTo: _schoolId)
@@ -71,23 +93,23 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
             .orderBy('createdAt', descending: true)
             .get();
         
-        print('📢 Found ${schoolQuery.docs.length} school-wide announcements');
+        print('📢 Found ${schoolQuery.docs.length} school-wide announcements (from principal)');
         
         for (var doc in schoolQuery.docs) {
           await _addAnnouncementWithAuthor(doc);
         }
       }
       
-      // Get classroom announcements if applicable
+      // STUDENTS: Get classroom announcements (from teacher) if applicable
       if (_classroomId != null && _classroomId!.isNotEmpty) {
-        print('🔍 Fetching classroom announcements...');
+        print('🔍 Fetching classroom announcements from teacher...');
         final classroomQuery = await FirebaseFirestore.instance
             .collection('announcements')
             .where('classroomId', isEqualTo: _classroomId)
             .orderBy('createdAt', descending: true)
             .get();
         
-        print('📢 Found ${classroomQuery.docs.length} classroom announcements');
+        print('📢 Found ${classroomQuery.docs.length} classroom announcements (from teacher)');
         
         for (var doc in classroomQuery.docs) {
           // Avoid duplicates
@@ -343,99 +365,111 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           child: CleanCard(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Header
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.primary.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: const Icon(
-                                          Icons.campaign,
-                                          color: AppColors.primary,
-                                          size: 24,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Header - Responsive layout
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
                                           children: [
-                                            Text(
-                                              announcement['title'] ?? 'Untitled',
-                                              style: const TextStyle(
-                                                fontSize: 17,
-                                                fontWeight: FontWeight.bold,
+                                            Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primary.withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: const Icon(
+                                                Icons.campaign,
+                                                color: AppColors.primary,
+                                                size: 20,
                                               ),
                                             ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  announcement['authorRole'] == 'principal'
-                                                      ? Icons.admin_panel_settings
-                                                      : Icons.person,
-                                                  size: 14,
-                                                  color: Colors.grey,
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Expanded(
-                                                  child: Text(
-                                                    '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    announcement['title'] ?? 'Untitled',
                                                     style: const TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.grey,
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
+                                                    maxLines: 2,
                                                     overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        announcement['authorRole'] == 'principal'
+                                                            ? Icons.admin_panel_settings
+                                                            : Icons.person,
+                                                        size: 12,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Expanded(
+                                                        child: Text(
+                                                          '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
+                                                          style: const TextStyle(
+                                                            fontSize: 11,
+                                                            color: Colors.grey,
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        if (isSchoolWide) ...[
+                                          const SizedBox(height: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.amber.withOpacity(0.2),
+                                              borderRadius: BorderRadius.circular(6),
+                                              border: Border.all(color: Colors.amber.withOpacity(0.5)),
+                                            ),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(Icons.school, size: 12, color: Colors.orange),
+                                                SizedBox(width: 4),
+                                                Text(
+                                                  'School-Wide',
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.orange,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      if (isSchoolWide)
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.amber.withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(color: Colors.amber.withOpacity(0.5)),
                                           ),
-                                          child: const Row(
-                                            children: [
-                                              Icon(Icons.school, size: 14, color: Colors.orange),
-                                              SizedBox(width: 4),
-                                              Text(
-                                                'School',
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.orange,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16),
-                                  
-                                  // Message
-                                  Text(
-                                    announcement['message'] ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      height: 1.5,
+                                        ],
+                                      ],
                                     ),
-                                  ),
+                                    const SizedBox(height: 12),
+                                    
+                                    // Message - with proper wrapping
+                                    Text(
+                                      announcement['message'] ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        height: 1.5,
+                                      ),
+                                      softWrap: true,
+                                    ),
                                   
                                   // Actions (only for teachers on their own announcements)
                                   if (canEdit) ...[

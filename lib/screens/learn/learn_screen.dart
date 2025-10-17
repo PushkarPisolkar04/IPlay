@@ -9,6 +9,7 @@ import '../../core/models/realm_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/progress_bar.dart';
 import '../../widgets/primary_button.dart';
+import 'realm_detail_screen.dart';
 
 /// Learn Screen - All realms with modern UI and gradients
 class LearnScreen extends StatefulWidget {
@@ -143,7 +144,7 @@ class _LearnScreenState extends State<LearnScreen> {
           slivers: [
             // Modern gradient app bar
             SliverAppBar(
-              expandedHeight: 140,
+              expandedHeight: 110,
               floating: false,
               pinned: true,
               backgroundColor: const Color(0xFF3B82F6),
@@ -185,7 +186,7 @@ class _LearnScreenState extends State<LearnScreen> {
             
             // Content
             SliverPadding(
-              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.screenHorizontal, AppSpacing.md, AppSpacing.screenHorizontal, AppSpacing.screenHorizontal),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   if (_isLoading)
@@ -275,10 +276,11 @@ class _LearnScreenState extends State<LearnScreen> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(
+                                    Navigator.push(
                                       context,
-                                      '/realm',
-                                      arguments: realm,
+                                      MaterialPageRoute(
+                                        builder: (context) => RealmDetailScreen(realm: realm.toMap()),
+                                      ),
                                     );
                                   },
                                   child: Padding(

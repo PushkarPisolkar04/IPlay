@@ -136,6 +136,15 @@
       "collectionGroup": "announcements",
       "queryScope": "COLLECTION",
       "fields": [
+        {"fieldPath": "isSchoolWide", "order": "ASCENDING"},
+        {"fieldPath": "schoolId", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "announcements",
+      "queryScope": "COLLECTION",
+      "fields": [
         {"fieldPath": "classroomId", "order": "ASCENDING"},
         {"fieldPath": "createdAt", "order": "DESCENDING"}
       ]

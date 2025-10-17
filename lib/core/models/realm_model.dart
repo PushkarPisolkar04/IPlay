@@ -39,7 +39,9 @@ class RealmModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'realmId': id, // For compatibility with RealmDetailScreen
       'name': name,
+      'title': name, // For compatibility with RealmDetailScreen
       'description': description,
       'iconEmoji': iconEmoji,
       'color': color,
