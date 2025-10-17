@@ -105,6 +105,10 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   Future<void> _addAnnouncementWithAuthor(QueryDocumentSnapshot doc) async {
     final data = doc.data() as Map<String, dynamic>;
     
+    print('Loading announcement: ${doc.id}');
+    print('Title: ${data['title']}');
+    print('Message: ${data['message']}');
+    
     // Get author name
     String authorName = 'Unknown';
     String authorRole = 'User';

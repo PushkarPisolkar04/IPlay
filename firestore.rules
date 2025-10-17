@@ -12,8 +12,10 @@ service cloud.firestore {
     }
     
     function isTeacher() {
-      return isSignedIn() && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPrincipal == true
+      );
     }
     
     function isPrincipal() {
@@ -37,9 +39,8 @@ service cloud.firestore {
     // Classrooms Collection
     match /classrooms/{classroomId} {
       allow read: if isSignedIn();
-      // Allow creation if user is teacher/principal AND they're setting themselves as the teacher
+      // Allow creation if user is authenticated and setting themselves as teacher
       allow create: if isSignedIn() && 
-        (isTeacher() || isPrincipal()) && 
         request.resource.data.teacherId == request.auth.uid;
       allow update: if isSignedIn() && (
         resource.data.teacherId == request.auth.uid ||
@@ -131,8 +132,17 @@ service cloud.firestore {
       // Allow read only for authenticated users
       allow read: if request.auth != null;
       allow create: if request.auth != null;
-      allow update: if isPrincipal() && 
-        get(/databases/$(database)/documents/schools/$(schoolId)).data.principalId == request.auth.uid;
+      // Allow update if:
+      // - User is the principal of this school, OR
+      // - User is a teacher who is already in this school's teacherIds (for adding classrooms)
+      // - User is a teacher who is being added to teacherIds (for joining school)
+      allow update: if isSignedIn() && (
+        (isPrincipal() && get(/databases/$(database)/documents/schools/$(schoolId)).data.principalId == request.auth.uid) ||
+        (isTeacher() && (
+          request.auth.uid in resource.data.teacherIds ||
+          request.auth.uid in request.resource.data.teacherIds
+        ))
+      );
       allow delete: if false; // Schools cannot be deleted, only deactivated
     }
     

@@ -45,17 +45,29 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
+        print('Loading user data for: ${currentUser.uid}');
+        
         final doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)
             .get();
         
         if (doc.exists && mounted) {
+          final userData = doc.data()!;
+          print('User data loaded: ${userData['displayName']}');
+          print('Total XP: ${userData['totalXP']}');
+          print('Current Streak: ${userData['currentStreak']}');
+          print('Badges: ${userData['badges']?.length ?? 0}');
+          
           setState(() {
-            _user = UserModel.fromMap(doc.data()!);
+            _user = UserModel.fromMap(userData);
             _isLoading = false;
           });
+        } else {
+          print('User document does not exist!');
         }
+      } else {
+        print('No current user!');
       }
     } catch (e) {
       print('Error loading user data: $e');

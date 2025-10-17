@@ -1,16 +1,84 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/primary_button.dart';
 
-/// Play/Games Screen - Hub for all mini games
-class PlayScreen extends StatelessWidget {
+/// Play/Games Screen - Hub for all mini games (REAL DATA from Firebase)
+class PlayScreen extends StatefulWidget {
   const PlayScreen({Key? key}) : super(key: key);
 
   @override
+  State<PlayScreen> createState() => _PlayScreenState();
+}
+
+class _PlayScreenState extends State<PlayScreen> {
+  bool _isLoading = true;
+  int _totalGameXP = 0;
+  int _gamesPlayed = 0;
+  Map<String, int> _gameScores = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadGameData();
+  }
+
+  Future<void> _loadGameData() async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      print('Loading game data for user: ${currentUser.uid}');
+
+      // Load user document to get game progress
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final userData = userDoc.data()!;
+        
+        // Get game scores from user data (if stored there)
+        final gameProgress = userData['gameProgress'] as Map<String, dynamic>?;
+        
+        if (gameProgress != null) {
+          _totalGameXP = (gameProgress['totalXP'] as num?)?.toInt() ?? 0;
+          _gamesPlayed = (gameProgress['gamesPlayed'] as num?)?.toInt() ?? 0;
+          
+          final scores = gameProgress['scores'] as Map<String, dynamic>?;
+          if (scores != null) {
+            _gameScores = scores.map((key, value) => MapEntry(key, (value as num).toInt()));
+          }
+        }
+
+        print('Total Game XP: $_totalGameXP');
+        print('Games Played: $_gamesPlayed');
+        print('Game Scores: $_gameScores');
+      }
+
+      setState(() => _isLoading = false);
+    } catch (e) {
+      print('Error loading game data: $e');
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -23,7 +91,7 @@ class PlayScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Stats card
+            // Stats card - REAL DATA
             CleanCard(
               color: AppColors.primary.withOpacity(0.05),
               child: Row(
@@ -39,18 +107,27 @@ class PlayScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Your Best Scores',
+                          _gamesPlayed > 0 ? 'Your Game Stats' : 'No Games Played Yet',
                           style: AppTextStyles.cardTitle,
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          '3,450 Total Game XP',
-                          style: AppTextStyles.bodyMedium,
-                        ),
-                        Text(
-                          '7 Games Played',
-                          style: AppTextStyles.bodySmall,
-                        ),
+                        if (_gamesPlayed > 0) ...[
+                          Text(
+                            '$_totalGameXP Total Game XP',
+                            style: AppTextStyles.bodyMedium,
+                          ),
+                          Text(
+                            '$_gamesPlayed Games Played',
+                            style: AppTextStyles.bodySmall,
+                          ),
+                        ] else ...[
+                          Text(
+                            'Play games to earn XP and unlock achievements!',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -61,7 +138,7 @@ class PlayScreen extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             
             Text(
-              'All Games (7)',
+              'All Games',
               style: AppTextStyles.sectionHeader,
             ),
             
@@ -80,49 +157,49 @@ class PlayScreen extends StatelessWidget {
                   title: 'IPR Quiz\nMaster',
                   icon: Icons.quiz,
                   color: AppColors.cardPurple,
-                  bestScore: 850,
+                  bestScore: _gameScores['ipr_quiz_master'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'Memory\nMatch',
                   icon: Icons.style,
                   color: AppColors.cardOrange,
-                  bestScore: 120,
+                  bestScore: _gameScores['memory_match'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'Spot the\nOriginal',
                   icon: Icons.search,
                   color: AppColors.cardBlue,
-                  bestScore: 600,
+                  bestScore: _gameScores['spot_original'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'IP\nDefender',
                   icon: Icons.shield,
                   color: AppColors.cardGreen,
-                  bestScore: 750,
+                  bestScore: _gameScores['ip_defender'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'Word\nPuzzle',
                   icon: Icons.abc,
                   color: AppColors.cardPink,
-                  bestScore: 420,
+                  bestScore: _gameScores['word_puzzle'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'True or\nFalse',
                   icon: Icons.check_circle,
                   color: AppColors.cardTeal,
-                  bestScore: 680,
+                  bestScore: _gameScores['true_false'],
                   onTap: () {},
                 ),
                 _GameCard(
                   title: 'Timeline\nChallenge',
                   icon: Icons.timeline,
                   color: AppColors.cardIndigo,
-                  bestScore: 520,
+                  bestScore: _gameScores['timeline_challenge'],
                   onTap: () {},
                 ),
               ],
@@ -136,12 +213,12 @@ class PlayScreen extends StatelessWidget {
   }
 }
 
-/// Game card
+/// Game card - Shows REAL score or "Not Played"
 class _GameCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
-  final int bestScore;
+  final int? bestScore;  // Nullable - null means not played
   final VoidCallback onTap;
   
   const _GameCard({
@@ -149,7 +226,7 @@ class _GameCard extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.color,
-    required this.bestScore,
+    this.bestScore,
     required this.onTap,
   }) : super(key: key);
   
@@ -208,7 +285,7 @@ class _GameCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              'Best: $bestScore',
+              bestScore != null ? 'Best: $bestScore' : 'Not Played',
               style: AppTextStyles.caption.copyWith(
                 color: color,
                 fontWeight: FontWeight.w600,

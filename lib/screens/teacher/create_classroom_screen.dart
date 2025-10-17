@@ -236,7 +236,12 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         );
       }
       
+      print('Creating classroom with data: $classroomData');
+      print('User UID: ${user.uid}');
+      
       await batch.commit();
+
+      print('Classroom created successfully!');
 
       if (!mounted) return;
 
@@ -299,12 +304,16 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         ),
       );
     } catch (e) {
+      print('Error creating classroom: $e');
+      print('Error details: ${e.toString()}');
+      
       if (!mounted) return;
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
         ),
       );
       
