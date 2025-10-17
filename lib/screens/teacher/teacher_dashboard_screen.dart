@@ -10,11 +10,10 @@ import 'teacher_comprehensive_leaderboard_screen.dart';
 import 'create_classroom_screen.dart';
 import 'classroom_detail_screen.dart';
 import 'all_students_screen.dart';
-import '../principal/school_announcements_screen.dart';
 import 'student_progress_screen.dart';
 import 'quiz_performance_screen.dart';
 import 'generate_report_screen.dart';
-import 'create_announcement_screen.dart';
+import 'teacher_all_announcements_screen.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
@@ -434,7 +433,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12,
                         mainAxisSpacing: 12,
-                        childAspectRatio: 1.0,
+                        childAspectRatio: 1.15,
                         children: [
                           _buildStatCard(
                             icon: Icons.class_,
@@ -442,10 +441,6 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             value: _totalClassrooms.toString(),
                             color: const Color(0xFFEF4444),
                             subtitle: 'Active classrooms',
-                            onTap: () {
-                              // Switch to classrooms tab (index 1)
-                              DefaultTabController.of(context).animateTo(1);
-                            },
                           ),
                           _buildStatCard(
                             icon: Icons.people,
@@ -539,67 +534,13 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                       ),
                       const SizedBox(height: 10),
 
-                      // View Announcements
-                      if (_schoolData != null)
-                        CleanCard(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolData!['id']),
-                              ),
-                            );
-                          },
-      child: Row(
-        children: [
-          Container(
-                                padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(10),
-            ),
-                                child: const Icon(Icons.campaign, color: Color(0xFF8B5CF6), size: 20),
-          ),
-                              const SizedBox(width: 12),
-                              const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-              children: [
-                                    Text(
-                                      'View School Announcements',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      'Read school updates',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-              ],
-            ),
-          ),
-                              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                            ],
-                          ),
-                        ),
-                      if (_schoolData != null) const SizedBox(height: 10),
-                      
-                      // Create Classroom Announcement
+                      // View All Announcements
                       CleanCard(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const CreateAnnouncementScreen(isSchoolWide: false),
+                              builder: (context) => const TeacherAllAnnouncementsScreen(),
                             ),
                           );
                         },
@@ -608,10 +549,10 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(Icons.add_comment, color: Color(0xFFF59E0B), size: 20),
+                              child: const Icon(Icons.campaign, color: Color(0xFF8B5CF6), size: 20),
                             ),
                             const SizedBox(width: 12),
                             const Expanded(
@@ -620,7 +561,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Create Announcement',
+                                    'Announcements',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
@@ -629,7 +570,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Post to your classroom',
+                                    'View & create announcements',
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: Colors.grey,

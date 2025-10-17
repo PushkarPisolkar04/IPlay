@@ -55,7 +55,9 @@ class _TeacherComprehensiveLeaderboardScreenState extends State<TeacherComprehen
   }
 
   Future<void> _loadDataForTab(int index) async {
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
     
     switch (index) {
       case 0:
@@ -72,7 +74,9 @@ class _TeacherComprehensiveLeaderboardScreenState extends State<TeacherComprehen
         break;
     }
     
-    setState(() => _isLoading = false);
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _loadSchoolLeaderboard() async {
@@ -523,12 +527,16 @@ class _TeacherComprehensiveLeaderboardScreenState extends State<TeacherComprehen
                     );
                   }).toList(),
                   onChanged: (value) async {
-                    setState(() {
-                      _selectedClassroomId = value;
-                      _isLoading = true;
-                    });
+                    if (mounted) {
+                      setState(() {
+                        _selectedClassroomId = value;
+                        _isLoading = true;
+                      });
+                    }
                     await _loadClassroomStudents();
-                    setState(() => _isLoading = false);
+                    if (mounted) {
+                      setState(() => _isLoading = false);
+                    }
                   },
                 ),
               ),
