@@ -5,7 +5,7 @@ class ClassroomModel {
   final String name;
   final String teacherId;
   final String teacherName;
-  final String classCode;
+  final String joinCode;
   final List<String> studentIds;
   final List<String> pendingStudentIds;
   final String? school;
@@ -20,7 +20,7 @@ class ClassroomModel {
     required this.name,
     required this.teacherId,
     required this.teacherName,
-    required this.classCode,
+    required this.joinCode,
     this.studentIds = const [],
     this.pendingStudentIds = const [],
     this.school,
@@ -37,7 +37,7 @@ class ClassroomModel {
       'name': name,
       'teacherId': teacherId,
       'teacherName': teacherName,
-      'classCode': classCode,
+      'joinCode': joinCode,
       'studentIds': studentIds,
       'pendingStudentIds': pendingStudentIds,
       'school': school,
@@ -55,7 +55,7 @@ class ClassroomModel {
       name: map['name'] ?? '',
       teacherId: map['teacherId'] ?? '',
       teacherName: map['teacherName'] ?? '',
-      classCode: map['classCode'] ?? '',
+      joinCode: map['joinCode'] ?? map['classCode'] ?? '',  // Support both for backwards compatibility
       studentIds: List<String>.from(map['studentIds'] ?? []),
       pendingStudentIds: List<String>.from(map['pendingStudentIds'] ?? []),
       school: map['school'],
@@ -72,7 +72,7 @@ class ClassroomModel {
     String? name,
     String? teacherId,
     String? teacherName,
-    String? classCode,
+    String? joinCode,
     List<String>? studentIds,
     List<String>? pendingStudentIds,
     String? school,
@@ -87,7 +87,7 @@ class ClassroomModel {
       name: name ?? this.name,
       teacherId: teacherId ?? this.teacherId,
       teacherName: teacherName ?? this.teacherName,
-      classCode: classCode ?? this.classCode,
+      joinCode: joinCode ?? this.joinCode,
       studentIds: studentIds ?? this.studentIds,
       pendingStudentIds: pendingStudentIds ?? this.pendingStudentIds,
       school: school ?? this.school,

@@ -111,7 +111,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
         // Find classroom by code
         final classroomQuery = await FirebaseFirestore.instance
             .collection('classrooms')
-            .where('classroomCode', isEqualTo: code)
+            .where('joinCode', isEqualTo: code)
             .limit(1)
             .get();
         

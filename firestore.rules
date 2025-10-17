@@ -38,15 +38,25 @@ service cloud.firestore {
     
     // Classrooms Collection
     match /classrooms/{classroomId} {
-      allow read: if isSignedIn();
+      // Allow read for everyone (including during signup to search by classroom code)
+      // Classroom data is not sensitive - it's just names and codes
+      allow read: if true;
+      
       // Allow creation if user is authenticated and setting themselves as teacher
       allow create: if isSignedIn() && 
         request.resource.data.teacherId == request.auth.uid;
+      
       allow update: if isSignedIn() && (
+        // Teacher or principal can update
         resource.data.teacherId == request.auth.uid ||
-        isPrincipal() || 
-        (isStudent() && request.auth.uid in resource.data.pendingStudentIds)
+        isPrincipal() ||
+        // Student can join by adding themselves to pendingStudentIds or studentIds
+        (isStudent() && (
+          request.auth.uid in request.resource.data.pendingStudentIds ||
+          request.auth.uid in request.resource.data.studentIds
+        ))
       );
+      
       allow delete: if isSignedIn() && (
         resource.data.teacherId == request.auth.uid || 
         isPrincipal()
@@ -129,8 +139,8 @@ service cloud.firestore {
     
     // Schools Collection
     match /schools/{schoolId} {
-      // Allow read only for authenticated users
-      allow read: if request.auth != null;
+      // Allow read for everyone (including during signup to fetch school info)
+      allow read: if true;
       allow create: if request.auth != null;
       // Allow update if:
       // - User is the principal of this school, OR

@@ -62,17 +62,19 @@ class _MainScreenState extends State<MainScreen> {
       return const [
         HomeScreen(),
         LearnScreen(),
+        AnnouncementsScreen(canEdit: false),
         PlayScreen(),
         LeaderboardScreen(),
         ProfileScreen(),
       ];
     }
 
-    // STUDENT: Home, Learn, Play, Leaderboard, Profile
+    // STUDENT: Home, Learn, Announcements, Play, Leaderboard, Profile
     if (_user!.role == 'student') {
       return const [
         HomeScreen(),
         LearnScreen(),
+        AnnouncementsScreen(canEdit: false), // Students can only view
         PlayScreen(),
         LeaderboardScreen(),
         ProfileScreen(),

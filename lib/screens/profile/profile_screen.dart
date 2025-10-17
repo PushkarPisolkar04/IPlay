@@ -22,6 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ContentService _contentService = ContentService();
   UserModel? _user;
   Map<String, dynamic> _progressSummary = {};
+  Map<String, dynamic>? _classroomInfo;
+  Map<String, dynamic>? _schoolInfo;
   bool _isLoading = true;
 
   @override
@@ -40,10 +42,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .get();
         
         if (doc.exists) {
+          final userData = doc.data()!;
           setState(() {
-            _user = UserModel.fromMap(doc.data()!);
-            _progressSummary = doc.data()?['progressSummary'] ?? {};
+            _user = UserModel.fromMap(userData);
+            _progressSummary = userData['progressSummary'] ?? {};
           });
+          
+          // Load classroom and school info
+          await _loadClassroomInfo(userData);
         }
       }
     } catch (e) {
@@ -52,6 +58,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadClassroomInfo(Map<String, dynamic> userData) async {
+    try {
+      final classroomIds = userData['classroomIds'] as List?;
+      if (classroomIds != null && classroomIds.isNotEmpty) {
+        final classroomId = classroomIds.first;
+        
+        final classroomDoc = await FirebaseFirestore.instance
+            .collection('classrooms')
+            .doc(classroomId)
+            .get();
+        
+        if (classroomDoc.exists) {
+          _classroomInfo = classroomDoc.data()!;
+          
+          // Load school info if classroom has schoolId
+          final schoolId = _classroomInfo!['schoolId'];
+          if (schoolId != null) {
+            final schoolDoc = await FirebaseFirestore.instance
+                .collection('schools')
+                .doc(schoolId)
+                .get();
+            
+            if (schoolDoc.exists) {
+              _schoolInfo = schoolDoc.data()!;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading classroom info: $e');
     }
   }
 
@@ -163,6 +202,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             
             const SizedBox(height: AppSpacing.lg),
+            
+            // Classroom & School Info Card
+            if (_classroomInfo != null) ...[
+              CleanCard(
+                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.school,
+                            color: Color(0xFF8B5CF6),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Classroom',
+                                style: AppTextStyles.caption.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                              Text(
+                                _classroomInfo!['name'] ?? '-',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_schoolInfo != null) ...[
+                      const SizedBox(height: 12),
+                      const Divider(),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF10B981).withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.business,
+                              color: Color(0xFF10B981),
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'School',
+                                  style: AppTextStyles.caption.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                                Text(
+                                  _schoolInfo!['name'] ?? '-',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
             
             // Stats cards row
             Row(

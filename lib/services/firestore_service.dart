@@ -57,12 +57,12 @@ class FirestoreService {
   }
 
   // Join classroom with code
-  Future<ClassroomModel?> joinClassroom(String classCode, String studentId) async {
+  Future<ClassroomModel?> joinClassroom(String joinCode, String studentId) async {
     try {
       // Find classroom with code
       final querySnapshot = await _firestore
           .collection(AppConstants.collectionClassrooms)
-          .where('classCode', isEqualTo: classCode.toUpperCase())
+          .where('joinCode', isEqualTo: joinCode.toUpperCase())
           .limit(1)
           .get();
 

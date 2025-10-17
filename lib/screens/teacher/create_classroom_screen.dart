@@ -236,8 +236,16 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         );
       }
       
+      // Debug: Check user role
+      final currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final userRole = currentUserDoc.data()?['role'];
+      final isPrincipal = currentUserDoc.data()?['isPrincipal'] ?? false;
+      print('User role: $userRole, isPrincipal: $isPrincipal');
+      
       print('Creating classroom with data: $classroomData');
       print('User UID: ${user.uid}');
+      print('School ID: $_selectedSchoolId');
+      print('Is Independent: $_isIndependent');
       
       await batch.commit();
 

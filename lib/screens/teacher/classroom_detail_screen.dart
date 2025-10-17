@@ -97,7 +97,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                classroom.classCode,
+                                classroom.joinCode,
                                 style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -107,10 +107,10 @@ class ClassroomDetailScreen extends StatelessWidget {
                               ),
                               const Spacer(),
                               IconButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                    ClipboardData(text: classroom.classCode),
-                                  );
+                              onPressed: () {
+                                Clipboard.setData(
+                                  ClipboardData(text: classroom.joinCode),
+                                );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(AppStrings.codeCopied),

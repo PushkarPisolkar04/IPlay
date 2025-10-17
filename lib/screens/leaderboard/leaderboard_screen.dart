@@ -21,6 +21,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   LeaderboardEntry? _currentUserEntry;
   bool _isLoading = true;
   String? _userClassroomId;
+  String? _userSchoolId;
   String? _userState;
 
   @override
@@ -33,18 +34,43 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      
+      if (userDoc.exists) {
+        final userData = userDoc.data()!;
+        final classroomIds = userData['classroomIds'] as List?;
         
-        if (userDoc.exists) {
-          setState(() {
-            _userClassroomId = userDoc.data()?['classroomId'];
-            _userState = userDoc.data()?['state'];
-          });
-          await _loadLeaderboard();
+        // Get first classroom if user has any
+        final firstClassroomId = (classroomIds != null && classroomIds.isNotEmpty) 
+            ? classroomIds.first 
+            : null;
+        
+        // Get schoolId from classroom
+        String? schoolId;
+        if (firstClassroomId != null) {
+          final classroomDoc = await FirebaseFirestore.instance
+              .collection('classrooms')
+              .doc(firstClassroomId)
+              .get();
+          
+          if (classroomDoc.exists) {
+            schoolId = classroomDoc.data()?['schoolId'];
+          }
         }
+        
+        setState(() {
+          _userClassroomId = firstClassroomId;
+          _userSchoolId = schoolId;
+          _userState = userData['state'];
+        });
+        
+        print('Leaderboard - Classroom: $_userClassroomId, School: $_userSchoolId, State: $_userState');
+        
+        await _loadLeaderboard();
+      }
       } catch (e) {
         print('Error loading user info: $e');
         setState(() => _isLoading = false);
@@ -64,7 +90,8 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       switch (_selectedFilter) {
         case 'Class':
           if (_userClassroomId != null) {
-            query = query.where('classroomId', isEqualTo: _userClassroomId);
+            // Filter by users who have this classroomId in their classroomIds array
+            query = query.where('classroomIds', arrayContains: _userClassroomId);
           } else {
             // No classroom, show message
             setState(() {
@@ -75,33 +102,57 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           }
           break;
         case 'School':
-          // For now, same as classroom since we don't have school structure yet
-          if (_userClassroomId != null) {
-            final classroomDoc = await FirebaseFirestore.instance
+          if (_userSchoolId != null) {
+            // Get all students from classrooms in this school
+            final schoolClassrooms = await FirebaseFirestore.instance
                 .collection('classrooms')
-                .doc(_userClassroomId)
+                .where('schoolId', isEqualTo: _userSchoolId)
                 .get();
             
-            if (classroomDoc.exists) {
-              final schoolTag = classroomDoc.data()?['schoolTag'];
-              if (schoolTag != null) {
-                query = query.where('schoolTag', isEqualTo: schoolTag);
-              }
+            // Collect all classroom IDs
+            final classroomIds = schoolClassrooms.docs.map((doc) => doc.id).toList();
+            
+            if (classroomIds.isNotEmpty) {
+              // Get students who are in any of these classrooms
+              // Due to Firestore limitation, we'll fetch all and filter in memory
+              query = FirebaseFirestore.instance.collection('users')
+                  .where('role', isEqualTo: 'student');
+            } else {
+              // No classrooms, show empty
+              setState(() {
+                _leaderboard = [];
+                _isLoading = false;
+              });
+              return;
             }
+          } else {
+            // No school, show empty
+            setState(() {
+              _leaderboard = [];
+              _isLoading = false;
+            });
+            return;
           }
           break;
         case 'State':
+          query = query.where('role', isEqualTo: 'student');
           if (_userState != null) {
             query = query.where('state', isEqualTo: _userState);
           }
           break;
         case 'National':
-          // No filter, all users
+          // Show all students nationwide
+          query = query.where('role', isEqualTo: 'student');
           break;
       }
       
-      // Order by totalXP and limit to top 50
-      query = query.orderBy('totalXP', descending: true).limit(50);
+      // Order by totalXP and limit
+      query = query.orderBy('totalXP', descending: true);
+      
+      // For School filter, we need to filter in memory
+      if (_selectedFilter != 'School') {
+        query = query.limit(50);
+      }
       
       final snapshot = await query.get();
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -109,8 +160,27 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       final entries = <LeaderboardEntry>[];
       LeaderboardEntry? currentEntry;
       
-      for (int i = 0; i < snapshot.docs.length; i++) {
-        final doc = snapshot.docs[i];
+      // For School filter, filter by classroomIds
+      List<QueryDocumentSnapshot> filteredDocs = snapshot.docs;
+      if (_selectedFilter == 'School' && _userSchoolId != null) {
+        // Get school classrooms
+        final schoolClassrooms = await FirebaseFirestore.instance
+            .collection('classrooms')
+            .where('schoolId', isEqualTo: _userSchoolId)
+            .get();
+        
+        final schoolClassroomIds = schoolClassrooms.docs.map((doc) => doc.id).toSet();
+        
+        // Filter students who have at least one classroom from the school
+        filteredDocs = snapshot.docs.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final studentClassroomIds = List<String>.from(data['classroomIds'] ?? []);
+          return studentClassroomIds.any((id) => schoolClassroomIds.contains(id));
+        }).take(50).toList();
+      }
+      
+      for (int i = 0; i < filteredDocs.length; i++) {
+        final doc = filteredDocs[i];
         final data = doc.data() as Map<String, dynamic>;
         
         final entry = LeaderboardEntry(

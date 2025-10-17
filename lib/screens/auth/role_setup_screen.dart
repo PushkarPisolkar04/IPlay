@@ -238,7 +238,7 @@ class _RoleSetupScreenState extends State<RoleSetupScreen> {
       // Find classroom with this code
       final snapshot = await FirebaseFirestore.instance
           .collection('classrooms')
-          .where('classroomCode', isEqualTo: code.toUpperCase())
+          .where('joinCode', isEqualTo: code.toUpperCase())
           .limit(1)
           .get();
       

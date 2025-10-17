@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   UserModel? _user;
   bool _isLoading = true;
   String _greeting = 'Good Morning';
+  Map<String, dynamic>? _classroomInfo;
+  Map<String, dynamic>? _schoolInfo;
 
   @override
   void initState() {
@@ -61,8 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
           
           setState(() {
             _user = UserModel.fromMap(userData);
-            _isLoading = false;
           });
+          
+          // Load classroom info if student is in a classroom
+          await _loadClassroomInfo(userData);
+          
+          setState(() => _isLoading = false);
         } else {
           print('User document does not exist!');
         }
@@ -76,6 +82,44 @@ class _HomeScreenState extends State<HomeScreen> {
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _loadClassroomInfo(Map<String, dynamic> userData) async {
+    try {
+      // Check if user has classroomIds
+      final classroomIds = userData['classroomIds'] as List?;
+      if (classroomIds != null && classroomIds.isNotEmpty) {
+        final classroomId = classroomIds.first;
+        
+        print('Loading classroom info: $classroomId');
+        
+        final classroomDoc = await FirebaseFirestore.instance
+            .collection('classrooms')
+            .doc(classroomId)
+            .get();
+        
+        if (classroomDoc.exists) {
+          _classroomInfo = classroomDoc.data()!;
+          print('Classroom loaded: ${_classroomInfo!['name']}');
+          
+          // Load school info if classroom has schoolId
+          final schoolId = _classroomInfo!['schoolId'];
+          if (schoolId != null) {
+            final schoolDoc = await FirebaseFirestore.instance
+                .collection('schools')
+                .doc(schoolId)
+                .get();
+            
+            if (schoolDoc.exists) {
+              _schoolInfo = schoolDoc.data()!;
+              print('School loaded: ${_schoolInfo!['name']}');
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading classroom info: $e');
     }
   }
 
@@ -205,6 +249,131 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           
                           const SizedBox(height: AppSpacing.lg),
+                          
+                          // Classroom & School Info Card (if exists)
+                          if (_classroomInfo != null) ...[
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(AppSpacing.md),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(alpha: 0.2),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: const Icon(
+                                          Icons.school,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _classroomInfo!['name'] ?? 'Classroom',
+                                              style: AppTextStyles.h3.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            if (_schoolInfo != null)
+                                              Text(
+                                                _schoolInfo!['name'] ?? '',
+                                                style: AppTextStyles.bodySmall.copyWith(
+                                                  color: Colors.white.withValues(alpha: 0.9),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.2),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Grade',
+                                                style: AppTextStyles.caption.copyWith(
+                                                  color: Colors.white.withValues(alpha: 0.9),
+                                                ),
+                                              ),
+                                              Text(
+                                                '${_classroomInfo!['grade'] ?? '-'}',
+                                                style: AppTextStyles.h3.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.2),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Students',
+                                                style: AppTextStyles.caption.copyWith(
+                                                  color: Colors.white.withValues(alpha: 0.9),
+                                                ),
+                                              ),
+                                              Text(
+                                                '${(_classroomInfo!['studentIds'] as List?)?.length ?? 0}',
+                                                style: AppTextStyles.h3.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+                          ],
                           
                           // Featured card (Continue Learning) with gradient
                           Container(

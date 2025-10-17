@@ -78,6 +78,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception('Not authenticated');
 
+      print('Student joining classroom - User ID: ${user.uid}');
+
       // Get student's name
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -87,10 +89,16 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       if (!userDoc.exists) throw Exception('User not found');
       
       final studentName = userDoc.data()?['displayName'] ?? 'Student';
+      final studentRole = userDoc.data()?['role'];
       final classroomId = _foundClassroom!['id'];
       final requiresApproval = _foundClassroom!['requiresApproval'] ?? false;
 
+      print('Student name: $studentName, role: $studentRole');
+      print('Classroom ID: $classroomId, requiresApproval: $requiresApproval');
+
       if (requiresApproval) {
+        print('Creating join request (requires approval)...');
+        
         // Create join request
         await FirebaseFirestore.instance
             .collection('join_requests')
@@ -106,6 +114,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'resolvedAt': null,
         });
 
+        print('Join request created, adding to pendingStudentIds...');
+        
         // Add student to pending list
         await FirebaseFirestore.instance
             .collection('classrooms')
@@ -113,6 +123,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
             .update({
           'pendingStudentIds': FieldValue.arrayUnion([user.uid]),
         });
+
+        print('Successfully added to pending list!');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -123,6 +135,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           ),
         );
       } else {
+        print('Direct join (no approval needed)...');
+        
         // Direct join (no approval needed)
         await FirebaseFirestore.instance
             .collection('classrooms')
@@ -132,14 +146,18 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'updatedAt': Timestamp.now(),
         });
 
+        print('Added to studentIds, updating user profile...');
+
         // Update student's profile
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .update({
-          'classroomId': classroomId,
+          'classroomIds': FieldValue.arrayUnion([classroomId]),
           'updatedAt': Timestamp.now(),
         });
+
+        print('Successfully joined classroom!');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
