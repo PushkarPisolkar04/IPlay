@@ -37,10 +37,19 @@ service cloud.firestore {
     // Classrooms Collection
     match /classrooms/{classroomId} {
       allow read: if isSignedIn();
-      allow create: if isTeacher() || isPrincipal();
-      allow update: if isTeacher() || isPrincipal() || 
-        (isStudent() && request.auth.uid in resource.data.pendingStudentIds);
-      allow delete: if isTeacher() || isPrincipal();
+      // Allow creation if user is teacher/principal AND they're setting themselves as the teacher
+      allow create: if isSignedIn() && 
+        (isTeacher() || isPrincipal()) && 
+        request.resource.data.teacherId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.teacherId == request.auth.uid ||
+        isPrincipal() || 
+        (isStudent() && request.auth.uid in resource.data.pendingStudentIds)
+      );
+      allow delete: if isSignedIn() && (
+        resource.data.teacherId == request.auth.uid || 
+        isPrincipal()
+      );
     }
     
     // Realms Collection (Read-only for students, writable by admins)
@@ -104,7 +113,11 @@ service cloud.firestore {
     match /announcements/{announcementId} {
       allow read: if isSignedIn();
       allow create: if isTeacher() || isPrincipal();
-      allow update, delete: if isTeacher() || isPrincipal();
+      // Only allow update/delete if user is the author OR if they are principal
+      allow update, delete: if isSignedIn() && (
+        request.auth.uid == resource.data.authorId || 
+        isPrincipal()
+      );
     }
     
     // News Collection (Read-only for students)

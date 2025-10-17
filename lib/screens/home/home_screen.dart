@@ -120,9 +120,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.lg),
                           
-                          // XP & Level Card
-                          ColoredCard(
-                            color: AppColors.primary,
+                          // XP & Level Card with gradient
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF3B82F6), Color(0xFF60A5FA)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -132,14 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       'Total XP',
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.textWhite.withOpacity(0.8),
+                                        color: Colors.white.withValues(alpha: 0.9),
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${_user?.totalXP ?? 0}',
                                       style: AppTextStyles.h1.copyWith(
-                                        color: AppColors.textWhite,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -150,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Text(
                                       'Streak',
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        color: AppColors.textWhite.withOpacity(0.8),
+                                        color: Colors.white.withValues(alpha: 0.9),
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -158,14 +174,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         const Icon(
                                           Icons.local_fire_department,
-                                          color: AppColors.accent,
+                                          color: Color(0xFFF59E0B),
                                           size: 24,
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
                                           '${_user?.currentStreak ?? 0} days',
                                           style: AppTextStyles.h2.copyWith(
-                                            color: AppColors.textWhite,
+                                            color: Colors.white,
                                           ),
                                         ),
                                       ],
@@ -178,9 +194,25 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.lg),
                           
-                          // Featured card (Continue Learning)
-                          ColoredCard(
-                            color: AppColors.secondary,
+                          // Featured card (Continue Learning) with gradient
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -193,19 +225,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             'Continue',
                                             style: AppTextStyles.h2.copyWith(
-                                              color: AppColors.textWhite,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           Text(
                                             'Learning',
                                             style: AppTextStyles.h2.copyWith(
-                                              color: AppColors.textWhite,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           Text(
                                             'IPR',
                                             style: AppTextStyles.h2.copyWith(
-                                              color: AppColors.textWhite,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ],
@@ -229,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
-                                      foregroundColor: AppColors.secondary,
+                                      foregroundColor: const Color(0xFF10B981),
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
@@ -275,27 +307,50 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.sm),
                           
-                          // Stats cards
+                          // Stats cards with improved styling
                           Row(
                             children: [
                               Expanded(
-                                child: CleanCard(
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.05),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
                                   child: Column(
                                     children: [
-                                      const Icon(
-                                        Icons.emoji_events,
-                                        size: 32,
-                                        color: AppColors.accent,
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Icon(
+                                          Icons.emoji_events,
+                                          size: 28,
+                                          color: Color(0xFFF59E0B),
+                                        ),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 12),
                                       Text(
                                         '${_user?.badges.length ?? 0}',
-                                        style: AppTextStyles.h2,
+                                        style: AppTextStyles.h2.copyWith(
+                                          color: const Color(0xFFF59E0B),
+                                        ),
                                       ),
+                                      const SizedBox(height: 4),
                                       Text(
                                         'Badges',
                                         style: AppTextStyles.bodySmall.copyWith(
                                           color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ],
@@ -304,23 +359,46 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(width: 12),
                               Expanded(
-                                child: CleanCard(
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.05),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
                                   child: Column(
                                     children: [
-                                      const Icon(
-                                        Icons.workspace_premium,
-                                        size: 32,
-                                        color: AppColors.success,
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const Icon(
+                                          Icons.workspace_premium,
+                                          size: 28,
+                                          color: Color(0xFF8B5CF6),
+                                        ),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 12),
                                       Text(
                                         '${_user?.progressSummary.values.where((r) => r.completed).length ?? 0}',
-                                        style: AppTextStyles.h2,
+                                        style: AppTextStyles.h2.copyWith(
+                                          color: const Color(0xFF8B5CF6),
+                                        ),
                                       ),
+                                      const SizedBox(height: 4),
                                       Text(
                                         'Realms Done',
                                         style: AppTextStyles.bodySmall.copyWith(
                                           color: AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ],

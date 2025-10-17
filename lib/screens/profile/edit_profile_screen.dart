@@ -22,6 +22,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? _selectedAvatar;
   String? _currentUserId;
   String? _userRole;
+  bool _isPrincipal = false;
   
   final List<String> _indianStates = [
     'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -62,6 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (doc.exists) {
           final userData = doc.data()!;
           _userRole = userData['role'];
+          _isPrincipal = userData['isPrincipal'] == true;
           
           // Set avatar options based on role
           if (_userRole == 'student') {
@@ -279,34 +281,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           CleanCard(
                             child: Padding(
                               padding: const EdgeInsets.all(16),
-                              child: DropdownButtonFormField<String>(
-                                value: _selectedState,
-                                isExpanded: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'State',
-                                  hintText: 'Select your state',
-                                  prefixIcon: Icon(Icons.location_on),
-                                  border: OutlineInputBorder(),
-                                ),
-                                items: _indianStates.map((state) {
-                                  return DropdownMenuItem(
-                                    value: state,
-                                    child: Text(
-                                      state,
-                                      overflow: TextOverflow.ellipsis,
+                              child: _isPrincipal
+                                  ? TextFormField(
+                                      initialValue: _selectedState,
+                                      enabled: false,
+                                      decoration: InputDecoration(
+                                        labelText: 'State',
+                                        hintText: 'State (School Location)',
+                                        prefixIcon: const Icon(Icons.location_on),
+                                        border: const OutlineInputBorder(),
+                                        filled: true,
+                                        fillColor: Colors.grey[200],
+                                        suffixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                      ),
+                                    )
+                                  : DropdownButtonFormField<String>(
+                                      value: _selectedState,
+                                      isExpanded: true,
+                                      decoration: const InputDecoration(
+                                        labelText: 'State',
+                                        hintText: 'Select your state',
+                                        prefixIcon: Icon(Icons.location_on),
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      items: _indianStates.map((state) {
+                                        return DropdownMenuItem(
+                                          value: state,
+                                          child: Text(
+                                            state,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() => _selectedState = value);
+                                      },
+                                      validator: (value) {
+                                        if (value == null) {
+                                          return 'Please select your state';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() => _selectedState = value);
-                                },
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Please select your state';
-                                  }
-                                  return null;
-                                },
-                              ),
                             ),
                           ),
                           

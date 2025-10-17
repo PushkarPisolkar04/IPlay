@@ -9,6 +9,8 @@ import '../settings/settings_screen.dart';
 import 'comprehensive_leaderboard_screen.dart';
 import 'school_settings_screen.dart';
 import 'school_announcements_screen.dart';
+import '../teacher/quiz_performance_screen.dart';
+import '../teacher/generate_report_screen.dart';
 
 class PrincipalDashboardScreen extends StatefulWidget {
   const PrincipalDashboardScreen({super.key});
@@ -617,6 +619,112 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                   ),
                                   Text(
                                     'View top performers',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Quiz Performance
+                      CleanCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const QuizPerformanceScreen(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEC4899).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.quiz, color: Color(0xFFEC4899), size: 24),
+                            ),
+                            const SizedBox(width: 16),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Quiz Performance',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'View quiz results across school',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Generate Report
+                      CleanCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GenerateReportScreen(),
+                            ),
+                          );
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEF4444).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.description, color: Color(0xFFEF4444), size: 24),
+                            ),
+                            const SizedBox(width: 16),
+                            const Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Generate Report',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Create student performance reports',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -2519,52 +2627,12 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                   const Color(0xFF8B5CF6),
                 ),
                 _buildStatCard(
-                  Icons.admin_panel_settings,
-                  'Role',
-                  'Principal',
+                  Icons.stars,
+                  'Avg XP',
+                  (_studentCount > 0 ? '0' : '0'), // Calculate actual avg XP if needed
                   const Color(0xFFF59E0B),
                 ),
               ],
-            ),
-            const SizedBox(height: 20),
-
-            // Quick Links
-            const Text(
-              'Quick Links',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1F2937),
-              ),
-            ),
-            const SizedBox(height: 12),
-            CleanCard(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolId!),
-                  ),
-                );
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Icon(Icons.campaign, color: AppColors.primary),
-                    SizedBox(width: 16),
-                    Text(
-                      'View Announcements',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                  ],
-                ),
-              ),
             ),
             const SizedBox(height: 20),
             

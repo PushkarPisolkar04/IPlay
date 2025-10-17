@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/constants/app_colors.dart';
 import '../../widgets/clean_card.dart';
 import '../teacher/create_announcement_screen.dart';
@@ -16,6 +17,8 @@ class SchoolAnnouncementsScreen extends StatefulWidget {
 class _SchoolAnnouncementsScreenState extends State<SchoolAnnouncementsScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _announcements = [];
+  String? _currentUserId;
+  bool _isPrincipal = false;
 
   @override
   void initState() {
@@ -25,6 +28,19 @@ class _SchoolAnnouncementsScreenState extends State<SchoolAnnouncementsScreen> {
 
   Future<void> _loadAnnouncements() async {
     try {
+      // Get current user info
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        _currentUserId = currentUser.uid;
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+        if (userDoc.exists) {
+          _isPrincipal = userDoc.data()?['isPrincipal'] == true;
+        }
+      }
+      
       print('Loading announcements for school: ${widget.schoolId}');
       
       final snapshot = await FirebaseFirestore.instance
@@ -196,6 +212,13 @@ class _SchoolAnnouncementsScreenState extends State<SchoolAnnouncementsScreen> {
 
     titleController.dispose();
     messageController.dispose();
+  }
+
+  bool _canEditAnnouncement(Map<String, dynamic> announcement) {
+    // Principal can edit all announcements
+    if (_isPrincipal) return true;
+    // Teachers can only edit their own announcements
+    return announcement['authorId'] == _currentUserId;
   }
 
   String _formatDate(Timestamp? timestamp) {
@@ -388,32 +411,34 @@ class _SchoolAnnouncementsScreenState extends State<SchoolAnnouncementsScreen> {
                                   
                                   const SizedBox(height: 12),
                                   
-                                  // Actions
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton.icon(
-                                        onPressed: () => _editAnnouncement(announcement),
-                                        icon: const Icon(Icons.edit, size: 16),
-                                        label: const Text('Edit'),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: AppColors.primary,
+                                  // Actions - Only show if user is author or principal
+                                  if (_canEditAnnouncement(announcement)) ...[
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton.icon(
+                                          onPressed: () => _editAnnouncement(announcement),
+                                          icon: const Icon(Icons.edit, size: 16),
+                                          label: const Text('Edit'),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: AppColors.primary,
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      TextButton.icon(
-                                        onPressed: () => _deleteAnnouncement(
-                                          announcement['id'],
-                                          announcement['title'] ?? 'this announcement',
+                                        const SizedBox(width: 8),
+                                        TextButton.icon(
+                                          onPressed: () => _deleteAnnouncement(
+                                            announcement['id'],
+                                            announcement['title'] ?? 'this announcement',
+                                          ),
+                                          icon: const Icon(Icons.delete, size: 16),
+                                          label: const Text('Delete'),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.red,
+                                          ),
                                         ),
-                                        icon: const Icon(Icons.delete, size: 16),
-                                        label: const Text('Delete'),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),

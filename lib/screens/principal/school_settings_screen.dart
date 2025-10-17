@@ -73,9 +73,8 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
           .collection('schools')
           .doc(widget.schoolId)
           .update({
-        'name': _nameController.text.trim(),
+        // Note: name, city, and state are not updatable to prevent data inconsistencies
         'description': _descriptionController.text.trim(),
-        'city': _cityController.text.trim(),
         'isActive': _isActive,
         'updatedAt': Timestamp.now(),
       });
@@ -252,14 +251,16 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                       const SizedBox(height: 8),
                                       TextFormField(
                               controller: _nameController,
+                              enabled: false,
                               decoration: InputDecoration(
                                 hintText: 'Enter school name',
                                 filled: true,
-                                fillColor: Colors.grey[100],
+                                fillColor: Colors.grey[200],
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
                                 ),
+                                suffixIcon: const Icon(Icons.lock, color: Colors.grey),
                               ),
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
@@ -293,15 +294,17 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                     children: [
                                       TextFormField(
                               controller: _cityController,
+                              enabled: false,
                               decoration: InputDecoration(
                                 labelText: 'City',
                                 hintText: 'Enter city',
                                 filled: true,
-                                fillColor: Colors.grey[100],
+                                fillColor: Colors.grey[200],
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
                                 ),
+                                suffixIcon: const Icon(Icons.lock, color: Colors.grey),
                               ),
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {

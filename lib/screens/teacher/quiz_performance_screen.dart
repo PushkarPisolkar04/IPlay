@@ -120,114 +120,144 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          // Header
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppColors.accent, AppColors.accent.withOpacity(0.7)],
+      backgroundColor: const Color(0xFFF5F7FA),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                ),
               ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text(
-                        'Quiz & Module Performance',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
+                          'Quiz Performance',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.quiz, color: Colors.white70, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Performance across all realms',
-                      style: const TextStyle(color: Colors.white70, fontSize: 14),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.analytics, color: Colors.white, size: 20),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Track student quiz performance across all realms',
+                            style: TextStyle(color: Colors.white, fontSize: 13),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Realms Performance List
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                    onRefresh: _loadPerformanceData,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: _realmPerformance.length,
-                      itemBuilder: (context, index) {
-                        final realmId = _realmPerformance.keys.elementAt(index);
-                        final perf = _realmPerformance[realmId]!;
-                        final hasData = perf['totalQuizzes'] > 0;
-                        
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: CleanCard(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Realm Header
-                                Row(
+            // Realms Performance List
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator(color: Color(0xFFEC4899)))
+                  : RefreshIndicator(
+                      onRefresh: _loadPerformanceData,
+                      color: const Color(0xFFEC4899),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(20),
+                        itemCount: _realmPerformance.length,
+                        itemBuilder: (context, index) {
+                          final realmId = _realmPerformance.keys.elementAt(index);
+                          final perf = _realmPerformance[realmId]!;
+                          final hasData = perf['totalQuizzes'] > 0;
+                          
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: CleanCard(
+                              child: Padding(
+                                padding: const EdgeInsets.all(18),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        gradient: AppColors.primaryGradient,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        perf['icon'],
-                                        style: const TextStyle(fontSize: 28),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            perf['name'],
-                                            style: AppTextStyles.h3,
-                                          ),
-                                          Text(
-                                            hasData 
-                                                ? '${perf['totalQuizzes']} quizzes completed'
-                                                : 'No quizzes taken yet',
-                                            style: AppTextStyles.bodySmall.copyWith(
-                                              color: hasData ? AppColors.success : AppColors.textSecondary,
+                                    // Realm Header
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(14),
+                                          decoration: BoxDecoration(
+                                            gradient: const LinearGradient(
+                                              colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
                                             ),
+                                            borderRadius: BorderRadius.circular(14),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: const Color(0xFFEC4899).withValues(alpha: 0.3),
+                                                blurRadius: 8,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                          child: Text(
+                                            perf['icon'],
+                                            style: const TextStyle(fontSize: 26),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                perf['name'],
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF1F2937),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                hasData 
+                                                    ? '${perf['totalQuizzes']} quizzes completed'
+                                                    : 'No quizzes taken yet',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: hasData ? const Color(0xFF10B981) : Colors.grey[600],
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
                                 
                                 if (hasData) ...[
                                   const SizedBox(height: 16),
@@ -285,45 +315,49 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                                   
                                   // Performance Grade
                                   _buildPerformanceGrade(perf['averageScore']),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
                           ),
                         );
                       },
                     ),
                   ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildStatBox(String label, String value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 20),
+          Icon(icon, color: color, size: 22),
           const SizedBox(height: 8),
           Text(
             value,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             label,
             style: TextStyle(
               fontSize: 11,
-              color: AppColors.textSecondary,
+              color: Colors.grey[700],
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -335,37 +369,50 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
     String grade;
     Color color;
     String message;
+    IconData icon;
     
     if (avgScore >= 90) {
       grade = 'Excellent';
-      color = AppColors.success;
+      color = const Color(0xFF10B981);
       message = 'Outstanding performance!';
+      icon = Icons.emoji_events;
     } else if (avgScore >= 75) {
       grade = 'Good';
-      color = AppColors.primary;
+      color = const Color(0xFF3B82F6);
       message = 'Good progress!';
+      icon = Icons.thumb_up;
     } else if (avgScore >= 60) {
       grade = 'Fair';
-      color = AppColors.warning;
+      color = const Color(0xFFF59E0B);
       message = 'Room for improvement';
+      icon = Icons.trending_up;
     } else {
       grade = 'Needs Improvement';
-      color = AppColors.error;
+      color = const Color(0xFFEF4444);
       message = 'Extra support needed';
+      icon = Icons.priority_high;
     }
     
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color.withOpacity(0.2), color.withOpacity(0.05)],
+          colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)],
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
       ),
       child: Row(
         children: [
-          Icon(Icons.assessment, color: color, size: 24),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: Colors.white, size: 24),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,14 +420,18 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                 Text(
                   grade,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: color,
                   ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   message,
-                  style: AppTextStyles.bodySmall,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey[700],
+                  ),
                 ),
               ],
             ),

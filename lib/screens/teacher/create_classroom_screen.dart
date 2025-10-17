@@ -30,6 +30,46 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
   String? _selectedSchoolName;
 
   @override
+  void initState() {
+    super.initState();
+    _checkExistingSchool();
+  }
+
+  Future<void> _checkExistingSchool() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (userDoc.exists) {
+        final schoolId = userDoc.data()?['schoolId'] as String?;
+        
+        if (schoolId != null) {
+          // Teacher already has a school, fetch it
+          final schoolDoc = await FirebaseFirestore.instance
+              .collection('schools')
+              .doc(schoolId)
+              .get();
+
+          if (schoolDoc.exists) {
+            setState(() {
+              _selectedSchoolId = schoolId;
+              _selectedSchoolName = schoolDoc.data()?['name'];
+              _isIndependent = false; // Automatically set to under school
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print('Error checking existing school: $e');
+    }
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _gradeController.dispose();
