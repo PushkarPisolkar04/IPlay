@@ -89,16 +89,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
     
-    if (_selectedState == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select your state'),
-          backgroundColor: AppColors.warning,
-        ),
-      );
-      return;
-    }
-    
     if (_selectedAvatar == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -112,12 +102,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isSaving = true);
 
     try {
+      // Only update displayName and avatarUrl (state is locked)
       await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUserId)
           .update({
         'displayName': _nameController.text.trim(),
-        'state': _selectedState,
         'avatarUrl': _selectedAvatar,
         'updatedAt': Timestamp.now(),
       });
@@ -277,52 +267,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           
                           const SizedBox(height: 20),
                           
-                          // State Selection
+                          // State Selection (Locked for everyone - set during signup)
                           CleanCard(
                             child: Padding(
                               padding: const EdgeInsets.all(16),
-                              child: _isPrincipal
-                                  ? TextFormField(
-                                      initialValue: _selectedState,
-                                      enabled: false,
-                                      decoration: InputDecoration(
-                                        labelText: 'State',
-                                        hintText: 'State (School Location)',
-                                        prefixIcon: const Icon(Icons.location_on),
-                                        border: const OutlineInputBorder(),
-                                        filled: true,
-                                        fillColor: Colors.grey[200],
-                                        suffixIcon: const Icon(Icons.lock, color: Colors.grey),
-                                      ),
-                                    )
-                                  : DropdownButtonFormField<String>(
-                                      value: _selectedState,
-                                      isExpanded: true,
-                                      decoration: const InputDecoration(
-                                        labelText: 'State',
-                                        hintText: 'Select your state',
-                                        prefixIcon: Icon(Icons.location_on),
-                                        border: OutlineInputBorder(),
-                                      ),
-                                      items: _indianStates.map((state) {
-                                        return DropdownMenuItem(
-                                          value: state,
-                                          child: Text(
-                                            state,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) {
-                                        setState(() => _selectedState = value);
-                                      },
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Please select your state';
-                                        }
-                                        return null;
-                                      },
-                                    ),
+                              child: TextFormField(
+                                initialValue: _selectedState,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText: 'State',
+                                  hintText: 'State (Cannot be changed)',
+                                  prefixIcon: const Icon(Icons.location_on),
+                                  border: const OutlineInputBorder(),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  suffixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // Role Display (Read-only)
+                          CleanCard(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: TextFormField(
+                                initialValue: _isPrincipal ? 'Principal' : (_userRole ?? 'User'),
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText: 'Role',
+                                  hintText: 'Your role',
+                                  prefixIcon: const Icon(Icons.badge),
+                                  border: const OutlineInputBorder(),
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  suffixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                ),
+                              ),
                             ),
                           ),
                           

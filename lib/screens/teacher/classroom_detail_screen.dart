@@ -1,16 +1,130 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../models/classroom_model.dart';
 import '../../widgets/clean_card.dart';
 import 'teacher_leaderboard_screen.dart';
 import 'teacher_announcements_screen.dart';
+import '../classroom/join_requests_screen.dart';
 
-class ClassroomDetailScreen extends StatelessWidget {
+class ClassroomDetailScreen extends StatefulWidget {
   final ClassroomModel classroom;
 
   const ClassroomDetailScreen({super.key, required this.classroom});
+
+  @override
+  State<ClassroomDetailScreen> createState() => _ClassroomDetailScreenState();
+}
+
+class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
+  
+  Future<void> _editClassroom() async {
+    // TODO: Navigate to edit classroom screen or show edit dialog
+    final result = await showDialog<Map<String, String>>(
+      context: context,
+      builder: (context) => _EditClassroomDialog(
+        currentName: widget.classroom.name,
+        currentGrade: widget.classroom.grade.toString(),
+      ),
+    );
+
+    if (result != null) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('classrooms')
+            .doc(widget.classroom.id)
+            .update({
+          'name': result['name'],
+          'grade': result['grade'],
+          'updatedAt': Timestamp.now(),
+        });
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Classroom updated successfully'),
+            backgroundColor: AppColors.success,
+          ),
+        );
+
+        Navigator.pop(context); // Go back to refresh
+      } catch (e) {
+        if (!mounted) return;
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _deleteClassroom() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Classroom'),
+        content: Text('Are you sure you want to delete "${widget.classroom.name}"? This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      // Remove classroom from all students
+      for (String studentId in widget.classroom.studentIds) {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(studentId)
+            .update({
+          'classroomIds': FieldValue.arrayRemove([widget.classroom.id]),
+          'updatedAt': Timestamp.now(),
+        });
+      }
+
+      // Delete the classroom
+      await FirebaseFirestore.instance
+          .collection('classrooms')
+          .doc(widget.classroom.id)
+          .delete();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Classroom deleted successfully'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+
+      Navigator.pop(context); // Go back
+    } catch (e) {
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +142,52 @@ class ClassroomDetailScreen extends StatelessWidget {
                 floating: false,
                 pinned: true,
                 backgroundColor: Colors.transparent,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    onPressed: _editClassroom,
+                  ),
+                  PopupMenuButton<String>(
+                    icon: const Icon(Icons.more_vert, color: Colors.white),
+                    onSelected: (value) {
+                      if (value == 'delete') {
+                        _deleteClassroom();
+                      } else if (value == 'requests') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JoinRequestsScreen(classroomId: widget.classroom.id),
+                          ),
+                        );
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'requests',
+                        child: Row(
+                          children: [
+                            Icon(Icons.pending_actions, size: 20),
+                            SizedBox(width: 12),
+                            Text('Manage Join Requests'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, size: 20, color: AppColors.error),
+                            SizedBox(width: 12),
+                            Text('Delete Classroom', style: TextStyle(color: AppColors.error)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
-                    classroom.name,
+                    widget.classroom.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -51,7 +208,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Grade ${classroom.grade}${classroom.school != null ? ' • ${classroom.school}' : ''}',
+                            'Grade ${widget.classroom.grade}${widget.classroom.school != null ? ' • ${widget.classroom.school}' : ''}',
                             style: const TextStyle(
                               fontSize: 14,
                               color: Colors.white70,
@@ -97,7 +254,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                classroom.joinCode,
+                                widget.classroom.joinCode,
                                 style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -109,7 +266,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                               IconButton(
                               onPressed: () {
                                 Clipboard.setData(
-                                  ClipboardData(text: classroom.joinCode),
+                                  ClipboardData(text: widget.classroom.joinCode),
                                 );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -146,7 +303,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TeacherAnnouncementsScreen(classroomId: classroom.id),
+                                  builder: (context) => TeacherAnnouncementsScreen(classroomId: widget.classroom.id),
                                 ),
                               );
                             },
@@ -183,7 +340,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TeacherLeaderboardScreen(classroomId: classroom.id),
+                                  builder: (context) => TeacherLeaderboardScreen(classroomId: widget.classroom.id),
                                 ),
                               );
                             },
@@ -224,7 +381,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                         Expanded(
                           child: _StatCard(
                             icon: Icons.people,
-                            value: '${classroom.studentIds.length}',
+                            value: '${widget.classroom.studentIds.length}',
                             label: AppStrings.students,
                             color: AppColors.primary,
                           ),
@@ -233,7 +390,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                         Expanded(
                           child: _StatCard(
                             icon: Icons.pending,
-                            value: '${classroom.pendingStudentIds.length}',
+                            value: '${widget.classroom.pendingStudentIds.length}',
                             label: 'Pending',
                             color: AppColors.warning,
                           ),
@@ -244,7 +401,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Pending Approvals
-                    if (classroom.pendingStudentIds.isNotEmpty) ...[
+                    if (widget.classroom.pendingStudentIds.isNotEmpty) ...[
                       const Text(
                         AppStrings.pendingApprovals,
                         style: TextStyle(
@@ -254,12 +411,12 @@ class ClassroomDetailScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      ...classroom.pendingStudentIds.map(
+                      ...widget.classroom.pendingStudentIds.map(
                         (studentId) => Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: _StudentCard(
                             studentId: studentId,
-                            classroomId: classroom.id,
+                            classroomId: widget.classroom.id,
                             isPending: true,
                           ),
                         ),
@@ -278,7 +435,7 @@ class ClassroomDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    if (classroom.studentIds.isEmpty)
+                    if (widget.classroom.studentIds.isEmpty)
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.all(40.0),
@@ -302,12 +459,12 @@ class ClassroomDetailScreen extends StatelessWidget {
                         ),
                       )
                     else
-                      ...classroom.studentIds.map(
+                      ...widget.classroom.studentIds.map(
                         (studentId) => Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: _StudentCard(
                             studentId: studentId,
-                            classroomId: classroom.id,
+                            classroomId: widget.classroom.id,
                             isPending: false,
                           ),
                         ),
@@ -475,6 +632,102 @@ class _StudentCard extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+// Edit Classroom Dialog
+class _EditClassroomDialog extends StatefulWidget {
+  final String currentName;
+  final String currentGrade;
+
+  const _EditClassroomDialog({
+    required this.currentName,
+    required this.currentGrade,
+  });
+
+  @override
+  State<_EditClassroomDialog> createState() => _EditClassroomDialogState();
+}
+
+class _EditClassroomDialogState extends State<_EditClassroomDialog> {
+  late TextEditingController _nameController;
+  late TextEditingController _gradeController;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.currentName);
+    _gradeController = TextEditingController(text: widget.currentGrade);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _gradeController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Edit Classroom'),
+      content: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(
+                labelText: 'Classroom Name',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a classroom name';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _gradeController,
+              decoration: const InputDecoration(
+                labelText: 'Grade',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a grade';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              Navigator.pop(context, {
+                'name': _nameController.text.trim(),
+                'grade': _gradeController.text.trim(),
+              });
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+          ),
+          child: const Text('Save'),
+        ),
+      ],
     );
   }
 }

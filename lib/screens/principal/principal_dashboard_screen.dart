@@ -2385,18 +2385,25 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
             _schoolCode = schoolData['schoolCode'];
             _state = schoolData['state'];
             _city = schoolData['city'];
-            _studentCount = schoolData['studentCount'] ?? 0;
             
             // Get teacher count (excluding principal)
             final teacherIds = (schoolData['teacherIds'] as List?)?.length ?? 0;
             _teacherCount = teacherIds > 0 ? teacherIds - 1 : 0;
             
-            // Get classroom count
+            // Get classroom count and calculate student count
             final classroomsSnapshot = await FirebaseFirestore.instance
                 .collection('classrooms')
                 .where('schoolId', isEqualTo: schoolId)
                 .get();
             _classroomCount = classroomsSnapshot.docs.length;
+            
+            // Calculate total unique students from all classrooms
+            Set<String> uniqueStudentIds = {};
+            for (var classroom in classroomsSnapshot.docs) {
+              final studentIds = List<String>.from(classroom.data()['studentIds'] ?? []);
+              uniqueStudentIds.addAll(studentIds);
+            }
+            _studentCount = uniqueStudentIds.length;
           }
         }
       }

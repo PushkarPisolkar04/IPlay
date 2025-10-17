@@ -20,6 +20,7 @@ import 'screens/profile/profile_screen.dart';
 import 'screens/settings/settings_screen.dart';
 import 'screens/teacher/create_classroom_screen.dart';
 import 'screens/classroom/join_classroom_screen.dart';
+import 'screens/profile/edit_profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,6 +101,8 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => const CreateClassroomScreen());
             case '/join-classroom':
               return MaterialPageRoute(builder: (_) => const JoinClassroomScreen());
+            case '/edit-profile':
+              return MaterialPageRoute(builder: (_) => const EditProfileScreen());
             default:
               return MaterialPageRoute(builder: (_) => const SplashScreen());
           }

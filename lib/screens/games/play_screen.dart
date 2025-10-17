@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../widgets/clean_card.dart';
-import '../../widgets/primary_button.dart';
+import 'ipr_quiz_master_game.dart';
+import 'match_ipr_game.dart';
 
-/// Play/Games Screen - Hub for all mini games (REAL DATA from Firebase)
+/// Play/Games Screen - All 7 Games
 class PlayScreen extends StatefulWidget {
   const PlayScreen({Key? key}) : super(key: key);
 
@@ -35,9 +35,6 @@ class _PlayScreenState extends State<PlayScreen> {
         return;
       }
 
-      print('Loading game data for user: ${currentUser.uid}');
-
-      // Load user document to get game progress
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
@@ -46,7 +43,6 @@ class _PlayScreenState extends State<PlayScreen> {
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         
-        // Get game scores from user data (if stored there)
         final gameProgress = userData['gameProgress'] as Map<String, dynamic>?;
         
         if (gameProgress != null) {
@@ -58,10 +54,6 @@ class _PlayScreenState extends State<PlayScreen> {
             _gameScores = scores.map((key, value) => MapEntry(key, (value as num).toInt()));
           }
         }
-
-        print('Total Game XP: $_totalGameXP');
-        print('Games Played: $_gamesPlayed');
-        print('Game Scores: $_gameScores');
       }
 
       setState(() => _isLoading = false);
@@ -73,261 +65,360 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: AppColors.background,
-        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
-      );
-    }
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Play Games'),
+        title: const Text('Play Games', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Stats card - REAL DATA
-            CleanCard(
-              color: AppColors.primary.withOpacity(0.05),
-              child: Row(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.emoji_events,
-                    color: AppColors.accent,
-                    size: 40,
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _gamesPlayed > 0 ? 'Your Game Stats' : 'No Games Played Yet',
-                          style: AppTextStyles.cardTitle,
+                  // Stats card
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFEC4899).withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
                         ),
-                        const SizedBox(height: 4),
-                        if (_gamesPlayed > 0) ...[
-                          Text(
-                            '$_totalGameXP Total Game XP',
-                            style: AppTextStyles.bodyMedium,
-                          ),
-                          Text(
-                            '$_gamesPlayed Games Played',
-                            style: AppTextStyles.bodySmall,
-                          ),
-                        ] else ...[
-                          Text(
-                            'Play games to earn XP and unlock achievements!',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
                       ],
                     ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Icon(Icons.stars, color: Colors.white, size: 32),
+                              const SizedBox(height: 8),
+                              Text(
+                                '$_totalGameXP',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                'Total XP',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 1,
+                          height: 60,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const Icon(Icons.games, color: Colors.white, size: 32),
+                              const SizedBox(height: 8),
+                              Text(
+                                '$_gamesPlayed',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Text(
+                                'Games Played',
+                                style: TextStyle(color: Colors.white, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  Text(
+                    'Available Games',
+                    style: AppTextStyles.sectionHeader.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Game 1: IP Quiz Master (Implemented)
+                  _buildGameCard(
+                    title: 'IP Quiz Master',
+                    description: 'Test your IPR knowledge in rapid-fire quiz',
+                    icon: '🧠',
+                    color: const Color(0xFF8B5CF6),
+                    difficulty: 'Medium',
+                    xpReward: '10-100 XP',
+                    timeEstimate: '1-2 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const IPRQuizMasterGame()),
+                      );
+                    },
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Game 2: Match the IPR (Implemented)
+                  _buildGameCard(
+                    title: 'Match the IPR',
+                    description: 'Memory card game matching IPR concepts',
+                    icon: '🎯',
+                    color: const Color(0xFF10B981),
+                    difficulty: 'Easy',
+                    xpReward: '60-100 XP',
+                    timeEstimate: '2-5 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const MatchIPRGame()),
+                      );
+                    },
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  Text(
+                    'Coming Soon',
+                    style: AppTextStyles.sectionHeader.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Game 3: Spot the Original
+                  _buildGameCard(
+                    title: 'Spot the Original',
+                    description: 'Identify genuine IP from counterfeits',
+                    icon: '🔍',
+                    color: const Color(0xFFF59E0B),
+                    difficulty: 'Hard',
+                    xpReward: '15-75 XP',
+                    timeEstimate: '3-5 min',
+                    isImplemented: false,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Game 4: IP Defender
+                  _buildGameCard(
+                    title: 'IP Defender',
+                    description: 'Defend your IP rights from infringement',
+                    icon: '🛡️',
+                    color: const Color(0xFFEF4444),
+                    difficulty: 'Medium',
+                    xpReward: 'Up to 50 XP',
+                    timeEstimate: '3-5 min',
+                    isImplemented: false,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Game 5: GI Mapper
+                  _buildGameCard(
+                    title: 'GI Mapper',
+                    description: 'Drag GI products to correct locations on map',
+                    icon: '🗺️',
+                    color: const Color(0xFF3B82F6),
+                    difficulty: 'Medium',
+                    xpReward: '10-80 XP',
+                    timeEstimate: '2-4 min',
+                    isImplemented: false,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Game 6: Patent Detective
+                  _buildGameCard(
+                    title: 'Patent Detective',
+                    description: 'Solve patent investigation cases',
+                    icon: '🕵️',
+                    color: const Color(0xFF6366F1),
+                    difficulty: 'Hard',
+                    xpReward: '20-60 XP',
+                    timeEstimate: '5-8 min',
+                    isImplemented: false,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Game 7: Innovation Lab
+                  _buildGameCard(
+                    title: 'Innovation Lab',
+                    description: 'Draw & simulate your own invention',
+                    icon: '🔬',
+                    color: const Color(0xFFEC4899),
+                    difficulty: 'Creative',
+                    xpReward: '100 XP',
+                    timeEstimate: '10-15 min',
+                    isImplemented: false,
                   ),
                 ],
               ),
             ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            Text(
-              'All Games',
-              style: AppTextStyles.sectionHeader,
-            ),
-            
-            const SizedBox(height: AppSpacing.sm),
-            
-            // Games grid (2 columns)
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: AppSpacing.cardSpacing,
-              crossAxisSpacing: AppSpacing.cardSpacing,
-              childAspectRatio: 0.75, // Increased height to prevent overflow
+    );
+  }
+
+  Widget _buildGameCard({
+    required String title,
+    required String description,
+    required String icon,
+    required Color color,
+    required String difficulty,
+    required String xpReward,
+    required String timeEstimate,
+    required bool isImplemented,
+    VoidCallback? onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: isImplemented ? onTap : null,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                _GameCard(
-                  title: 'IPR Quiz\nMaster',
-                  icon: Icons.quiz,
-                  color: AppColors.cardPurple,
-                  bestScore: _gameScores['ipr_quiz_master'],
-                  onTap: () {},
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      icon,
+                      style: const TextStyle(fontSize: 28),
+                    ),
+                  ),
                 ),
-                _GameCard(
-                  title: 'Memory\nMatch',
-                  icon: Icons.style,
-                  color: AppColors.cardOrange,
-                  bestScore: _gameScores['memory_match'],
-                  onTap: () {},
-                ),
-                _GameCard(
-                  title: 'Spot the\nOriginal',
-                  icon: Icons.search,
-                  color: AppColors.cardBlue,
-                  bestScore: _gameScores['spot_original'],
-                  onTap: () {},
-                ),
-                _GameCard(
-                  title: 'IP\nDefender',
-                  icon: Icons.shield,
-                  color: AppColors.cardGreen,
-                  bestScore: _gameScores['ip_defender'],
-                  onTap: () {},
-                ),
-                _GameCard(
-                  title: 'Word\nPuzzle',
-                  icon: Icons.abc,
-                  color: AppColors.cardPink,
-                  bestScore: _gameScores['word_puzzle'],
-                  onTap: () {},
-                ),
-                _GameCard(
-                  title: 'True or\nFalse',
-                  icon: Icons.check_circle,
-                  color: AppColors.cardTeal,
-                  bestScore: _gameScores['true_false'],
-                  onTap: () {},
-                ),
-                _GameCard(
-                  title: 'Timeline\nChallenge',
-                  icon: Icons.timeline,
-                  color: AppColors.cardIndigo,
-                  bestScore: _gameScores['timeline_challenge'],
-                  onTap: () {},
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          if (!isImplemented)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.orange[50],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Soon',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.orange[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          _buildInfoChip(difficulty, Icons.bar_chart, color),
+                          const SizedBox(width: 8),
+                          _buildInfoChip(xpReward, Icons.stars, color),
+                          const SizedBox(width: 8),
+                          _buildInfoChip(timeEstimate, Icons.access_time, color),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            
-            const SizedBox(height: AppSpacing.xl),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoChip(String text, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: color),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 10,
+              color: color,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-/// Game card - Shows REAL score or "Not Played"
-class _GameCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final int? bestScore;  // Nullable - null means not played
-  final VoidCallback onTap;
-  
-  const _GameCard({
-    Key? key,
-    required this.title,
-    required this.icon,
-    required this.color,
-    this.bestScore,
-    required this.onTap,
-  }) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    return CleanCard(
-      color: color.withOpacity(0.1),
-      border: Border.all(
-        color: color.withOpacity(0.3),
-        width: 2,
-      ),
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-              child: Icon(
-                icon,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-            
-            const SizedBox(height: 8),
-            
-            Flexible(
-              child: Text(
-                title,
-                style: AppTextStyles.cardTitle.copyWith(
-                  fontSize: 14,
-                  color: color,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            
-            const SizedBox(height: 6),
-          
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 4,
-            ),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              bestScore != null ? 'Best: $bestScore' : 'Not Played',
-              style: AppTextStyles.caption.copyWith(
-                color: color,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-            
-            const SizedBox(height: 8),
-            
-            SizedBox(
-              width: double.infinity,
-              height: 28,
-            child: ElevatedButton(
-              onPressed: onTap,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: color,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: EdgeInsets.zero,
-              ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Play',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(width: 4),
-                    Icon(Icons.play_arrow, size: 12),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

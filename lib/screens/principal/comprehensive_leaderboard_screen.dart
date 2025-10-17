@@ -73,23 +73,36 @@ class _ComprehensiveLeaderboardScreenState extends State<ComprehensiveLeaderboar
 
   Future<void> _loadSchoolLeaderboard() async {
     try {
-      // Get all students from this school
-      final studentsSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('role', isEqualTo: 'student')
+      // Get all classrooms in the school
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
           .where('schoolId', isEqualTo: widget.schoolId)
           .get();
-
-      _schoolStudents = studentsSnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {
-          'id': doc.id,
+      
+      Set<String> studentIds = {};
+      for (var classroomDoc in classroomsSnapshot.docs) {
+        final studentList = List<String>.from(classroomDoc.data()['studentIds'] ?? []);
+        studentIds.addAll(studentList);
+      }
+      
+      _schoolStudents = [];
+      for (String studentId in studentIds) {
+        final studentDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(studentId)
+            .get();
+        
+        if (!studentDoc.exists) continue;
+        
+        final data = studentDoc.data()!;
+        _schoolStudents.add({
+          'id': studentDoc.id,
           'displayName': data['displayName'] ?? 'Unknown',
           'avatarUrl': data['avatarUrl'],
           'totalXP': data['totalXP'] ?? 0,
           'level': data['level'] ?? 1,
-        };
-      }).toList();
+        });
+      }
 
       // Sort by totalXP
       _schoolStudents.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
@@ -128,22 +141,39 @@ class _ComprehensiveLeaderboardScreenState extends State<ComprehensiveLeaderboar
     if (_selectedClassroomId == null) return;
     
     try {
-      final studentsSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('role', isEqualTo: 'student')
-          .where('classroomId', isEqualTo: _selectedClassroomId)
+      // Get the classroom document to get studentIds array
+      final classroomDoc = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .doc(_selectedClassroomId)
           .get();
+      
+      if (!classroomDoc.exists) {
+        _classroomStudents = [];
+        if (mounted) setState(() {});
+        return;
+      }
+      
+      final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
 
-      _classroomStudents = studentsSnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {
-          'id': doc.id,
+      _classroomStudents = [];
+      
+      for (String studentId in studentIds) {
+        final studentDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(studentId)
+            .get();
+        
+        if (!studentDoc.exists) continue;
+        
+        final data = studentDoc.data()!;
+        _classroomStudents.add({
+          'id': studentDoc.id,
           'displayName': data['displayName'] ?? 'Unknown',
           'avatarUrl': data['avatarUrl'],
           'totalXP': data['totalXP'] ?? 0,
           'level': data['level'] ?? 1,
-        };
-      }).toList();
+        });
+      }
 
       _classroomStudents.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
       
@@ -254,8 +284,15 @@ class _ComprehensiveLeaderboardScreenState extends State<ComprehensiveLeaderboar
           }
         }
       }
+      
+      if (mounted) {
+        setState(() {});
+      }
     } catch (e) {
       print('Error loading country leaderboard: $e');
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

@@ -195,7 +195,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
         final studentsSnapshot = await FirebaseFirestore.instance
             .collection('users')
             .where('role', isEqualTo: 'student')
-            .where('classroomId', isEqualTo: classroomDoc.id)
+            .where('classroomIds', arrayContains: classroomDoc.id)
             .get();
         
         totalStudentsCount += studentsSnapshot.docs.length;
@@ -441,6 +441,10 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             value: _totalClassrooms.toString(),
                             color: const Color(0xFF10B981),
                             subtitle: 'Active classrooms',
+                            onTap: () {
+                              // Switch to classrooms tab (index 1)
+                              DefaultTabController.of(context).animateTo(1);
+                            },
                           ),
                           _buildStatCard(
                             icon: Icons.people,
@@ -899,8 +903,10 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
     required String value,
     required Color color,
     required String subtitle,
+    VoidCallback? onTap,
   }) {
     return CleanCard(
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(14),
         child: Column(
@@ -1183,23 +1189,29 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
       double totalCompletion = 0;
 
       for (var classroomDoc in classroomsSnapshot.docs) {
-        final studentsSnapshot = await FirebaseFirestore.instance
-                  .collection('users')
-            .where('role', isEqualTo: 'student')
-            .where('classroomId', isEqualTo: classroomDoc.id)
-                  .get();
-
-        totalStudentsCount += studentsSnapshot.docs.length;
-
-        for (var studentDoc in studentsSnapshot.docs) {
-          final lastActive = studentDoc.data()['lastActiveDate'] as Timestamp?;
+        final classroomData = classroomDoc.data();
+        final studentIds = List<String>.from(classroomData['studentIds'] ?? []);
+        
+        totalStudentsCount += studentIds.length;
+        
+        for (String studentId in studentIds) {
+          final studentDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          
+          if (!studentDoc.exists) continue;
+          
+          final studentData = studentDoc.data()!;
+          
+          final lastActive = studentData['lastActiveDate'] as Timestamp?;
           if (lastActive != null) {
             final daysSinceActive = DateTime.now().difference(lastActive.toDate()).inDays;
             if (daysSinceActive <= 7) activeCount++;
           }
 
           // Calculate average completion
-          final progressSummary = studentDoc.data()['progressSummary'] as Map<String, dynamic>?;
+          final progressSummary = studentData['progressSummary'] as Map<String, dynamic>?;
           if (progressSummary != null) {
             int completed = 0;
             int total = progressSummary.length;
@@ -1237,14 +1249,18 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
       List<Map<String, dynamic>> allStudents = [];
 
       for (var classroomDoc in classroomsSnapshot.docs) {
-        final studentsSnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('role', isEqualTo: 'student')
-            .where('classroomId', isEqualTo: classroomDoc.id)
-            .get();
-
-        for (var studentDoc in studentsSnapshot.docs) {
-          final studentData = studentDoc.data();
+        final classroomData = classroomDoc.data();
+        final studentIds = List<String>.from(classroomData['studentIds'] ?? []);
+        
+        for (String studentId in studentIds) {
+          final studentDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          
+          if (!studentDoc.exists) continue;
+          
+          final studentData = studentDoc.data()!;
           allStudents.add({
             'id': studentDoc.id,
             'name': studentData['displayName'] ?? 'Unknown',

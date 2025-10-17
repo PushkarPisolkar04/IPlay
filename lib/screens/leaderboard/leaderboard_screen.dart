@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_spacing.dart';
-import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 
-/// Leaderboard Screen - Rankings with podium
+/// Modern Leaderboard Screen for Students
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({Key? key}) : super(key: key);
 
@@ -15,646 +13,513 @@ class LeaderboardScreen extends StatefulWidget {
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  String _selectedFilter = 'State';
-  List<LeaderboardEntry> _leaderboard = [];
-  LeaderboardEntry? _currentUserEntry;
+class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   bool _isLoading = true;
+  String? _currentUserId;
   String? _userClassroomId;
   String? _userSchoolId;
   String? _userState;
+  
+  List<Map<String, dynamic>> _classStudents = [];
+  List<Map<String, dynamic>> _schoolStudents = [];
+  List<Map<String, dynamic>> _stateStudents = [];
+  List<Map<String, dynamic>> _countryStudents = [];
+  
+  List<String> _availableTabs = [];
+  Map<String, int> _tabIndexMap = {};
 
   @override
   void initState() {
     super.initState();
+    _currentUserId = FirebaseAuth.instance.currentUser?.uid;
     _loadUserInfo();
   }
 
   Future<void> _loadUserInfo() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      try {
+    try {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .doc(user.uid)
+          .doc(_currentUserId)
           .get();
       
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         final classroomIds = userData['classroomIds'] as List?;
         
-        // Get first classroom if user has any
-        final firstClassroomId = (classroomIds != null && classroomIds.isNotEmpty) 
+        _userClassroomId = (classroomIds != null && classroomIds.isNotEmpty) 
             ? classroomIds.first 
             : null;
         
-        // Get schoolId from classroom
-        String? schoolId;
-        if (firstClassroomId != null) {
+        // Get schoolId from classroom or user
+        if (_userClassroomId != null) {
           final classroomDoc = await FirebaseFirestore.instance
               .collection('classrooms')
-              .doc(firstClassroomId)
+              .doc(_userClassroomId)
               .get();
           
           if (classroomDoc.exists) {
-            schoolId = classroomDoc.data()?['schoolId'];
+            _userSchoolId = classroomDoc.data()?['schoolId'];
           }
         }
         
-        setState(() {
-          _userClassroomId = firstClassroomId;
-          _userSchoolId = schoolId;
-          _userState = userData['state'];
+        _userState = userData['state'];
+        
+        // Build available tabs based on user's enrollment
+        _availableTabs = [];
+        _tabIndexMap = {};
+        int index = 0;
+        
+        if (_userClassroomId != null) {
+          _availableTabs.add('Class');
+          _tabIndexMap['Class'] = index++;
+        }
+        if (_userSchoolId != null) {
+          _availableTabs.add('School');
+          _tabIndexMap['School'] = index++;
+        }
+        _availableTabs.add('State');
+        _tabIndexMap['State'] = index++;
+        _availableTabs.add('Country');
+        _tabIndexMap['Country'] = index++;
+        
+        // Initialize tab controller
+        _tabController = TabController(length: _availableTabs.length, vsync: this);
+        _tabController.addListener(() {
+          if (_tabController.indexIsChanging) {
+            _loadDataForTab(_tabController.index);
+          }
         });
         
-        print('Leaderboard - Classroom: $_userClassroomId, School: $_userSchoolId, State: $_userState');
-        
-        await _loadLeaderboard();
+        // Load initial data
+        _loadDataForTab(0);
       }
-      } catch (e) {
-        print('Error loading user info: $e');
+    } catch (e) {
+      print('Error loading user info: $e');
+      if (mounted) {
         setState(() => _isLoading = false);
       }
-    } else {
-      setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _loadLeaderboard() async {
+  Future<void> _loadDataForTab(int index) async {
     setState(() => _isLoading = true);
     
+    final tabName = _availableTabs[index];
+    
+    switch (tabName) {
+      case 'Class':
+        await _loadClassLeaderboard();
+        break;
+      case 'School':
+        await _loadSchoolLeaderboard();
+        break;
+      case 'State':
+        await _loadStateLeaderboard();
+        break;
+      case 'Country':
+        await _loadCountryLeaderboard();
+        break;
+    }
+    
+    setState(() => _isLoading = false);
+  }
+
+  Future<void> _loadClassLeaderboard() async {
+    if (_userClassroomId == null) return;
+    
     try {
-      Query query = FirebaseFirestore.instance.collection('users');
+      final classroomDoc = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .doc(_userClassroomId)
+          .get();
       
-      // Apply filters based on selected filter
-      switch (_selectedFilter) {
-        case 'Class':
-          if (_userClassroomId != null) {
-            // Filter by users who have this classroomId in their classroomIds array
-            query = query.where('classroomIds', arrayContains: _userClassroomId);
-          } else {
-            // No classroom, show message
-            setState(() {
-              _leaderboard = [];
-              _isLoading = false;
+      if (classroomDoc.exists) {
+        final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
+        
+        _classStudents = [];
+        for (String studentId in studentIds) {
+          final studentDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          
+          if (studentDoc.exists) {
+            final data = studentDoc.data()!;
+            _classStudents.add({
+              'id': studentId,
+              'displayName': data['displayName'] ?? 'Unknown',
+              'avatarUrl': data['avatarUrl'],
+              'totalXP': data['totalXP'] ?? 0,
+              'level': data['level'] ?? 1,
             });
-            return;
           }
-          break;
-        case 'School':
-          if (_userSchoolId != null) {
-            // Get all students from classrooms in this school
-            final schoolClassrooms = await FirebaseFirestore.instance
-                .collection('classrooms')
-                .where('schoolId', isEqualTo: _userSchoolId)
-                .get();
-            
-            // Collect all classroom IDs
-            final classroomIds = schoolClassrooms.docs.map((doc) => doc.id).toList();
-            
-            if (classroomIds.isNotEmpty) {
-              // Get students who are in any of these classrooms
-              // Due to Firestore limitation, we'll fetch all and filter in memory
-              query = FirebaseFirestore.instance.collection('users')
-                  .where('role', isEqualTo: 'student');
-            } else {
-              // No classrooms, show empty
-              setState(() {
-                _leaderboard = [];
-                _isLoading = false;
-              });
-              return;
-            }
-          } else {
-            // No school, show empty
-            setState(() {
-              _leaderboard = [];
-              _isLoading = false;
-            });
-            return;
-          }
-          break;
-        case 'State':
-          query = query.where('role', isEqualTo: 'student');
-          if (_userState != null) {
-            query = query.where('state', isEqualTo: _userState);
-          }
-          break;
-        case 'National':
-          // Show all students nationwide
-          query = query.where('role', isEqualTo: 'student');
-          break;
+        }
+        
+        _classStudents.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
+      }
+    } catch (e) {
+      print('Error loading class leaderboard: $e');
+    }
+  }
+
+  Future<void> _loadSchoolLeaderboard() async {
+    if (_userSchoolId == null) return;
+    
+    try {
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('schoolId', isEqualTo: _userSchoolId)
+          .get();
+      
+      Set<String> studentIds = {};
+      for (var classroomDoc in classroomsSnapshot.docs) {
+        final studentList = List<String>.from(classroomDoc.data()['studentIds'] ?? []);
+        studentIds.addAll(studentList);
       }
       
-      // Order by totalXP and limit
-      query = query.orderBy('totalXP', descending: true);
-      
-      // For School filter, we need to filter in memory
-      if (_selectedFilter != 'School') {
-        query = query.limit(50);
-      }
-      
-      final snapshot = await query.get();
-      final currentUser = FirebaseAuth.instance.currentUser;
-      
-      final entries = <LeaderboardEntry>[];
-      LeaderboardEntry? currentEntry;
-      
-      // For School filter, filter by classroomIds
-      List<QueryDocumentSnapshot> filteredDocs = snapshot.docs;
-      if (_selectedFilter == 'School' && _userSchoolId != null) {
-        // Get school classrooms
-        final schoolClassrooms = await FirebaseFirestore.instance
-            .collection('classrooms')
-            .where('schoolId', isEqualTo: _userSchoolId)
+      _schoolStudents = [];
+      for (String studentId in studentIds) {
+        final studentDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(studentId)
             .get();
         
-        final schoolClassroomIds = schoolClassrooms.docs.map((doc) => doc.id).toSet();
-        
-        // Filter students who have at least one classroom from the school
-        filteredDocs = snapshot.docs.where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final studentClassroomIds = List<String>.from(data['classroomIds'] ?? []);
-          return studentClassroomIds.any((id) => schoolClassroomIds.contains(id));
-        }).take(50).toList();
-      }
-      
-      for (int i = 0; i < filteredDocs.length; i++) {
-        final doc = filteredDocs[i];
-        final data = doc.data() as Map<String, dynamic>;
-        
-        final entry = LeaderboardEntry(
-          rank: i + 1,
-          userId: doc.id,
-          displayName: data['displayName'] ?? 'Unknown',
-          avatarUrl: data['avatarUrl'],
-          totalXP: data['totalXP'] ?? 0,
-          badgeCount: (data['badges'] as List?)?.length ?? 0,
-          isCurrentUser: doc.id == currentUser?.uid,
-        );
-        
-        entries.add(entry);
-        
-        if (doc.id == currentUser?.uid) {
-          currentEntry = entry;
+        if (studentDoc.exists) {
+          final data = studentDoc.data()!;
+          _schoolStudents.add({
+            'id': studentId,
+            'displayName': data['displayName'] ?? 'Unknown',
+            'avatarUrl': data['avatarUrl'],
+            'totalXP': data['totalXP'] ?? 0,
+            'level': data['level'] ?? 1,
+          });
         }
       }
       
-      setState(() {
-        _leaderboard = entries;
-        _currentUserEntry = currentEntry;
-        _isLoading = false;
-      });
+      _schoolStudents.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
     } catch (e) {
-      print('Error loading leaderboard: $e');
-      setState(() => _isLoading = false);
+      print('Error loading school leaderboard: $e');
     }
   }
-  
+
+  Future<void> _loadStateLeaderboard() async {
+    if (_userState == null) return;
+    
+    try {
+      final studentsSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'student')
+          .where('state', isEqualTo: _userState)
+          .orderBy('totalXP', descending: true)
+          .limit(100)
+          .get();
+
+      _stateStudents = studentsSnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'id': doc.id,
+          'displayName': data['displayName'] ?? 'Unknown',
+          'avatarUrl': data['avatarUrl'],
+          'totalXP': data['totalXP'] ?? 0,
+          'level': data['level'] ?? 1,
+        };
+      }).toList();
+    } catch (e) {
+      print('Error loading state leaderboard: $e');
+    }
+  }
+
+  Future<void> _loadCountryLeaderboard() async {
+    try {
+      final studentsSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'student')
+          .orderBy('totalXP', descending: true)
+          .limit(100)
+          .get();
+
+      _countryStudents = studentsSnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'id': doc.id,
+          'displayName': data['displayName'] ?? 'Unknown',
+          'avatarUrl': data['avatarUrl'],
+          'totalXP': data['totalXP'] ?? 0,
+          'level': data['level'] ?? 1,
+          'state': data['state'] ?? 'Unknown',
+        };
+      }).toList();
+    } catch (e) {
+      print('Error loading country leaderboard: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_availableTabs.isEmpty) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Leaderboard'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Filter chips
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+            // Header with gradient
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF34D399)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              child: Column(
                 children: [
-                  _FilterChip(
-                    label: 'Class',
-                    isSelected: _selectedFilter == 'Class',
-                    onTap: () {
-                      setState(() => _selectedFilter = 'Class');
-                      _loadLeaderboard();
-                    },
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.emoji_events, color: Colors.white, size: 28),
+                      SizedBox(width: 8),
+                      Text(
+                        'Leaderboard',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  _FilterChip(
-                    label: 'School',
-                    isSelected: _selectedFilter == 'School',
-                    onTap: () {
-                      setState(() => _selectedFilter = 'School');
-                      _loadLeaderboard();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  _FilterChip(
-                    label: 'State',
-                    isSelected: _selectedFilter == 'State',
-                    onTap: () {
-                      setState(() => _selectedFilter = 'State');
-                      _loadLeaderboard();
-                    },
-                  ),
-                  const SizedBox(width: 8),
-                  _FilterChip(
-                    label: '🇮🇳 National',
-                    isSelected: _selectedFilter == 'National',
-                    onTap: () {
-                      setState(() => _selectedFilter = 'National');
-                      _loadLeaderboard();
-                    },
+                  const SizedBox(height: 8),
+                  Text(
+                    'Compete with others and climb the ranks!',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.9),
+                    ),
                   ),
                 ],
               ),
             ),
             
-            const SizedBox(height: AppSpacing.lg),
-            
-            // User rank card
-            if (_currentUserEntry != null)
-              ColoredCard(
-                color: AppColors.primary,
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.emoji_events,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Your Rank: #${_currentUserEntry!.rank}',
-                            style: AppTextStyles.cardTitle.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${_currentUserEntry!.totalXP} XP • ${_currentUserEntry!.badgeCount} Badges',
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: Colors.white.withOpacity(0.9),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+            // Tabs
+            Container(
+              color: Colors.white,
+              child: TabBar(
+                controller: _tabController,
+                labelColor: const Color(0xFF10B981),
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: const Color(0xFF10B981),
+                indicatorWeight: 3,
+                labelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
-              )
-            else if (!_isLoading)
-              CleanCard(
-                child: Text(
-                  _selectedFilter == 'Class' && _userClassroomId == null
-                      ? 'Join a classroom to see class rankings!'
-                      : 'Not ranked yet. Complete more levels to appear!',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                tabs: _availableTabs.map((tab) => Tab(text: tab)).toList(),
               ),
+            ),
             
-            const SizedBox(height: AppSpacing.lg),
-            
-            if (_isLoading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppSpacing.xl),
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            else if (_leaderboard.isEmpty)
-              CleanCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Text(
-                    'No users found for this leaderboard.',
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
+            // Tab content
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : TabBarView(
+                      controller: _tabController,
+                      children: _availableTabs.map((tab) {
+                        switch (tab) {
+                          case 'Class':
+                            return _buildLeaderboardTab(_classStudents);
+                          case 'School':
+                            return _buildLeaderboardTab(_schoolStudents);
+                          case 'State':
+                            return _buildLeaderboardTab(_stateStudents);
+                          case 'Country':
+                            return _buildLeaderboardTab(_countryStudents);
+                          default:
+                            return const SizedBox();
+                        }
+                      }).toList(),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              )
-            else ...[
-              if (_leaderboard.length >= 3) ...[
-                Text(
-                  'Top 3',
-                  style: AppTextStyles.sectionHeader,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Podium
-                SizedBox(
-                  height: 200,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // 2nd place
-                      if (_leaderboard.length >= 2)
-                        Expanded(
-                          child: _PodiumPosition(
-                            rank: 2,
-                            name: _leaderboard[1].displayName,
-                            xp: _leaderboard[1].totalXP,
-                            avatarUrl: _leaderboard[1].avatarUrl,
-                            color: AppColors.textSecondary,
-                            height: 140,
-                          ),
-                        ),
-                      const SizedBox(width: 8),
-                      // 1st place
-                      Expanded(
-                        child: _PodiumPosition(
-                          rank: 1,
-                          name: _leaderboard[0].displayName,
-                          xp: _leaderboard[0].totalXP,
-                          avatarUrl: _leaderboard[0].avatarUrl,
-                          color: AppColors.accent,
-                          height: 180,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // 3rd place
-                      if (_leaderboard.length >= 3)
-                        Expanded(
-                          child: _PodiumPosition(
-                            rank: 3,
-                            name: _leaderboard[2].displayName,
-                            xp: _leaderboard[2].totalXP,
-                            avatarUrl: _leaderboard[2].avatarUrl,
-                            color: const Color(0xFFCD7F32),
-                            height: 120,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-              
-              // Rankings list (4th onwards)
-              ...(_leaderboard.skip(3).map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.cardSpacing),
-                child: _RankingItem(
-                  rank: entry.rank,
-                  name: entry.displayName,
-                  xp: entry.totalXP,
-                  badges: entry.badgeCount,
-                  avatarUrl: entry.avatarUrl,
-                  isCurrentUser: entry.isCurrentUser,
-                ),
-              )).toList()),
-            ],
-            
-            const SizedBox(height: AppSpacing.xl),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-/// Leaderboard entry model
-class LeaderboardEntry {
-  final int rank;
-  final String userId;
-  final String displayName;
-  final String? avatarUrl;
-  final int totalXP;
-  final int badgeCount;
-  final bool isCurrentUser;
+  Widget _buildLeaderboardTab(List<Map<String, dynamic>> students) {
+    if (students.isEmpty) {
+      return const Center(
+        child: Text('No students yet', style: TextStyle(fontSize: 16, color: Colors.grey)),
+      );
+    }
 
-  LeaderboardEntry({
-    required this.rank,
-    required this.userId,
-    required this.displayName,
-    this.avatarUrl,
-    required this.totalXP,
-    required this.badgeCount,
-    this.isCurrentUser = false,
-  });
-}
-
-/// Filter chip
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-  
-  const _FilterChip({
-    Key? key,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  }) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.background,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.border,
-          ),
-        ),
-        child: Text(
-          label,
-          style: AppTextStyles.bodyMedium.copyWith(
-            color: isSelected ? Colors.white : AppColors.textSecondary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          ),
-        ),
-      ),
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: students.length,
+      itemBuilder: (context, index) {
+        return _buildLeaderboardItem(students[index], index + 1);
+      },
     );
   }
-}
 
-/// Podium position
-class _PodiumPosition extends StatelessWidget {
-  final int rank;
-  final String name;
-  final int xp;
-  final String? avatarUrl;
-  final Color color;
-  final double height;
-
-  const _PodiumPosition({
-    Key? key,
-    required this.rank,
-    required this.name,
-    required this.xp,
-    this.avatarUrl,
-    required this.color,
-    required this.height,
-  }) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    String medal = rank == 1 ? '🥇' : rank == 2 ? '🥈' : '🥉';
+  Widget _buildLeaderboardItem(Map<String, dynamic> student, int rank) {
+    final bool isCurrentUser = student['id'] == _currentUserId;
     
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        // Avatar
-        AvatarWidget(
-          initials: name[0],
-          size: rank == 1 ? 56 : 48,
-          backgroundColor: color.withOpacity(0.2),
-        ),
-        const SizedBox(height: 8),
-        // Name
-        Text(
-          name,
-          style: AppTextStyles.bodyMedium.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-        const SizedBox(height: 4),
-        // XP
-        Text(
-          '$xp',
-          style: AppTextStyles.bodySmall.copyWith(
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 8),
-        // Podium
-        Container(
-          height: height,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(12),
-            ),
-            border: Border.all(
-              color: color.withOpacity(0.3),
-              width: 2,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              medal,
-              style: TextStyle(
-                fontSize: rank == 1 ? 48 : 36,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+    Color? rankColor;
+    IconData? medalIcon;
+    if (rank == 1) {
+      rankColor = const Color(0xFFFFD700);
+      medalIcon = Icons.emoji_events;
+    } else if (rank == 2) {
+      rankColor = const Color(0xFFC0C0C0);
+      medalIcon = Icons.emoji_events;
+    } else if (rank == 3) {
+      rankColor = const Color(0xFFCD7F32);
+      medalIcon = Icons.emoji_events;
+    }
 
-/// Ranking list item
-class _RankingItem extends StatelessWidget {
-  final int rank;
-  final String name;
-  final int xp;
-  final int badges;
-  final String? avatarUrl;
-  final bool isCurrentUser;
-
-  const _RankingItem({
-    Key? key,
-    required this.rank,
-    required this.name,
-    required this.xp,
-    required this.badges,
-    this.avatarUrl,
-    this.isCurrentUser = false,
-  }) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    return CleanCard(
-      color: isCurrentUser ? AppColors.primary.withOpacity(0.1) : null,
-      child: Row(
-        children: [
-          // Rank
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.backgroundGrey,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                '$rank',
-                style: AppTextStyles.h4.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-          
-          const SizedBox(width: 12),
-          
-          // Avatar
-          AvatarWidget(
-            initials: name[0],
-            size: 40,
-          ),
-          
-          const SizedBox(width: 12),
-          
-          // Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: AppTextStyles.cardTitle.copyWith(
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.emoji_events,
-                      size: 14,
-                      color: AppColors.textTertiary,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$badges badges',
-                      style: AppTextStyles.bodySmall,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          
-          // XP
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '$xp XP',
-                style: AppTextStyles.cardTitle.copyWith(
-                  fontSize: 16,
-                  color: AppColors.primary,
-                ),
-              ),
-            ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        gradient: isCurrentUser
+            ? const LinearGradient(
+                colors: [Color(0xFF10B981), Color(0xFF34D399)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        color: isCurrentUser ? null : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: isCurrentUser 
+                ? const Color(0xFF10B981).withOpacity(0.3)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {},
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  // Rank
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: rankColor ?? (isCurrentUser ? Colors.white.withOpacity(0.3) : Colors.grey[100]),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: medalIcon != null
+                          ? Icon(medalIcon, color: Colors.white, size: 20)
+                          : Text(
+                              '$rank',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isCurrentUser ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // Avatar
+                  AvatarWidget(
+                    imageUrl: student['avatarUrl'],
+                    initials: _getInitials(student['displayName']),
+                    size: 48,
+                  ),
+                  const SizedBox(width: 12),
+                  // Name and Level
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                student['displayName'] ?? 'Unknown',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: isCurrentUser ? Colors.white : Colors.black87,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (isCurrentUser) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Text(
+                                  'YOU',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Level ${student['level']} • ${student['totalXP']} XP',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: isCurrentUser ? Colors.white.withOpacity(0.9) : Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
+
+  String _getInitials(String? name) {
+    if (name == null || name.isEmpty) return 'U';
+    final names = name.split(' ');
+    if (names.length >= 2) {
+      return '${names[0][0]}${names[1][0]}'.toUpperCase();
+    }
+    return name[0].toUpperCase();
+  }
 }
+

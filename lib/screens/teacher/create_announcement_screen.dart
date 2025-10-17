@@ -19,6 +19,44 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
   final _titleController = TextEditingController();
   final _messageController = TextEditingController();
   bool _isSubmitting = false;
+  String? _selectedClassroomId;
+  List<Map<String, dynamic>> _classrooms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedClassroomId = widget.classroomId;
+    if (widget.classroomId == null && !widget.isSchoolWide) {
+      _loadClassrooms();
+    }
+  }
+
+  Future<void> _loadClassrooms() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: user.uid)
+          .get();
+
+      setState(() {
+        _classrooms = classroomsSnapshot.docs.map((doc) {
+          return {
+            'id': doc.id,
+            'name': doc.data()['name'] ?? 'Unnamed',
+          };
+        }).toList();
+        
+        if (_classrooms.isNotEmpty && _selectedClassroomId == null) {
+          _selectedClassroomId = _classrooms[0]['id'];
+        }
+      });
+    } catch (e) {
+      print('Error loading classrooms: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -74,9 +112,10 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         print('Announcement created with ID: ${docRef.id}');
       } else {
         // Classroom announcement (for teachers)
-        if (widget.classroomId == null) throw Exception('No classroom specified');
+        final classroomId = widget.classroomId ?? _selectedClassroomId;
+        if (classroomId == null) throw Exception('No classroom specified');
         
-        announcementData['classroomId'] = widget.classroomId;
+        announcementData['classroomId'] = classroomId;
         
         print('Creating classroom announcement: $announcementData');
         

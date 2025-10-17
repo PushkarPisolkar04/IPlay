@@ -14,7 +14,7 @@ class JoinRequestsScreen extends StatefulWidget {
   const JoinRequestsScreen({
     Key? key,
     required this.classroomId,
-    required this.classroomName,
+    this.classroomName = '',
   }) : super(key: key);
 
   @override
@@ -41,7 +41,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
     });
 
     try {
-      final requests = await _requestService.getPendingRequestsForClassroom(
+      final requests = await _requestService.getPendingRequests(
         widget.classroomId,
       );
       

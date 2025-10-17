@@ -133,6 +133,13 @@ class JoinRequestService {
         },
       );
 
+      // Get classroom's schoolId
+      final classroomDoc = await _firestore
+          .collection('classrooms')
+          .doc(request.classroomId)
+          .get();
+      final schoolId = classroomDoc.data()?['schoolId'];
+
       // Add student to classroom
       batch.update(
         _firestore.collection('classrooms').doc(request.classroomId),
@@ -142,13 +149,18 @@ class JoinRequestService {
         },
       );
 
-      // Add classroom to user's classroomIds
+      // Add classroom and schoolId to user's profile
+      final updateData = {
+        'classroomIds': FieldValue.arrayUnion([request.classroomId]),
+        'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
+      };
+      if (schoolId != null) {
+        updateData['schoolId'] = schoolId;
+      }
+      
       batch.update(
         _firestore.collection('users').doc(request.studentId),
-        {
-          'classroomIds': FieldValue.arrayUnion([request.classroomId]),
-          'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
-        },
+        updateData,
       );
 
       await batch.commit();

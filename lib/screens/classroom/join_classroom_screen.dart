@@ -148,16 +148,20 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
 
         print('Added to studentIds, updating user profile...');
 
-        // Update student's profile
+        // Get classroom's schoolId to update student profile
+        final schoolId = _foundClassroom!['schoolId'];
+
+        // Update student's profile with classroom and school
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .update({
           'classroomIds': FieldValue.arrayUnion([classroomId]),
+          if (schoolId != null) 'schoolId': schoolId,
           'updatedAt': Timestamp.now(),
         });
 
-        print('Successfully joined classroom!');
+        print('Successfully joined classroom with schoolId: $schoolId!');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

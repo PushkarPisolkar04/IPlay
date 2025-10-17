@@ -9,6 +9,8 @@ import '../../widgets/clean_card.dart';
 import '../../widgets/top_bar_with_avatar.dart';
 import '../../widgets/progress_bar.dart';
 import '../../widgets/primary_button.dart';
+import '../announcements/announcements_screen.dart';
+import '../student/student_progress_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
 class HomeScreen extends StatefulWidget {
@@ -123,6 +125,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _refreshData() async {
+    setState(() => _isLoading = true);
+    await _loadUserData();
+  }
+
   String _getInitials() {
     if (_user == null) return 'U';
     final names = _user!.displayName.split(' ');
@@ -149,15 +156,19 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             
-            // Scrollable content
+            // Scrollable content with pull-to-refresh
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.screenHorizontal,
-                      ),
-                      child: Column(
+                  : RefreshIndicator(
+                      onRefresh: _refreshData,
+                      color: AppColors.primary,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.screenHorizontal,
+                        ),
+                        child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
@@ -462,6 +473,77 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.lg),
                           
+                          // Quick Actions Section
+                          Text(
+                            'Quick Actions',
+                            style: AppTextStyles.sectionHeader,
+                          ),
+                          
+                          const SizedBox(height: AppSpacing.sm),
+                          
+                          GridView.count(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: AppSpacing.cardSpacing,
+                            mainAxisSpacing: AppSpacing.cardSpacing,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            childAspectRatio: 1.3,
+                            children: [
+                              // Join Classroom
+                              _buildActionCard(
+                                context,
+                                icon: Icons.add_circle_outline,
+                                title: 'Join\nClassroom',
+                                color: const Color(0xFF10B981),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/join-classroom');
+                                },
+                              ),
+                              // View Announcements (opens dedicated screen)
+                              _buildActionCard(
+                                context,
+                                icon: Icons.campaign_outlined,
+                                title: 'View\nAnnouncements',
+                                color: const Color(0xFFF59E0B),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const AnnouncementsScreen(canEdit: false),
+                                    ),
+                                  );
+                                },
+                              ),
+                              // My Badges
+                              _buildActionCard(
+                                context,
+                                icon: Icons.emoji_events_outlined,
+                                title: 'My\nBadges',
+                                color: const Color(0xFF8B5CF6),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/badges');
+                                },
+                              ),
+                              // Progress Report
+                              _buildActionCard(
+                                context,
+                                icon: Icons.assessment_outlined,
+                                title: 'My\nProgress',
+                                color: const Color(0xFFEC4899),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const StudentProgressScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          
+                          const SizedBox(height: AppSpacing.lg),
+                          
                           // My Stats section
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -593,6 +675,88 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showProgressDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('My Progress'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Total XP: ${_user?.totalXP ?? 0}'),
+            const SizedBox(height: 8),
+            Text('Current Streak: ${_user?.currentStreak ?? 0} days'),
+            const SizedBox(height: 8),
+            Text('Badges Earned: ${_user?.badges.length ?? 0}'),
+            const SizedBox(height: 8),
+            Text('Realms Completed: ${_user?.progressSummary.values.where((r) => r.completed).length ?? 0}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build action cards
+  Widget _buildActionCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 32,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
             ),
           ],
         ),

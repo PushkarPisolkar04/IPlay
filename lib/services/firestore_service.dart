@@ -31,13 +31,13 @@ class FirestoreService {
     String? school,
   }) async {
     try {
-      final classCode = _generateClassCode();
+      final joinCode = _generateClassCode();
       final classroom = ClassroomModel(
         id: _uuid.v4(),
         name: name,
         teacherId: teacherId,
         teacherName: teacherName,
-        classCode: classCode,
+        joinCode: joinCode,
         grade: grade,
         school: school,
         codeExpiresAt: DateTime.now().add(const Duration(days: 365)),

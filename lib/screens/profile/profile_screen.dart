@@ -595,17 +595,19 @@ class _StatCard extends StatelessWidget {
   final String icon;
   final String value;
   final String label;
+  final VoidCallback? onTap;
   
   const _StatCard({
     Key? key,
     required this.icon,
     required this.value,
     required this.label,
+    this.onTap,
   }) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
-    return CleanCard(
+    final card = CleanCard(
       child: Column(
         children: [
           Text(
@@ -624,6 +626,15 @@ class _StatCard extends StatelessWidget {
         ],
       ),
     );
+    
+    if (onTap != null) {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: card,
+      );
+    }
+    return card;
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
+import 'student_detail_screen.dart';
 
 class AllStudentsScreen extends StatefulWidget {
   const AllStudentsScreen({Key? key}) : super(key: key);
@@ -147,6 +148,107 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     if (grade.startsWith('B')) return AppColors.primary;
     if (grade.startsWith('C')) return AppColors.warning;
     return AppColors.error;
+  }
+
+  Future<void> _viewStudentDetails(Map<String, dynamic> student) async {
+    // Navigate to student detail screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StudentDetailScreen(
+          studentId: student['id'],
+          studentName: student['name'],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _removeStudent(Map<String, dynamic> student) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Remove Student'),
+        content: Text('Are you sure you want to remove ${student['name']} from their classroom?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      // Get student's classrooms
+      final studentDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(student['id'])
+          .get();
+      
+      if (!studentDoc.exists) return;
+      
+      final classroomIds = List<String>.from(studentDoc.data()?['classroomIds'] ?? []);
+      
+      // Find which classroom this student is in (under current teacher)
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+      
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: currentUser.uid)
+          .get();
+      
+      for (var classroomDoc in classroomsSnapshot.docs) {
+        final classroomId = classroomDoc.id;
+        if (classroomIds.contains(classroomId)) {
+          // Remove student from this classroom
+          await FirebaseFirestore.instance
+              .collection('classrooms')
+              .doc(classroomId)
+              .update({
+            'studentIds': FieldValue.arrayRemove([student['id']]),
+            'updatedAt': Timestamp.now(),
+          });
+          
+          // Remove classroom from student's classroomIds
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(student['id'])
+              .update({
+            'classroomIds': FieldValue.arrayRemove([classroomId]),
+            'updatedAt': Timestamp.now(),
+          });
+        }
+      }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${student['name']} removed successfully'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+
+      // Reload students list
+      _loadAllStudents();
+    } catch (e) {
+      if (!mounted) return;
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
   }
 
   @override
@@ -330,6 +432,37 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                           '${student['badges']}',
                                           'Badges',
                                           AppColors.warning,
+                                        ),
+                                      ],
+                                    ),
+                                    
+                                    const SizedBox(height: 12),
+                                    
+                                    // Action Buttons
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: () => _viewStudentDetails(student),
+                                            icon: const Icon(Icons.visibility, size: 16),
+                                            label: const Text('View Details'),
+                                            style: OutlinedButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(vertical: 8),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: () => _removeStudent(student),
+                                            icon: const Icon(Icons.remove_circle_outline, size: 16),
+                                            label: const Text('Remove'),
+                                            style: OutlinedButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(vertical: 8),
+                                              foregroundColor: AppColors.error,
+                                              side: BorderSide(color: AppColors.error),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
