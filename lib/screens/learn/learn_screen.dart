@@ -143,7 +143,7 @@ class _LearnScreenState extends State<LearnScreen> {
           slivers: [
             // Modern gradient app bar
             SliverAppBar(
-              expandedHeight: 160,
+              expandedHeight: 140,
               floating: false,
               pinned: true,
               backgroundColor: const Color(0xFF3B82F6),
@@ -168,7 +168,7 @@ class _LearnScreenState extends State<LearnScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 60),
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 50),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [

@@ -33,6 +33,8 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
     try {
       _currentUserId = FirebaseAuth.instance.currentUser?.uid;
       
+      print('🔔 Loading announcements for user: $_currentUserId');
+      
       // Get user's school and classroom
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
@@ -43,59 +45,72 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
         final userData = userDoc.data()!;
         _schoolId = userData['schoolId'];
         
+        print('🏫 User schoolId: $_schoolId');
+        
         // For students, get their classrooms
         if (!widget.canEdit) {
           final classroomIds = List<String>.from(userData['classroomIds'] ?? []);
+          print('🏫 User classroomIds: $classroomIds');
           if (classroomIds.isNotEmpty) {
             _classroomId = classroomIds.first;
+            print('🏫 Selected classroomId: $_classroomId');
           }
         }
       }
 
+      _announcements = [];
+
       // Load announcements
-      Query query = FirebaseFirestore.instance
-          .collection('announcements')
-          .orderBy('createdAt', descending: true);
-      
-      // Filter by school or classroom
-      if (_schoolId != null) {
-        // Get school-wide announcements
-        final schoolQuery = await query
+      // Get school-wide announcements if user is in a school
+      if (_schoolId != null && _schoolId!.isNotEmpty) {
+        print('🔍 Fetching school-wide announcements...');
+        final schoolQuery = await FirebaseFirestore.instance
+            .collection('announcements')
             .where('schoolId', isEqualTo: _schoolId)
             .where('isSchoolWide', isEqualTo: true)
+            .orderBy('createdAt', descending: true)
             .get();
         
-        _announcements = [];
+        print('📢 Found ${schoolQuery.docs.length} school-wide announcements');
+        
         for (var doc in schoolQuery.docs) {
           await _addAnnouncementWithAuthor(doc);
         }
+      }
+      
+      // Get classroom announcements if applicable
+      if (_classroomId != null && _classroomId!.isNotEmpty) {
+        print('🔍 Fetching classroom announcements...');
+        final classroomQuery = await FirebaseFirestore.instance
+            .collection('announcements')
+            .where('classroomId', isEqualTo: _classroomId)
+            .orderBy('createdAt', descending: true)
+            .get();
         
-        // Get classroom announcements if applicable
-        if (_classroomId != null) {
-          final classroomQuery = await FirebaseFirestore.instance
-              .collection('announcements')
-              .where('classroomId', isEqualTo: _classroomId)
-              .orderBy('createdAt', descending: true)
-              .get();
-          
-          for (var doc in classroomQuery.docs) {
+        print('📢 Found ${classroomQuery.docs.length} classroom announcements');
+        
+        for (var doc in classroomQuery.docs) {
+          // Avoid duplicates
+          if (!_announcements.any((a) => a['id'] == doc.id)) {
             await _addAnnouncementWithAuthor(doc);
           }
         }
-        
-        // Sort by date
-        _announcements.sort((a, b) {
-          final aDate = (a['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
-          final bDate = (b['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
-          return bDate.compareTo(aDate);
-        });
       }
+      
+      // Sort by date
+      _announcements.sort((a, b) {
+        final aDate = (a['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
+        final bDate = (b['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
+        return bDate.compareTo(aDate);
+      });
+      
+      print('✅ Total announcements loaded: ${_announcements.length}');
 
       if (mounted) {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('Error loading announcements: $e');
+      print('❌ Error loading announcements: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }

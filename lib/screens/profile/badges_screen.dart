@@ -145,7 +145,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                       crossAxisCount: 3,
                       crossAxisSpacing: AppSpacing.sm,
                       mainAxisSpacing: AppSpacing.sm,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.75,
                     ),
                     itemCount: entry.value.length,
                     itemBuilder: (context, index) {
@@ -297,32 +297,39 @@ class _BadgeCard extends StatelessWidget {
         color: isEarned ? Colors.white : AppColors.backgroundGrey,
         child: Opacity(
           opacity: isEarned ? 1.0 : 0.5,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                badge.iconEmoji,
-                style: const TextStyle(fontSize: 48),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                badge.name,
-                style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.w600,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  badge.iconEmoji,
+                  style: const TextStyle(fontSize: 40),
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (!isEarned) ...[
-                const SizedBox(height: 4),
-                const Icon(
-                  Icons.lock,
-                  size: 16,
-                  color: AppColors.textTertiary,
+                const SizedBox(height: 6),
+                Flexible(
+                  child: Text(
+                    badge.name,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                if (!isEarned) ...[
+                  const SizedBox(height: 2),
+                  const Icon(
+                    Icons.lock,
+                    size: 14,
+                    color: AppColors.textTertiary,
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
