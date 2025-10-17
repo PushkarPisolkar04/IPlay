@@ -204,6 +204,59 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+              
+              // Classroom Selector for Teachers
+              if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                CleanCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Select Classroom',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          value: _selectedClassroomId,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          ),
+                          items: _classrooms.map((classroom) {
+                            return DropdownMenuItem<String>(
+                              value: classroom['id'],
+                              child: Text(classroom['name']),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedClassroomId = value;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a classroom';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                const SizedBox(height: 16),
+              
               CleanCard(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
