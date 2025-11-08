@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_text_styles.dart';
+import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
-import '../../core/models/realm_model.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class QuizPerformanceScreen extends StatefulWidget {
-  const QuizPerformanceScreen({Key? key}) : super(key: key);
+  const QuizPerformanceScreen({super.key});
 
   @override
   State<QuizPerformanceScreen> createState() => _QuizPerformanceScreenState();
 }
 
 class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
-  Map<String, Map<String, dynamic>> _realmPerformance = {};
+  final Map<String, Map<String, dynamic>> _realmPerformance = {};
   bool _isLoading = true;
   List<String> _studentIds = [];
 
@@ -45,15 +44,20 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
 
       _studentIds = allStudentIds.toList();
 
-      // Initialize performance data for each realm (hardcoded for now)
-      final realmIds = ['realm_1', 'realm_2', 'realm_3', 'realm_4', 'realm_5', 'realm_6'];
-      final realmNames = ['Copyright', 'Trademark', 'Patent', 'Industrial Design', 'GI', 'Trade Secrets'];
-      final realmIcons = ['©️', '™️', '🔬', '🎨', '🌍', '🔒'];
+      // Use centralized realm data from AppConstants
+      final realmMappings = {
+        'copyright': {'name': 'Copyright', 'icon': '©️'},
+        'trademark': {'name': 'Trademark', 'icon': '™️'},
+        'patent': {'name': 'Patent', 'icon': '🔬'},
+        'industrial_design': {'name': 'Industrial Design', 'icon': '🎨'},
+        'gi': {'name': 'GI', 'icon': '🌍'},
+        'trade_secrets': {'name': 'Trade Secrets', 'icon': '🔒'},
+      };
       
-      for (int i = 0; i < realmIds.length; i++) {
-        _realmPerformance[realmIds[i]] = {
-          'name': realmNames[i],
-          'icon': realmIcons[i],
+      for (var entry in realmMappings.entries) {
+        _realmPerformance[entry.key] = {
+          'name': entry.value['name'],
+          'icon': entry.value['icon'],
           'totalStudents': 0,
           'completedStudents': 0,
           'totalQuizzes': 0,
@@ -112,7 +116,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
 
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading performance data: $e');
+      // print('Error loading performance data: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -186,7 +190,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
             // Realms Performance List
             Expanded(
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator(color: Color(0xFFEC4899)))
+                  ? const ListSkeleton(itemCount: 6)
                   : RefreshIndicator(
                       onRefresh: _loadPerformanceData,
                       color: const Color(0xFFEC4899),
@@ -272,7 +276,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                                           'Average',
                                           '${perf['averageScore'].toStringAsFixed(0)}%',
                                           Icons.trending_up,
-                                          AppColors.primary,
+                                          AppDesignSystem.primaryIndigo,
                                         ),
                                       ),
                                       const SizedBox(width: 12),
@@ -281,7 +285,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                                           'Highest',
                                           '${perf['highestScore']}%',
                                           Icons.star,
-                                          AppColors.success,
+                                          AppDesignSystem.success,
                                         ),
                                       ),
                                     ],
@@ -296,7 +300,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                                           'Lowest',
                                           '${perf['lowestScore']}%',
                                           Icons.warning,
-                                          AppColors.error,
+                                          AppDesignSystem.error,
                                         ),
                                       ),
                                       const SizedBox(width: 12),
@@ -305,7 +309,7 @@ class _QuizPerformanceScreenState extends State<QuizPerformanceScreen> {
                                           'Total XP',
                                           '${perf['totalXP']}',
                                           Icons.emoji_events,
-                                          AppColors.accent,
+                                          AppDesignSystem.primaryAmber,
                                         ),
                                       ),
                                     ],

@@ -16,6 +16,8 @@ class ReportModel {
   final DateTime? reviewedAt;
   final String? reviewedBy; // Admin/principal ID who reviewed
   final String? resolution;
+  final String? contentCreatorId; // For Firebase security rules - allows teachers to see reports about their content
+  final String? schoolId; // For Firebase security rules - allows principals to filter by school
 
   ReportModel({
     required this.id,
@@ -31,6 +33,8 @@ class ReportModel {
     this.reviewedAt,
     this.reviewedBy,
     this.resolution,
+    this.contentCreatorId,
+    this.schoolId,
   });
 
   /// Convert to Firestore document
@@ -49,6 +53,8 @@ class ReportModel {
       'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
       'reviewedBy': reviewedBy,
       'resolution': resolution,
+      'contentCreatorId': contentCreatorId,
+      'schoolId': schoolId,
     };
   }
 
@@ -70,6 +76,8 @@ class ReportModel {
           : null,
       reviewedBy: data['reviewedBy'] as String?,
       resolution: data['resolution'] as String?,
+      contentCreatorId: data['contentCreatorId'] as String?,
+      schoolId: data['schoolId'] as String?,
     );
   }
 
@@ -88,6 +96,8 @@ class ReportModel {
     DateTime? reviewedAt,
     String? reviewedBy,
     String? resolution,
+    String? contentCreatorId,
+    String? schoolId,
   }) {
     return ReportModel(
       id: id ?? this.id,
@@ -103,6 +113,8 @@ class ReportModel {
       reviewedAt: reviewedAt ?? this.reviewedAt,
       reviewedBy: reviewedBy ?? this.reviewedBy,
       resolution: resolution ?? this.resolution,
+      contentCreatorId: contentCreatorId ?? this.contentCreatorId,
+      schoolId: schoolId ?? this.schoolId,
     );
   }
 }

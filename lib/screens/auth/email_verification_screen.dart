@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -9,7 +9,7 @@ import '../../widgets/clean_card.dart';
 
 /// Email Verification Screen - Prompt user to verify their email
 class EmailVerificationScreen extends StatefulWidget {
-  const EmailVerificationScreen({Key? key}) : super(key: key);
+  const EmailVerificationScreen({super.key});
 
   @override
   State<EmailVerificationScreen> createState() => _EmailVerificationScreenState();
@@ -109,7 +109,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     final user = FirebaseAuth.instance.currentUser;
     
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Verify Your Email'),
         backgroundColor: Colors.transparent,
@@ -135,13 +135,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               width: 120,
               height: 120,
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.1),
+                color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.email_outlined,
                 size: 64,
-                color: AppColors.accent,
+                color: AppDesignSystem.primaryAmber,
               ),
             ),
             
@@ -158,7 +158,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             Text(
               'We\'ve sent a verification email to:',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -169,7 +169,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               user?.email ?? '',
               style: AppTextStyles.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: AppDesignSystem.primaryIndigo,
               ),
               textAlign: TextAlign.center,
             ),
@@ -177,12 +177,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             const SizedBox(height: AppSpacing.xl),
             
             CleanCard(
-              color: AppColors.secondary.withOpacity(0.1),
+              color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
               child: Column(
                 children: [
                   const Icon(
                     Icons.info_outline,
-                    color: AppColors.secondary,
+                    color: AppDesignSystem.primaryPink,
                     size: 32,
                   ),
                   const SizedBox(height: 12),
@@ -195,7 +195,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   Text(
                     'Don\'t forget to check your spam folder!',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: AppDesignSystem.textSecondary,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -219,13 +219,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   horizontal: 24,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundGrey,
+                  color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   'Resend available in $_resendCountdown seconds',
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -239,7 +239,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               child: Text(
                 'I\'ll verify later',
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                   decoration: TextDecoration.underline,
                 ),
               ),

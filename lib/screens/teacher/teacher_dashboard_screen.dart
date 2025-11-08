@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/models/user_model.dart';
 import '../../models/classroom_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
+import '../../widgets/stat_card.dart';
+import '../../widgets/app_button.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../settings/settings_screen.dart';
-import 'teacher_comprehensive_leaderboard_screen.dart';
+import '../leaderboard/unified_leaderboard_screen.dart';
 import 'create_classroom_screen.dart';
 import 'classroom_detail_screen.dart';
 import 'all_students_screen.dart';
 import 'student_progress_screen.dart';
 import 'quiz_performance_screen.dart';
 import 'generate_report_screen.dart';
-import 'teacher_all_announcements_screen.dart';
+import '../announcements/unified_announcements_screen.dart';
+import 'create_announcement_screen.dart';
+import '../assignment/create_assignment_screen.dart';
+import '../../core/services/join_request_service.dart';
+import '../../core/services/notification_service.dart';
+import '../../core/models/join_request_model.dart';
 
 class TeacherDashboardScreen extends StatefulWidget {
   const TeacherDashboardScreen({super.key});
@@ -24,9 +34,29 @@ class TeacherDashboardScreen extends StatefulWidget {
 
 class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   int _selectedIndex = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   List<Widget> get _screens => [
-    _TeacherOverviewTab(onNavigate: (index) => setState(() => _selectedIndex = index)),
+    _TeacherOverviewTab(onNavigate: (index) {
+      setState(() => _selectedIndex = index);
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }),
     const _TeacherClassroomsTab(),
     const _TeacherAnalyticsTab(),
     const _TeacherProfileTab(),
@@ -35,8 +65,11 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => _selectedIndex = index);
+        },
         children: _screens,
       ),
       bottomNavigationBar: Container(
@@ -76,7 +109,14 @@ class _TeacherDashboardScreenState extends State<TeacherDashboardScreen> {
     final isSelected = _selectedIndex == index;
     
     return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
+      onTap: () {
+        setState(() => _selectedIndex = index);
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
         child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
@@ -230,8 +270,68 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator(color: Color(0xFFEF4444))),
+      return Scaffold(
+        backgroundColor: AppDesignSystem.backgroundLight,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Header skeleton
+                Row(
+                  children: [
+                    LoadingSkeleton(
+                      width: 60,
+                      height: 60,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LoadingSkeleton(
+                            width: 150,
+                            height: 20,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          const SizedBox(height: 8),
+                          LoadingSkeleton(
+                            width: 100,
+                            height: 16,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                // Stats skeleton
+                Row(
+                  children: List.generate(
+                    4,
+                    (index) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: index == 0 ? 0 : 6,
+                          right: index == 3 ? 0 : 6,
+                        ),
+                        child: LoadingSkeleton(
+                          height: 80,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Cards skeleton
+                const ListSkeleton(itemCount: 3),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
@@ -245,69 +345,114 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                // Compact Header - Red Theme
+                // Header with gradient
               Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFFEF4444), Color(0xFFF87171)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                  decoration: BoxDecoration(
+                    gradient: AppDesignSystem.getRoleGradient('teacher'),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(24),
+                    bottomRight: Radius.circular(24),
                   ),
                 ),
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24), // Reduced padding
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                          Column(
+                          Expanded(
+                            child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                     Text(
                       _getGreeting(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w500,
+                                style: AppDesignSystem.bodyMedium.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       _user?.displayName ?? 'Teacher',
-                      style: const TextStyle(
-                                  fontSize: 26,
+                                style: AppDesignSystem.h2.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                             ],
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.15),
-                                  blurRadius: 8,
-                                  spreadRadius: 0,
-                                ),
-                              ],
-                            ),
-                            child: const Text(
-                              'Teacher',
-                              style: TextStyle(
-                                color: Color(0xFFEF4444),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                          ),
+                          Row(
+                            children: [
+                              // Notification bell icon
+                              StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('notifications')
+                                    .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                    .where('read', isEqualTo: false)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+                                  
+                                  return Stack(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Colors.white,
+                                          size: 26,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, '/notifications');
+                                        },
+                                      ),
+                                      if (unreadCount > 0)
+                                        Positioned(
+                                          right: 8,
+                                          top: 8,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 18,
+                                              minHeight: 18,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                                style: TextStyle(
+                                                  color: AppDesignSystem.primaryPink,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: AppDesignSystem.shadowSM,
+                                ),
+                                child: Text(
+                                  'Teacher',
+                                  style: AppDesignSystem.bodySmall.copyWith(
+                                    color: AppDesignSystem.primaryPink,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -327,9 +472,8 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                               Expanded(
                                 child: Text(
                                   _schoolName!,
-                      style: const TextStyle(
+                                  style: AppDesignSystem.bodyMedium.copyWith(
                                     color: Colors.white,
-                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
                                   maxLines: 1,
@@ -416,72 +560,372 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                         const SizedBox(height: 20),
                       ],
                       
-                      const Text(
+                      Text(
                         'Teaching Overview',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1F2937),
-                        ),
+                        style: AppDesignSystem.h4,
                       ),
                       const SizedBox(height: 16),
                       
-                      // Stats Grid
-                      GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.85,
+                      // Stats Grid with new StatCard widgets
+                      Row(
                         children: [
-                          _buildStatCard(
-                            icon: Icons.class_,
-                            title: 'My Classes',
-                            value: _totalClassrooms.toString(),
-                            color: const Color(0xFFEF4444),
-                            subtitle: 'Active classrooms',
+                          Expanded(
+                            child: StatCard(
+                              title: 'Classes',
+                              value: _totalClassrooms.toString(),
+                              icon: Icons.class_,
+                              color: AppDesignSystem.primaryPink,
+                              subtitle: 'Active',
+                              onTap: () => widget.onNavigate(1),
+                            ),
                           ),
-                          _buildStatCard(
-                            icon: Icons.people,
-                            title: 'Students',
-                            value: _totalStudents.toString(),
-                            color: const Color(0xFF3B82F6),
-                            subtitle: '$_activeStudents active',
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: StatCard(
+                              title: 'Students',
+                              value: _totalStudents.toString(),
+                              icon: Icons.people,
+                              color: AppDesignSystem.primaryIndigo,
+                              subtitle: '$_activeStudents active',
+                            ),
                           ),
-                          _buildStatCard(
-                            icon: Icons.trending_up,
-                            title: 'Active Rate',
-                            value: _totalStudents > 0 
-                                ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
-                                : '0%',
-                            color: const Color(0xFFF59E0B),
-                            subtitle: 'Last 7 days',
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: StatCard(
+                              title: 'Active Rate',
+                              value: _totalStudents > 0 
+                                  ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
+                                  : '0%',
+                              icon: Icons.trending_up,
+                              color: AppDesignSystem.primaryAmber,
+                              subtitle: 'Last 7 days',
+                            ),
                           ),
-                          _buildStatCard(
-                            icon: Icons.stars,
-                            title: 'Avg XP',
-                            value: _avgClassXP.toStringAsFixed(0),
-                            color: const Color(0xFF8B5CF6),
-                            subtitle: 'Per student',
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: StatCard(
+                              title: 'Avg XP',
+                              value: _avgClassXP.toStringAsFixed(0),
+                              icon: Icons.stars,
+                              color: AppDesignSystem.secondaryPurple,
+                              subtitle: 'Per student',
+                            ),
                           ),
                         ],
                       ),
 
                       const SizedBox(height: 24),
 
-                      // Quick Actions - Compact Cards Like Principal
-                      const Text(
+                      // Quick Actions with new AppButton widgets
+                      Text(
                         'Quick Actions',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1F2937),
-                        ),
+                        style: AppDesignSystem.h4,
                       ),
                       const SizedBox(height: 16),
 
-                      // Create Classroom
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton.primary(
+                              text: 'Create Class',
+                              icon: Icons.add_box,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CreateClassroomScreen(),
+                                  ),
+                                ).then((_) => _loadData());
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: AppButton.secondary(
+                              text: 'Announce',
+                              icon: Icons.campaign,
+                              onPressed: () {
+                                // Navigate to create announcement with optional classroom selection
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CreateAnnouncementScreen(),
+                                  ),
+                                ).then((_) => _loadData());
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton.accent(
+                              text: 'Assignment',
+                              icon: Icons.assignment,
+                              onPressed: () async {
+                                // Show classroom selection dialog if teacher has multiple classrooms
+                                if (_classrooms.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Please create a classroom first'),
+                                      backgroundColor: Colors.orange,
+                                    ),
+                                  );
+                                  return;
+                                }
+                                
+                                // If only one classroom, use it directly
+                                if (_classrooms.length == 1) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateAssignmentScreen(
+                                        classroomId: _classrooms[0]['id'],
+                                        classroomName: _classrooms[0]['name'],
+                                      ),
+                                    ),
+                                  ).then((_) => _loadData());
+                                } else {
+                                  // Show classroom selection dialog
+                                  final selected = await showDialog<Map<String, dynamic>>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Select Classroom'),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: _classrooms.map((classroom) {
+                                            return ListTile(
+                                              title: Text(classroom['name']),
+                                              subtitle: Text('${classroom['studentCount']} students'),
+                                              onTap: () => Navigator.pop(context, classroom),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                  
+                                  if (selected != null) {
+                                    if (!mounted) return;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateAssignmentScreen(
+                                          classroomId: selected['id'],
+                                          classroomName: selected['name'],
+                                        ),
+                                      ),
+                                    ).then((_) => _loadData());
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: AppButton.outline(
+                              text: 'Reports',
+                              icon: Icons.assessment,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const GenerateReportScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton.secondary(
+                              text: 'Messages',
+                              icon: Icons.chat_bubble_outline,
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/chat-list');
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Pending Join Requests Section with Quick Actions
+                      Text(
+                        'Pending Join Requests',
+                        style: AppDesignSystem.h4,
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('join_requests')
+                            .where('status', isEqualTo: 'pending')
+                            .orderBy('requestedAt', descending: true)
+                            .limit(5)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          final requests = snapshot.data!.docs;
+
+                          if (requests.isEmpty) {
+                            return CleanCard(
+                              child: Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Center(
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle_outline,
+                                        size: 48,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'No pending requests',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Column(
+                            children: requests.map((doc) {
+                              final request = JoinRequestModel.fromFirestore(
+                                doc.data() as Map<String, dynamic>,
+                              );
+                              
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: _PendingRequestCard(
+                                  request: request,
+                                  onApproved: _loadData,
+                                  onRejected: _loadData,
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Recent Activity Feed
+                      Text(
+                        'Recent Activity',
+                        style: AppDesignSystem.h4,
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('progress')
+                            .orderBy('completedAt', descending: true)
+                            .limit(10)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+
+                          final activities = snapshot.data!.docs;
+
+                          if (activities.isEmpty) {
+                            return CleanCard(
+                              child: Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Center(
+                                  child: Text(
+                                    'No recent activity',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+
+                          return CleanCard(
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: activities.length > 5 ? 5 : activities.length,
+                              separatorBuilder: (context, index) => const Divider(height: 1),
+                              itemBuilder: (context, index) {
+                                final activity = activities[index].data() as Map<String, dynamic>;
+                                return _ActivityTile(activity: activity);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Performance Insights placeholder
+                      Text(
+                        'Performance Insights',
+                        style: AppDesignSystem.h4,
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          gradient: AppDesignSystem.gradientPrimary,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: AppDesignSystem.shadowMD,
+                        ),
+                        child: Column(
+                          children: [
+                            const Icon(
+                              Icons.insights,
+                              color: Colors.white,
+                              size: 48,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Coming Soon',
+                              style: AppDesignSystem.h4.copyWith(color: Colors.white),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Detailed analytics and insights',
+                              style: AppDesignSystem.bodySmall.copyWith(
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Legacy action - keeping for compatibility
                       CleanCard(
                         onTap: () {
                           Navigator.push(
@@ -496,10 +940,10 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                                color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
                         ),
-                              child: const Icon(Icons.add_box, color: Color(0xFFEF4444), size: 20),
+                              child: Icon(Icons.add_box, color: AppDesignSystem.primaryPink, size: 20),
                       ),
                       const SizedBox(width: 12),
                             const Expanded(
@@ -540,7 +984,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const TeacherAllAnnouncementsScreen(),
+                              builder: (context) => const UnifiedAnnouncementsScreen(),
                             ),
                           );
                         },
@@ -647,34 +1091,14 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             final user = FirebaseAuth.instance.currentUser;
                             if (user == null) return;
                             
-                            final userDoc = await FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(user.uid)
-                                .get();
-                            
-                            if (userDoc.exists && mounted) {
-                              final userData = userDoc.data()!;
-                              final schoolId = userData['schoolId'];
-                              
-                              final classroomsSnapshot = await FirebaseFirestore.instance
-            .collection('classrooms')
-                                  .where('teacherId', isEqualTo: user.uid)
-            .get();
-        
-                              final classroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
-                              
-                              if (schoolId != null && mounted) {
+                            if (mounted) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => TeacherComprehensiveLeaderboardScreen(
-                                      schoolId: schoolId,
-                                      classroomIds: classroomIds,
-                                    ),
+                                    builder: (context) => const UnifiedLeaderboardScreen(),
                                   ),
                                 );
         }
-      }
     } catch (e) {
                             // Error handling
                           }
@@ -1127,7 +1551,7 @@ class _TeacherClassroomsTab extends StatelessWidget {
                                   ),
                                 );
                               } catch (e) {
-                                print('Error navigating to classroom: $e');
+                                // print('Error navigating to classroom: $e');
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Error opening classroom: $e'),
@@ -1279,15 +1703,51 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
       allStudents.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
       _topPerformers = allStudents.take(5).toList();
     } catch (e) {
-      print('Error loading top performers: $e');
+      // print('Error loading top performers: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator(color: Color(0xFFEF4444))),
+      return Scaffold(
+        backgroundColor: AppDesignSystem.backgroundLight,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Stats skeleton
+                Row(
+                  children: List.generate(
+                    3,
+                    (index) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: index == 0 ? 0 : 6,
+                          right: index == 2 ? 0 : 6,
+                        ),
+                        child: LoadingSkeleton(
+                          height: 100,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Chart skeleton
+                LoadingSkeleton(
+                  height: 200,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                const SizedBox(height: 24),
+                // List skeleton
+                const ListSkeleton(itemCount: 5),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
@@ -1439,6 +1899,29 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
 
                     const SizedBox(height: 24),
 
+                    // Performance Chart
+                    const Text(
+                      'Student Progress Distribution',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1F2937),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    CleanCard(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: SizedBox(
+                          height: 200,
+                          child: _buildProgressChart(),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
                     // Top Performers Section
                     const Text(
                       'Top Performers',
@@ -1536,7 +2019,7 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
                             ),
                           ),
                         );
-                      }).toList(),
+                      }),
                     ],
                   ),
                 ),
@@ -1595,6 +2078,111 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
       ),
     );
   }
+
+  Widget _buildProgressChart() {
+    // Sample data - in real implementation, fetch from Firestore
+    final data = [
+      _ChartData('0-25%', _totalStudents > 0 ? (_totalStudents * 0.1).round() : 0, const Color(0xFFEF4444)),
+      _ChartData('26-50%', _totalStudents > 0 ? (_totalStudents * 0.2).round() : 0, const Color(0xFFF59E0B)),
+      _ChartData('51-75%', _totalStudents > 0 ? (_totalStudents * 0.3).round() : 0, const Color(0xFF3B82F6)),
+      _ChartData('76-100%', _totalStudents > 0 ? (_totalStudents * 0.4).round() : 0, const Color(0xFF10B981)),
+    ];
+
+    return BarChart(
+      BarChartData(
+        alignment: BarChartAlignment.spaceAround,
+        maxY: data.map((e) => e.value.toDouble()).reduce((a, b) => a > b ? a : b) * 1.2,
+        barTouchData: BarTouchData(
+          enabled: true,
+          touchTooltipData: BarTouchTooltipData(
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              return BarTooltipItem(
+                '${data[group.x.toInt()].label}\n${rod.toY.round()} students',
+                const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              );
+            },
+          ),
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                if (value.toInt() >= 0 && value.toInt() < data.length) {
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      data[value.toInt()].label,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                }
+                return const Text('');
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) {
+                return Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 11),
+                );
+              },
+            ),
+          ),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false,
+          horizontalInterval: 1,
+          getDrawingHorizontalLine: (value) {
+            return FlLine(
+              color: Colors.grey[300],
+              strokeWidth: 1,
+            );
+          },
+        ),
+        borderData: FlBorderData(show: false),
+        barGroups: data.asMap().entries.map((entry) {
+          return BarChartGroupData(
+            x: entry.key,
+            barRods: [
+              BarChartRodData(
+                toY: entry.value.value.toDouble(),
+                color: entry.value.color,
+                width: 40,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(6),
+                  topRight: Radius.circular(6),
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _ChartData {
+  final String label;
+  final int value;
+  final Color color;
+
+  _ChartData(this.label, this.value, this.color);
 }
 
 // =================================================================
@@ -1675,7 +2263,45 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: Color(0xFFEF4444)));
+      return Scaffold(
+        backgroundColor: AppDesignSystem.backgroundLight,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                // Header skeleton
+                LoadingSkeleton(
+                  height: 120,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                const SizedBox(height: 24),
+                // Stats skeleton
+                Row(
+                  children: List.generate(
+                    2,
+                    (index) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: index == 0 ? 0 : 6,
+                          right: index == 1 ? 0 : 6,
+                        ),
+                        child: LoadingSkeleton(
+                          height: 80,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // List skeleton
+                const ListSkeleton(itemCount: 3),
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     return Scaffold(
@@ -2040,3 +2666,276 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
   }
 }
 
+
+// =================================================================
+// HELPER WIDGETS
+// =================================================================
+
+/// Widget for displaying pending join request with quick approve/reject actions
+class _PendingRequestCard extends StatefulWidget {
+  final JoinRequestModel request;
+  final VoidCallback onApproved;
+  final VoidCallback onRejected;
+
+  const _PendingRequestCard({
+    required this.request,
+    required this.onApproved,
+    required this.onRejected,
+  });
+
+  @override
+  State<_PendingRequestCard> createState() => _PendingRequestCardState();
+}
+
+class _PendingRequestCardState extends State<_PendingRequestCard> {
+  final JoinRequestService _joinRequestService = JoinRequestService();
+  final NotificationService _notificationService = NotificationService();
+  bool _isProcessing = false;
+
+  Future<void> _approveRequest() async {
+    if (_isProcessing) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      final teacherId = FirebaseAuth.instance.currentUser!.uid;
+
+      await _joinRequestService.approveRequest(
+        requestId: widget.request.id,
+        teacherId: teacherId,
+      );
+
+      await _notificationService.sendToUser(
+        userId: widget.request.studentId,
+        title: 'Join Request Approved',
+        body: 'Your request to join the classroom has been approved!',
+        data: {
+          'type': 'join_request_approved',
+          'classroomId': widget.request.classroomId,
+        },
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Student approved successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      widget.onApproved();
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
+  Future<void> _rejectRequest() async {
+    if (_isProcessing) return;
+
+    setState(() => _isProcessing = true);
+
+    try {
+      final teacherId = FirebaseAuth.instance.currentUser!.uid;
+
+      await _joinRequestService.rejectRequest(
+        requestId: widget.request.id,
+        teacherId: teacherId,
+        reason: 'Rejected by teacher',
+      );
+
+      await _notificationService.sendToUser(
+        userId: widget.request.studentId,
+        title: 'Join Request Rejected',
+        body: 'Your request to join the classroom was not approved.',
+        data: {
+          'type': 'join_request_rejected',
+          'classroomId': widget.request.classroomId,
+        },
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Request rejected'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+
+      widget.onRejected();
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isProcessing = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CleanCard(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: AppDesignSystem.warning.withValues(alpha: 0.1),
+              child: Icon(
+                Icons.person_add,
+                color: AppDesignSystem.warning,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.request.studentName,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Requested to join',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (_isProcessing)
+              const SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: _approveRequest,
+                    icon: const Icon(Icons.check_circle),
+                    color: AppDesignSystem.success,
+                    iconSize: 28,
+                    tooltip: 'Approve',
+                  ),
+                  IconButton(
+                    onPressed: _rejectRequest,
+                    icon: const Icon(Icons.cancel),
+                    color: AppDesignSystem.error,
+                    iconSize: 28,
+                    tooltip: 'Reject',
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Widget for displaying recent activity items
+class _ActivityTile extends StatelessWidget {
+  final Map<String, dynamic> activity;
+
+  const _ActivityTile({required this.activity});
+
+  @override
+  Widget build(BuildContext context) {
+    final userId = activity['userId'] as String?;
+    final levelId = activity['levelId'] as String?;
+    final completedAt = activity['completedAt'] as Timestamp?;
+
+    if (userId == null || levelId == null) {
+      return const SizedBox.shrink();
+    }
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+      builder: (context, snapshot) {
+        String userName = 'Student';
+        if (snapshot.hasData && snapshot.data!.exists) {
+          final userData = snapshot.data!.data() as Map<String, dynamic>;
+          userName = userData['displayName'] ?? 'Student';
+        }
+
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+            child: Icon(
+              Icons.check_circle,
+              color: AppDesignSystem.primaryIndigo,
+              size: 20,
+            ),
+          ),
+          title: Text(
+            userName,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          subtitle: Text(
+            'Completed $levelId',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[600],
+            ),
+          ),
+          trailing: completedAt != null
+              ? Text(
+                  _formatTimestamp(completedAt),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[500],
+                  ),
+                )
+              : null,
+        );
+      },
+    );
+  }
+
+  String _formatTimestamp(Timestamp timestamp) {
+    final now = DateTime.now();
+    final date = timestamp.toDate();
+    final difference = now.difference(date);
+
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return '${date.day}/${date.month}';
+    }
+  }
+}

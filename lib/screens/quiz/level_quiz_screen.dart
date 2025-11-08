@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/models/realm_model.dart';
 import '../../core/services/progress_service.dart';
+import '../../core/services/certificate_service.dart';
+import '../../core/services/xp_service.dart';
+import '../../core/services/content_service.dart';
+import '../../utils/haptic_feedback_util.dart';
+import '../../services/sound_service.dart';
+import '../../services/app_rating_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Screen for taking a level quiz
@@ -22,6 +29,9 @@ class LevelQuizScreen extends StatefulWidget {
 
 class _LevelQuizScreenState extends State<LevelQuizScreen> {
   final ProgressService _progressService = ProgressService();
+  final CertificateService _certificateService = CertificateService();
+  final XPService _xpService = XPService();
+  final ContentService _contentService = ContentService();
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
@@ -31,6 +41,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   List<int?> _selectedAnswers = [];
   bool _showExplanation = false;
   bool _isQuizCompleted = false;
+  bool _certificateGenerated = false;
+  int _bonusXP = 0;
 
   @override
   void initState() {
@@ -70,6 +82,15 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
     if (isCorrect) {
       _score++;
+      // Haptic feedback for correct answer
+      HapticFeedbackUtil.correctAnswer();
+      // Sound effect for correct answer
+      SoundService.playCorrectAnswer();
+    } else {
+      // Haptic feedback for incorrect answer
+      HapticFeedbackUtil.incorrectAnswer();
+      // Sound effect for incorrect answer
+      SoundService.playIncorrectAnswer();
     }
 
     setState(() {
@@ -94,6 +115,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
     if (passed) {
       _confettiController.play();
+      // Haptic feedback for XP gain
+      HapticFeedbackUtil.xpGain();
+      // Sound effect for level completion
+      SoundService.playLevelComplete();
 
       // Save progress if user is logged in
       final user = FirebaseAuth.instance.currentUser;
@@ -107,8 +132,11 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             quizScore: _score,
             totalQuestions: widget.level.quiz.length,
           );
+
+          // Check if realm is complete and generate certificate
+          await _checkAndGenerateCertificate(user.uid);
         } catch (e) {
-          print('Error saving progress: $e');
+          // print('Error saving progress: $e');
         }
       }
     }
@@ -116,6 +144,209 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     setState(() {
       _isQuizCompleted = true;
     });
+  }
+
+  /// Check if realm is complete and generate certificate
+  Future<void> _checkAndGenerateCertificate(String userId) async {
+    try {
+      // Get realm info
+      final realm = _contentService.getRealmById(widget.level.realmId);
+      if (realm == null) return;
+
+      // Get user's progress for this realm
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (!userDoc.exists) return;
+
+      final userData = userDoc.data()!;
+      final progressSummary = userData['progressSummary'] as Map<String, dynamic>? ?? {};
+      final realmProgress = progressSummary[widget.level.realmId] as Map<String, dynamic>? ?? {};
+
+      final levelsCompleted = realmProgress['levelsCompleted'] as int? ?? 0;
+      final totalLevels = realm.totalLevels;
+
+      // Check if all levels are completed
+      if (levelsCompleted >= totalLevels) {
+        // Check if certificate already exists
+        final existingCert = await _certificateService.getUserRealmCertificate(
+          userId: userId,
+          realmId: widget.level.realmId,
+        );
+
+        if (existingCert == null) {
+          // Generate certificate
+          await _certificateService.generateRealmCertificate(
+            realmId: widget.level.realmId,
+            realmName: realm.name,
+          );
+
+          // Award realm completion bonus XP
+          final bonusXP = await _xpService.awardRealmCompletionBonus(
+            userId: userId,
+            realmId: widget.level.realmId,
+            levelsCompleted: levelsCompleted,
+            totalLevels: totalLevels,
+          );
+
+          setState(() {
+            _certificateGenerated = true;
+            _bonusXP = bonusXP;
+          });
+
+          // Haptic feedback for badge/certificate unlock
+          HapticFeedbackUtil.badgeUnlock();
+
+          // Track realm completion for app rating
+          await AppRatingService.incrementRealmsCompleted();
+
+          // Show certificate celebration dialog
+          if (mounted) {
+            _showCertificateDialog(null, realm.name);
+          }
+        }
+      }
+    } catch (e) {
+      // print('Error checking/generating certificate: $e');
+    }
+  }
+
+  /// Show certificate celebration dialog
+  void _showCertificateDialog(dynamic certificate, String realmName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        contentPadding: const EdgeInsets.all(24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Trophy icon
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.amber.withValues(alpha: 0.2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.workspace_premium,
+                size: 50,
+                color: Colors.amber,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Title
+            Text(
+              'Realm Completed!',
+              style: AppTextStyles.h2.copyWith(
+                color: AppDesignSystem.primaryIndigo,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+
+            // Message
+            Text(
+              'Congratulations! You\'ve completed the $realmName realm.',
+              style: AppTextStyles.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+
+            // Certificate preview
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                  width: 2,
+                ),
+              ),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.card_membership,
+                    size: 40,
+                    color: AppDesignSystem.primaryIndigo,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Certificate Earned!',
+                    style: AppTextStyles.h4.copyWith(
+                      color: AppDesignSystem.primaryIndigo,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'View it in your profile',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppDesignSystem.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Bonus XP
+            if (_bonusXP > 0) ...[
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.star, color: Colors.amber, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      '+$_bonusXP Bonus XP!',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber[800],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+            },
+            child: const Text('Continue'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pushNamed(context, '/certificates'); // Navigate to certificates
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppDesignSystem.primaryIndigo,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('View Certificate'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _retakeQuiz() {
@@ -139,10 +370,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     final isAnswered = selectedAnswer != null;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: Text('${widget.level.name} Quiz'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         actions: [
           Center(
@@ -166,7 +397,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             LinearProgressIndicator(
               value: (_currentQuestionIndex + 1) / widget.level.quiz.length,
               backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
             ),
 
             // Question and Options
@@ -181,7 +412,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                       ),
                       child: Text(
@@ -198,22 +429,22 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       final isCorrect = index == question.correctIndex;
                       
                       Color bgColor = Colors.white;
-                      Color borderColor = AppColors.border;
+                      Color borderColor = AppDesignSystem.backgroundGrey;
                       IconData? icon;
                       
                       if (_showExplanation) {
                         if (isCorrect) {
-                          bgColor = Colors.green.withOpacity(0.1);
+                          bgColor = Colors.green.withValues(alpha: 0.1);
                           borderColor = Colors.green;
                           icon = Icons.check_circle;
                         } else if (isSelected && !isCorrect) {
-                          bgColor = Colors.red.withOpacity(0.1);
+                          bgColor = Colors.red.withValues(alpha: 0.1);
                           borderColor = Colors.red;
                           icon = Icons.cancel;
                         }
                       } else if (isSelected) {
-                        bgColor = AppColors.primary.withOpacity(0.1);
-                        borderColor = AppColors.primary;
+                        bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.1);
+                        borderColor = AppDesignSystem.primaryIndigo;
                       }
 
                       return GestureDetector(
@@ -251,9 +482,9 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       Container(
                         padding: const EdgeInsets.all(AppSpacing.md),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppSpacing.sm),
-                          border: Border.all(color: Colors.blue.withOpacity(0.3)),
+                          border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,7 +533,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppDesignSystem.primaryIndigo,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                       vertical: AppSpacing.md,
@@ -334,7 +565,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     final passed = percentage >= 60;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: Stack(
         children: [
           SafeArea(
@@ -386,7 +617,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                     Text(
                       '${percentage.toStringAsFixed(0)}%',
                       style: AppTextStyles.h1.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontSize: 48,
                       ),
                     ),
@@ -401,7 +632,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           vertical: AppSpacing.sm,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
+                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -410,9 +641,52 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                             const Icon(Icons.star, color: Colors.amber),
                             const SizedBox(width: 8),
                             Text(
-                              '+${widget.level.xpReward} XP Earned!',
+                              '+${widget.level.xpReward}${_bonusXP > 0 ? ' + $_bonusXP' : ''} XP Earned!',
                               style: AppTextStyles.h3.copyWith(
-                                color: AppColors.primary,
+                                color: AppDesignSystem.primaryIndigo,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+
+                    // Certificate notification
+                    if (_certificateGenerated) ...[
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.md),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.amber.withValues(alpha: 0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.workspace_premium,
+                              color: Colors.amber,
+                              size: 32,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Certificate Earned!',
+                                    style: AppTextStyles.h4.copyWith(
+                                      color: Colors.amber[800],
+                                    ),
+                                  ),
+                                  Text(
+                                    'Realm completed! Check your profile.',
+                                    style: AppTextStyles.bodySmall,
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -427,7 +701,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           ? 'Level completed! You\'ve unlocked the next level.'
                           : 'You need 60% to pass. Review the content and try again!',
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -444,7 +718,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                             Navigator.pop(context); // Back to realm
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
+                            backgroundColor: AppDesignSystem.primaryIndigo,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
@@ -459,8 +733,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
+                            foregroundColor: AppDesignSystem.primaryIndigo,
+                            side: const BorderSide(color: AppDesignSystem.primaryIndigo),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),
@@ -474,7 +748,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         child: ElevatedButton(
                           onPressed: _retakeQuiz,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
+                            backgroundColor: AppDesignSystem.primaryIndigo,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
@@ -489,8 +763,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
+                            foregroundColor: AppDesignSystem.primaryIndigo,
+                            side: const BorderSide(color: AppDesignSystem.primaryIndigo),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),

@@ -1,0 +1,119 @@
+{
+  "levelId": "gi_level_1",
+  "realmId": "gi",
+  "levelNumber": 1,
+  "name": "Introduction to Geographical Indications",
+  "difficulty": "Basic",
+  "xpReward": 100,
+  "estimatedMinutes": 8,
+  "videoUrl": "dQw4w9WgXcQ",
+  "videoDuration": 300,
+  "contentBlocks": [
+    {
+      "type": "text",
+      "content": "A Geographical Indication (GI) is a sign used on products that have a specific geographical origin and possess qualities, reputation, or characteristics that are essentially attributable to that place of origin."
+    },
+    {
+      "type": "text",
+      "content": "GI protection ensures that only producers from a specific region can use the geographical name for their products. This protects the reputation of regional products and promotes economic prosperity for producers in that region."
+    },
+    {
+      "type": "image",
+      "content": "https://via.placeholder.com/400x300/14B8A6/FFFFFF?text=GI+Tag",
+      "caption": "The GI tag identifies products from specific regions"
+    },
+    {
+      "type": "example",
+      "content": "Darjeeling Tea is a famous example of a GI-protected product in India. Only tea grown in the Darjeeling region of West Bengal can be labeled as 'Darjeeling Tea'. This protection ensures that consumers get authentic Darjeeling tea and prevents misuse of the name by producers from other regions.",
+      "metadata": {
+        "title": "Darjeeling Tea GI"
+      }
+    },
+    {
+      "type": "text",
+      "content": "GI protection benefits both producers and consumers. Producers gain recognition and can command premium prices for their authentic regional products. Consumers are assured of the product's origin and quality."
+    },
+    {
+      "type": "text",
+      "content": "In India, GIs are protected under the Geographical Indications of Goods (Registration and Protection) Act, 1999. India has registered numerous GIs including Basmati Rice, Kanchipuram Silk, Mysore Silk, and many handicrafts."
+    },
+    {
+      "type": "case_study",
+      "content": "Kanchipuram Silk sarees from Tamil Nadu received GI protection, preventing manufacturers from other regions from falsely labeling their products as Kanchipuram silk. This protection helped preserve the traditional weaving techniques and ensured fair prices for authentic weavers.",
+      "metadata": {
+        "title": "Kanchipuram Silk GI Protection"
+      }
+    },
+    {
+      "type": "text",
+      "content": "GI protection is particularly important for agricultural products, foodstuffs, wines, handicrafts, and industrial products where quality and reputation are linked to geographical origin."
+    }
+  ],
+  "keyTakeaways": [
+    "GI identifies products with specific geographical origin and qualities",
+    "Only producers from the designated region can use the GI name",
+    "GI protection benefits both producers and consumers",
+    "India has many registered GIs including Darjeeling Tea and Basmati Rice",
+    "GIs are protected under the GI Act, 1999 in India"
+  ],
+  "quizQuestions": [
+    {
+      "question": "What does a Geographical Indication identify?",
+      "options": [
+        "The inventor of a product",
+        "The brand name of a product",
+        "The geographical origin and qualities of a product",
+        "The price of a product"
+      ],
+      "correctIndex": 2,
+      "explanation": "A Geographical Indication identifies products that have a specific geographical origin and possess qualities, reputation, or characteristics attributable to that place of origin."
+    },
+    {
+      "question": "Which of the following is a famous Indian GI?",
+      "options": [
+        "Coca-Cola",
+        "Darjeeling Tea",
+        "Microsoft Windows",
+        "Toyota Cars"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea is a famous Indian Geographical Indication. Only tea grown in the Darjeeling region can be labeled as Darjeeling Tea."
+    },
+    {
+      "question": "Who can use a GI-protected name?",
+      "options": [
+        "Anyone who pays a fee",
+        "Only the first person to register it",
+        "Only producers from the designated geographical region",
+        "Only large companies"
+      ],
+      "correctIndex": 2,
+      "explanation": "Only producers from the specific geographical region designated in the GI registration can use the GI-protected name for their products."
+    },
+    {
+      "question": "What is the main benefit of GI protection for consumers?",
+      "options": [
+        "Lower prices",
+        "Assurance of product origin and quality",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protection assures consumers that they are getting authentic products from the designated region with the expected qualities and characteristics."
+    },
+    {
+      "question": "Which law protects GIs in India?",
+      "options": [
+        "Patents Act, 1970",
+        "Trade Marks Act, 1999",
+        "Geographical Indications Act, 1999",
+        "Copyright Act, 1957"
+      ],
+      "correctIndex": 2,
+      "explanation": "Geographical Indications in India are protected under the Geographical Indications of Goods (Registration and Protection) Act, 1999."
+    }
+  ],
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-01-15T00:00:00Z"
+}

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/badge_service.dart';
-import '../../core/models/badge_model.dart';
+import '../../models/badge_model.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 
 /// Badges Screen - Display all badges (earned and locked)
 class BadgesScreen extends StatefulWidget {
-  const BadgesScreen({Key? key}) : super(key: key);
+  const BadgesScreen({super.key});
 
   @override
   State<BadgesScreen> createState() => _BadgesScreenState();
@@ -55,7 +56,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
           _isLoading = false;
         });
       } catch (e) {
-        print('Error loading badges: $e');
+        // print('Error loading badges: $e');
         setState(() => _isLoading = false);
       }
     } else {
@@ -67,20 +68,18 @@ class _BadgesScreenState extends State<BadgesScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: const Text('My Badges'),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const GridSkeleton(itemCount: 6, crossAxisCount: 3),
       );
     }
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('My Badges'),
         backgroundColor: Colors.transparent,
@@ -93,7 +92,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
           children: [
             // Stats card
             CleanCard(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -105,7 +104,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   Container(
                     width: 1,
                     height: 40,
-                    color: AppColors.border,
+                    color: AppDesignSystem.backgroundGrey,
                   ),
                   _StatItem(
                     label: 'Total',
@@ -115,7 +114,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   Container(
                     width: 1,
                     height: 40,
-                    color: AppColors.border,
+                    color: AppDesignSystem.backgroundGrey,
                   ),
                   _StatItem(
                     label: 'Progress',
@@ -160,7 +159,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   const SizedBox(height: AppSpacing.lg),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -197,21 +196,20 @@ class _StatItem extends StatelessWidget {
   final IconData icon;
 
   const _StatItem({
-    Key? key,
     required this.label,
     required this.value,
     required this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.primary, size: 24),
+        Icon(icon, color: AppDesignSystem.primaryIndigo, size: 24),
         const SizedBox(height: 4),
         Text(
           value,
-          style: AppTextStyles.h2.copyWith(color: AppColors.primary),
+          style: AppTextStyles.h2.copyWith(color: AppDesignSystem.primaryIndigo),
         ),
         Text(
           label,
@@ -227,10 +225,9 @@ class _BadgeCard extends StatelessWidget {
   final bool isEarned;
 
   const _BadgeCard({
-    Key? key,
     required this.badge,
     required this.isEarned,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -270,14 +267,14 @@ class _BadgeCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isEarned
-                        ? AppColors.success.withOpacity(0.1)
-                        : AppColors.textTertiary.withOpacity(0.1),
+                        ? AppDesignSystem.success.withValues(alpha: 0.1)
+                        : AppDesignSystem.textTertiary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     isEarned ? '✓ Earned' : '🔒 Locked',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: isEarned ? AppColors.success : AppColors.textTertiary,
+                      color: isEarned ? AppDesignSystem.success : AppDesignSystem.textTertiary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -294,7 +291,7 @@ class _BadgeCard extends StatelessWidget {
         );
       },
       child: CleanCard(
-        color: isEarned ? Colors.white : AppColors.backgroundGrey,
+        color: isEarned ? Colors.white : AppDesignSystem.backgroundGrey,
         child: Opacity(
           opacity: isEarned ? 1.0 : 0.5,
           child: Padding(
@@ -325,7 +322,7 @@ class _BadgeCard extends StatelessWidget {
                   const Icon(
                     Icons.lock,
                     size: 14,
-                    color: AppColors.textTertiary,
+                    color: AppDesignSystem.textTertiary,
                   ),
                 ],
               ],

@@ -1,4 +1,4 @@
-import '../models/level_model.dart';
+import '../../models/level_model.dart';
 
 final List<LevelModel> tradeSecretsLevelsData = [
   LevelModel(
@@ -778,7 +778,7 @@ Cheating
 - Economic espionage
 
 **Outcome:**
-- Uber settled for $245 million
+- Uber settled for \$245 million
 - Levandowski criminally charged
 - Lesson: Digital forensics critical
 
@@ -1166,11 +1166,11 @@ Cheating
 
 **Zomato Customer Data (2015):**
 - 17 million user records allegedly leaked
-- Estimated value: $10-50 million
+- Estimated value: \$10-50 million
 - Based on: Ad revenue potential, competitive edge
 
 **KFC Recipe:**
-- Estimated value: $5-10 billion
+- Estimated value: \$5-10 billion
 - Based on: Brand value, sales advantage
 
 ## Key Takeaways for Startups
@@ -1187,7 +1187,7 @@ Trade secrets are assets. Protect like you protect cash.
 ''',
     quiz: [
       {'question': 'Startup advantage of trade secrets?', 'options': ['Expensive', 'No cost, immediate protection', 'Requires disclosure', 'Only for big companies'], 'correctAnswer': 1, 'explanation': 'Trade secrets have no filing cost and immediate protection, ideal for startups.'},
-      {'question': 'Founders' Agreement should include?', 'options': ['Nothing', 'IP ownership & assignment to company', 'Salary details', 'Office location'], 'correctAnswer': 1, 'explanation': 'All IP must be assigned to the company, not individual founders.'},
+      {'question': 'Founders Agreement should include?', 'options': ['Nothing', 'IP ownership and assignment to company', 'Salary details', 'Office location'], 'correctAnswer': 1, 'explanation': 'All IP must be assigned to the company not individual founders.'},
       {'question': 'Can you license a trade secret?', 'options': ['No', 'Yes, with strict confidentiality', 'Only patents can be licensed', 'Only to government'], 'correctAnswer': 1, 'explanation': 'Trade secrets can be licensed with strict confidentiality obligations.'},
       {'question': 'Open source and trade secret for same code?', 'options': ['Yes', 'No, conflicting', 'Sometimes', 'Only in USA'], 'correctAnswer': 1, 'explanation': 'Cannot have both for same code; open source requires disclosure.'},
       {'question': 'In M&A, buyer should check?', 'options': ['Office size', 'IP agreements signed by employees', 'Lunch menu', 'Parking spaces'], 'correctAnswer': 1, 'explanation': 'Buyer must verify all employees signed IP assignment agreements.'},

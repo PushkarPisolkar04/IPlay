@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
+import '../../models/classroom_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/top_bar_with_avatar.dart';
-import '../../widgets/progress_bar.dart';
-import '../../widgets/primary_button.dart';
-import '../announcements/announcements_screen.dart';
-import '../student/student_progress_screen.dart';
+import '../../widgets/stat_card.dart';
+import '../../widgets/streak_indicator.dart';
+import '../../widgets/xp_counter.dart';
+import '../../widgets/loading_skeleton.dart';
+import '../announcements/unified_announcements_screen.dart';
+import '../student/my_progress_screen.dart';
 import '../learn/learn_screen.dart';
+import '../leaderboard/unified_leaderboard_screen.dart';
+import '../teacher/classroom_detail_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -50,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        print('Loading user data for: ${currentUser.uid}');
+        // print('Loading user data for: ${currentUser.uid}');
         
         final doc = await FirebaseFirestore.instance
             .collection('users')
@@ -59,10 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
         
         if (doc.exists && mounted) {
           final userData = doc.data()!;
-          print('User data loaded: ${userData['displayName']}');
-          print('Total XP: ${userData['totalXP']}');
-          print('Current Streak: ${userData['currentStreak']}');
-          print('Badges: ${userData['badges']?.length ?? 0}');
+          // print('User data loaded: ${userData['displayName']}');
+          // print('Total XP: ${userData['totalXP']}');
+          // print('Current Streak: ${userData['currentStreak']}');
+          // print('Badges: ${userData['badges']?.length ?? 0}');
           
           setState(() {
             _user = UserModel.fromMap(userData);
@@ -73,13 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
           
           setState(() => _isLoading = false);
         } else {
-          print('User document does not exist!');
+          // print('User document does not exist!');
         }
       } else {
-        print('No current user!');
+        // print('No current user!');
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -95,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (classroomIds != null && classroomIds.isNotEmpty) {
         final classroomId = classroomIds.first;
         
-        print('Loading classroom info: $classroomId');
+        // print('Loading classroom info: $classroomId');
         
         final classroomDoc = await FirebaseFirestore.instance
             .collection('classrooms')
@@ -104,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
         
         if (classroomDoc.exists) {
           _classroomInfo = classroomDoc.data()!;
-          print('Classroom loaded: ${_classroomInfo!['name']}');
+          // print('Classroom loaded: ${_classroomInfo!['name']}');
           
           // Load school info if classroom has schoolId
           final schoolId = _classroomInfo!['schoolId'];
@@ -116,13 +121,13 @@ class _HomeScreenState extends State<HomeScreen> {
             
             if (schoolDoc.exists) {
               _schoolInfo = schoolDoc.data()!;
-              print('School loaded: ${_schoolInfo!['name']}');
+              // print('School loaded: ${_schoolInfo!['name']}');
             }
           }
         }
       }
     } catch (e) {
-      print('Error loading classroom info: $e');
+      // print('Error loading classroom info: $e');
     }
   }
 
@@ -142,8 +147,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    
+    if (currentUser == null) {
+      return const Scaffold(
+        body: Center(child: Text('Not authenticated')),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -157,104 +170,224 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             
-            // Scrollable content with pull-to-refresh
+            // Scrollable content with pull-to-refresh and real-time updates
             Expanded(
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      onRefresh: _refreshData,
-                      color: AppColors.primary,
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.screenHorizontal,
-                      ),
+                  ? const SingleChildScrollView(
+                      padding: EdgeInsets.all(16),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
-                          
-                          // Greeting (real user name)
-                          Text(
-                            '$_greeting!',
-                            style: AppTextStyles.h1,
+                          LoadingSkeleton(height: 120, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                              SizedBox(width: 12),
+                              Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                            ],
                           ),
-                          Text(
-                            _user?.displayName ?? 'Student',
-                            style: AppTextStyles.h3.copyWith(
-                              color: AppColors.secondary,
+                          SizedBox(height: 16),
+                          LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+                        ],
+                      ),
+                    )
+                  : StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(currentUser.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        // Use cached data while waiting for stream
+                        UserModel? streamUser = _user;
+                        
+                        if (snapshot.hasData && snapshot.data!.exists) {
+                          streamUser = UserModel.fromMap(
+                            snapshot.data!.data() as Map<String, dynamic>,
+                          );
+                        }
+                        
+                        return RefreshIndicator(
+                          onRefresh: _refreshData,
+                          color: AppDesignSystem.primaryIndigo,
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.screenHorizontal,
                             ),
-                          ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 8),
+                                
+                                // Greeting with avatar and streak (real-time)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '$_greeting!',
+                                            style: AppTextStyles.h1,
+                                          ),
+                                          Text(
+                                            streamUser?.displayName ?? 'Student',
+                                            style: AppTextStyles.h3.copyWith(
+                                              color: AppDesignSystem.primaryPink,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    StreakIndicator(
+                                      currentStreak: streamUser?.currentStreak ?? 0,
+                                      maxStreak: streamUser?.currentStreak ?? 0,
+                                      isActive: true,
+                                    ),
+                                  ],
+                                ),
+                                
+                                const SizedBox(height: AppSpacing.lg),
+                                
+                                // Quick Stats Row with animated XP
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(AppSpacing.md),
+                                        decoration: BoxDecoration(
+                                          color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                          border: Border.all(
+                                            color: AppDesignSystem.primaryAmber.withValues(alpha: 0.3),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => Navigator.pushNamed(context, '/profile'),
+                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                          child: Column(
+                                            children: [
+                                              Icon(
+                                                Icons.stars,
+                                                color: AppDesignSystem.primaryAmber,
+                                                size: 28,
+                                              ),
+                                              const SizedBox(height: 4),
+                                              XPCounter(
+                                                xp: streamUser?.totalXP ?? 0,
+                                              ),
+                                              Text(
+                                                'Total XP',
+                                                style: AppTextStyles.caption.copyWith(
+                                                  color: AppDesignSystem.textSecondary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppSpacing.cardSpacing),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Badges',
+                                        value: '${streamUser?.badges.length ?? 0}',
+                                        icon: Icons.emoji_events,
+                                        color: AppDesignSystem.primaryPink,
+                                        onTap: () => Navigator.pushNamed(context, '/badges'),
+                                      ),
+                                    ),
+                                    const SizedBox(width: AppSpacing.cardSpacing),
+                                    Expanded(
+                                      child: StatCard(
+                                        title: 'Rank',
+                                        value: '-',
+                                        icon: Icons.leaderboard,
+                                        color: AppDesignSystem.primaryIndigo,
+                                        subtitle: 'Coming soon',
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const UnifiedLeaderboardScreen(),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                           
                           const SizedBox(height: AppSpacing.lg),
                           
-                          // XP & Level Card with gradient
+                          // Daily Challenge Card
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.all(AppSpacing.md),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF3B82F6), Color(0xFF60A5FA)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
+                              gradient: AppDesignSystem.gradientWarning,
                               borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
+                              boxShadow: AppDesignSystem.shadowMD,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                Row(
                                   children: [
-                                    Text(
-                                      'Total XP',
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white.withValues(alpha: 0.9),
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(
+                                        Icons.emoji_events,
+                                        color: Colors.white,
+                                        size: 24,
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '${_user?.totalXP ?? 0}',
-                                      style: AppTextStyles.h1.copyWith(
-                                        color: Colors.white,
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Daily Challenge',
+                                            style: AppTextStyles.h4.copyWith(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Complete today\'s challenge for bonus XP!',
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              color: Colors.white.withValues(alpha: 0.9),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'Streak',
-                                      style: AppTextStyles.bodyMedium.copyWith(
-                                        color: Colors.white.withValues(alpha: 0.9),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/daily-challenge');
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: AppDesignSystem.primaryAmber,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.local_fire_department,
-                                          color: Color(0xFFF59E0B),
-                                          size: 24,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${_user?.currentStreak ?? 0} days',
-                                          style: AppTextStyles.h2.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+                                    child: const Text(
+                                      'Start Challenge',
+                                      style: TextStyle(fontWeight: FontWeight.w600),
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -387,6 +520,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(height: AppSpacing.lg),
                           ],
                           
+                          // Continue Learning Section
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Continue Learning',
+                                style: AppTextStyles.sectionHeader,
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LearnScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'View All',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppDesignSystem.primaryIndigo,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          
                           // Featured card (Continue Learning) with gradient
                           Container(
                             width: double.infinity,
@@ -416,21 +578,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Continue',
+                                            'Start Your',
                                             style: AppTextStyles.h2.copyWith(
                                               color: Colors.white,
                                             ),
                                           ),
                                           Text(
-                                            'Learning',
+                                            'IPR Journey',
                                             style: AppTextStyles.h2.copyWith(
                                               color: Colors.white,
                                             ),
                                           ),
+                                          const SizedBox(height: 4),
                                           Text(
-                                            'IPR',
-                                            style: AppTextStyles.h2.copyWith(
-                                              color: Colors.white,
+                                            '6 Realms • 40+ Levels',
+                                            style: AppTextStyles.bodySmall.copyWith(
+                                              color: Colors.white.withValues(alpha: 0.9),
                                             ),
                                           ),
                                         ],
@@ -439,17 +602,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     // Logo
                                     Image.asset(
                                       'assets/logos/logo.png',
-                                      width: 100,
-                                      height: 100,
+                                      width: 80,
+                                      height: 80,
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: AppSpacing.md),
                                 SizedBox(
-                                  height: 40,
+                                  width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      // Navigate to Learn Screen
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -472,6 +634,65 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          const SizedBox(height: AppSpacing.lg),
+                          
+                          // Recommended for You Section
+                          Text(
+                            'Recommended for You',
+                            style: AppTextStyles.sectionHeader,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          
+                          CleanCard(
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Text('©️', style: TextStyle(fontSize: 24)),
+                                  ),
+                                  title: const Text('Copyright Basics'),
+                                  subtitle: const Text('Start with the fundamentals'),
+                                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LearnScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const Divider(height: 1),
+                                ListTile(
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Text('™️', style: TextStyle(fontSize: 24)),
+                                  ),
+                                  title: const Text('Trademark Essentials'),
+                                  subtitle: const Text('Protect your brand'),
+                                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LearnScreen(),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -515,7 +736,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const AnnouncementsScreen(canEdit: false),
+                                      builder: (_) => const UnifiedAnnouncementsScreen(),
                                     ),
                                   );
                                 },
@@ -540,7 +761,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const StudentProgressScreen(),
+                                      builder: (_) => const MyProgressScreen(),
                                     ),
                                   );
                                 },
@@ -549,6 +770,75 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           
                           const SizedBox(height: AppSpacing.lg),
+                          
+                          // Recent Activity Feed (if in classroom)
+                          if (_classroomInfo != null) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Recent Activity',
+                                  style: AppTextStyles.sectionHeader,
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    if (_classroomInfo != null) {
+                                      final classroom = ClassroomModel.fromMap(_classroomInfo!);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ClassroomDetailScreen(classroom: classroom),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+                                    'View All',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: AppDesignSystem.primaryIndigo,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            
+                            CleanCard(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: AppDesignSystem.success.withValues(alpha: 0.1),
+                                      child: Icon(
+                                        Icons.emoji_events,
+                                        color: AppDesignSystem.success,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    title: const Text('New badge unlocked!'),
+                                    subtitle: const Text('First Steps - Complete your first level'),
+                                    trailing: const Text('2h ago', style: TextStyle(fontSize: 12)),
+                                  ),
+                                  const Divider(height: 1),
+                                  ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor: AppDesignSystem.info.withValues(alpha: 0.1),
+                                      child: Icon(
+                                        Icons.announcement,
+                                        color: AppDesignSystem.info,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    title: const Text('New announcement'),
+                                    subtitle: const Text('Check the latest updates from your teacher'),
+                                    trailing: const Text('1d ago', style: TextStyle(fontSize: 12)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.lg),
+                          ],
                           
                           // My Stats section
                           Row(
@@ -566,7 +856,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   'View Profile',
                                   style: AppTextStyles.bodyMedium.copyWith(
-                                    color: AppColors.secondary,
+                                    color: AppDesignSystem.primaryPink,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -581,7 +871,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(14),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -596,40 +886,41 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Column(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: const Icon(
                                         Icons.emoji_events,
-                                          size: 28,
+                                          size: 26,
                                           color: Color(0xFFF59E0B),
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 10),
                                       Text(
                                         '${_user?.badges.length ?? 0}',
                                         style: AppTextStyles.h2.copyWith(
                                           color: const Color(0xFFF59E0B),
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 2),
                                       Text(
                                         'Badges',
                                         style: AppTextStyles.bodySmall.copyWith(
-                                          color: AppColors.textSecondary,
+                                          color: AppDesignSystem.textSecondary,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.all(16),
+                                  padding: const EdgeInsets.all(14),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -644,31 +935,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Column(
                                     children: [
                                       Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                                           borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: const Icon(
                                         Icons.workspace_premium,
-                                          size: 28,
+                                          size: 26,
                                           color: Color(0xFF8B5CF6),
                                         ),
                                       ),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 10),
                                       Text(
                                         '${_user?.progressSummary.values.where((r) => r.completed).length ?? 0}',
                                         style: AppTextStyles.h2.copyWith(
                                           color: const Color(0xFF8B5CF6),
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 2),
                                       Text(
                                         'Realms Done',
                                         style: AppTextStyles.bodySmall.copyWith(
-                                          color: AppColors.textSecondary,
+                                          color: AppDesignSystem.textSecondary,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
@@ -681,7 +973,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -734,7 +1028,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -746,7 +1040,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -761,7 +1055,7 @@ class _HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: AppDesignSystem.textPrimary,
                     ),
             ),
           ],
@@ -777,10 +1071,10 @@ class ColoredCard extends StatelessWidget {
   final Widget child;
   
   const ColoredCard({
-    Key? key,
+    super.key,
     required this.color,
     required this.child,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {

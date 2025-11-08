@@ -3,15 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'dart:math';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
+import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// Match the IPR - Memory card matching game
 class MatchIPRGame extends StatefulWidget {
-  const MatchIPRGame({Key? key}) : super(key: key);
+  const MatchIPRGame({super.key});
 
   @override
   State<MatchIPRGame> createState() => _MatchIPRGameState();
@@ -87,6 +88,9 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
   void _flipCard(int index) {
     if (_isChecking || _flippedIndices.contains(index) || _gameEnded) return;
 
+    // Haptic feedback on card flip
+    HapticFeedbackUtil.lightImpact();
+
     setState(() {
       _flippedIndices.add(index);
     });
@@ -102,6 +106,9 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
       if (firstCard.id == secondCard.id) {
         // Match found!
+        // Haptic feedback for correct match
+        HapticFeedbackUtil.correctAnswer();
+        
         setState(() {
           _matchesFound++;
         });
@@ -114,6 +121,9 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
         _isChecking = false;
       } else {
         // No match - flip back after delay
+        // Haptic feedback for incorrect match
+        HapticFeedbackUtil.incorrectAnswer();
+        
         Future.delayed(const Duration(milliseconds: 1000), () {
           if (mounted) {
             setState(() {
@@ -130,6 +140,9 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
   void _endGame() {
     _timer?.cancel();
+    // Haptic feedback for XP gain
+    HapticFeedbackUtil.xpGain();
+    
     setState(() {
       _gameEnded = true;
     });
@@ -180,7 +193,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
           'timeSpentSeconds': _timeElapsed,
           'lastAttemptAt': Timestamp.now(),
           'completedAt': Timestamp.now(),
-        }, SetOptions(merge: true) as SetOptions);
+        }, SetOptions(merge: true));
         
         // Update user's gameProgress field
         final userDoc = await FirebaseFirestore.instance
@@ -206,9 +219,9 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
           },
         }, SetOptions(merge: true));
         
-        print('✅ Game score saved: $score, XP earned: $xpEarned');
+        // print('✅ Game score saved: $score, XP earned: $xpEarned');
       } catch (e) {
-        print('❌ Error saving game score: $e');
+        // print('❌ Error saving game score: $e');
       }
     }
   }
@@ -242,10 +255,10 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
   Widget _buildStartScreen() {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Match the IPR'),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppDesignSystem.primaryPink,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -259,13 +272,13 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withOpacity(0.1),
+                  color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.grid_4x4,
                   size: 60,
-                  color: AppColors.secondary,
+                  color: AppDesignSystem.primaryPink,
                 ),
               ),
 
@@ -282,7 +295,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
               Text(
                 'Test your memory by matching IPR concepts!',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -293,7 +306,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundGrey,
+                  color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
                 child: Column(
@@ -330,10 +343,10 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
   Widget _buildGameScreen() {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Match the IPR'),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppDesignSystem.primaryPink,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
       ),
@@ -343,7 +356,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
             // Stats bar
             Container(
               padding: const EdgeInsets.all(AppSpacing.md),
-              color: AppColors.backgroundGrey,
+              color: AppDesignSystem.backgroundGrey,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -375,15 +388,15 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         decoration: BoxDecoration(
-                          color: isFlipped ? Colors.white : AppColors.primary,
+                          color: isFlipped ? Colors.white : AppDesignSystem.primaryIndigo,
                           borderRadius: BorderRadius.circular(AppSpacing.sm),
                           border: Border.all(
-                            color: isFlipped ? AppColors.primary : Colors.transparent,
+                            color: isFlipped ? AppDesignSystem.primaryIndigo : Colors.transparent,
                             width: 2,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -402,7 +415,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
                                         card.content,
                                         style: AppTextStyles.bodySmall.copyWith(
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.primary,
+                                          color: AppDesignSystem.primaryIndigo,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -469,10 +482,10 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
     final String rating = _moves <= 12 ? 'Perfect!' : _moves <= 18 ? 'Great!' : 'Good!';
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Game Complete'),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppDesignSystem.primaryPink,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -486,13 +499,13 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.success.withOpacity(0.1),
+                  color: AppDesignSystem.success.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.emoji_events,
                   size: 60,
-                  color: AppColors.success,
+                  color: AppDesignSystem.success,
                 ),
               ),
 
@@ -508,7 +521,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
               Text(
                 'You matched all pairs!',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -519,7 +532,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundGrey,
+                  color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
                 child: Column(
@@ -590,7 +603,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 20, color: AppColors.textSecondary),
+        Icon(icon, size: 20, color: AppDesignSystem.textSecondary),
         const SizedBox(width: 4),
         Text(
           text,
@@ -609,13 +622,13 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
         Text(
           label,
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
+            color: AppDesignSystem.textSecondary,
           ),
         ),
         Text(
           value,
           style: AppTextStyles.h3.copyWith(
-            color: isHighlight ? AppColors.primary : AppColors.textPrimary,
+            color: isHighlight ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
           ),
         ),
       ],

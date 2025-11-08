@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
@@ -9,7 +7,7 @@ import '../../widgets/clean_card.dart';
 /// Role Selection Screen - Choose between Student/Teacher (NOT Principal)
 /// Note: Principal is NOT a signup role. Teachers become Principals by creating a school.
 class RoleSelectionScreen extends StatefulWidget {
-  const RoleSelectionScreen({Key? key}) : super(key: key);
+  const RoleSelectionScreen({super.key});
 
   @override
   State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
@@ -17,7 +15,6 @@ class RoleSelectionScreen extends StatefulWidget {
 
 class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   String? _selectedRole;
-  bool _isLoading = false;
 
   /// Handle continue button - Navigate to role-specific signup
   void _handleContinue() {
@@ -47,12 +44,18 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/backgrounds/background1.png'),
-            fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppDesignSystem.primaryIndigo,
+              AppDesignSystem.secondaryPurple,
+              AppDesignSystem.primaryPink,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
         child: SafeArea(
@@ -60,16 +63,16 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
               child: Container(
-                padding: const EdgeInsets.all(28),
+                padding: const EdgeInsets.all(32),
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(28),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 30,
+                      offset: const Offset(0, 15),
                     ),
                   ],
                 ),
@@ -77,101 +80,134 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title
-                    Text(
-                      'Select Your Role',
-                      style: AppTextStyles.h1,
-                    ),
-
-                    const SizedBox(height: AppSpacing.sm),
-                    
-                    Text(
-                      'Choose how you want to use IPlay',
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    
-                    const SizedBox(height: AppSpacing.md),
-                    
-                    // Helper text
-                    Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.info.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.info.withOpacity(0.3)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.info_outline, color: AppColors.info, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Select your role carefully. You can join classrooms or schools later!',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.info,
-                          fontWeight: FontWeight.w600,
+                    Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppDesignSystem.primaryIndigo,
+                                AppDesignSystem.primaryPink,
+                              ],
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.waving_hand,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome!',
+                                style: AppTextStyles.h1.copyWith(fontSize: 28),
+                              ),
+                              Text(
+                                'Let\'s get started',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              
+                    
                     const SizedBox(height: AppSpacing.lg),
                     
-                    // Role cards
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppDesignSystem.info.withValues(alpha: 0.1),
+                            AppDesignSystem.primaryTeal.withValues(alpha: 0.1),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppDesignSystem.info.withValues(alpha: 0.3),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.info_outline, color: AppDesignSystem.info, size: 22),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Choose your role to unlock a personalized experience!',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppDesignSystem.info,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.xl),
+                    
                     _RoleCard(
-                title: 'Student',
-                description: 'Learn IPR through games and challenges',
-                helperText: '💡 Join a classroom or learn solo - your choice!',
-                icon: Icons.school,
-                color: AppColors.primary,
-                isSelected: _selectedRole == 'student',
-                onTap: () => setState(() => _selectedRole = 'student'),
-              ),
-              
+                      title: 'Student',
+                      description: 'Learn IPR through games and challenges',
+                      helperText: 'Join a classroom or learn solo - your choice!',
+                      icon: Icons.school,
+                      color: AppDesignSystem.primaryIndigo,
+                      isSelected: _selectedRole == 'student',
+                      onTap: () => setState(() => _selectedRole = 'student'),
+                    ),
+                    
                     const SizedBox(height: AppSpacing.md),
                     
                     _RoleCard(
-                title: 'Teacher',
-                description: 'Manage classrooms and track student progress',
-                helperText: '💡 First in your school? You\'ll become principal!',
-                icon: Icons.person,
-                color: AppColors.secondary,
-                isSelected: _selectedRole == 'teacher',
-                onTap: () => setState(() => _selectedRole = 'teacher'),
-              ),
-              
+                      title: 'Teacher',
+                      description: 'Manage classrooms and track student progress',
+                      helperText: 'First in your school? You\'ll become principal!',
+                      icon: Icons.person,
+                      color: AppDesignSystem.primaryPink,
+                      isSelected: _selectedRole == 'teacher',
+                      onTap: () => setState(() => _selectedRole = 'teacher'),
+                    ),
+                    
                     const SizedBox(height: AppSpacing.xl),
                     
-                    // Continue button
                     SizedBox(
-                width: double.infinity,
-                height: AppSpacing.buttonHeight,
-                child: ElevatedButton(
-                  onPressed: _selectedRole != null ? _handleContinue : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    disabledBackgroundColor: AppColors.textTertiary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Continue',
-                        style: AppTextStyles.buttonLarge,
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.arrow_forward, size: 20),
-                    ],
-                  ),
+                      width: double.infinity,
+                      height: AppSpacing.buttonHeight,
+                      child: ElevatedButton(
+                        onPressed: _selectedRole != null ? _handleContinue : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _selectedRole == 'student'
+                              ? AppDesignSystem.primaryIndigo
+                              : AppDesignSystem.primaryPink,
+                          disabledBackgroundColor: AppDesignSystem.textTertiary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Continue',
+                              style: AppTextStyles.buttonLarge,
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward, size: 20),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -185,7 +221,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   }
 }
 
-/// Role selection card
 class _RoleCard extends StatelessWidget {
   final String title;
   final String description;
@@ -196,7 +231,6 @@ class _RoleCard extends StatelessWidget {
   final VoidCallback onTap;
   
   const _RoleCard({
-    Key? key,
     required this.title,
     required this.description,
     required this.helperText,
@@ -204,76 +238,128 @@ class _RoleCard extends StatelessWidget {
     required this.color,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
-    return CleanCard(
-      color: isSelected
-          ? color.withOpacity(0.1)
-          : AppColors.background,
-      border: Border.all(
-        color: isSelected ? color : AppColors.border,
-        width: isSelected ? 2 : 1,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      decoration: BoxDecoration(
+        gradient: isSelected
+            ? LinearGradient(
+                colors: [
+                  color.withValues(alpha: 0.15),
+                  color.withValues(alpha: 0.05),
+                ],
+              )
+            : null,
+        color: isSelected ? null : AppDesignSystem.backgroundLight,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isSelected ? color : AppDesignSystem.backgroundGrey,
+          width: isSelected ? 2.5 : 1.5,
+        ),
+        boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ]
+            : null,
       ),
-      onTap: onTap,
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 28,
-            ),
-          ),
-          
-          const SizedBox(width: 16),
-          
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.cardTitle.copyWith(
-                    color: isSelected ? color : AppColors.textPrimary,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    gradient: isSelected
+                        ? LinearGradient(
+                            colors: [color, color.withValues(alpha: 0.7)],
+                          )
+                        : null,
+                    color: isSelected ? null : color.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: color.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: Icon(
+                    icon,
+                    color: isSelected ? Colors.white : color,
+                    size: 32,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w500,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTextStyles.cardTitle.copyWith(
+                          color: isSelected ? color : AppDesignSystem.textPrimary,
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppDesignSystem.textPrimary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.lightbulb_outline,
+                            size: 14,
+                            color: isSelected ? color : AppDesignSystem.textSecondary,
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              helperText,
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: isSelected ? color : AppDesignSystem.textSecondary,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 6),
-                Text(
-                  helperText,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: isSelected ? color : AppColors.textPrimary.withOpacity(0.8),
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic,
+                if (isSelected)
+                  Icon(
+                    Icons.check_circle,
+                    color: color,
+                    size: 32,
                   ),
-                ),
               ],
             ),
           ),
-          
-          if (isSelected)
-            Icon(
-              Icons.check_circle,
-              color: color,
-              size: 28,
-            ),
-        ],
+        ),
       ),
     );
   }

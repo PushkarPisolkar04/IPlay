@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -11,7 +11,7 @@ import '../../widgets/clean_card.dart';
 /// Create Classroom Screen - For teachers to create new classrooms
 /// Features: School affiliation (independent or under school)
 class CreateClassroomScreen extends StatefulWidget {
-  const CreateClassroomScreen({Key? key}) : super(key: key);
+  const CreateClassroomScreen({super.key});
 
   @override
   State<CreateClassroomScreen> createState() => _CreateClassroomScreenState();
@@ -65,7 +65,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         }
       }
     } catch (e) {
-      print('Error checking existing school: $e');
+      // print('Error checking existing school: $e');
     }
   }
 
@@ -236,20 +236,14 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         );
       }
       
-      // Debug: Check user role
-      final currentUserDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      final userRole = currentUserDoc.data()?['role'];
-      final isPrincipal = currentUserDoc.data()?['isPrincipal'] ?? false;
-      print('User role: $userRole, isPrincipal: $isPrincipal');
-      
-      print('Creating classroom with data: $classroomData');
-      print('User UID: ${user.uid}');
-      print('School ID: $_selectedSchoolId');
-      print('Is Independent: $_isIndependent');
+      // print('Creating classroom with data: $classroomData');
+      // print('User UID: ${user.uid}');
+      // print('School ID: $_selectedSchoolId');
+      // print('Is Independent: $_isIndependent');
       
       await batch.commit();
 
-      print('Classroom created successfully!');
+      // print('Classroom created successfully!');
 
       if (!mounted) return;
 
@@ -268,15 +262,15 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.primary),
+                  border: Border.all(color: AppDesignSystem.primaryIndigo),
                 ),
                 child: Column(
                   children: [
                     const Text(
                       'Join Code',
-                      style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -284,7 +278,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         letterSpacing: 2,
                       ),
                     ),
@@ -295,7 +289,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
               Text(
                 'Share this code with your students so they can join.',
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                 ),
               ),
             ],
@@ -312,8 +306,8 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         ),
       );
     } catch (e) {
-      print('Error creating classroom: $e');
-      print('Error details: ${e.toString()}');
+      // print('Error creating classroom: $e');
+      // print('Error details: ${e.toString()}');
       
       if (!mounted) return;
       
@@ -332,7 +326,8 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: CustomScrollView(
         slivers: [
           // Gradient Header
@@ -390,12 +385,12 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
               CleanCard(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.school,
-                      color: AppColors.primary,
+                      color: AppDesignSystem.primaryIndigo,
                       size: 32,
                     ),
                     const SizedBox(width: 12),
@@ -425,7 +420,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                       title: Text('Independent', style: AppTextStyles.cardTitle),
                       subtitle: Text(
                         'Not affiliated with any school',
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(color: AppDesignSystem.textSecondary),
                       ),
                       value: true,
                       groupValue: _isIndependent,
@@ -436,21 +431,21 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                           _selectedSchoolName = null;
                         });
                       },
-                      activeColor: AppColors.primary,
+                      activeColor: AppDesignSystem.primaryIndigo,
                     ),
                     const Divider(height: 1),
                     RadioListTile<bool>(
                       title: Text('Under School', style: AppTextStyles.cardTitle),
                       subtitle: Text(
                         'Part of a school system',
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                        style: AppTextStyles.bodySmall.copyWith(color: AppDesignSystem.textSecondary),
                       ),
                       value: false,
                       groupValue: _isIndependent,
                       onChanged: (value) {
                         setState(() => _isIndependent = value!);
                       },
-                      activeColor: AppColors.primary,
+                      activeColor: AppDesignSystem.primaryIndigo,
                     ),
                   ],
                 ),
@@ -467,10 +462,10 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 
                 if (_selectedSchoolName != null)
                   CleanCard(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppDesignSystem.success.withValues(alpha: 0.1),
                     child: Row(
                       children: [
-                        const Icon(Icons.check_circle, color: AppColors.success),
+                        const Icon(Icons.check_circle, color: AppDesignSystem.success),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -479,7 +474,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                               Text(
                                 'Selected School',
                                 style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: AppDesignSystem.textSecondary,
                                 ),
                               ),
                               Text(
@@ -530,7 +525,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                   Text(
                     'Ask your school principal for the school code',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: AppDesignSystem.textSecondary,
                     ),
                   ),
                 ],
@@ -611,7 +606,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                   onChanged: (value) {
                     setState(() => _requiresApproval = value);
                   },
-                  activeColor: AppColors.primary,
+                  activeColor: AppDesignSystem.primaryIndigo,
                 ),
               ),
               
@@ -629,7 +624,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 child: Text(
                   'A unique join code will be generated',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
               ),

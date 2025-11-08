@@ -18,15 +18,25 @@ class BadgeModel {
     required this.id,
     required this.name,
     required this.description,
-    required this.icon,
+    String? icon,
+    String? iconEmoji, // Backward compatibility
     required this.category,
     required this.xpBonus,
     required this.rarity,
-    required this.criteriaType,
-    required this.criteriaValue,
-    required this.order,
+    String? criteriaType,
+    dynamic criteriaValue,
+    Map<String, dynamic>? condition, // Backward compatibility
+    int? order,
+    int? displayOrder, // Backward compatibility
     this.isActive = true,
-  });
+  }) : icon = icon ?? iconEmoji ?? '🏅',
+       criteriaType = criteriaType ?? (condition?['type'] as String?) ?? 'manual',
+       criteriaValue = criteriaValue ?? condition?['value'],
+       order = order ?? displayOrder ?? 0;
+  
+  // Alias for backward compatibility
+  String get iconEmoji => icon;
+  int get displayOrder => order;
 
   /// Convert to Firestore document
   Map<String, dynamic> toFirestore() {
@@ -52,13 +62,13 @@ class BadgeModel {
       id: data['id'] as String,
       name: data['name'] as String,
       description: data['description'] as String,
-      icon: data['icon'] as String,
+      icon: (data['icon'] ?? data['iconEmoji']) as String, // Support both field names
       category: data['category'] as String,
-      xpBonus: data['xpBonus'] as int,
+      xpBonus: data['xpBonus'] as int? ?? 0,
       rarity: data['rarity'] as String,
       criteriaType: data['criteriaType'] as String,
       criteriaValue: data['criteriaValue'],
-      order: data['order'] as int,
+      order: (data['order'] ?? data['displayOrder']) as int, // Support both field names
       isActive: data['isActive'] as bool? ?? true,
     );
   }

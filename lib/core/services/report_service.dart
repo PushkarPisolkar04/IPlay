@@ -1,316 +1,212 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uuid/uuid.dart';
-import '../models/report_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:csv/csv.dart';
+import 'dart:typed_data';
 
-/// Service for content reporting and moderation
+/// Service for generating reports (PDF and CSV)
+/// No Cloud Functions needed - all client-side
 class ReportService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final _uuid = const Uuid();
 
-  // ========== REPORT OPERATIONS ==========
+  /// Generate Student Progress Report (PDF)
+  Future<Uint8List> generateStudentReport(String studentId) async {
+    final user = await _firestore.collection('users').doc(studentId).get();
+    final userData = user.data()!;
 
-  /// Submit a content report
-  Future<ReportModel> submitReport({
+    final progress = await _firestore
+        .collection('progress')
+        .where('userId', isEqualTo: studentId)
+        .get();
+
+    final pdf = pw.Document();
+    
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Text('Student Progress Report',
+                style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text('Name: ${userData['displayName']}'),
+          pw.Text('Email: ${userData['email']}'),
+          pw.Text('Total XP: ${userData['totalXP']}'),
+          pw.Text('Current Streak: ${userData['currentStreak']} days'),
+          pw.SizedBox(height: 20),
+          pw.Header(level: 1, child: pw.Text('Realm Progress')),
+          pw.TableHelper.fromTextArray(
+            headers: ['Content', 'Status', 'XP Earned', 'Accuracy'],
+            data: progress.docs.map((doc) {
+              final data = doc.data();
+              return [
+                data['contentId'] ?? '',
+                data['status'] ?? '',
+                '${data['xpEarned'] ?? 0}',
+                '${data['accuracy'] ?? 0}%',
+              ];
+            }).toList(),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text('Report Generated: ${DateTime.now().toString().split(' ')[0]}',
+              style: const pw.TextStyle(fontSize: 10)),
+        ],
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  /// Export Class Data as CSV
+  Future<String> exportClassDataCSV(String classroomId) async {
+    final classroom = await _firestore
+        .collection('classrooms')
+        .doc(classroomId)
+        .get();
+
+    final studentIds = List<String>.from(classroom['studentIds']);
+
+    List<List<dynamic>> rows = [
+      ['Name', 'Email', 'Total XP', 'Streak', 'Realms Completed', 'Join Date']
+    ];
+
+    for (String studentId in studentIds) {
+      final user = await _firestore.collection('users').doc(studentId).get();
+      final userData = user.data()!;
+
+      final progressSummary = userData['progressSummary'] as Map<String, dynamic>?;
+      final realmsCompleted = progressSummary?.values
+              .where((v) => v['completed'] == true)
+              .length ??
+          0;
+
+      rows.add([
+        userData['displayName'] ?? '',
+        userData['email'] ?? '',
+        userData['totalXP'] ?? 0,
+        userData['currentStreak'] ?? 0,
+        realmsCompleted,
+        (userData['createdAt'] as Timestamp?)?.toDate().toString().split(' ')[0] ?? '',
+      ]);
+    }
+
+    return const ListToCsvConverter().convert(rows);
+  }
+
+  /// Export School Analytics as CSV
+  Future<String> exportSchoolAnalyticsCSV(String schoolId) async {
+    final classrooms = await _firestore
+        .collection('classrooms')
+        .where('schoolId', isEqualTo: schoolId)
+        .get();
+
+    List<List<dynamic>> rows = [
+      ['Classroom', 'Teacher', 'Students', 'Total XP', 'Avg XP']
+    ];
+
+    for (var classroom in classrooms.docs) {
+      final classData = classroom.data();
+      final studentIds = List<String>.from(classData['studentIds']);
+      
+      int totalXP = 0;
+      for (String studentId in studentIds) {
+        final user = await _firestore.collection('users').doc(studentId).get();
+        totalXP += (user.data()?['totalXP'] ?? 0) as int;
+      }
+
+      rows.add([
+        classData['name'],
+        classData['teacherName'],
+        studentIds.length,
+        totalXP,
+        studentIds.isNotEmpty ? (totalXP / studentIds.length).toStringAsFixed(1) : '0',
+      ]);
+    }
+
+    return const ListToCsvConverter().convert(rows);
+  }
+
+  /// Generate Classroom Performance Report (PDF)
+  Future<Uint8List> generateClassroomReport(String classroomId) async {
+    final classroom = await _firestore
+        .collection('classrooms')
+        .doc(classroomId)
+        .get();
+    final classData = classroom.data()!;
+    
+    final studentIds = List<String>.from(classData['studentIds']);
+    
+    final pdf = pw.Document();
+    
+    // Gather student data
+    List<Map<String, dynamic>> studentData = [];
+    for (String studentId in studentIds) {
+      final user = await _firestore.collection('users').doc(studentId).get();
+      studentData.add(user.data()!);
+    }
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          pw.Header(
+            level: 0,
+            child: pw.Text('Classroom Performance Report',
+                style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text('Classroom: ${classData['name']}'),
+          pw.Text('Teacher: ${classData['teacherName']}'),
+          pw.Text('Total Students: ${studentIds.length}'),
+          pw.SizedBox(height: 20),
+          pw.Header(level: 1, child: pw.Text('Student Performance')),
+          pw.TableHelper.fromTextArray(
+            headers: ['Name', 'XP', 'Streak', 'Realms'],
+            data: studentData.map((student) {
+              final progressSummary = student['progressSummary'] as Map?;
+              final realmsCompleted = progressSummary?.values
+                      .where((v) => v['completed'] == true)
+                      .length ??
+                  0;
+              return [
+                student['displayName'] ?? '',
+                '${student['totalXP'] ?? 0}',
+                '${student['currentStreak'] ?? 0}',
+                '$realmsCompleted/6',
+              ];
+            }).toList(),
+          ),
+          pw.SizedBox(height: 20),
+          pw.Text('Report Generated: ${DateTime.now().toString().split(' ')[0]}',
+              style: const pw.TextStyle(fontSize: 10)),
+        ],
+      ),
+    );
+
+    return pdf.save();
+  }
+  
+  /// Submit a content report (bug, inappropriate content, etc.)
+  Future<void> submitReport({
     required String reportType,
-    required String reportedItemId,
-    required String reporterId,
-    required String reporterName,
-    required String reason,
-    String? description,
+    required String contentId,
+    required String description,
     String? screenshotUrl,
   }) async {
-    try {
-      final report = ReportModel(
-        id: _uuid.v4(),
-        reportType: reportType,
-        reportedItemId: reportedItemId,
-        reporterId: reporterId,
-        reporterName: reporterName,
-        reason: reason,
-        description: description,
-        screenshotUrl: screenshotUrl,
-        status: 'pending',
-        reportedAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection('reports')
-          .doc(report.id)
-          .set(report.toFirestore());
-
-      return report;
-    } catch (e) {
-      throw Exception('Failed to submit report: $e');
-    }
-  }
-
-  /// Get report by ID
-  Future<ReportModel?> getReport(String reportId) async {
-    try {
-      final doc = await _firestore
-          .collection('reports')
-          .doc(reportId)
-          .get();
-
-      if (!doc.exists) return null;
-
-      return ReportModel.fromFirestore(doc.data()!);
-    } catch (e) {
-      throw Exception('Failed to get report: $e');
-    }
-  }
-
-  /// Get pending reports
-  Future<List<ReportModel>> getPendingReports({int limit = 50}) async {
-    try {
-      final query = await _firestore
-          .collection('reports')
-          .where('status', isEqualTo: 'pending')
-          .orderBy('reportedAt', descending: true)
-          .limit(limit)
-          .get();
-
-      return query.docs
-          .map((doc) => ReportModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get pending reports: $e');
-    }
-  }
-
-  /// Get all reports by type
-  Future<List<ReportModel>> getReportsByType(String reportType) async {
-    try {
-      final query = await _firestore
-          .collection('reports')
-          .where('reportType', isEqualTo: reportType)
-          .orderBy('reportedAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => ReportModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get reports by type: $e');
-    }
-  }
-
-  /// Get reports by reporter
-  Future<List<ReportModel>> getReportsByReporter(String reporterId) async {
-    try {
-      final query = await _firestore
-          .collection('reports')
-          .where('reporterId', isEqualTo: reporterId)
-          .orderBy('reportedAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => ReportModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get reports by reporter: $e');
-    }
-  }
-
-  /// Update report status (review, resolve, dismiss)
-  Future<void> updateReportStatus({
-    required String reportId,
-    required String status,
-    required String reviewedBy,
-    String? resolution,
-  }) async {
-    try {
-      await _firestore
-          .collection('reports')
-          .doc(reportId)
-          .update({
-        'status': status,
-        'reviewedAt': Timestamp.now(),
-        'reviewedBy': reviewedBy,
-        'resolution': resolution,
-      });
-    } catch (e) {
-      throw Exception('Failed to update report status: $e');
-    }
-  }
-
-  /// Get report statistics
-  Future<Map<String, dynamic>> getReportStats() async {
-    try {
-      final allReports = await _firestore.collection('reports').get();
-      
-      final totalReports = allReports.docs.length;
-      final pendingReports = allReports.docs.where((d) => d.data()['status'] == 'pending').length;
-      final reviewedReports = allReports.docs.where((d) => d.data()['status'] == 'reviewed').length;
-      final resolvedReports = allReports.docs.where((d) => d.data()['status'] == 'resolved').length;
-      final dismissedReports = allReports.docs.where((d) => d.data()['status'] == 'dismissed').length;
-
-      return {
-        'totalReports': totalReports,
-        'pendingReports': pendingReports,
-        'reviewedReports': reviewedReports,
-        'resolvedReports': resolvedReports,
-        'dismissedReports': dismissedReports,
-      };
-    } catch (e) {
-      throw Exception('Failed to get report stats: $e');
-    }
-  }
-
-  // ========== FEEDBACK OPERATIONS ==========
-
-  /// Submit user feedback
-  Future<FeedbackModel> submitFeedback({
-    required String userId,
-    required String userName,
-    required String category,
-    required String title,
-    required String message,
-  }) async {
-    try {
-      final feedback = FeedbackModel(
-        id: _uuid.v4(),
-        userId: userId,
-        userName: userName,
-        category: category,
-        title: title,
-        message: message,
-        status: 'pending',
-        submittedAt: DateTime.now(),
-      );
-
-      await _firestore
-          .collection('feedback')
-          .doc(feedback.id)
-          .set(feedback.toFirestore());
-
-      return feedback;
-    } catch (e) {
-      throw Exception('Failed to submit feedback: $e');
-    }
-  }
-
-  /// Get feedback by ID
-  Future<FeedbackModel?> getFeedback(String feedbackId) async {
-    try {
-      final doc = await _firestore
-          .collection('feedback')
-          .doc(feedbackId)
-          .get();
-
-      if (!doc.exists) return null;
-
-      return FeedbackModel.fromFirestore(doc.data()!);
-    } catch (e) {
-      throw Exception('Failed to get feedback: $e');
-    }
-  }
-
-  /// Get pending feedback
-  Future<List<FeedbackModel>> getPendingFeedback({int limit = 50}) async {
-    try {
-      final query = await _firestore
-          .collection('feedback')
-          .where('status', isEqualTo: 'pending')
-          .orderBy('submittedAt', descending: true)
-          .limit(limit)
-          .get();
-
-      return query.docs
-          .map((doc) => FeedbackModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get pending feedback: $e');
-    }
-  }
-
-  /// Get feedback by category
-  Future<List<FeedbackModel>> getFeedbackByCategory(String category) async {
-    try {
-      final query = await _firestore
-          .collection('feedback')
-          .where('category', isEqualTo: category)
-          .orderBy('submittedAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => FeedbackModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get feedback by category: $e');
-    }
-  }
-
-  /// Get feedback by user
-  Future<List<FeedbackModel>> getUserFeedback(String userId) async {
-    try {
-      final query = await _firestore
-          .collection('feedback')
-          .where('userId', isEqualTo: userId)
-          .orderBy('submittedAt', descending: true)
-          .get();
-
-      return query.docs
-          .map((doc) => FeedbackModel.fromFirestore(doc.data()))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to get user feedback: $e');
-    }
-  }
-
-  /// Update feedback status and add response
-  Future<void> updateFeedbackStatus({
-    required String feedbackId,
-    required String status,
-    String? response,
-  }) async {
-    try {
-      await _firestore
-          .collection('feedback')
-          .doc(feedbackId)
-          .update({
-        'status': status,
-        'reviewedAt': Timestamp.now(),
-        'response': response,
-      });
-    } catch (e) {
-      throw Exception('Failed to update feedback status: $e');
-    }
-  }
-
-  /// Get feedback statistics
-  Future<Map<String, dynamic>> getFeedbackStats() async {
-    try {
-      final allFeedback = await _firestore.collection('feedback').get();
-      
-      final totalFeedback = allFeedback.docs.length;
-      final pendingFeedback = allFeedback.docs.where((d) => d.data()['status'] == 'pending').length;
-      final reviewedFeedback = allFeedback.docs.where((d) => d.data()['status'] == 'reviewed').length;
-      final implementedFeedback = allFeedback.docs.where((d) => d.data()['status'] == 'implemented').length;
-      final rejectedFeedback = allFeedback.docs.where((d) => d.data()['status'] == 'rejected').length;
-
-      // Count by category
-      final bugReports = allFeedback.docs.where((d) => d.data()['category'] == 'bug').length;
-      final featureRequests = allFeedback.docs.where((d) => d.data()['category'] == 'feature').length;
-      final contentSuggestions = allFeedback.docs.where((d) => d.data()['category'] == 'content').length;
-      final otherFeedback = allFeedback.docs.where((d) => d.data()['category'] == 'other').length;
-
-      return {
-        'totalFeedback': totalFeedback,
-        'pendingFeedback': pendingFeedback,
-        'reviewedFeedback': reviewedFeedback,
-        'implementedFeedback': implementedFeedback,
-        'rejectedFeedback': rejectedFeedback,
-        'byCategory': {
-          'bug': bugReports,
-          'feature': featureRequests,
-          'content': contentSuggestions,
-          'other': otherFeedback,
-        },
-      };
-    } catch (e) {
-      throw Exception('Failed to get feedback stats: $e');
-    }
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception('User not logged in');
+    
+    await _firestore.collection('reports').add({
+      'reporterId': user.uid,
+      'reportType': reportType, // 'bug', 'content', 'user', etc.
+      'contentId': contentId,
+      'description': description,
+      'screenshotUrl': screenshotUrl,
+      'status': 'pending',
+      'reportedAt': Timestamp.now(),
+    });
   }
 }
-

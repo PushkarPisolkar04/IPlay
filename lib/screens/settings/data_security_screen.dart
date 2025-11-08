@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../widgets/clean_card.dart';
 
 class DataSecurityScreen extends StatelessWidget {
-  const DataSecurityScreen({Key? key}) : super(key: key);
+  const DataSecurityScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Data & Security'),
         backgroundColor: Colors.transparent,
@@ -28,7 +28,7 @@ class DataSecurityScreen extends StatelessWidget {
                   children: [
                     const Row(
                       children: [
-                        Icon(Icons.shield, color: AppColors.primary, size: 32),
+                        Icon(Icons.shield, color: AppDesignSystem.primaryIndigo, size: 32),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -36,7 +36,7 @@ class DataSecurityScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                              color: AppDesignSystem.textPrimary,
                             ),
                           ),
                         ),
@@ -92,7 +92,7 @@ class DataSecurityScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -109,7 +109,7 @@ class DataSecurityScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -123,20 +123,20 @@ class DataSecurityScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+                        border: Border.all(color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3)),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.info_outline, color: AppColors.primary),
+                          Icon(Icons.info_outline, color: AppDesignSystem.primaryIndigo),
                           SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               'If you have any questions about data security, please contact us at support@iplay.example.com',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: AppColors.textPrimary,
+                                color: AppDesignSystem.textPrimary,
                               ),
                             ),
                           ),
@@ -163,7 +163,7 @@ class DataSecurityScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 24),
@@ -186,7 +186,7 @@ class DataSecurityScreen extends StatelessWidget {
                   content,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -203,7 +203,7 @@ class DataSecurityScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: AppColors.success, size: 20),
+          const Icon(Icons.check_circle, color: AppDesignSystem.success, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -220,7 +220,7 @@ class DataSecurityScreen extends StatelessWidget {
                   description,
                   style: const TextStyle(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
               ],
@@ -236,7 +236,7 @@ class DataSecurityScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const Icon(Icons.arrow_right, color: AppColors.primary, size: 24),
+          const Icon(Icons.arrow_right, color: AppDesignSystem.primaryIndigo, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -253,7 +253,7 @@ class DataSecurityScreen extends StatelessWidget {
                   description,
                   style: const TextStyle(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
               ],

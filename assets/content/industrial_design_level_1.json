@@ -1,0 +1,115 @@
+{
+  "levelId": "industrial_design_level_1",
+  "realmId": "industrial_design",
+  "levelNumber": 1,
+  "name": "Introduction to Industrial Designs",
+  "difficulty": "Basic",
+  "xpReward": 100,
+  "estimatedMinutes": 8,
+  "videoUrl": "dQw4w9WgXcQ",
+  "videoDuration": 300,
+  "contentBlocks": [
+    {
+      "type": "text",
+      "content": "An industrial design refers to the ornamental or aesthetic aspect of an article. It consists of the shape, configuration, pattern, or composition of lines or colors applied to any article, whether in two-dimensional or three-dimensional form."
+    },
+    {
+      "type": "text",
+      "content": "Industrial design protection covers the visual design of objects that are not purely utilitarian. The design must be new and original, and it must appeal to the eye. It protects the appearance of a product, not its technical or functional features."
+    },
+    {
+      "type": "image",
+      "content": "https://via.placeholder.com/400x300/8B5CF6/FFFFFF?text=Product+Design",
+      "caption": "Industrial designs protect the aesthetic appearance of products"
+    },
+    {
+      "type": "example",
+      "content": "The unique shape of a Coca-Cola bottle is protected as an industrial design. While the bottle serves a functional purpose, its distinctive contoured shape is an aesthetic feature that makes it instantly recognizable and distinguishes it from other beverage containers.",
+      "metadata": {
+        "title": "Coca-Cola Bottle Design"
+      }
+    },
+    {
+      "type": "text",
+      "content": "Industrial designs are important for businesses because they help products stand out in the marketplace. A well-designed product can attract customers and create brand recognition, giving companies a competitive advantage."
+    },
+    {
+      "type": "text",
+      "content": "In India, industrial designs are protected under the Designs Act, 2000. Registration provides protection for 10 years, which can be extended for another 5 years, giving a total of 15 years of protection."
+    },
+    {
+      "type": "case_study",
+      "content": "An Indian furniture manufacturer created a unique chair design with an innovative ergonomic shape and distinctive pattern. By registering the design, they prevented competitors from copying the appearance while they built their brand around this signature product.",
+      "metadata": {
+        "title": "Furniture Design Protection"
+      }
+    }
+  ],
+  "keyTakeaways": [
+    "Industrial designs protect the aesthetic appearance of products",
+    "Designs must be new, original, and appeal to the eye",
+    "Protection covers shape, configuration, pattern, or composition",
+    "In India, protection lasts for 10 years, extendable to 15 years",
+    "Industrial designs help products stand out in the marketplace"
+  ],
+  "quizQuestions": [
+    {
+      "question": "What does industrial design protection cover?",
+      "options": [
+        "The functional features of a product",
+        "The aesthetic appearance of a product",
+        "The manufacturing process",
+        "The brand name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Industrial design protection covers the aesthetic or ornamental appearance of a product, not its functional features, manufacturing process, or brand name."
+    },
+    {
+      "question": "How long does industrial design protection last in India?",
+      "options": [
+        "5 years",
+        "10 years, extendable to 15 years",
+        "20 years",
+        "Lifetime of creator"
+      ],
+      "correctIndex": 1,
+      "explanation": "In India, industrial design protection lasts for 10 years from the date of registration and can be extended for another 5 years, giving a total of 15 years of protection."
+    },
+    {
+      "question": "Which law governs industrial designs in India?",
+      "options": [
+        "Patents Act, 1970",
+        "Copyright Act, 1957",
+        "Designs Act, 2000",
+        "Trade Marks Act, 1999"
+      ],
+      "correctIndex": 2,
+      "explanation": "Industrial designs in India are governed by the Designs Act, 2000, which provides the legal framework for registration and protection of designs."
+    },
+    {
+      "question": "What is a key requirement for industrial design protection?",
+      "options": [
+        "The design must be functional",
+        "The design must be new and original",
+        "The design must be expensive to produce",
+        "The design must be registered in all countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "For industrial design protection, the design must be new and original, and it must appeal to the eye. Functionality is not a requirement for design protection."
+    },
+    {
+      "question": "Which of the following is an example of industrial design?",
+      "options": [
+        "A software algorithm",
+        "A company logo",
+        "The shape of a smartphone",
+        "A secret recipe"
+      ],
+      "correctIndex": 2,
+      "explanation": "The shape of a smartphone is an example of industrial design as it relates to the aesthetic appearance of a product. Software algorithms are not designs, logos are trademarks, and recipes are trade secrets."
+    }
+  ],
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-01-15T00:00:00Z"
+}

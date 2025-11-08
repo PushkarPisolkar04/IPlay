@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 
 /// Clean progress bar
 class ProgressBar extends StatelessWidget {
@@ -10,13 +10,13 @@ class ProgressBar extends StatelessWidget {
   final bool showPercentage;
   
   const ProgressBar({
-    Key? key,
+    super.key,
     required this.progress,
     this.color,
     this.backgroundColor,
     this.height = 8.0,
     this.showPercentage = false,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ProgressBar extends StatelessWidget {
           child: Container(
             height: height,
             decoration: BoxDecoration(
-              color: backgroundColor ?? AppColors.backgroundGrey,
+              color: backgroundColor ?? AppDesignSystem.backgroundGrey,
               borderRadius: BorderRadius.circular(height / 2),
             ),
             child: FractionallySizedBox(
@@ -36,7 +36,7 @@ class ProgressBar extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Container(
                 decoration: BoxDecoration(
-                  color: color ?? AppColors.primary,
+                  color: color ?? AppDesignSystem.primaryIndigo,
                   borderRadius: BorderRadius.circular(height / 2),
                 ),
               ),
@@ -50,7 +50,7 @@ class ProgressBar extends StatelessWidget {
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
           ),
         ],
@@ -68,13 +68,13 @@ class CircularProgress extends StatelessWidget {
   final Widget? child;
   
   const CircularProgress({
-    Key? key,
+    super.key,
     required this.progress,
     this.color,
     this.size = 80.0,
     this.strokeWidth = 8.0,
     this.child,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -90,9 +90,9 @@ class CircularProgress extends StatelessWidget {
             child: CircularProgressIndicator(
               value: progress.clamp(0.0, 1.0),
               strokeWidth: strokeWidth,
-              backgroundColor: AppColors.backgroundGrey,
+              backgroundColor: AppDesignSystem.backgroundGrey,
               valueColor: AlwaysStoppedAnimation<Color>(
-                color ?? AppColors.primary,
+                color ?? AppDesignSystem.primaryIndigo,
               ),
             ),
           ),

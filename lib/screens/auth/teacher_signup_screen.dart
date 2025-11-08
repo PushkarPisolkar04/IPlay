@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -11,7 +9,7 @@ import 'dart:math';
 
 /// Teacher Signup Screen with School Code option
 class TeacherSignupScreen extends StatefulWidget {
-  const TeacherSignupScreen({Key? key}) : super(key: key);
+  const TeacherSignupScreen({super.key});
 
   @override
   State<TeacherSignupScreen> createState() => _TeacherSignupScreenState();
@@ -110,17 +108,19 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
       if (_hasSchoolCode && _schoolCodeController.text.trim().isNotEmpty) {
         final code = _schoolCodeController.text.trim().toUpperCase();
         
-        // Validate school code using Cloud Function (secure)
+        // Validate school code using direct Firestore query (client-side)
         try {
-          final callable = FirebaseFunctions.instance.httpsCallable('validateSchoolCode');
-          final result = await callable.call<Map<String, dynamic>>({'schoolCode': code});
-          final data = result.data as Map<String, dynamic>;
+          final schoolQuery = await FirebaseFirestore.instance
+              .collection('schools')
+              .where('schoolCode', isEqualTo: code)
+              .limit(1)
+              .get();
           
-          if (data['valid'] != true) {
+          if (schoolQuery.docs.isEmpty) {
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(data['message'] ?? 'Invalid school code'),
+              const SnackBar(
+                content: Text('Invalid school code. Please check and try again.'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -128,9 +128,25 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
             return;
           }
           
-          schoolId = data['schoolId'];
-          fetchedState = data['state'];
-          fetchedSchoolName = data['schoolName'];
+          final schoolDoc = schoolQuery.docs.first;
+          final schoolData = schoolDoc.data();
+          
+          // Check if school is active
+          if (schoolData['status'] != null && schoolData['status'] != 'active') {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('This school is not active. Please contact the administrator.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            setState(() => _isLoading = false);
+            return;
+          }
+          
+          schoolId = schoolDoc.id;
+          fetchedState = schoolData['state'];
+          fetchedSchoolName = schoolData['name'];
           isPrincipal = false; // Not principal if joining
         } catch (e) {
           if (!mounted) return;
@@ -216,7 +232,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
       });
 
       // If creating new school, create it AFTER user document exists
-      if (isPrincipal && schoolId != null) {
+      if (isPrincipal) {
         final schoolCode = _generateSchoolCode();
         final schoolRef = FirebaseFirestore.instance.collection('schools').doc(schoolId);
         
@@ -245,24 +261,25 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });
-      } else if (schoolId != null) {
+      } else {
         // If joining existing school, create a join request for principal approval
-        await FirebaseFirestore.instance
-            .collection('teacher_join_requests')
-            .add({
-          'teacherId': user.uid,
-          'teacherName': _nameController.text.trim(),
-          'teacherEmail': user.email,
-          'schoolId': schoolId,
-          'status': 'pending', // pending, approved, rejected
-          'createdAt': Timestamp.now(),
-        });
+      await FirebaseFirestore.instance
+          .collection('teacher_join_requests')
+          .add({
+        'teacherId': user.uid,
+        'teacherName': _nameController.text.trim(),
+        'teacherEmail': user.email,
+        'schoolId': schoolId,
+        'status': 'pending', // pending, approved, rejected
+        'createdAt': Timestamp.now(),
+      });
       }
+    
 
       if (!mounted) return;
 
-      // Navigate to main screen (Teacher Dashboard)
-      Navigator.pushReplacementNamed(context, '/main');
+      // Navigate to teacher tutorial screen
+      Navigator.pushReplacementNamed(context, '/teacher-tutorial');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -318,7 +335,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -337,7 +354,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                 Text(
                   'Start teaching IPR!',
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
                 
@@ -349,7 +366,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Full Name',
                     hintText: 'Enter your name',
-                    prefixIcon: Icon(Icons.person, color: AppColors.secondary),
+                    prefixIcon: Icon(Icons.person, color: AppDesignSystem.primaryPink),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -368,7 +385,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     hintText: 'your@email.com',
-                    prefixIcon: Icon(Icons.email, color: AppColors.accent),
+                    prefixIcon: Icon(Icons.email, color: AppDesignSystem.primaryAmber),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -390,11 +407,11 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: 'Min 8 characters',
-                    prefixIcon: const Icon(Icons.lock, color: AppColors.primary),
+                    prefixIcon: const Icon(Icons.lock, color: AppDesignSystem.primaryIndigo),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                       ),
                       onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
@@ -419,11 +436,11 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     hintText: 'Re-enter password',
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primary),
+                    prefixIcon: const Icon(Icons.lock_outline, color: AppDesignSystem.primaryIndigo),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                       ),
                       onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                     ),
@@ -441,12 +458,12 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                 // Avatar Selection
                 Row(
                   children: [
-                    Icon(Icons.face, size: 20, color: AppColors.secondary),
+                    Icon(Icons.face, size: 20, color: AppDesignSystem.primaryPink),
                     const SizedBox(width: 8),
                     Text(
                       'Select Avatar',
                       style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.secondary,
+                        color: AppDesignSystem.primaryPink,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -464,15 +481,15 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.secondary.withOpacity(0.2) : Colors.grey[100],
+                          color: isSelected ? AppDesignSystem.primaryPink.withValues(alpha: 0.2) : Colors.grey[100],
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                            color: isSelected ? AppColors.secondary : Colors.grey[300]!,
+                            color: isSelected ? AppDesignSystem.primaryPink : Colors.grey[300]!,
                             width: isSelected ? 3 : 1,
                           ),
                           boxShadow: isSelected ? [
                             BoxShadow(
-                              color: AppColors.secondary.withOpacity(0.3),
+                              color: AppDesignSystem.primaryPink.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -501,12 +518,12 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                 // School Option
                 Row(
                   children: [
-                    Icon(Icons.school, size: 20, color: AppColors.secondary),
+                    Icon(Icons.school, size: 20, color: AppDesignSystem.primaryPink),
                     const SizedBox(width: 8),
                     Text(
                       'School Setup',
                       style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.secondary,
+                        color: AppDesignSystem.primaryPink,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -517,10 +534,10 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                 // Has School Code Toggle
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppDesignSystem.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _hasSchoolCode ? AppColors.primary : Colors.transparent,
+                      color: _hasSchoolCode ? AppDesignSystem.primaryIndigo : Colors.transparent,
                       width: 2,
                     ),
                   ),
@@ -531,17 +548,17 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     title: Text(
                       'Join Existing School',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     subtitle: Text(
                       'I have a school code',
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                     ),
-                    activeColor: AppColors.primary,
+                    activeColor: AppDesignSystem.primaryIndigo,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
@@ -550,10 +567,10 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                 
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.secondary.withOpacity(0.1),
+                    color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: !_hasSchoolCode ? AppColors.secondary : Colors.transparent,
+                      color: !_hasSchoolCode ? AppDesignSystem.primaryPink : Colors.transparent,
                       width: 2,
                     ),
                   ),
@@ -566,7 +583,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                         Text(
                           'Create New School',
                           style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.secondary,
+                            color: AppDesignSystem.primaryPink,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -577,10 +594,10 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     subtitle: Text(
                       'Become principal of your school',
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                     ),
-                    activeColor: AppColors.secondary,
+                    activeColor: AppDesignSystem.primaryPink,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                 ),
@@ -595,7 +612,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     decoration: const InputDecoration(
                       labelText: 'School Code',
                       hintText: 'SCH-XXXXX',
-                      prefixIcon: Icon(Icons.school, color: AppColors.success),
+                      prefixIcon: Icon(Icons.school, color: AppDesignSystem.success),
                     ),
                     validator: (value) {
                       if (_hasSchoolCode && (value == null || value.isEmpty)) {
@@ -609,12 +626,12 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.info.withOpacity(0.1),
+                      color: AppDesignSystem.info.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.info, color: AppColors.info, size: 20),
+                        Icon(Icons.info, color: AppDesignSystem.info, size: 20),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -634,7 +651,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     decoration: const InputDecoration(
                       labelText: 'School Name (Required)',
                       hintText: 'Enter school name',
-                      prefixIcon: Icon(Icons.account_balance, color: AppColors.secondary),
+                      prefixIcon: Icon(Icons.account_balance, color: AppDesignSystem.primaryPink),
                     ),
                     validator: (value) {
                       if (!_hasSchoolCode && (value == null || value.isEmpty)) {
@@ -652,7 +669,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     isExpanded: true,
                     decoration: const InputDecoration(
                       labelText: 'State',
-                      prefixIcon: Icon(Icons.location_on, color: AppColors.info),
+                      prefixIcon: Icon(Icons.location_on, color: AppDesignSystem.info),
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                     ),
                     items: _states.map((state) {
@@ -678,7 +695,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     decoration: const InputDecoration(
                       labelText: 'City (Optional)',
                       hintText: 'Enter city',
-                      prefixIcon: Icon(Icons.location_city, color: AppColors.warning),
+                      prefixIcon: Icon(Icons.location_city, color: AppDesignSystem.warning),
                     ),
                   ),
                   
@@ -686,18 +703,18 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.success.withOpacity(0.1),
+                      color: AppDesignSystem.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle, color: AppColors.success, size: 20),
+                        Icon(Icons.check_circle, color: AppDesignSystem.success, size: 20),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             'You\'ll become the principal of this school',
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.success,
+                              color: AppDesignSystem.success,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

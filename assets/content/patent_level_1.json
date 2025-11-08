@@ -1,0 +1,119 @@
+{
+  "levelId": "patent_level_1",
+  "realmId": "patent",
+  "levelNumber": 1,
+  "name": "Understanding Patents",
+  "difficulty": "Basic",
+  "xpReward": 100,
+  "estimatedMinutes": 10,
+  "videoUrl": "dQw4w9WgXcQ",
+  "videoDuration": 360,
+  "contentBlocks": [
+    {
+      "type": "text",
+      "content": "A patent is an exclusive right granted for an invention, which provides the patent owner with the right to decide how the invention can be used by others. In exchange for this exclusive right, the inventor must publicly disclose technical information about the invention."
+    },
+    {
+      "type": "text",
+      "content": "Patents protect new inventions and provide incentives for innovation by allowing inventors to profit from their creations. They cover products, processes, and improvements that are novel, non-obvious, and useful."
+    },
+    {
+      "type": "image",
+      "content": "https://via.placeholder.com/400x300/3B82F6/FFFFFF?text=Patent+Document",
+      "caption": "A patent document describes the invention in detail"
+    },
+    {
+      "type": "text",
+      "content": "To be patentable, an invention must meet three key criteria: Novelty (it must be new), Inventive Step (it must not be obvious to someone skilled in the field), and Industrial Applicability (it must be useful and capable of being made or used in industry)."
+    },
+    {
+      "type": "example",
+      "content": "When a pharmaceutical company develops a new drug to treat a disease, they can patent the chemical compound, the manufacturing process, and even specific uses of the drug. This patent protection allows them to recoup their research and development costs before generic versions can be made.",
+      "metadata": {
+        "title": "Pharmaceutical Patent Example"
+      }
+    },
+    {
+      "type": "text",
+      "content": "In India, patents are governed by the Patents Act, 1970 (as amended). Patent protection typically lasts for 20 years from the filing date, after which the invention enters the public domain and anyone can use it."
+    },
+    {
+      "type": "text",
+      "content": "Patents are territorial rights, meaning a patent granted in India only provides protection within India. Inventors seeking protection in multiple countries must file separate patent applications in each country or use international filing systems."
+    },
+    {
+      "type": "case_study",
+      "content": "An Indian engineer invented a low-cost water purification device suitable for rural areas. By obtaining a patent, they prevented competitors from copying the design while they established manufacturing and distribution. The patent also helped attract investors who valued the exclusive rights.",
+      "metadata": {
+        "title": "Water Purification Device Patent"
+      }
+    }
+  ],
+  "keyTakeaways": [
+    "Patents protect new inventions and provide exclusive rights to inventors",
+    "Inventions must be novel, non-obvious, and industrially applicable",
+    "Patent protection lasts for 20 years from the filing date in India",
+    "Patents require public disclosure of the invention",
+    "Patents are territorial and must be filed in each country separately"
+  ],
+  "quizQuestions": [
+    {
+      "question": "What does a patent protect?",
+      "options": [
+        "Brand names and logos",
+        "Creative works like books",
+        "New inventions and processes",
+        "Trade secrets"
+      ],
+      "correctIndex": 2,
+      "explanation": "Patents protect new inventions, products, and processes that are novel, non-obvious, and industrially applicable. They do not protect brand names (trademarks) or creative works (copyright)."
+    },
+    {
+      "question": "How long does patent protection last in India?",
+      "options": [
+        "10 years",
+        "15 years",
+        "20 years from filing date",
+        "Lifetime of inventor"
+      ],
+      "correctIndex": 2,
+      "explanation": "In India, patent protection typically lasts for 20 years from the date of filing the patent application, after which the invention enters the public domain."
+    },
+    {
+      "question": "Which of the following is NOT a requirement for patentability?",
+      "options": [
+        "Novelty",
+        "Inventive step",
+        "Industrial applicability",
+        "Artistic merit"
+      ],
+      "correctIndex": 3,
+      "explanation": "The three requirements for patentability are novelty, inventive step (non-obviousness), and industrial applicability. Artistic merit is not relevant for patents."
+    },
+    {
+      "question": "What must a patent applicant do in exchange for patent protection?",
+      "options": [
+        "Pay annual fees forever",
+        "Publicly disclose the invention",
+        "Share profits with the government",
+        "Manufacture the product immediately"
+      ],
+      "correctIndex": 1,
+      "explanation": "In exchange for exclusive patent rights, the inventor must publicly disclose detailed technical information about the invention, which eventually benefits society when the patent expires."
+    },
+    {
+      "question": "Are patents valid worldwide?",
+      "options": [
+        "Yes, automatically",
+        "No, they are territorial rights",
+        "Only in developing countries",
+        "Only for 10 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patents are territorial rights, meaning a patent granted in one country only provides protection in that country. Inventors must file separate applications in each country where they want protection."
+    }
+  ],
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-01-15T00:00:00Z"
+}

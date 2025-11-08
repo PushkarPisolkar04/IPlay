@@ -4,29 +4,23 @@ class LevelModel {
   final String id;
   final String realmId;
   final String title;
-  final String description;
+  final String difficulty; // Easy, Medium, Hard, Expert
   final int levelNumber;
-  final String lessonContent; // JSON string or markdown
-  final List<QuizQuestion> quizQuestions;
-  final int xpReward;
-  final int estimatedMinutes;
+  final String content; // Markdown content
+  final List<Map<String, dynamic>> quiz; // Quiz questions as maps
+  final int xp; // XP reward
   final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
   LevelModel({
     required this.id,
     required this.realmId,
     required this.title,
-    required this.description,
+    required this.difficulty,
     required this.levelNumber,
-    required this.lessonContent,
-    required this.quizQuestions,
-    required this.xpReward,
-    required this.estimatedMinutes,
+    required this.content,
+    required this.quiz,
+    required this.xp,
     this.isActive = true,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,15 +28,14 @@ class LevelModel {
       'id': id,
       'realmId': realmId,
       'title': title,
-      'description': description,
+      'difficulty': difficulty,
       'levelNumber': levelNumber,
-      'lessonContent': lessonContent,
-      'quizQuestions': quizQuestions.map((q) => q.toMap()).toList(),
-      'xpReward': xpReward,
-      'estimatedMinutes': estimatedMinutes,
+      'content': content,
+      'quiz': quiz,
+      'xp': xp,
       'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+      'createdAt': Timestamp.now(),
+      'updatedAt': Timestamp.now(),
     };
   }
 
@@ -51,43 +44,44 @@ class LevelModel {
       id: map['id'] ?? '',
       realmId: map['realmId'] ?? '',
       title: map['title'] ?? '',
-      description: map['description'] ?? '',
+      difficulty: map['difficulty'] ?? 'Easy',
       levelNumber: map['levelNumber'] ?? 0,
-      lessonContent: map['lessonContent'] ?? '',
-      quizQuestions: (map['quizQuestions'] as List<dynamic>)
-          .map((q) => QuizQuestion.fromMap(q as Map<String, dynamic>))
-          .toList(),
-      xpReward: map['xpReward'] ?? 0,
-      estimatedMinutes: map['estimatedMinutes'] ?? 5,
+      content: map['content'] ?? '',
+      quiz: List<Map<String, dynamic>>.from(map['quiz'] ?? []),
+      xp: map['xp'] ?? 0,
       isActive: map['isActive'] ?? true,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
     );
   }
+  
+  // Helper getters for compatibility
+  String get description => difficulty;
+  String get lessonContent => content;
+  int get xpReward => xp;
+  int get estimatedMinutes => (content.length / 100).ceil().clamp(5, 30);
+  DateTime get createdAt => DateTime.now();
+  DateTime get updatedAt => DateTime.now();
+  List<QuizQuestion> get quizQuestions => quiz.map((q) => QuizQuestion.fromMap(q)).toList();
 }
 
 class QuizQuestion {
   final String question;
   final List<String> options;
-  final int correctAnswerIndex;
+  final int correctAnswer; // Index of correct answer
   final String explanation;
-  final int timeLimit; // in seconds
 
   QuizQuestion({
     required this.question,
     required this.options,
-    required this.correctAnswerIndex,
+    required this.correctAnswer,
     required this.explanation,
-    this.timeLimit = 30,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'question': question,
       'options': options,
-      'correctAnswerIndex': correctAnswerIndex,
+      'correctAnswer': correctAnswer,
       'explanation': explanation,
-      'timeLimit': timeLimit,
     };
   }
 
@@ -95,10 +89,13 @@ class QuizQuestion {
     return QuizQuestion(
       question: map['question'] ?? '',
       options: List<String>.from(map['options'] ?? []),
-      correctAnswerIndex: map['correctAnswerIndex'] ?? 0,
+      correctAnswer: map['correctAnswer'] ?? 0,
       explanation: map['explanation'] ?? '',
-      timeLimit: map['timeLimit'] ?? 30,
     );
   }
+  
+  // Compatibility getter
+  int get correctAnswerIndex => correctAnswer;
+  int get timeLimit => 30;
 }
 

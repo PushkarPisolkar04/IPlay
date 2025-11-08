@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import '../design/app_design_system.dart';
 
 /// Clean, modern typography using Inter font
 /// Fallback to system default if Inter not available
@@ -11,7 +11,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 28,
     fontWeight: FontWeight.w700,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.3,
     letterSpacing: -0.5,
   );
@@ -20,7 +20,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 22,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
   
@@ -28,7 +28,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.4,
   );
   
@@ -36,7 +36,15 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
+    height: 1.4,
+  );
+  
+  static const h5 = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppDesignSystem.textPrimary,
     height: 1.4,
   );
   
@@ -45,7 +53,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.5,
   );
   
@@ -53,7 +61,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    color: AppDesignSystem.textSecondary,
     height: 1.5,
   );
   
@@ -61,7 +69,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    color: AppColors.textTertiary,
+    color: AppDesignSystem.textTertiary,
     height: 1.4,
   );
   
@@ -70,7 +78,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: AppColors.textWhite,
+    color: AppDesignSystem.backgroundWhite,
     height: 1.2,
   );
   
@@ -78,7 +86,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: AppColors.textWhite,
+    color: AppDesignSystem.backgroundWhite,
     height: 1.2,
   );
 
@@ -90,7 +98,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 12,
     fontWeight: FontWeight.w500,
-    color: AppColors.textSecondary,
+    color: AppDesignSystem.textSecondary,
     height: 1.2,
     letterSpacing: 0.5,
   );
@@ -99,7 +107,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 11,
     fontWeight: FontWeight.w400,
-    color: AppColors.textTertiary,
+    color: AppDesignSystem.textTertiary,
     height: 1.2,
   );
   
@@ -108,7 +116,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
   
@@ -116,7 +124,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 18,
     fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
+    color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
   
@@ -124,7 +132,7 @@ class AppTextStyles {
     fontFamily: fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: AppColors.textSecondary,
+    color: AppDesignSystem.textSecondary,
     height: 1.4,
   );
   

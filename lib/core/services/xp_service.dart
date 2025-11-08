@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../services/sound_service.dart';
+import 'leaderboard_service.dart';
 
 /// XP Service - Handles all XP calculations and rewards
 class XPService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final LeaderboardService _leaderboardService = LeaderboardService();
 
   // XP Constants from documentation
   static const int DAILY_XP_CAP = 1000;
@@ -72,7 +75,7 @@ class XPService {
         'remainingXP': remainingXP,
       };
     } catch (e) {
-      print('Error checking daily XP cap: $e');
+      // print('Error checking daily XP cap: $e');
       return {
         'hasReachedCap': false,
         'currentDailyXP': 0,
@@ -101,6 +104,8 @@ class XPService {
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
           'lastActiveDate': Timestamp.now(),
         });
+        // Play XP gain sound
+        SoundService.playXPGain();
         return FIRST_LOGIN_BONUS;
       }
 
@@ -114,12 +119,14 @@ class XPService {
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
           'lastActiveDate': Timestamp.now(),
         });
+        // Play XP gain sound
+        SoundService.playXPGain();
         return FIRST_LOGIN_BONUS;
       }
 
       return 0; // Already logged in today
     } catch (e) {
-      print('Error awarding first login bonus: $e');
+      // print('Error awarding first login bonus: $e');
       return 0;
     }
   }
@@ -150,13 +157,15 @@ class XPService {
             'totalXP': FieldValue.increment(SEVEN_DAY_STREAK_BONUS),
             'lastStreakBonusAt': Timestamp.now(),
           });
+          // Play XP gain sound
+          SoundService.playXPGain();
           return SEVEN_DAY_STREAK_BONUS;
         }
       }
 
       return 0;
     } catch (e) {
-      print('Error awarding streak milestone bonus: $e');
+      // print('Error awarding streak milestone bonus: $e');
       return 0;
     }
   }
@@ -192,12 +201,14 @@ class XPService {
           'totalXP': FieldValue.increment(REALM_COMPLETION_BONUS),
           'progressSummary.$realmId.completionBonusAwarded': true,
         });
+        // Play XP gain sound
+        SoundService.playXPGain();
         return REALM_COMPLETION_BONUS;
       }
 
       return 0;
     } catch (e) {
-      print('Error awarding realm completion bonus: $e');
+      // print('Error awarding realm completion bonus: $e');
       return 0;
     }
   }
@@ -252,6 +263,28 @@ class XPService {
       'progressPercentage': progressPercentage,
       'hasReachedCap': capStatus['hasReachedCap'],
     };
+  }
+
+  /// Award XP and check for rank changes
+  /// This is a convenience method that awards XP and triggers rank change notifications
+  Future<void> awardXPAndCheckRank({
+    required String userId,
+    required int xpAmount,
+  }) async {
+    try {
+      // Award the XP
+      await _firestore.collection('users').doc(userId).update({
+        'totalXP': FieldValue.increment(xpAmount),
+      });
+
+      // Check for rank changes and send notifications if needed
+      // Run this asynchronously to not block the XP award
+      _leaderboardService.monitorUserRankChanges(userId: userId).catchError((e) {
+        // print('Error monitoring rank changes: $e');
+      });
+    } catch (e) {
+      // print('Error awarding XP and checking rank: $e');
+    }
   }
 }
 

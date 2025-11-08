@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/providers/user_provider.dart';
@@ -8,7 +8,7 @@ import '../../widgets/primary_button.dart';
 
 /// Profile Setup Screen - For Google Sign-In users or additional info collection
 class ProfileSetupScreen extends StatefulWidget {
-  const ProfileSetupScreen({Key? key}) : super(key: key);
+  const ProfileSetupScreen({super.key});
 
   @override
   State<ProfileSetupScreen> createState() => _ProfileSetupScreenState();
@@ -110,7 +110,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           ),
         ),
         child: Container(
-          color: Colors.white.withOpacity(0.6),
+          color: Colors.white.withValues(alpha: 0.6),
           child: SafeArea(
             bottom: false,
             child: Column(
@@ -130,7 +130,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       Text(
                         'Tell us a bit about yourself',
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textSecondary,
+                          color: AppDesignSystem.textSecondary,
                         ),
                       ),
                     ],
@@ -177,12 +177,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                     margin: const EdgeInsets.only(right: 12),
                                     decoration: BoxDecoration(
                                       color: isSelected 
-                                          ? AppColors.primary.withOpacity(0.2)
+                                          ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.2)
                                           : Colors.white,
                                       border: Border.all(
                                         color: isSelected 
-                                            ? AppColors.primary
-                                            : AppColors.border,
+                                            ? AppDesignSystem.primaryIndigo
+                                            : AppDesignSystem.backgroundGrey,
                                         width: isSelected ? 3 : 1,
                                       ),
                                       borderRadius: BorderRadius.circular(35),

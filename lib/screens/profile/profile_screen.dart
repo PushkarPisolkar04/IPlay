@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/content_service.dart';
+import '../../core/services/certificate_service.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/progress_bar.dart';
+import '../../widgets/sync_status_widget.dart';
+import '../../widgets/loading_skeleton.dart';
+import '../../services/bookmark_service.dart';
 
 /// Profile Screen - User profile with stats and progress
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -20,16 +24,69 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ContentService _contentService = ContentService();
+  final CertificateService _certificateService = CertificateService();
   UserModel? _user;
   Map<String, dynamic> _progressSummary = {};
   Map<String, dynamic>? _classroomInfo;
   Map<String, dynamic>? _schoolInfo;
+  int _certificateCount = 0;
+  int _bookmarkCount = 0;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _setupRealtimeListener();
+    _setupCertificateListener();
+    _setupBookmarkListener();
+  }
+
+  void _setupBookmarkListener() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      // Listen to bookmark changes in real-time
+      BookmarkService().getBookmarksStream().listen((snapshot) {
+        if (mounted) {
+          setState(() {
+            _bookmarkCount = snapshot.docs.length;
+          });
+        }
+      });
+    }
+  }
+
+  void _setupRealtimeListener() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .snapshots()
+          .listen((snapshot) {
+        if (snapshot.exists && mounted) {
+          final userData = snapshot.data()!;
+          setState(() {
+            _user = UserModel.fromMap(userData);
+            _progressSummary = userData['progressSummary'] ?? {};
+          });
+        }
+      });
+    }
+  }
+
+  void _setupCertificateListener() {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      // Listen to certificate changes in real-time
+      _certificateService.watchUserCertificates(currentUser.uid).listen((certificates) {
+        if (mounted) {
+          setState(() {
+            _certificateCount = certificates.length;
+          });
+        }
+      });
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -53,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -90,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e) {
-      print('Error loading classroom info: $e');
+      // print('Error loading classroom info: $e');
     }
   }
 
@@ -123,21 +180,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: const Text('Profile'),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const ProfileSkeleton(),
       );
     }
 
     if (_user == null) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: const Text('Profile'),
           backgroundColor: Colors.transparent,
@@ -159,12 +214,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .join()
         .toUpperCase();
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Profile'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
+          // Notification bell
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('notifications')
+                .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                .where('read', isEqualTo: false)
+                .snapshots(),
+            builder: (context, snapshot) {
+              final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+              
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/notifications');
+                    },
+                  ),
+                  if (unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppDesignSystem.error,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 2,
+                          ),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Center(
+                          child: Text(
+                            unreadCount > 99 ? '99+' : unreadCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
@@ -181,7 +289,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             AvatarWidget(
               initials: initials,
               size: 120,
-              backgroundColor: AppColors.secondary,
+              backgroundColor: AppDesignSystem.primaryPink,
               imageUrl: _user!.avatarUrl,
             ),
             
@@ -206,7 +314,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Classroom & School Info Card
             if (_classroomInfo != null) ...[
               CleanCard(
-                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                 child: Column(
                   children: [
                     Row(
@@ -214,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const Icon(
@@ -231,7 +339,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 'Classroom',
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: AppDesignSystem.textSecondary,
                                 ),
                               ),
                               Text(
@@ -254,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withOpacity(0.2),
+                              color: const Color(0xFF10B981).withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Icon(
@@ -271,7 +379,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                   'School',
                                   style: AppTextStyles.caption.copyWith(
-                                    color: AppColors.textSecondary,
+                                    color: AppDesignSystem.textSecondary,
                                   ),
                                 ),
                                 Text(
@@ -291,6 +399,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
+            
+            // Sync Status Widget
+            const SyncStatusWidget(),
             
             // Stats cards row
             Row(
@@ -314,9 +425,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: _StatCard(
                     icon: '⭐',
-                    value: '0', // TODO: Fetch from CertificateService
+                    value: '$_certificateCount',
                     label: 'Certs',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/certificates');
+                    },
                   ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: AppSpacing.cardSpacing),
+            
+            // Second row of stats
+            Row(
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    icon: '🔖',
+                    value: '$_bookmarkCount',
+                    label: 'Bookmarks',
+                    onTap: () {
+                      Navigator.pushNamed(context, '/bookmarks');
+                    },
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.cardSpacing),
+                Expanded(
+                  child: Container(), // Empty placeholder for symmetry
                 ),
               ],
             ),
@@ -325,7 +461,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             
             // Level card
             ColoredCard(
-              color: AppColors.primary,
+              color: AppDesignSystem.primaryIndigo,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -344,7 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -371,14 +507,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProgressBar(
                     progress: levelProgress,
                     color: Colors.white,
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                     height: 10,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '$xpToNext XP to Level ${userLevel + 1}',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                 ],
@@ -424,6 +560,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
             
             const SizedBox(height: AppSpacing.lg),
             
+            // Learning Insights Button
+            if (_user!.role == 'student') ...[
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/insights');
+                },
+                child: CleanCard(
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.insights,
+                              size: 32,
+                              color: AppDesignSystem.primaryIndigo,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Learning Insights',
+                                style: AppTextStyles.cardTitle.copyWith(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'View your detailed analytics',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
+            
             // My Badges
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -439,7 +636,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Text(
                     'View All',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.primary,
+                      color: AppDesignSystem.primaryIndigo,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -448,35 +645,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             
-            // Badge grid
-            if (_user!.badges.isNotEmpty)
-              GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: AppSpacing.sm,
-                  crossAxisSpacing: AppSpacing.sm,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _user!.badges.length.clamp(0, 8),
-                itemBuilder: (context, index) {
-                  // TODO: Map badge IDs to icons
-                  return _BadgeItem(icon: '🏅');
-                },
-              )
-            else
-              CleanCard(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Text(
-                      'No badges yet. Complete levels to earn badges!',
-                      style: AppTextStyles.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
+            // Badge grid with unlock dates
+            _BadgeGridWidget(userId: _user!.uid, unlockedBadges: _user!.badges),
             
             const SizedBox(height: AppSpacing.lg),
             
@@ -485,23 +655,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Certificates (0)', // TODO: Fetch from CertificateService
+                  'Certificates ($_certificateCount)',
                   style: AppTextStyles.sectionHeader,
                 ),
-                if (false) // TODO: Fetch certificates
+                if (_certificateCount > 0)
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to certificates screen
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Certificate details coming soon!'),
-                        ),
-                      );
+                      Navigator.pushNamed(context, '/certificates');
                     },
                     child: Text(
                       'View All',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -510,25 +675,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             
-            if (false) // TODO: Fetch certificates
-              ...([]/*.take(3)*/.map((cert) {
-                // TODO: Parse certificate data properly
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                  child: CleanCard(
+            // Certificate preview or empty state
+            if (_certificateCount > 0)
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/certificates');
+                },
+                child: CleanCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     child: Row(
                       children: [
                         Container(
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppColors.accent.withOpacity(0.15),
+                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Text(
-                              '📜',
-                              style: TextStyle(fontSize: 28),
+                            child: Icon(
+                              Icons.workspace_premium,
+                              size: 32,
+                              color: AppDesignSystem.primaryIndigo,
                             ),
                           ),
                         ),
@@ -538,36 +707,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                cert,
+                                'View Your Certificates',
                                 style: AppTextStyles.cardTitle.copyWith(
                                   fontSize: 16,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Tap to view',
-                                style: AppTextStyles.bodySmall,
+                                'Tap to view, download, or share',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.download, size: 20),
-                          onPressed: () {
-                            // TODO: Download certificate
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Certificate download coming soon!'),
-                              ),
-                            );
-                          },
-                          color: AppColors.primary,
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
                         ),
                       ],
                     ),
                   ),
-                );
-              }).toList())
+                ),
+              )
             else
               CleanCard(
                 child: Center(
@@ -598,12 +762,11 @@ class _StatCard extends StatelessWidget {
   final VoidCallback? onTap;
   
   const _StatCard({
-    Key? key,
     required this.icon,
     required this.value,
     required this.label,
     this.onTap,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -646,12 +809,11 @@ class _RealmProgress extends StatelessWidget {
   final Color color;
   
   const _RealmProgress({
-    Key? key,
     required this.icon,
     required this.title,
     required this.progress,
     required this.color,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -694,22 +856,279 @@ class _RealmProgress extends StatelessWidget {
   }
 }
 
-/// Badge item
-class _BadgeItem extends StatelessWidget {
-  final String icon;
+/// Badge Grid Widget - Shows unlocked and locked badges
+class _BadgeGridWidget extends StatefulWidget {
+  final String userId;
+  final List<String> unlockedBadges;
   
-  const _BadgeItem({
-    Key? key,
-    required this.icon,
-  }) : super(key: key);
+  const _BadgeGridWidget({
+    required this.userId,
+    required this.unlockedBadges,
+  });
+  
+  @override
+  State<_BadgeGridWidget> createState() => _BadgeGridWidgetState();
+}
+
+class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
+  List<Map<String, dynamic>> _allBadges = [];
+  final Map<String, DateTime> _badgeUnlockDates = {};
+  bool _isLoading = true;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadBadges();
+  }
+  
+  Future<void> _loadBadges() async {
+    try {
+      // Load all badge definitions
+      final badgesSnapshot = await FirebaseFirestore.instance
+          .collection('badges')
+          .orderBy('displayOrder')
+          .limit(12) // Show first 12 badges
+          .get();
+      
+      _allBadges = badgesSnapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'id': doc.id,
+          'name': data['name'] ?? 'Badge',
+          'iconEmoji': data['iconEmoji'] ?? '🏅',
+          'description': data['description'] ?? '',
+          'rarity': data['rarity'] ?? 'common',
+        };
+      }).toList();
+      
+      // Load unlock dates from user's badge_unlocks subcollection
+      final unlocksSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userId)
+          .collection('badge_unlocks')
+          .get();
+      
+      for (var doc in unlocksSnapshot.docs) {
+        final data = doc.data();
+        final badgeId = data['badgeId'] as String?;
+        final unlockedAt = (data['unlockedAt'] as Timestamp?)?.toDate();
+        if (badgeId != null && unlockedAt != null) {
+          _badgeUnlockDates[badgeId] = unlockedAt;
+        }
+      }
+      
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      // print('Error loading badges: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+  
+  Color _getRarityColor(String rarity) {
+    switch (rarity) {
+      case 'legendary':
+        return const Color(0xFFFFD700); // Gold
+      case 'epic':
+        return const Color(0xFF9333EA); // Purple
+      case 'rare':
+        return const Color(0xFF3B82F6); // Blue
+      case 'uncommon':
+        return const Color(0xFF10B981); // Green
+      default:
+        return const Color(0xFF6B7280); // Gray
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
-    return CleanCard(
-      child: Center(
-        child: Text(
-          icon,
-          style: const TextStyle(fontSize: 32),
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
+    if (_allBadges.isEmpty) {
+      return CleanCard(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            child: Text(
+              'No badges yet. Complete levels to earn badges!',
+              style: AppTextStyles.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+    
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: AppSpacing.sm,
+        crossAxisSpacing: AppSpacing.sm,
+        childAspectRatio: 0.85,
+      ),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _allBadges.length,
+      itemBuilder: (context, index) {
+        final badge = _allBadges[index];
+        final badgeId = badge['id'];
+        final isUnlocked = widget.unlockedBadges.contains(badgeId);
+        final unlockDate = _badgeUnlockDates[badgeId];
+        
+        return _BadgeItem(
+          icon: badge['iconEmoji'],
+          name: badge['name'],
+          isUnlocked: isUnlocked,
+          unlockDate: unlockDate,
+          rarity: badge['rarity'],
+          description: badge['description'],
+          rarityColor: _getRarityColor(badge['rarity']),
+        );
+      },
+    );
+  }
+}
+
+/// Badge item with unlock status
+class _BadgeItem extends StatelessWidget {
+  final String icon;
+  final String name;
+  final bool isUnlocked;
+  final DateTime? unlockDate;
+  final String rarity;
+  final String description;
+  final Color rarityColor;
+  
+  const _BadgeItem({
+    required this.icon,
+    required this.name,
+    required this.isUnlocked,
+    this.unlockDate,
+    required this.rarity,
+    required this.description,
+    required this.rarityColor,
+  });
+  
+  String _formatDate(DateTime date) {
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Show badge details dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(name),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    icon,
+                    style: TextStyle(
+                      fontSize: 64,
+                      color: isUnlocked ? null : Colors.grey,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(description),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: rarityColor.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        rarity.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: rarityColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (isUnlocked && unlockDate != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'Unlocked: ${_formatDate(unlockDate!)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+                if (!isUnlocked) ...[
+                  const SizedBox(height: 12),
+                  const Text(
+                    '🔒 Locked',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
+      child: CleanCard(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              icon,
+              style: TextStyle(
+                fontSize: 32,
+                color: isUnlocked ? null : Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 4),
+            if (unlockDate != null && isUnlocked)
+              Text(
+                _formatDate(unlockDate!),
+                style: const TextStyle(
+                  fontSize: 8,
+                  color: Color(0xFF6B7280),
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            if (!isUnlocked)
+              const Icon(
+                Icons.lock,
+                size: 12,
+                color: Color(0xFF9CA3AF),
+              ),
+          ],
         ),
       ),
     );

@@ -1,4 +1,4 @@
-import '../models/level_model.dart';
+import '../../models/level_model.dart';
 
 final List<LevelModel> geographicalIndicationLevelsData = [
   LevelModel(
@@ -879,7 +879,7 @@ Knowledge, innovations, and practices of indigenous and local communities develo
 
 **Tequila (Mexico):**
 - Denomination of origin
-- $3 billion+ exports
+- \$3 billion+ exports
 - Quality control
 
 **Lessons for India:**

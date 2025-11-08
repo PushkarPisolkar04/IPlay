@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../core/design/app_design_system.dart';
 import '../core/constants/app_text_styles.dart';
+import '../core/utils/cache_manager.dart';
 
 /// Avatar widget with optional online badge
 class AvatarWidget extends StatelessWidget {
@@ -12,14 +14,14 @@ class AvatarWidget extends StatelessWidget {
   final VoidCallback? onTap;
   
   const AvatarWidget({
-    Key? key,
+    super.key,
     this.imageUrl,
     required this.initials,
     this.size = 40.0,
     this.showOnlineBadge = false,
     this.backgroundColor,
     this.onTap,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,8 @@ class AvatarWidget extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: backgroundColor ?? AppColors.backgroundGrey,
-          border: Border.all(color: AppColors.border, width: 2),
+          color: backgroundColor ?? AppDesignSystem.backgroundGrey,
+          border: Border.all(color: AppDesignSystem.backgroundGrey, width: 2),
         ),
         child: Stack(
           children: [
@@ -52,9 +54,9 @@ class AvatarWidget extends StatelessWidget {
                   width: size * 0.25,
                   height: size * 0.25,
                   decoration: BoxDecoration(
-                    color: AppColors.success,
+                    color: AppDesignSystem.success,
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.background, width: 2),
+                    border: Border.all(color: AppDesignSystem.backgroundLight, width: 2),
                   ),
                 ),
               ),
@@ -75,13 +77,27 @@ class AvatarWidget extends StatelessWidget {
         errorBuilder: (_, __, ___) => _buildInitials(),
       );
     } else {
-      // Network image (URL)
-      return Image.network(
-        imageUrl!,
+      // Network image (URL) with caching
+      return CachedNetworkImage(
+        imageUrl: imageUrl!,
+        cacheManager: IPlayCacheManager.userDataCache,
         width: size,
         height: size,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _buildInitials(),
+        placeholder: (context, url) => Container(
+          color: AppDesignSystem.backgroundGrey,
+          child: Center(
+            child: SizedBox(
+              width: size * 0.3,
+              height: size * 0.3,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+              ),
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => _buildInitials(),
       );
     }
   }
@@ -90,7 +106,7 @@ class AvatarWidget extends StatelessWidget {
     return Text(
       initials.toUpperCase(),
       style: AppTextStyles.h3.copyWith(
-        color: AppColors.textPrimary,
+        color: AppDesignSystem.textPrimary,
         fontSize: size * 0.4,
       ),
     );

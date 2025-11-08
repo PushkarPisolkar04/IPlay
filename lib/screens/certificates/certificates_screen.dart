@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/certificate_service.dart';
 import '../../core/models/certificate_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/loading_skeleton.dart';
 import 'package:intl/intl.dart';
 
 class CertificatesScreen extends StatefulWidget {
-  const CertificatesScreen({Key? key}) : super(key: key);
+  const CertificatesScreen({super.key});
 
   @override
   State<CertificatesScreen> createState() => _CertificatesScreenState();
@@ -53,28 +57,139 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
 
   Future<void> _downloadCertificate(CertificateModel certificate) async {
     try {
+      // Show loading indicator
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Downloading certificate...')),
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              SizedBox(width: 16),
+              Text('Downloading certificate...'),
+            ],
+          ),
+          duration: Duration(seconds: 2),
+        ),
       );
 
-      final url = await _certificateService.getCertificateDownloadUrl(certificate.id);
+      // Get PDF bytes from Firestore
+      final pdfBytes = await _certificateService.getCertificatePdfBytes(certificate.id);
       
-      // TODO: Implement actual download using url_launcher or similar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Certificate URL: $url')),
-      );
+      if (pdfBytes == null) {
+        throw Exception('Certificate PDF not found');
+      }
+
+      // Get downloads directory
+      Directory? directory;
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory();
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+
+      if (directory == null) {
+        throw Exception('Could not access storage');
+      }
+
+      // Create file path
+      final fileName = 'IPlay_Certificate_${certificate.certificateNumber}.pdf';
+      final filePath = '${directory.path}/$fileName';
+
+      // Write PDF to file
+      final file = File(filePath);
+      await file.writeAsBytes(pdfBytes);
+
+      // Show success message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Certificate saved to: $filePath'),
+            backgroundColor: AppDesignSystem.success,
+            duration: const Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'Share',
+              textColor: Colors.white,
+              onPressed: () => _shareCertificate(certificate),
+            ),
+          ),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Download failed: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
     }
   }
 
   Future<void> _shareCertificate(CertificateModel certificate) async {
-    // TODO: Implement sharing functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share functionality coming soon!')),
-    );
+    try {
+      // Show loading indicator
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              SizedBox(width: 16),
+              Text('Preparing to share...'),
+            ],
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Get PDF bytes from Firestore
+      final pdfBytes = await _certificateService.getCertificatePdfBytes(certificate.id);
+      
+      if (pdfBytes == null) {
+        throw Exception('Certificate PDF not found');
+      }
+
+      // Get temporary directory
+      final directory = await getTemporaryDirectory();
+      final fileName = 'IPlay_Certificate_${certificate.certificateNumber}.pdf';
+      final filePath = '${directory.path}/$fileName';
+
+      // Write PDF to temporary file
+      final file = File(filePath);
+      await file.writeAsBytes(pdfBytes);
+
+      // Share the file with text
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        text: 'I completed the ${certificate.realmName} realm on IPlay! 🎉\n\n'
+            'Certificate #${certificate.certificateNumber}\n'
+            'Verify at: https://iplay.app/verify/${certificate.certificateNumber}\n\n'
+            'Download IPlay to learn IPR the fun way!',
+        subject: 'IPlay Certificate - ${certificate.realmName}',
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Share failed: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _viewCertificate(CertificateModel certificate) async {
@@ -124,11 +239,11 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Certificates'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const GridSkeleton(itemCount: 6, crossAxisCount: 1)
           : _error != null
               ? _buildErrorState()
               : _certificates.isEmpty
@@ -144,7 +259,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.textSecondary),
+            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -172,7 +287,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
             const Icon(
               Icons.workspace_premium_outlined,
               size: 80,
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
             const SizedBox(height: 24),
             Text(
@@ -183,7 +298,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
             Text(
               'Complete realms to earn certificates!\nEach completed realm awards you a certificate of achievement.',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -261,7 +376,7 @@ class _CertificateCard extends StatelessWidget {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -286,14 +401,14 @@ class _CertificateCard extends StatelessWidget {
                         Text(
                           'Certificate #${certificate.certificateNumber}',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: AppDesignSystem.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Issued: ${DateFormat('MMM dd, yyyy').format(certificate.issuedAt)}',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: AppDesignSystem.textSecondary,
                           ),
                         ),
                       ],
@@ -304,13 +419,13 @@ class _CertificateCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.success.withOpacity(0.1),
+                      color: AppDesignSystem.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       certificate.certificateType.toUpperCase(),
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.success,
+                        color: AppDesignSystem.success,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -328,7 +443,7 @@ class _CertificateCard extends StatelessWidget {
                       icon: const Icon(Icons.download, size: 18),
                       label: const Text('Download'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.primary,
+                        foregroundColor: AppDesignSystem.primaryIndigo,
                       ),
                     ),
                   ),
@@ -339,7 +454,7 @@ class _CertificateCard extends StatelessWidget {
                       icon: const Icon(Icons.share, size: 18),
                       label: const Text('Share'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.primary,
+                        foregroundColor: AppDesignSystem.primaryIndigo,
                       ),
                     ),
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Sign In Screen
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -196,7 +196,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -218,7 +218,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       Text(
                         'Sign in to continue learning',
                         style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppColors.textSecondary,
+                          color: AppDesignSystem.textSecondary,
                         ),
                       ),
                       
@@ -231,7 +231,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email_outlined, color: AppColors.primary),
+                          prefixIcon: Icon(Icons.email_outlined, color: AppDesignSystem.primaryIndigo),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -250,13 +250,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           hintText: 'Enter your password',
-                          prefixIcon: const Icon(Icons.lock_outline, color: AppColors.secondary),
+                          prefixIcon: const Icon(Icons.lock_outline, color: AppDesignSystem.primaryPink),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
                                   ? Icons.visibility_outlined
                                   : Icons.visibility_off_outlined,
-                              color: AppColors.secondary,
+                              color: AppDesignSystem.primaryPink,
                             ),
                             onPressed: () {
                               setState(() {
@@ -285,7 +285,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: Text(
                             'Forgot Password?',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.primary,
+                              color: AppDesignSystem.primaryIndigo,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -318,7 +318,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: Text(
                               'Sign Up',
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.primary,
+                                color: AppDesignSystem.primaryIndigo,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),

@@ -17,6 +17,7 @@ class AssignmentService {
     required DateTime dueDate,
     required int maxPoints,
     List<String>? attachmentUrls,
+    String? schoolId, // Added for Firebase security rules
   }) async {
     try {
       final now = DateTime.now();
@@ -34,6 +35,8 @@ class AssignmentService {
         createdAt: now,
         updatedAt: now,
         isActive: true,
+        createdBy: teacherId, // Set for Firebase security rules
+        schoolId: schoolId, // Set for principal access
       );
 
       await _firestore
@@ -61,6 +64,15 @@ class AssignmentService {
     } catch (e) {
       throw Exception('Failed to get assignment: $e');
     }
+  }
+
+  /// Get assignment by ID (throws if not found)
+  Future<AssignmentModel> getAssignmentById(String assignmentId) async {
+    final assignment = await getAssignment(assignmentId);
+    if (assignment == null) {
+      throw Exception('Assignment not found');
+    }
+    return assignment;
   }
 
   /// Get all assignments for a classroom

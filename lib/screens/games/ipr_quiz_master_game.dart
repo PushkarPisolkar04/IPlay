@@ -3,15 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'dart:math';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
+import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// IPR Quiz Master - Rapid-fire 10 question quiz game
 class IPRQuizMasterGame extends StatefulWidget {
-  const IPRQuizMasterGame({Key? key}) : super(key: key);
+  const IPRQuizMasterGame({super.key});
 
   @override
   State<IPRQuizMasterGame> createState() => _IPRQuizMasterGameState();
@@ -82,6 +83,11 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
       setState(() {
         _score++;
       });
+      // Haptic feedback for correct answer
+      HapticFeedbackUtil.correctAnswer();
+    } else {
+      // Haptic feedback for incorrect answer
+      HapticFeedbackUtil.incorrectAnswer();
     }
 
     // Move to next question after brief delay
@@ -100,6 +106,9 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
 
   void _endGame() {
     _timer?.cancel();
+    // Haptic feedback for XP gain
+    HapticFeedbackUtil.xpGain();
+    
     setState(() {
       _gameEnded = true;
     });
@@ -163,9 +172,9 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
           },
         }, SetOptions(merge: true));
         
-        print('✅ Game score saved: $_score, XP earned: $xpEarned');
+        // print('✅ Game score saved: $_score, XP earned: $xpEarned');
       } catch (e) {
-        print('❌ Error saving game score: $e');
+        // print('❌ Error saving game score: $e');
       }
     }
   }
@@ -198,10 +207,10 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
 
   Widget _buildStartScreen() {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('IPR Quiz Master'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -215,13 +224,13 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.speed,
                   size: 60,
-                  color: AppColors.primary,
+                  color: AppDesignSystem.primaryIndigo,
                 ),
               ),
 
@@ -238,7 +247,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
               Text(
                 'Test your IPR knowledge in a rapid-fire quiz!',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -249,7 +258,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundGrey,
+                  color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
                 child: Column(
@@ -288,10 +297,10 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
     final question = _questions[_currentQuestionIndex];
     
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: Text('Question ${_currentQuestionIndex + 1}/10'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         automaticallyImplyLeading: false,
         actions: [
@@ -304,7 +313,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: _timeLeft <= 10 ? Colors.red : Colors.white.withOpacity(0.2),
+                color: _timeLeft <= 10 ? Colors.red : Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -335,7 +344,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
             LinearProgressIndicator(
               value: (_currentQuestionIndex + 1) / _questions.length,
               backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
               minHeight: 6,
             ),
 
@@ -350,7 +359,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.sm),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
+                        color: AppDesignSystem.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                       ),
                       child: Row(
@@ -358,14 +367,14 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                         children: [
                           const Icon(
                             Icons.check_circle,
-                            color: AppColors.success,
+                            color: AppDesignSystem.success,
                             size: 20,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Score: $_score',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.success,
+                              color: AppDesignSystem.success,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -382,8 +391,8 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.primary.withOpacity(0.1),
-                            AppColors.secondary.withOpacity(0.1),
+                            AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                            AppDesignSystem.primaryPink.withValues(alpha: 0.1),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -403,19 +412,19 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                       final isCorrect = index == question.correctIndex;
                       
                       Color bgColor = Colors.white;
-                      Color borderColor = AppColors.border;
+                      Color borderColor = AppDesignSystem.backgroundGrey;
                       
                       if (_answerLocked) {
                         if (isCorrect) {
-                          bgColor = AppColors.success.withOpacity(0.1);
-                          borderColor = AppColors.success;
+                          bgColor = AppDesignSystem.success.withValues(alpha: 0.1);
+                          borderColor = AppDesignSystem.success;
                         } else if (isSelected && !isCorrect) {
-                          bgColor = Colors.red.withOpacity(0.1);
+                          bgColor = Colors.red.withValues(alpha: 0.1);
                           borderColor = Colors.red;
                         }
                       } else if (isSelected) {
-                        bgColor = AppColors.primary.withOpacity(0.1);
-                        borderColor = AppColors.primary;
+                        bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.1);
+                        borderColor = AppDesignSystem.primaryIndigo;
                       }
 
                       return GestureDetector(
@@ -434,7 +443,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                                 width: 32,
                                 height: 32,
                                 decoration: BoxDecoration(
-                                  color: borderColor.withOpacity(0.2),
+                                  color: borderColor.withValues(alpha: 0.2),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Center(
@@ -480,10 +489,10 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
     final xpEarned = _score * 10;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Game Over'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -497,13 +506,13 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: passed ? AppColors.success.withOpacity(0.1) : Colors.orange.withOpacity(0.1),
+                  color: passed ? AppDesignSystem.success.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   passed ? Icons.emoji_events : Icons.refresh,
                   size: 60,
-                  color: passed ? AppColors.success : Colors.orange,
+                  color: passed ? AppDesignSystem.success : Colors.orange,
                 ),
               ),
 
@@ -519,7 +528,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
               Text(
                 'You answered $_score out of ${_questions.length} questions correctly',
                 style: AppTextStyles.bodyLarge.copyWith(
-                  color: AppColors.textSecondary,
+                  color: AppDesignSystem.textSecondary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -530,7 +539,7 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
               Container(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 decoration: BoxDecoration(
-                  color: AppColors.backgroundGrey,
+                  color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                 ),
                 child: Column(
@@ -602,13 +611,13 @@ class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
         Text(
           label,
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textSecondary,
+            color: AppDesignSystem.textSecondary,
           ),
         ),
         Text(
           value,
           style: AppTextStyles.h3.copyWith(
-            color: isHighlight ? AppColors.primary : AppColors.textPrimary,
+            color: isHighlight ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
           ),
         ),
       ],

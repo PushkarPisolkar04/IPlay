@@ -2,37 +2,88 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper Functions
+    // ============================================================================
+    // HELPER FUNCTIONS - Role-Based Access Control (RBAC)
+    // ============================================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
     function isSignedIn() {
       return request.auth != null;
     }
     
     function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+      return isAuthenticated() && request.auth.uid == userId;
     }
     
-    function isTeacher() {
-      return isSignedIn() && (
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher' ||
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPrincipal == true
-      );
-    }
-    
-    function isPrincipal() {
-      return isSignedIn() && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPrincipal == true;
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
     }
     
     function isStudent() {
-      return isSignedIn() && 
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'student';
+      return isAuthenticated() && getUserData().role == 'student';
     }
     
-    // Users Collection
+    function isTeacher() {
+      return isAuthenticated() && getUserData().role == 'teacher';
+    }
+    
+    function isPrincipal() {
+      return isAuthenticated() && getUserData().isPrincipal == true;
+    }
+    
+    function isTeacherOrPrincipal() {
+      return isTeacher() || isPrincipal();
+    }
+    
+    function isInClassroom(classroomId) {
+      return isAuthenticated() && 
+             request.auth.uid in get(/databases/$(database)/documents/classrooms/$(classroomId)).data.studentIds;
+    }
+    
+    function isClassroomTeacher(classroomId) {
+      return isAuthenticated() && 
+             request.auth.uid == get(/databases/$(database)/documents/classrooms/$(classroomId)).data.teacherId;
+    }
+    
+    function isInSchool(schoolId) {
+      return isAuthenticated() && getUserData().schoolId == schoolId;
+    }
+    
+    function isSchoolPrincipal(schoolId) {
+      return isPrincipal() && 
+             get(/databases/$(database)/documents/schools/$(schoolId)).data.principalId == request.auth.uid;
+    }
+    
+    // ============================================================================
+    // USERS COLLECTION
+    // ============================================================================
     match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn() && request.auth.uid == userId;
-      allow update: if isOwner(userId) || isTeacher() || isPrincipal();
+      // Users can read their own data
+      allow read: if isOwner(userId);
+      
+      // Teachers can read students in their classrooms
+      allow read: if isTeacher() && 
+                     exists(/databases/$(database)/documents/classrooms/$(resource.data.classroomId)) &&
+                     isClassroomTeacher(resource.data.classroomId);
+      
+      // Principals can read users in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Users can create their own account
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      
+      // Users can update their own data (except role and isPrincipal)
+      allow update: if isOwner(userId) && 
+                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isPrincipal']);
+      
+      // Teachers/Principals can update student data in their scope
+      allow update: if (isTeacher() && isClassroomTeacher(resource.data.classroomId)) ||
+                       (isPrincipal() && isInSchool(resource.data.schoolId));
+      
+      // Users can delete their own account
       allow delete: if isOwner(userId);
     }
     
@@ -65,42 +116,61 @@ service cloud.firestore {
     
     // Realms Collection (Read-only for students, writable by admins)
     match /realms/{realmId} {
-      allow read: if isSignedIn();
-      allow write: if isPrincipal(); // Only principals can modify content
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admins via console
     }
     
     // Levels Collection (Read-only for students, writable by admins)
     match /levels/{levelId} {
-      allow read: if isSignedIn();
-      allow write: if isPrincipal();
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admins via console
     }
     
     // Quizzes Collection (Read-only for students, writable by admins)
     match /quizzes/{quizId} {
-      allow read: if isSignedIn();
-      allow write: if isPrincipal();
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admins via console
     }
     
     // Progress Collection
+    // Progress IDs are formatted as: userId__contentId (e.g., "abc123__realm_copyright_level_1" or "abc123__game_quiz_master")
     match /progress/{progressId} {
-      allow read: if isSignedIn() && (
-        isOwner(resource.data.userId) || 
+      // Extract userId from progressId (split by __ and take first part)
+      function getProgressUserId() {
+        return progressId.split('__')[0];
+      }
+      
+      // Allow read queries and individual document reads if signed in
+      // For queries: Allow if querying by own userId or if teacher/principal
+      // For gets: Allow if it's your own progress or if teacher/principal
+      allow read, list: if isSignedIn() && (
+        request.auth.uid == resource.data.userId ||
+        getProgressUserId() == request.auth.uid ||
         isTeacher() || 
         isPrincipal()
       );
-      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
-      allow update: if isSignedIn() && (
-        isOwner(resource.data.userId) || 
+      
+      // Allow create if signed in and creating your own progress
+      allow create: if isSignedIn() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Allow update/write if it's your progress or you're a teacher/principal  
+      allow update, write: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid ||
+        getProgressUserId() == request.auth.uid ||
         isTeacher() || 
         isPrincipal()
       );
-      allow delete: if isOwner(resource.data.userId);
+      
+      // Allow delete if it's your own progress
+      allow delete: if isSignedIn() && 
+        getProgressUserId() == request.auth.uid;
     }
     
     // Badges Collection (Read-only)
     match /badges/{badgeId} {
-      allow read: if isSignedIn();
-      allow write: if isPrincipal();
+      allow read: if isAuthenticated();
+      allow write: if false; // Only admins via console
     }
     
     // Certificates Collection
@@ -120,15 +190,28 @@ service cloud.firestore {
       allow write: if isSignedIn(); // Users can update their own scores
     }
     
-    // Announcements Collection
+    // ============================================================================
+    // ANNOUNCEMENTS COLLECTION
+    // ============================================================================
     match /announcements/{announcementId} {
-      allow read: if isSignedIn();
-      allow create: if isTeacher() || isPrincipal();
-      // Only allow update/delete if user is the author OR if they are principal
-      allow update, delete: if isSignedIn() && (
-        request.auth.uid == resource.data.authorId || 
-        isPrincipal()
-      );
+      // Students can read announcements in their classrooms
+      allow read: if isStudent() && isInClassroom(resource.data.classroomId);
+      
+      // Teachers can read their own announcements
+      allow read: if isTeacher() && isClassroomTeacher(resource.data.classroomId);
+      
+      // Principals can read announcements in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Only teachers can create announcements
+      allow create: if isTeacher() && isClassroomTeacher(request.resource.data.classroomId);
+      
+      // Principals can also create announcements
+      allow create: if isPrincipal() && isInSchool(request.resource.data.schoolId);
+      
+      // Only creator or principal can update/delete
+      allow update, delete: if isOwner(resource.data.authorId) || 
+                               (isPrincipal() && isInSchool(resource.data.schoolId));
     }
     
     // News Collection (Read-only for students)
@@ -181,26 +264,60 @@ service cloud.firestore {
       allow delete: if isPrincipal();
     }
     
-    // Assignments Collection
+    // ============================================================================
+    // ASSIGNMENTS COLLECTION
+    // ============================================================================
     match /assignments/{assignmentId} {
-      allow read: if isSignedIn();
-      allow create: if isTeacher() || isPrincipal();
-      allow update: if isTeacher() || isPrincipal();
-      allow delete: if isTeacher() || isPrincipal();
+      // Students can read assignments in their classrooms
+      allow read: if isStudent() && isInClassroom(resource.data.classroomId);
+      
+      // Teachers can read their own assignments
+      allow read: if isTeacher() && isClassroomTeacher(resource.data.classroomId);
+      
+      // Principals can read assignments in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Only teachers can create assignments
+      allow create: if isTeacher() && isClassroomTeacher(request.resource.data.classroomId);
+      
+      // Principals can also create assignments
+      allow create: if isPrincipal() && isInSchool(request.resource.data.schoolId);
+      
+      // Only creator or principal can update/delete
+      allow update, delete: if isOwner(resource.data.createdBy) || 
+                               (isPrincipal() && isInSchool(resource.data.schoolId));
     }
     
-    // Assignment Submissions Collection
+    // ============================================================================
+    // ASSIGNMENT SUBMISSIONS COLLECTION
+    // ============================================================================
     match /assignment_submissions/{submissionId} {
-      allow read: if isSignedIn() && (
-        request.auth.uid == resource.data.studentId ||
-        isTeacher() ||
-        isPrincipal()
-      );
-      allow create: if isSignedIn() && isStudent() &&
-        request.resource.data.studentId == request.auth.uid;
-      allow update: if (isStudent() && request.auth.uid == resource.data.studentId && 
-        resource.data.gradedAt == null) || isTeacher() || isPrincipal();
-      allow delete: if false; // Submissions cannot be deleted
+      // Students can read their own submissions
+      allow read: if isStudent() && isOwner(resource.data.studentId);
+      
+      // Teachers can read submissions for their assignments
+      allow read: if isTeacher() && isClassroomTeacher(resource.data.classroomId);
+      
+      // Principals can read submissions in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Students can create their own submissions
+      allow create: if isStudent() && 
+                       request.resource.data.studentId == request.auth.uid;
+      
+      // Students can update their own submissions (before grading)
+      allow update: if isStudent() && 
+                       isOwner(resource.data.studentId) && 
+                       resource.data.gradedAt == null;
+      
+      // Teachers can update (grade) submissions
+      allow update: if isTeacher() && isClassroomTeacher(resource.data.classroomId);
+      
+      // Principals can update submissions
+      allow update: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Submissions cannot be deleted
+      allow delete: if false;
     }
     
     // Certificates Collection (Cloud Functions only)
@@ -230,12 +347,48 @@ service cloud.firestore {
       allow update, delete: if false; // Attempts are immutable
     }
     
-    // Reports Collection
+    // ============================================================================
+    // REPORTS COLLECTION - Content Moderation
+    // ============================================================================
     match /reports/{reportId} {
-      allow read: if isPrincipal(); // Only principals/admins can view reports
-      allow create: if isSignedIn() && request.resource.data.reporterId == request.auth.uid;
-      allow update: if isPrincipal(); // Only principals can review/resolve
-      allow delete: if false; // Reports cannot be deleted
+      // Users can read their own reports
+      allow read: if isOwner(resource.data.reporterId);
+      
+      // Teachers can read reports about their content
+      allow read: if isTeacher() && isOwner(resource.data.contentCreatorId);
+      
+      // Principals can read reports in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // Any authenticated user can create reports
+      allow create: if isAuthenticated() && 
+                       request.resource.data.reporterId == request.auth.uid;
+      
+      // Teachers and principals can update (resolve) reports
+      allow update: if isTeacherOrPrincipal();
+      
+      // Reports cannot be deleted
+      allow delete: if false;
+    }
+    
+    // ============================================================================
+    // FLAGGED CONTENT COLLECTION - Automatic Content Moderation
+    // ============================================================================
+    match /flagged_content/{flagId} {
+      // Teachers can read flags for their content
+      allow read: if isTeacher() && isOwner(resource.data.creatorId);
+      
+      // Principals can read all flags in their school
+      allow read: if isPrincipal() && isInSchool(resource.data.schoolId);
+      
+      // System can create flags (via Cloud Functions)
+      allow create: if false; // Only Cloud Functions
+      
+      // Teachers and principals can update (review) flags
+      allow update: if isTeacherOrPrincipal();
+      
+      // Flags cannot be deleted
+      allow delete: if false;
     }
     
     // Feedback Collection
@@ -246,16 +399,108 @@ service cloud.firestore {
       allow delete: if false; // Feedback cannot be deleted
     }
     
-    // Leaderboard Cache Collection (Cloud Functions only)
+    // Leaderboard Cache Collection
     match /leaderboard_cache/{cacheId} {
       allow read: if isSignedIn();
-      allow write: if false; // Only Cloud Functions can update leaderboard cache
+      allow write: if isSignedIn(); // Allow client-side updates now
     }
     
-    // Badges Collection (Read-only, Cloud Functions write)
-    match /badges/{badgeId} {
-      allow read: if isSignedIn();
-      allow write: if false; // Only Cloud Functions/Admin setup
+    // Badges Collection (duplicate removed - see above)
+    
+    // ============================================================================
+    // CHAT COLLECTION - Simplified Education-Focused Communication
+    // Only teacher-to-student one-on-one messaging allowed
+    // No student-to-student messaging, no group chats
+    // ============================================================================
+    match /chats/{chatId} {
+      // Only participants can read
+      allow read: if isAuthenticated() && 
+                     request.auth.uid in resource.data.participants;
+      
+      // Only teachers can create chats (teacher-to-student only)
+      allow create: if isTeacher() && 
+                       request.resource.data.type == 'personal' &&
+                       request.auth.uid in request.resource.data.participants &&
+                       request.resource.data.participants.size() == 2;
+      
+      // No group chats allowed
+      allow create: if false && request.resource.data.type == 'group';
+      
+      // Participants can update (for read receipts, last message)
+      allow update: if isAuthenticated() && 
+                       request.auth.uid in resource.data.participants;
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        // Participants can read messages
+        allow read: if isAuthenticated() && 
+                       request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        
+        // Participants can send messages (with content moderation)
+        allow create: if isAuthenticated() && 
+                         request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants &&
+                         request.resource.data.senderId == request.auth.uid;
+        
+        // Participants can update (for read receipts)
+        allow update: if isAuthenticated() && 
+                         request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        
+        // Messages cannot be deleted
+        allow delete: if false;
+      }
+    }
+    
+    // ============================================================================
+    // NOTIFICATIONS COLLECTION
+    // ============================================================================
+    match /notifications/{notificationId} {
+      // Users can read their own notifications
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      
+      // System and authorized users can create notifications
+      allow create: if isAuthenticated();
+      
+      // Users can update their own notifications (mark as read)
+      allow update: if isAuthenticated() && isOwner(resource.data.userId);
+      
+      // Users can delete their own notifications
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+    }
+    
+    // ============================================================================
+    // DATA PRIVACY AND ACCESS CONTROL
+    // ============================================================================
+    
+    // User Data Export Collection (for GDPR compliance)
+    match /data_exports/{exportId} {
+      // Users can only read their own data exports
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      
+      // Users can request their own data export
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // System updates export status
+      allow update: if false; // Only Cloud Functions
+      
+      // Users can delete their export after download
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+    }
+    
+    // Account Deletion Requests Collection
+    match /deletion_requests/{requestId} {
+      // Users can read their own deletion requests
+      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      
+      // Users can create deletion requests
+      allow create: if isAuthenticated() && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // System processes deletion requests
+      allow update: if false; // Only Cloud Functions
+      
+      // Deletion requests cannot be deleted
+      allow delete: if false;
     }
   }
 }

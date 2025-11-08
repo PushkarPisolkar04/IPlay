@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/leaderboard_cache_model.dart';
 
-/// Service for leaderboard operations using cached data
-/// Note: Leaderboard cache is updated daily by Cloud Functions
+/// Service for leaderboard operations with LIVE data
+/// No more cached data - always shows current rankings
 class LeaderboardService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Get leaderboard with specified scope and filters
+  /// Get leaderboard with LIVE data (reactive to all XP changes)
   /// 
   /// Scopes: 'national', 'state', 'school', 'classroom'
   /// Types: 'all' (all learners), 'solo' (learners not in any classroom)
@@ -18,22 +18,52 @@ class LeaderboardService {
     String? identifier, // stateCode, schoolId, or classroomId
   }) async {
     try {
-      // Generate document ID based on parameters
-      final docId = LeaderboardCacheModel.generateId(
-        scope: scope,
-        type: type,
-        period: period,
-        identifier: identifier,
-      );
-
-      final doc = await _firestore
-          .collection('leaderboard_cache')
-          .doc(docId)
-          .get();
-
-      if (!doc.exists) return null;
-
-      return LeaderboardCacheModel.fromFirestore(doc.data()!);
+      // Build query based on scope
+      Query query = _firestore.collection('users');
+      
+      // Apply filters
+      if (scope == 'state' && identifier != null) {
+        query = query.where('state', isEqualTo: identifier);
+      } else if (scope == 'school' && identifier != null) {
+        query = query.where('schoolId', isEqualTo: identifier);
+      } else if (scope == 'classroom' && identifier != null) {
+        query = query.where('classroomIds', arrayContains: identifier);
+      }
+      
+      // Solo learners filter
+      if (type == 'solo') {
+        query = query.where('classroomIds', isEqualTo: []);
+      }
+      
+      // Period filter (for future - currently allTime only)
+      // TODO: Add weekly/monthly filtering based on lastActiveDate
+      
+      // Order by XP and get top 100
+      query = query.orderBy('totalXP', descending: true).limit(100);
+      
+      final snapshot = await query.get();
+      
+      // Build entries
+      final entries = snapshot.docs.asMap().entries.map((entry) {
+        final data = entry.value.data() as Map<String, dynamic>;
+        return {
+          'userId': entry.value.id,
+          'displayName': data['displayName'] ?? 'Anonymous',
+          'avatarUrl': data['avatarUrl'],
+          'totalXP': data['totalXP'] ?? 0,
+          'rank': entry.key + 1,
+        };
+      }).toList();
+      
+      return LeaderboardCacheModel.fromFirestore({
+        'id': '${scope}_${type}_$period${identifier != null ? "_$identifier" : ""}',
+        'scope': scope,
+        'type': type,
+        'period': period,
+        'identifier': identifier,
+        'entries': entries,
+        'lastUpdatedAt': Timestamp.now(),
+      });
     } catch (e) {
       throw Exception('Failed to get leaderboard: $e');
     }
@@ -341,6 +371,235 @@ class LeaderboardService {
       if (!snapshot.exists) return null;
       return LeaderboardCacheModel.fromFirestore(snapshot.data()!);
     });
+  }
+
+  /// Check for rank changes and send notifications
+  /// Call this method after XP updates to notify users of significant rank changes
+  Future<void> checkAndNotifyRankChanges({
+    required String userId,
+    required String scope,
+    required String type,
+    required String period,
+    String? identifier,
+    required int oldRank,
+  }) async {
+    try {
+      // Get current rank
+      final currentRankData = await getUserRank(
+        userId: userId,
+        scope: scope,
+        type: type,
+        period: period,
+        identifier: identifier,
+      );
+
+      if (currentRankData == null) return;
+
+      final newRank = currentRankData['rank'] as int;
+      final rankChange = oldRank - newRank; // Positive means moved up
+
+      // Only notify if rank changed by 5 or more positions
+      if (rankChange.abs() >= 5) {
+        String title;
+        String body;
+        
+        if (rankChange > 0) {
+          // Moved up
+          title = '🎉 You climbed the leaderboard!';
+          body = 'You moved up $rankChange positions to rank #$newRank in ${_getScopeName(scope)}!';
+        } else {
+          // Moved down
+          title = '📉 Leaderboard update';
+          body = 'You moved down ${rankChange.abs()} positions to rank #$newRank in ${_getScopeName(scope)}. Keep learning to climb back up!';
+        }
+
+        // Save notification to Firestore
+        await _firestore.collection('notifications').add({
+          'toUserId': userId,
+          'fromUserId': null, // System notification
+          'title': title,
+          'body': body,
+          'data': {
+            'type': 'rank_change',
+            'scope': scope,
+            'oldRank': oldRank,
+            'newRank': newRank,
+            'rankChange': rankChange,
+          },
+          'read': false,
+          'sentAt': Timestamp.now(),
+        });
+      }
+    } catch (e) {
+      // print('Error checking rank changes: $e');
+    }
+  }
+
+  /// Get user-friendly scope name
+  String _getScopeName(String scope) {
+    switch (scope) {
+      case 'classroom':
+        return 'your classroom';
+      case 'school':
+        return 'your school';
+      case 'state':
+        return 'your state';
+      case 'national':
+        return 'the country';
+      default:
+        return 'the leaderboard';
+    }
+  }
+
+  /// Monitor user's rank and send notifications for significant changes
+  /// This should be called periodically or after XP updates
+  Future<void> monitorUserRankChanges({
+    required String userId,
+  }) async {
+    try {
+      // Get user's current affiliations
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final userData = userDoc.data()!;
+      final classroomIds = List<String>.from(userData['classroomIds'] ?? []);
+      final schoolId = userData['schoolId'] as String?;
+      final state = userData['state'] as String?;
+
+      // Get stored previous ranks
+      final previousRanks = userData['previousRanks'] as Map<String, dynamic>?;
+
+      // Check classroom rank
+      if (classroomIds.isNotEmpty) {
+        final classroomId = classroomIds.first;
+        final oldRank = previousRanks?['classroom_$classroomId'] as int? ?? 999;
+        await checkAndNotifyRankChanges(
+          userId: userId,
+          scope: 'classroom',
+          type: 'all',
+          period: 'allTime',
+          identifier: classroomId,
+          oldRank: oldRank,
+        );
+      }
+
+      // Check school rank
+      if (schoolId != null) {
+        final oldRank = previousRanks?['school_$schoolId'] as int? ?? 999;
+        await checkAndNotifyRankChanges(
+          userId: userId,
+          scope: 'school',
+          type: 'all',
+          period: 'allTime',
+          identifier: schoolId,
+          oldRank: oldRank,
+        );
+      }
+
+      // Check state rank
+      if (state != null) {
+        final oldRank = previousRanks?['state_$state'] as int? ?? 999;
+        await checkAndNotifyRankChanges(
+          userId: userId,
+          scope: 'state',
+          type: 'all',
+          period: 'allTime',
+          identifier: state,
+          oldRank: oldRank,
+        );
+      }
+
+      // Check national rank
+      final oldRank = previousRanks?['national'] as int? ?? 999;
+      await checkAndNotifyRankChanges(
+        userId: userId,
+        scope: 'national',
+        type: 'all',
+        period: 'allTime',
+        oldRank: oldRank,
+      );
+
+      // Update stored ranks for next comparison
+      await _updateStoredRanks(userId);
+    } catch (e) {
+      // print('Error monitoring rank changes: $e');
+    }
+  }
+
+  /// Update stored ranks in user document for future comparison
+  Future<void> _updateStoredRanks(String userId) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final userData = userDoc.data()!;
+      final classroomIds = List<String>.from(userData['classroomIds'] ?? []);
+      final schoolId = userData['schoolId'] as String?;
+      final state = userData['state'] as String?;
+
+      final newRanks = <String, int>{};
+
+      // Get classroom rank
+      if (classroomIds.isNotEmpty) {
+        final classroomId = classroomIds.first;
+        final rankData = await getUserRank(
+          userId: userId,
+          scope: 'classroom',
+          type: 'all',
+          period: 'allTime',
+          identifier: classroomId,
+        );
+        if (rankData != null) {
+          newRanks['classroom_$classroomId'] = rankData['rank'] as int;
+        }
+      }
+
+      // Get school rank
+      if (schoolId != null) {
+        final rankData = await getUserRank(
+          userId: userId,
+          scope: 'school',
+          type: 'all',
+          period: 'allTime',
+          identifier: schoolId,
+        );
+        if (rankData != null) {
+          newRanks['school_$schoolId'] = rankData['rank'] as int;
+        }
+      }
+
+      // Get state rank
+      if (state != null) {
+        final rankData = await getUserRank(
+          userId: userId,
+          scope: 'state',
+          type: 'all',
+          period: 'allTime',
+          identifier: state,
+        );
+        if (rankData != null) {
+          newRanks['state_$state'] = rankData['rank'] as int;
+        }
+      }
+
+      // Get national rank
+      final nationalRankData = await getUserRank(
+        userId: userId,
+        scope: 'national',
+        type: 'all',
+        period: 'allTime',
+      );
+      if (nationalRankData != null) {
+        newRanks['national'] = nationalRankData['rank'] as int;
+      }
+
+      // Update user document
+      await _firestore.collection('users').doc(userId).update({
+        'previousRanks': newRanks,
+      });
+    } catch (e) {
+      // print('Error updating stored ranks: $e');
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 
 class LeaderboardFilters extends StatelessWidget {
   final String scope;
@@ -10,14 +10,14 @@ class LeaderboardFilters extends StatelessWidget {
   final Function(String) onPeriodChanged;
 
   const LeaderboardFilters({
-    Key? key,
+    super.key,
     required this.scope,
     required this.type,
     required this.period,
     required this.onScopeChanged,
     required this.onTypeChanged,
     required this.onPeriodChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class LeaderboardFilters extends StatelessWidget {
                     label: Text(option),
                     selected: isSelected,
                     onSelected: (_) => onChanged(option.toLowerCase()),
-                    selectedColor: AppColors.primary,
-                    labelStyle: TextStyle(color: isSelected ? Colors.white : AppColors.textPrimary),
+                    selectedColor: AppDesignSystem.primaryIndigo,
+                    labelStyle: TextStyle(color: isSelected ? Colors.white : AppDesignSystem.textPrimary),
                   ),
                 );
               }).toList(),

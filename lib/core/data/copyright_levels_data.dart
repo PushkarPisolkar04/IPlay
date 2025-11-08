@@ -31,7 +31,7 @@ class CopyrightLevelsData {
       levelNumber: 1,
       name: 'What is Copyright?',
       description: 'Introduction to copyright protection and why it matters',
-      videoUrl: 'https://www.youtube.com/watch?v=Uiq42O6rhW4', // Placeholder video
+      videoUrl: 'https://www.youtube.com/watch?v=2Fr6kERk5hw', // IPR Educational Video
       content: '''
 # What is Copyright?
 

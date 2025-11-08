@@ -263,23 +263,19 @@ class AuthService {
 
       int newStreak = userData.currentStreak;
 
-      if (lastActive != null) {
-        final difference = now.difference(lastActive);
-        
-        // If within grace period, maintain streak
-        if (difference.inHours <= AppConstants.streakGracePeriodHours + 24) {
-          // If it's a new day, increment streak
-          if (difference.inHours >= 24) {
-            newStreak += 1;
-          }
-        } else {
-          // Streak broken
-          newStreak = 1;
+      final difference = now.difference(lastActive);
+      
+      // If within grace period, maintain streak
+      if (difference.inHours <= AppConstants.streakGracePeriodHours + 24) {
+        // If it's a new day, increment streak
+        if (difference.inHours >= 24) {
+          newStreak += 1;
         }
       } else {
+        // Streak broken
         newStreak = 1;
       }
-
+    
       await updateUserData(uid, {
         'currentStreak': newStreak,
         'lastActiveDate': Timestamp.fromDate(now),

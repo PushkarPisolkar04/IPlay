@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/assignment_service.dart';
 import '../../core/models/assignment_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../core/utils/cache_manager.dart';
+import '../../widgets/upload_progress_indicator.dart';
 
 class AssignmentDetailScreen extends StatefulWidget {
   final String assignmentId;
 
   const AssignmentDetailScreen({
-    Key? key,
+    super.key,
     required this.assignmentId,
-  }) : super(key: key);
+  });
 
   @override
   State<AssignmentDetailScreen> createState() => _AssignmentDetailScreenState();
@@ -29,7 +36,9 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
   bool _isLoading = true;
   bool _isSubmitting = false;
   String? _error;
-  final List<String> _attachmentUrls = [];
+  final List<Map<String, dynamic>> _attachments = []; // {name, url, size}
+  bool _isUploading = false;
+  double _uploadProgress = 0.0;
 
   @override
   void initState() {
@@ -64,6 +73,16 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
         _submission = submission;
         if (submission != null) {
           _submissionController.text = submission.submissionText;
+          // Load existing attachments if any
+          if (submission.attachmentUrls != null) {
+            for (var url in submission.attachmentUrls!) {
+              _attachments.add({
+                'name': url.split('/').last.split('?').first,
+                'url': url,
+                'size': 0, // Size unknown for existing attachments
+              });
+            }
+          }
         }
         _isLoading = false;
       });
@@ -84,6 +103,8 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
       final user = Provider.of<AuthProvider>(context, listen: false).currentUser;
       if (user == null) throw Exception('User not logged in');
 
+      final attachmentUrls = _attachments.map((a) => a['url'] as String).toList();
+
       if (_submission == null) {
         // Create new submission
         await _assignmentService.submitAssignment(
@@ -91,14 +112,14 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
           studentId: user.uid,
           studentName: user.displayName,
           submissionText: _submissionController.text.trim(),
-          attachmentUrls: _attachmentUrls.isEmpty ? null : _attachmentUrls,
+          attachmentUrls: attachmentUrls.isEmpty ? null : attachmentUrls,
         );
       } else {
         // Update existing submission
         await _assignmentService.updateSubmission(
-          submissionId: _submission!.id,
+          _submission!.id,
           submissionText: _submissionController.text.trim(),
-          attachmentUrls: _attachmentUrls.isEmpty ? null : _attachmentUrls,
+          attachmentUrls: attachmentUrls.isEmpty ? null : attachmentUrls,
         );
       }
 
@@ -116,11 +137,143 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
     }
   }
 
-  void _addAttachment() {
-    // TODO: Implement file picker
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('File upload coming soon!')),
-    );
+  Future<void> _pickImage() async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final file = File(pickedFile.path);
+        final fileSize = await file.length();
+
+        // Check original file size (max 2MB before compression)
+        if (fileSize > 2 * 1024 * 1024) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Image must be less than 2MB')),
+            );
+          }
+          return;
+        }
+
+        // Compress image to max 500KB
+        final compressedFile = await _compressImage(file);
+        if (compressedFile == null) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Error compressing image')),
+            );
+          }
+          return;
+        }
+
+        await _uploadFile(compressedFile, pickedFile.name);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error picking image: $e')),
+        );
+      }
+    }
+  }
+
+  Future<File?> _compressImage(File file) async {
+    try {
+      final filePath = file.absolute.path;
+      final lastIndex = filePath.lastIndexOf('.');
+      final outPath = '${filePath.substring(0, lastIndex)}_compressed${filePath.substring(lastIndex)}';
+
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        outPath,
+        quality: 85,
+        minWidth: 1920,
+        minHeight: 1080,
+      );
+
+      if (result == null) return null;
+
+      final compressedFile = File(result.path);
+      final compressedSize = await compressedFile.length();
+
+      // If still larger than 500KB, compress more aggressively
+      if (compressedSize > 500 * 1024) {
+        final result2 = await FlutterImageCompress.compressAndGetFile(
+          file.absolute.path,
+          outPath,
+          quality: 70,
+          minWidth: 1280,
+          minHeight: 720,
+        );
+        return result2 != null ? File(result2.path) : compressedFile;
+      }
+
+      return compressedFile;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> _uploadFile(File file, String fileName) async {
+    setState(() {
+      _isUploading = true;
+      _uploadProgress = 0.0;
+    });
+
+    try {
+      final user = Provider.of<AuthProvider>(context, listen: false).currentUser;
+      if (user == null) throw Exception('User not logged in');
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final storageRef = FirebaseStorage.instance
+          .ref('submissions/${user.uid}/${timestamp}_$fileName');
+
+      final uploadTask = storageRef.putFile(file);
+
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        setState(() {
+          _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
+        });
+      });
+
+      await uploadTask;
+      final downloadUrl = await storageRef.getDownloadURL();
+      final fileSize = await file.length();
+
+      setState(() {
+        _attachments.add({
+          'name': fileName,
+          'url': downloadUrl,
+          'size': fileSize,
+        });
+        _isUploading = false;
+        _uploadProgress = 0.0;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image uploaded successfully!')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _isUploading = false;
+        _uploadProgress = 0.0;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error uploading image: $e')),
+        );
+      }
+    }
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes == 0) return 'Unknown size';
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
   bool _isOverdue() {
@@ -133,7 +286,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assignment Details'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -151,7 +304,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.textSecondary),
+            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -188,7 +341,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
           Text(
             'By ${_assignment!.teacherName}',
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
           ),
           const SizedBox(height: 16),
@@ -198,20 +351,20 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isOverdue
-                  ? AppColors.error.withOpacity(0.1)
-                  : AppColors.primary.withOpacity(0.1),
+                  ? AppDesignSystem.error.withValues(alpha: 0.1)
+                  : AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isOverdue
-                    ? AppColors.error.withOpacity(0.3)
-                    : AppColors.primary.withOpacity(0.3),
+                    ? AppDesignSystem.error.withValues(alpha: 0.3)
+                    : AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
               ),
             ),
             child: Row(
               children: [
                 Icon(
                   isOverdue ? Icons.warning : Icons.schedule,
-                  color: isOverdue ? AppColors.error : AppColors.primary,
+                  color: isOverdue ? AppDesignSystem.error : AppDesignSystem.primaryIndigo,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -221,7 +374,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                       Text(
                         isOverdue ? 'Overdue' : 'Due Date',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isOverdue ? AppColors.error : AppColors.primary,
+                          color: isOverdue ? AppDesignSystem.error : AppDesignSystem.primaryIndigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -236,13 +389,13 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppDesignSystem.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     '${_assignment!.maxPoints} pts',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.success,
+                      color: AppDesignSystem.success,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -276,7 +429,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.cardBackground,
+                  color: AppDesignSystem.backgroundWhite,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -311,13 +464,13 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isGraded
-                    ? AppColors.success.withOpacity(0.1)
-                    : AppColors.warning.withOpacity(0.1),
+                    ? AppDesignSystem.success.withValues(alpha: 0.1)
+                    : AppDesignSystem.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isGraded
-                      ? AppColors.success.withOpacity(0.3)
-                      : AppColors.warning.withOpacity(0.3),
+                      ? AppDesignSystem.success.withValues(alpha: 0.3)
+                      : AppDesignSystem.warning.withValues(alpha: 0.3),
                 ),
               ),
               child: Column(
@@ -327,13 +480,13 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                     children: [
                       Icon(
                         isGraded ? Icons.check_circle : Icons.pending,
-                        color: isGraded ? AppColors.success : AppColors.warning,
+                        color: isGraded ? AppDesignSystem.success : AppDesignSystem.warning,
                       ),
                       const SizedBox(width: 12),
                       Text(
                         isGraded ? 'Graded' : 'Submitted',
                         style: AppTextStyles.h3.copyWith(
-                          color: isGraded ? AppColors.success : AppColors.warning,
+                          color: isGraded ? AppDesignSystem.success : AppDesignSystem.warning,
                         ),
                       ),
                       const Spacer(),
@@ -341,7 +494,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                         Text(
                           '${_submission!.score}/${_assignment!.maxPoints}',
                           style: AppTextStyles.h2.copyWith(
-                            color: AppColors.success,
+                            color: AppDesignSystem.success,
                           ),
                         ),
                     ],
@@ -350,7 +503,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                   Text(
                     'Submitted ${DateFormat('MMM dd, yyyy').format(_submission!.submittedAt)}',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
+                      color: AppDesignSystem.textSecondary,
                     ),
                   ),
                   if (isGraded && _submission!.feedback != null) ...[
@@ -407,17 +560,109 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
                   ),
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
-                    onPressed: (!isOverdue || hasSubmission) ? _addAttachment : null,
-                    icon: const Icon(Icons.attach_file),
-                    label: const Text('Add Attachment'),
+                    onPressed: (!isOverdue || hasSubmission) && !_isUploading ? _pickImage : null,
+                    icon: const Icon(Icons.image),
+                    label: const Text('Add Image'),
                   ),
+                  
+                  // Upload progress
+                  if (_isUploading) ...[
+                    const SizedBox(height: 12),
+                    UploadProgressIndicator(
+                      progress: _uploadProgress,
+                      statusText: 'Uploading image...',
+                    ),
+                  ],
+                  
+                  // Attached images
+                  if (_attachments.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    ...List.generate(_attachments.length, (index) {
+                      final attachment = _attachments[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppDesignSystem.backgroundWhite,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: CachedNetworkImage(
+                                imageUrl: attachment['url'],
+                                cacheManager: IPlayCacheManager.staticContentCache,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  width: 50,
+                                  height: 50,
+                                  color: Colors.grey[200],
+                                  child: const Center(
+                                    child: SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) {
+                                  return Container(
+                                    width: 50,
+                                    height: 50,
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.image, size: 24),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    attachment['name'],
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    _formatFileSize(attachment['size']),
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppDesignSystem.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            if (!isGraded)
+                              IconButton(
+                                icon: const Icon(Icons.close, size: 20),
+                                onPressed: () {
+                                  setState(() {
+                                    _attachments.removeAt(index);
+                                  });
+                                },
+                              ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: (isOverdue && !hasSubmission) || _isSubmitting
                         ? null
                         : _submitAssignment,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
+                      backgroundColor: AppDesignSystem.primaryIndigo,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(

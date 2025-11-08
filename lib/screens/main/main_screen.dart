@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/bottom_nav_bar.dart';
+import '../../widgets/offline_banner.dart';
 import '../../core/models/user_model.dart';
 import '../home/home_screen.dart';
 import '../learn/learn_screen.dart';
 import '../games/play_screen.dart';
-import '../leaderboard/leaderboard_screen.dart';
+import '../leaderboard/unified_leaderboard_screen.dart';
 import '../profile/profile_screen.dart';
 import '../teacher/teacher_dashboard_screen.dart';
 import '../principal/principal_dashboard_screen.dart';
-import '../announcements/announcements_screen.dart';
+import '../chat/chat_list_screen.dart';
 
 /// Main screen with bottom navigation - Role-based tabs
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -49,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -63,18 +64,20 @@ class _MainScreenState extends State<MainScreen> {
         HomeScreen(),
         LearnScreen(),
         PlayScreen(),
-        LeaderboardScreen(),
+        UnifiedLeaderboardScreen(),
+        ChatListScreen(), // Messages
         ProfileScreen(),
       ];
     }
 
-    // STUDENT: Home, Learn, Play, Leaderboard, Profile (News in quick actions only)
+    // STUDENT: Home, Learn, Play, Leaderboard, Messages, Profile
     if (_user!.role == 'student') {
       return const [
         HomeScreen(),
         LearnScreen(),
         PlayScreen(),
-        LeaderboardScreen(),
+        UnifiedLeaderboardScreen(),
+        ChatListScreen(), // Messages
         ProfileScreen(),
       ];
     }
@@ -120,14 +123,21 @@ class _MainScreenState extends State<MainScreen> {
 
     // For students, show the normal tab navigation
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        children: _screens,
+      body: Column(
+        children: [
+          const OfflineBanner(),
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              children: _screens,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,

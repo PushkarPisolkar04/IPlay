@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import 'ipr_quiz_master_game.dart';
 import 'match_ipr_game.dart';
+import 'spot_the_original_game.dart';
+import 'gi_mapper_game.dart';
+import 'ip_defender_game.dart';
+import 'patent_detective_game.dart';
+import 'innovation_lab_game.dart';
 
 /// Games Screen - List of available educational games
 class GamesScreen extends StatefulWidget {
-  const GamesScreen({Key? key}) : super(key: key);
+  const GamesScreen({super.key});
 
   @override
   State<GamesScreen> createState() => _GamesScreenState();
 }
 
 class _GamesScreenState extends State<GamesScreen> {
-  Map<String, dynamic> _gameStats = {};
+  final Map<String, dynamic> _gameStats = {};
   bool _isLoading = true;
 
   @override
@@ -40,6 +46,31 @@ class _GamesScreenState extends State<GamesScreen> {
             .doc('${user.uid}__game_match_ipr')
             .get();
         
+        final spotDoc = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc('${user.uid}__game_spot_original')
+            .get();
+        
+        final giDoc = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc('${user.uid}__game_gi_mapper')
+            .get();
+        
+        final defenderDoc = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc('${user.uid}__game_ip_defender')
+            .get();
+        
+        final detectiveDoc = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc('${user.uid}__game_patent_detective')
+            .get();
+        
+        final innovationDoc = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc('${user.uid}__game_innovation_lab')
+            .get();
+        
         setState(() {
           if (quizDoc.exists) {
             _gameStats['quiz_master'] = quizDoc.data();
@@ -47,10 +78,25 @@ class _GamesScreenState extends State<GamesScreen> {
           if (matchDoc.exists) {
             _gameStats['match_ipr'] = matchDoc.data();
           }
+          if (spotDoc.exists) {
+            _gameStats['spot_original'] = spotDoc.data();
+          }
+          if (giDoc.exists) {
+            _gameStats['gi_mapper'] = giDoc.data();
+          }
+          if (defenderDoc.exists) {
+            _gameStats['ip_defender'] = defenderDoc.data();
+          }
+          if (detectiveDoc.exists) {
+            _gameStats['patent_detective'] = detectiveDoc.data();
+          }
+          if (innovationDoc.exists) {
+            _gameStats['innovation_lab'] = innovationDoc.data();
+          }
           _isLoading = false;
         });
       } catch (e) {
-        print('Error loading game stats: $e');
+        // print('Error loading game stats: $e');
         setState(() => _isLoading = false);
       }
     } else {
@@ -60,8 +106,20 @@ class _GamesScreenState extends State<GamesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppDesignSystem.backgroundLight,
+        appBar: AppBar(
+          title: const Text('Games'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: const GridSkeleton(itemCount: 6, crossAxisCount: 1),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Games'),
         backgroundColor: Colors.transparent,
@@ -83,7 +141,7 @@ class _GamesScreenState extends State<GamesScreen> {
             Text(
               'Learn IPR concepts through fun and interactive games!',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
             ),
 
@@ -121,6 +179,66 @@ class _GamesScreenState extends State<GamesScreen> {
                           'Best Time: ${_gameStats['match_ipr']['lastTime']}s',
                         ],
                       ),
+                    if (_gameStats.containsKey('match_ipr') && _gameStats.containsKey('spot_original'))
+                      const Divider(height: 24),
+                    if (_gameStats.containsKey('spot_original'))
+                      _StatItem(
+                        icon: Icons.search,
+                        title: 'Spot the Original',
+                        stats: [
+                          'Best: ${_gameStats['spot_original']['highScore']}/5',
+                          'Played ${_gameStats['spot_original']['attemptsCount']} times',
+                          'Accuracy: ${_gameStats['spot_original']['accuracy']}%',
+                        ],
+                      ),
+                    if (_gameStats.containsKey('spot_original') && _gameStats.containsKey('gi_mapper'))
+                      const Divider(height: 24),
+                    if (_gameStats.containsKey('gi_mapper'))
+                      _StatItem(
+                        icon: Icons.map,
+                        title: 'GI Mapper',
+                        stats: [
+                          'Best: ${_gameStats['gi_mapper']['highScore']}/8',
+                          'Played ${_gameStats['gi_mapper']['attemptsCount']} times',
+                          'Accuracy: ${_gameStats['gi_mapper']['accuracy']}%',
+                        ],
+                      ),
+                    if (_gameStats.containsKey('gi_mapper') && _gameStats.containsKey('ip_defender'))
+                      const Divider(height: 24),
+                    if (_gameStats.containsKey('ip_defender'))
+                      _StatItem(
+                        icon: Icons.shield,
+                        title: 'IP Defender',
+                        stats: [
+                          'Best: ${_gameStats['ip_defender']['highScore']} pts',
+                          'Played ${_gameStats['ip_defender']['attemptsCount']} times',
+                          'Defeated: ${_gameStats['ip_defender']['infringersDefeated']} infringers',
+                        ],
+                      ),
+                    if (_gameStats.containsKey('ip_defender') && _gameStats.containsKey('patent_detective'))
+                      const Divider(height: 24),
+                    if (_gameStats.containsKey('patent_detective'))
+                      _StatItem(
+                        icon: Icons.search,
+                        title: 'Patent Detective',
+                        stats: [
+                          'Best: ${_gameStats['patent_detective']['highScore']}/3',
+                          'Played ${_gameStats['patent_detective']['attemptsCount']} times',
+                          'Accuracy: ${_gameStats['patent_detective']['accuracy']}%',
+                        ],
+                      ),
+                    if (_gameStats.containsKey('patent_detective') && _gameStats.containsKey('innovation_lab'))
+                      const Divider(height: 24),
+                    if (_gameStats.containsKey('innovation_lab'))
+                      _StatItem(
+                        icon: Icons.science,
+                        title: 'Innovation Lab',
+                        stats: [
+                          'Inventions Created: ${_gameStats['innovation_lab']['attemptsCount']}',
+                          'Last: ${_gameStats['innovation_lab']['inventionName']}',
+                          'Category: ${_gameStats['innovation_lab']['inventionCategory']}',
+                        ],
+                      ),
                   ],
                 ),
               ),
@@ -132,7 +250,7 @@ class _GamesScreenState extends State<GamesScreen> {
               title: 'IPR Quiz Master',
               description: 'Test your IPR knowledge in a rapid-fire quiz',
               icon: Icons.speed,
-              color: AppColors.primary,
+              color: AppDesignSystem.primaryIndigo,
               difficulty: 'Medium',
               xpReward: '10-100 XP',
               timeEstimate: '1-2 min',
@@ -153,7 +271,7 @@ class _GamesScreenState extends State<GamesScreen> {
               title: 'Match the IPR',
               description: 'Memory card game matching IPR concepts',
               icon: Icons.grid_4x4,
-              color: AppColors.secondary,
+              color: AppDesignSystem.primaryPink,
               difficulty: 'Easy',
               xpReward: '60-100 XP',
               timeEstimate: '2-5 min',
@@ -167,38 +285,109 @@ class _GamesScreenState extends State<GamesScreen> {
               },
             ),
 
-            const SizedBox(height: AppSpacing.xl),
+            const SizedBox(height: AppSpacing.cardSpacing),
 
-            // Coming soon section
-            Text(
-              'Coming Soon',
-              style: AppTextStyles.sectionHeader,
+            // Game 3: Spot the Original
+            _GameCard(
+              title: 'Spot the Original',
+              description: 'Identify original works among copies',
+              icon: Icons.search,
+              color: AppDesignSystem.primaryAmber,
+              difficulty: 'Medium',
+              xpReward: '15-75 XP',
+              timeEstimate: '2-3 min',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SpotTheOriginalGame(),
+                  ),
+                );
+              },
             ),
 
-            const SizedBox(height: AppSpacing.sm),
+            const SizedBox(height: AppSpacing.cardSpacing),
 
-            CleanCard(
-              child: Column(
-                children: [
-                  _ComingSoonItem(
-                    icon: Icons.search,
-                    title: 'IPR Detective',
-                    description: 'Solve IPR cases and mysteries',
+            // Game 4: GI Mapper
+            _GameCard(
+              title: 'GI Mapper',
+              description: 'Match GI products to their states',
+              icon: Icons.map,
+              color: const Color(0xFF10B981),
+              difficulty: 'Medium',
+              xpReward: '10-80 XP',
+              timeEstimate: '3-5 min',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GIMapperGame(),
                   ),
-                  const Divider(height: 24),
-                  _ComingSoonItem(
-                    icon: Icons.build,
-                    title: 'Patent Builder',
-                    description: 'Create and patent your inventions',
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.cardSpacing),
+
+            // Game 5: IP Defender
+            _GameCard(
+              title: 'IP Defender',
+              description: 'Defend your IP assets from infringers',
+              icon: Icons.shield,
+              color: AppDesignSystem.error,
+              difficulty: 'Hard',
+              xpReward: 'Up to 500 XP',
+              timeEstimate: '5-10 min',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const IPDefenderGame(),
                   ),
-                  const Divider(height: 24),
-                  _ComingSoonItem(
-                    icon: Icons.gavel,
-                    title: 'IPR Court',
-                    description: 'Argue infringement cases',
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.cardSpacing),
+
+            // Game 6: Patent Detective
+            _GameCard(
+              title: 'Patent Detective',
+              description: 'Investigate patent cases and determine patentability',
+              icon: Icons.search,
+              color: const Color(0xFF8B5CF6),
+              difficulty: 'Medium',
+              xpReward: '20-60 XP',
+              timeEstimate: '3-5 min',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PatentDetectiveGame(),
                   ),
-                ],
-              ),
+                );
+              },
+            ),
+
+            const SizedBox(height: AppSpacing.cardSpacing),
+
+            // Game 7: Innovation Lab
+            _GameCard(
+              title: 'Innovation Lab',
+              description: 'Design your invention and learn IP protection',
+              icon: Icons.science,
+              color: Colors.teal,
+              difficulty: 'Easy',
+              xpReward: '100 XP',
+              timeEstimate: '5-10 min',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const InnovationLabGame(),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(height: AppSpacing.xl),
@@ -220,7 +409,6 @@ class _GameCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const _GameCard({
-    Key? key,
     required this.title,
     required this.description,
     required this.icon,
@@ -229,7 +417,7 @@ class _GameCard extends StatelessWidget {
     required this.xpReward,
     required this.timeEstimate,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +433,7 @@ class _GameCard extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppSpacing.sm),
                 ),
                 child: Icon(
@@ -272,7 +460,7 @@ class _GameCard extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -293,7 +481,7 @@ class _GameCard extends StatelessWidget {
           Text(
             description,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
 
@@ -304,26 +492,26 @@ class _GameCard extends StatelessWidget {
               Icon(
                 Icons.stars,
                 size: 16,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
               const SizedBox(width: 4),
               Text(
                 xpReward,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
               const SizedBox(width: 16),
               Icon(
                 Icons.timer,
                 size: 16,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
               const SizedBox(width: 4),
               Text(
                 timeEstimate,
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
             ],
@@ -371,11 +559,10 @@ class _ComingSoonItem extends StatelessWidget {
   final String description;
 
   const _ComingSoonItem({
-    Key? key,
     required this.icon,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -387,12 +574,12 @@ class _ComingSoonItem extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.backgroundGrey,
+              color: AppDesignSystem.backgroundGrey,
               borderRadius: BorderRadius.circular(AppSpacing.sm),
             ),
             child: Icon(
               icon,
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
               size: 24,
             ),
           ),
@@ -411,7 +598,7 @@ class _ComingSoonItem extends StatelessWidget {
                 Text(
                   description,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
               ],
@@ -423,16 +610,16 @@ class _ComingSoonItem extends StatelessWidget {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: AppColors.info.withOpacity(0.1),
+              color: AppDesignSystem.info.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.info.withOpacity(0.3),
+                color: AppDesignSystem.info.withValues(alpha: 0.3),
               ),
             ),
             child: Text(
               'Soon',
               style: AppTextStyles.caption.copyWith(
-                color: AppColors.info,
+                color: AppDesignSystem.info,
               ),
             ),
           ),
@@ -448,11 +635,10 @@ class _StatItem extends StatelessWidget {
   final List<String> stats;
 
   const _StatItem({
-    Key? key,
     required this.icon,
     required this.title,
     required this.stats,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -463,12 +649,12 @@ class _StatItem extends StatelessWidget {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppSpacing.sm),
           ),
           child: Icon(
             icon,
-            color: AppColors.primary,
+            color: AppDesignSystem.primaryIndigo,
             size: 24,
           ),
         ),
@@ -487,7 +673,7 @@ class _StatItem extends StatelessWidget {
                     child: Text(
                       stat,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                     ),
                   )),
@@ -506,11 +692,11 @@ class ColoredCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ColoredCard({
-    Key? key,
+    super.key,
     required this.color,
     required this.child,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

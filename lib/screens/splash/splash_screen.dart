@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
-import '../../core/constants/app_text_styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Splash Screen - Clean design without gradients
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -49,8 +48,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _navigateToNextScreen() async {
-    // Longer duration - 3 seconds total
-    await Future.delayed(const Duration(milliseconds: 3000));
+    // Optimized duration - 2 seconds for better UX (target <3s to home screen)
+    await Future.delayed(const Duration(milliseconds: 2000));
     
     if (!mounted) return;
 
@@ -58,19 +57,19 @@ class _SplashScreenState extends State<SplashScreen>
       // Check if user is logged in
       final user = FirebaseAuth.instance.currentUser;
       
-      print('🔍 Splash: User authentication status: ${user != null ? "Logged in" : "Not logged in"}');
+      // print('🔍 Splash: User authentication status: ${user != null ? "Logged in" : "Not logged in"}');
       
       if (user != null) {
         // User is logged in, go to main screen
-        print('📱 Splash: Navigating to main screen');
+        // print('📱 Splash: Navigating to main screen');
         Navigator.pushReplacementNamed(context, '/main');
       } else {
         // Not logged in, go to auth screen (sign in or create account)
-        print('🔐 Splash: Navigating to auth screen');
+        // print('🔐 Splash: Navigating to auth screen');
         Navigator.pushReplacementNamed(context, '/auth');
       }
     } catch (e) {
-      print('❌ Splash navigation error: $e');
+      // print('❌ Splash navigation error: $e');
       // On error, default to auth screen
       Navigator.pushReplacementNamed(context, '/auth');
     }
@@ -93,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         ),
         child: Container(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           child: AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {

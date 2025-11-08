@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 import '../core/constants/app_spacing.dart';
 import '../core/constants/app_text_styles.dart';
 
@@ -13,14 +13,14 @@ class PrimaryButton extends StatelessWidget {
   final IconData? icon;
   
   const PrimaryButton({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.color,
     this.fullWidth = false,
     this.isLoading = false,
     this.icon,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -30,14 +30,14 @@ class PrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: color ?? AppColors.primary,
-          foregroundColor: AppColors.textWhite,
+          backgroundColor: color ?? AppDesignSystem.primaryIndigo,
+          foregroundColor: AppDesignSystem.backgroundWhite,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.large,
           ),
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          disabledBackgroundColor: AppColors.textTertiary,
+          disabledBackgroundColor: AppDesignSystem.textTertiary,
         ),
         child: isLoading
             ? const SizedBox(
@@ -45,7 +45,7 @@ class PrimaryButton extends StatelessWidget {
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.textWhite),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.backgroundWhite),
                 ),
               )
             : Row(
@@ -72,17 +72,17 @@ class SecondaryButton extends StatelessWidget {
   final IconData? icon;
   
   const SecondaryButton({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.color,
     this.fullWidth = false,
     this.icon,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
-    final buttonColor = color ?? AppColors.primary;
+    final buttonColor = color ?? AppDesignSystem.primaryIndigo;
     
     return SizedBox(
       width: fullWidth ? double.infinity : null,

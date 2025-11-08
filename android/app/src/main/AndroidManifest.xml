@@ -24,6 +24,21 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Deep Link Intent Filters -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="iplay" android:host="realm"/>
+                <data android:scheme="iplay" android:host="game"/>
+                <data android:scheme="iplay" android:host="certificate"/>
+                <data android:scheme="iplay" android:host="daily-challenge"/>
+                <data android:scheme="iplay" android:host="chat"/>
+                <data android:scheme="iplay" android:host="classroom"/>
+                <data android:scheme="iplay" android:host="leaderboard"/>
+                <data android:scheme="iplay" android:host="badges"/>
+                <data android:scheme="iplay" android:host="notifications"/>
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

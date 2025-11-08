@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 import '../screens/reports/report_content_screen.dart';
 
 class ReportButton extends StatelessWidget {
@@ -7,16 +7,16 @@ class ReportButton extends StatelessWidget {
   final String reportedItemId;
 
   const ReportButton({
-    Key? key,
+    super.key,
     required this.reportType,
     required this.reportedItemId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.flag_outlined, size: 20),
-      color: AppColors.textSecondary,
+      color: AppDesignSystem.textSecondary,
       tooltip: 'Report',
       onPressed: () {
         Navigator.push(

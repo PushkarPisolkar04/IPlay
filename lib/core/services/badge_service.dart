@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/badge_model.dart';
+import 'package:flutter/material.dart';
+import '../../models/badge_model.dart';
+import '../../services/sound_service.dart';
+import 'badge_animation_queue.dart';
 
 /// Service to manage badge unlocking and tracking
 /// Reads badge definitions from Firestore /badges collection
 class BadgeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final BadgeAnimationQueue _animationQueue = BadgeAnimationQueue();
 
   // Cache for badge definitions
   List<BadgeModel>? _badgeCache;
@@ -26,7 +30,7 @@ class BadgeService {
 
       return _badgeCache!;
     } catch (e) {
-      print('Error getting badges: $e');
+      // print('Error getting badges: $e');
       return [];
     }
   }
@@ -43,7 +47,7 @@ class BadgeService {
 
       return BadgeModel.fromFirestore(doc.data()!);
     } catch (e) {
-      print('Error getting badge: $e');
+      // print('Error getting badge: $e');
       return null;
     }
   }
@@ -61,15 +65,20 @@ class BadgeService {
           .map((doc) => BadgeModel.fromFirestore(doc.data()))
           .toList();
     } catch (e) {
-      print('Error getting badges by category: $e');
+      // print('Error getting badges by category: $e');
       return [];
     }
   }
 
   /// Check and award badges based on user progress
   /// Returns list of newly unlocked badge IDs
-  Future<List<String>> checkAndAwardBadges(String userId) async {
+  /// If context is provided, queues badge animations
+  Future<List<String>> checkAndAwardBadges(
+    String userId, {
+    BuildContext? context,
+  }) async {
     final List<String> newBadges = [];
+    final List<BadgeModel> newBadgeModels = [];
     
     try {
       // Get user data
@@ -91,6 +100,7 @@ class BadgeService {
         if (!currentBadges.contains(badge.id)) {
           if (await _checkBadgeCondition(badge, userId, totalXP, streak, classroomIds, progressSummary)) {
             newBadges.add(badge.id);
+            newBadgeModels.add(badge);
 
             // Award XP bonus for badge unlock
             if (badge.xpBonus > 0) {
@@ -107,12 +117,28 @@ class BadgeService {
         await _firestore.collection('users').doc(userId).update({
           'badges': FieldValue.arrayUnion(newBadges),
         });
+
+        // Play badge unlock sound
+        SoundService.playBadgeUnlock();
+
+        // Queue badge animations if context provided
+        if (context != null && newBadgeModels.isNotEmpty) {
+          _animationQueue.queueBadges(newBadgeModels);
+          // Show first animation
+          _animationQueue.showNext(context);
+        }
       }
     } catch (e) {
-      print('Error checking badges: $e');
+      // print('Error checking badges: $e');
     }
     
     return newBadges;
+  }
+
+  /// Manually trigger badge animation (for testing or special cases)
+  void showBadgeAnimation(BuildContext context, BadgeModel badge) {
+    _animationQueue.queueBadge(badge);
+    _animationQueue.showNext(context);
   }
 
   /// Check if badge condition is met
@@ -124,52 +150,49 @@ class BadgeService {
     List<String> classroomIds,
     Map<String, dynamic> progressSummary,
   ) async {
-    final condition = badge.condition;
-    final type = condition['type'] as String?;
-
-    if (type == null) return false;
+    final type = badge.criteriaType;
+    final value = badge.criteriaValue;
 
     switch (type) {
-      case 'xp':
-        final requiredXP = condition['value'] as int? ?? 0;
+      case 'xp_threshold':
+        final requiredXP = value as int? ?? 0;
         return totalXP >= requiredXP;
 
       case 'streak':
-        final requiredStreak = condition['value'] as int? ?? 0;
+        final requiredStreak = value as int? ?? 0;
         return streak >= requiredStreak;
 
       case 'realm_complete':
-        final realmId = condition['realmId'] as String?;
+        final realmId = value as String?;
         if (realmId == null) return false;
         return _isRealmCompleted(progressSummary, realmId);
 
       case 'all_realms_complete':
-        final requiredCount = condition['count'] as int? ?? 6;
+        final requiredCount = value as int? ?? 6;
         return _countCompletedRealms(progressSummary) >= requiredCount;
 
-      case 'levels_complete':
-        final requiredLevels = condition['value'] as int? ?? 0;
+      case 'levels_completed':
+        final requiredLevels = value as int? ?? 0;
         return _getTotalLevelsCompleted(progressSummary) >= requiredLevels;
 
       case 'classroom_join':
         return classroomIds.isNotEmpty;
 
       case 'perfect_quiz':
-        final requiredCount = condition['count'] as int? ?? 1;
+        final requiredCount = value as int? ?? 1;
         return await _countPerfectQuizzes(userId) >= requiredCount;
 
       case 'assignment_complete':
-        final requiredCount = condition['count'] as int? ?? 1;
+        final requiredCount = value as int? ?? 1;
         return await _countCompletedAssignments(userId) >= requiredCount;
 
       case 'daily_challenge_complete':
-        final requiredCount = condition['count'] as int? ?? 1;
+        final requiredCount = value as int? ?? 1;
         return await _countCompletedDailyChallenges(userId) >= requiredCount;
 
       case 'leaderboard_rank':
-        final scope = condition['scope'] as String? ?? 'classroom';
-        final maxRank = condition['rank'] as int? ?? 1;
-        return await _checkLeaderboardRank(userId, scope, maxRank);
+        final maxRank = value as int? ?? 1;
+        return await _checkLeaderboardRank(userId, 'classroom', maxRank);
 
       case 'early_adopter':
         // Check if user joined within first month of app launch
@@ -329,7 +352,7 @@ class BadgeService {
       final badges = await getAllBadges();
       return badges.where((badge) => badgeIds.contains(badge.id)).toList();
     } catch (e) {
-      print('Error getting user badges: $e');
+      // print('Error getting user badges: $e');
       return [];
     }
   }

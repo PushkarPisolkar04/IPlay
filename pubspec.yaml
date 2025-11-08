@@ -17,7 +17,8 @@ dependencies:
   firebase_auth: ^5.7.0
   cloud_firestore: ^5.6.12
   firebase_storage: ^12.4.10
-  cloud_functions: ^5.6.2
+  firebase_messaging: ^15.0.0
+  firebase_crashlytics: ^4.2.0
   google_sign_in: ^6.3.0
   
   # State Management
@@ -27,10 +28,13 @@ dependencies:
   go_router: ^14.8.1
   flutter_svg: ^2.0.10+1
   cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.1
   google_fonts: ^6.2.1
   shimmer: ^3.0.0
   flutter_animate: ^4.5.2
   image_picker: ^1.1.2
+  file_picker: ^8.1.4
+  flutter_image_compress: ^2.3.0
   
   # Local Storage & Offline
   shared_preferences: ^2.3.3
@@ -38,16 +42,21 @@ dependencies:
   path_provider: ^2.1.5
   
   # Utilities
-  intl: ^0.19.0
+  intl: ^0.20.2
   uuid: ^4.5.1
   connectivity_plus: ^7.0.0
   url_launcher: ^6.3.1
   timeago: ^3.7.0
+  csv: ^6.0.0
+  share_plus: ^10.1.2
+  device_info_plus: ^11.2.0
+  package_info_plus: ^8.1.2
   
   # PDF & Certificates
   pdf: ^3.11.1
   printing: ^5.13.3
   qr_flutter: ^4.1.0
+  mobile_scanner: ^5.2.3
   
   # Animations
   lottie: ^3.3.1
@@ -57,13 +66,31 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   youtube_player_flutter: ^9.1.3
   flutter_markdown: ^0.7.7+1
+  
+  # Charts
+  fl_chart: ^0.69.0
+  
+  # Rich Text Editor
+  flutter_quill: ^11.5.0
+  
+  # Audio
+  audioplayers: ^6.1.0
+  
+  # App Rating
+  in_app_review: ^2.0.10
+  
+  # Deep Linking
+  app_links: ^6.3.2
 
+  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: any
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
-
 flutter:
   uses-material-design: true
 
@@ -74,6 +101,7 @@ flutter:
     - assets/logos/logo.png
     - assets/stu_avatars/
     - assets/tea_avatars/
+    - assets/content/
 
 # App Icon Configuration
 flutter_launcher_icons:

@@ -18,6 +18,30 @@
       ]
     },
     {
+      "collectionGroup": "progress",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "userId", "order": "ASCENDING"},
+        {"fieldPath": "accuracy", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "progress",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "userId", "order": "ASCENDING"},
+        {"fieldPath": "status", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "progress",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "userId", "order": "ASCENDING"},
+        {"fieldPath": "lastAttemptAt", "order": "ASCENDING"}
+      ]
+    },
+    {
       "collectionGroup": "announcements",
       "queryScope": "COLLECTION",
       "fields": [
@@ -48,6 +72,14 @@
       "fields": [
         {"fieldPath": "studentId", "order": "ASCENDING"},
         {"fieldPath": "submittedAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "assignment_submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "studentId", "order": "ASCENDING"},
+        {"fieldPath": "score", "order": "ASCENDING"}
       ]
     },
     {

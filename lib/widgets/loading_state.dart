@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 
 class LoadingState extends StatelessWidget {
   final String? message;
-  const LoadingState({Key? key, this.message}) : super(key: key);
+  const LoadingState({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -11,10 +11,10 @@ class LoadingState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(color: AppColors.primary),
+          const CircularProgressIndicator(color: AppDesignSystem.primaryIndigo),
           if (message != null) ...[
             const SizedBox(height: 16),
-            Text(message!, style: const TextStyle(color: AppColors.textSecondary)),
+            Text(message!, style: const TextStyle(color: AppDesignSystem.textSecondary)),
           ],
         ],
       ),
@@ -24,7 +24,7 @@ class LoadingState extends StatelessWidget {
 
 class LoadingOverlay extends StatelessWidget {
   final String? message;
-  const LoadingOverlay({Key? key, this.message}) : super(key: key);
+  const LoadingOverlay({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {

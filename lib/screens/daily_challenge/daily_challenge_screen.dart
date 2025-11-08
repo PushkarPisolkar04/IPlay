@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../core/models/daily_challenge_model.dart';
 import '../../providers/auth_provider.dart';
 
 class DailyChallengeScreen extends StatefulWidget {
-  const DailyChallengeScreen({Key? key}) : super(key: key);
+  const DailyChallengeScreen({super.key});
 
   @override
   State<DailyChallengeScreen> createState() => _DailyChallengeScreenState();
@@ -53,7 +53,13 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       }
 
       // Check if already attempted
-      _todayAttempt = await _challengeService.getTodayAttempt(userId);
+      final todayChallenge = await _challengeService.getTodaysChallenge();
+      if (todayChallenge != null) {
+        _todayAttempt = await _challengeService.getUserAttempt(
+          userId: userId,
+          challengeId: todayChallenge.id,
+        );
+      }
 
       setState(() {
         _isLoading = false;
@@ -126,7 +132,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             Text(
               'XP Earned: +$xpEarned',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.success,
+                color: AppDesignSystem.success,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -156,7 +162,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daily Challenge'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -176,7 +182,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.textSecondary),
+            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -201,7 +207,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.check_circle, size: 80, color: AppColors.success),
+            const Icon(Icons.check_circle, size: 80, color: AppDesignSystem.success),
             const SizedBox(height: 24),
             Text(
               'Challenge Complete!',
@@ -216,7 +222,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             Text(
               'XP Earned: +${_todayAttempt!.xpEarned}',
               style: AppTextStyles.bodyLarge.copyWith(
-                color: AppColors.success,
+                color: AppDesignSystem.success,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -224,7 +230,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             Text(
               'Come back tomorrow for a new challenge!',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -243,8 +249,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
         // Progress bar
         LinearProgressIndicator(
           value: progress,
-          backgroundColor: AppColors.cardBackground,
-          valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+          backgroundColor: AppDesignSystem.backgroundWhite,
+          valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
         ),
         
         Expanded(
@@ -260,20 +266,20 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     Text(
                       'Question ${_currentQuestionIndex + 1}/${_challenge!.questions.length}',
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         '${_challenge!.xpReward} XP',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.primary,
+                          color: AppDesignSystem.primaryIndigo,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -317,7 +323,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, -5),
               ),
@@ -347,7 +353,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                           }
                         },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppDesignSystem.primaryIndigo,
                     foregroundColor: Colors.white,
                   ),
                   child: _isSubmitting
@@ -390,9 +396,9 @@ class _OptionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.1) : AppColors.cardBackground,
+          color: isSelected ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.1) : AppDesignSystem.backgroundWhite,
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.cardBackground,
+            color: isSelected ? AppDesignSystem.primaryIndigo : AppDesignSystem.backgroundWhite,
             width: 2,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -401,14 +407,14 @@ class _OptionCard extends StatelessWidget {
           children: [
             Icon(
               isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+              color: isSelected ? AppDesignSystem.primaryIndigo : AppDesignSystem.textSecondary,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 option,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+                  color: isSelected ? AppDesignSystem.textPrimary : AppDesignSystem.textSecondary,
                 ),
               ),
             ),

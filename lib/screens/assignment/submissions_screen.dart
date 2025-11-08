@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/assignment_service.dart';
 import '../../core/models/assignment_model.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class SubmissionsScreen extends StatefulWidget {
   final String assignmentId;
@@ -11,11 +13,11 @@ class SubmissionsScreen extends StatefulWidget {
   final int maxPoints;
 
   const SubmissionsScreen({
-    Key? key,
+    super.key,
     required this.assignmentId,
     required this.assignmentTitle,
     required this.maxPoints,
-  }) : super(key: key);
+  });
 
   @override
   State<SubmissionsScreen> createState() => _SubmissionsScreenState();
@@ -70,18 +72,24 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
     if (result == null) return;
 
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception('Not authenticated');
+
       await _assignmentService.gradeSubmission(
         submissionId: submission.id,
+        teacherId: user.uid,
         score: result['score'] as int,
         feedback: result['feedback'] as String?,
       );
 
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Submission graded successfully!')),
       );
 
       _loadSubmissions(); // Reload list
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error grading submission: $e')),
       );
@@ -115,6 +123,7 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,11 +135,11 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const ListSkeleton(itemCount: 5)
           : _error != null
               ? _buildErrorState()
               : _submissions.isEmpty
@@ -146,7 +155,7 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.textSecondary),
+            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -174,7 +183,7 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
             const Icon(
               Icons.assignment_outlined,
               size: 80,
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
             const SizedBox(height: 24),
             Text(
@@ -185,7 +194,7 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
             Text(
               'Students haven\'t submitted their work yet.',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -204,28 +213,28 @@ class _SubmissionsScreenState extends State<SubmissionsScreen> {
         // Stats header
         Container(
           padding: const EdgeInsets.all(16),
-          color: AppColors.cardBackground,
+          color: AppDesignSystem.backgroundWhite,
           child: Row(
             children: [
               Expanded(
                 child: _StatCard(
                   label: 'Total',
                   value: _submissions.length.toString(),
-                  color: AppColors.primary,
+                  color: AppDesignSystem.primaryIndigo,
                 ),
               ),
               Expanded(
                 child: _StatCard(
                   label: 'Graded',
                   value: graded.toString(),
-                  color: AppColors.success,
+                  color: AppDesignSystem.success,
                 ),
               ),
               Expanded(
                 child: _StatCard(
                   label: 'Pending',
                   value: pending.toString(),
-                  color: AppColors.warning,
+                  color: AppDesignSystem.warning,
                 ),
               ),
             ],
@@ -279,7 +288,7 @@ class _StatCard extends StatelessWidget {
         Text(
           label,
           style: AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textSecondary,
+            color: AppDesignSystem.textSecondary,
           ),
         ),
       ],
@@ -317,11 +326,11 @@ class _SubmissionCard extends StatelessWidget {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                     child: Text(
                       submission.studentName[0].toUpperCase(),
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -339,7 +348,7 @@ class _SubmissionCard extends StatelessWidget {
                         Text(
                           'Submitted ${DateFormat('MMM dd, yyyy').format(submission.submittedAt)}',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: AppDesignSystem.textSecondary,
                           ),
                         ),
                       ],
@@ -349,13 +358,13 @@ class _SubmissionCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(0.1),
+                        color: AppDesignSystem.success.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         '${submission.score}/$maxPoints',
                         style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.success,
+                          color: AppDesignSystem.success,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -364,13 +373,13 @@ class _SubmissionCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppColors.warning.withOpacity(0.1),
+                        color: AppDesignSystem.warning.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         'Pending',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.warning,
+                          color: AppDesignSystem.warning,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -389,7 +398,7 @@ class _SubmissionCard extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onGrade,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppDesignSystem.primaryIndigo,
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('Grade Submission'),
@@ -426,7 +435,7 @@ class _SubmissionDetailSheet extends StatelessWidget {
           width: 40,
           height: 4,
           decoration: BoxDecoration(
-            color: AppColors.textSecondary.withOpacity(0.3),
+            color: AppDesignSystem.textSecondary.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -441,10 +450,10 @@ class _SubmissionDetailSheet extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: AppColors.primary.withOpacity(0.1),
+                    backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                     child: Text(
                       submission.studentName[0].toUpperCase(),
-                      style: AppTextStyles.h2.copyWith(color: AppColors.primary),
+                      style: AppTextStyles.h2.copyWith(color: AppDesignSystem.primaryIndigo),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -460,7 +469,7 @@ class _SubmissionDetailSheet extends StatelessWidget {
                         Text(
                           'Submitted ${DateFormat('MMM dd, yyyy \'at\' hh:mm a').format(submission.submittedAt)}',
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
+                            color: AppDesignSystem.textSecondary,
                           ),
                         ),
                       ],
@@ -479,7 +488,7 @@ class _SubmissionDetailSheet extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.cardBackground,
+                  color: AppDesignSystem.backgroundWhite,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -494,25 +503,25 @@ class _SubmissionDetailSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppDesignSystem.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.success.withOpacity(0.3)),
+                    border: Border.all(color: AppDesignSystem.success.withValues(alpha: 0.3)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.check_circle, color: AppColors.success),
+                          const Icon(Icons.check_circle, color: AppDesignSystem.success),
                           const SizedBox(width: 12),
                           Text(
                             'Graded',
-                            style: AppTextStyles.h3.copyWith(color: AppColors.success),
+                            style: AppTextStyles.h3.copyWith(color: AppDesignSystem.success),
                           ),
                           const Spacer(),
                           Text(
                             '${submission.score}/100',
-                            style: AppTextStyles.h2.copyWith(color: AppColors.success),
+                            style: AppTextStyles.h2.copyWith(color: AppDesignSystem.success),
                           ),
                         ],
                       ),
@@ -536,7 +545,7 @@ class _SubmissionDetailSheet extends StatelessWidget {
                       Text(
                         'Graded ${DateFormat('MMM dd, yyyy').format(submission.gradedAt!)}',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: AppDesignSystem.textSecondary,
                         ),
                       ),
                     ],
@@ -546,7 +555,7 @@ class _SubmissionDetailSheet extends StatelessWidget {
                 ElevatedButton(
                   onPressed: onGrade,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: AppDesignSystem.primaryIndigo,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),

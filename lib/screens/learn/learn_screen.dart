@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/content_service.dart';
 import '../../core/models/realm_model.dart';
-import '../../widgets/clean_card.dart';
-import '../../widgets/progress_bar.dart';
-import '../../widgets/primary_button.dart';
+import '../../widgets/loading_skeleton.dart';
 import 'realm_detail_screen.dart';
 
 /// Learn Screen - All realms with modern UI and gradients
 class LearnScreen extends StatefulWidget {
-  const LearnScreen({Key? key}) : super(key: key);
+  const LearnScreen({super.key});
 
   @override
   State<LearnScreen> createState() => _LearnScreenState();
@@ -24,6 +22,7 @@ class _LearnScreenState extends State<LearnScreen> {
   final ContentService _contentService = ContentService();
   List<RealmModel> _realms = [];
   Map<String, dynamic> _userProgress = {};
+  Set<String> _downloadedRealms = {};
   bool _isLoading = true;
 
   @override
@@ -45,6 +44,12 @@ class _LearnScreenState extends State<LearnScreen> {
         _realms = _contentService.getAllRealms();
       });
 
+      // Load downloaded realms
+      final downloadedRealmIds = await _contentService.getDownloadedRealmIds();
+      setState(() {
+        _downloadedRealms = Set<String>.from(downloadedRealmIds);
+      });
+
       // Load user progress from Firestore
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -54,22 +59,28 @@ class _LearnScreenState extends State<LearnScreen> {
             .get();
         
         if (userDoc.exists) {
-          setState(() {
-            _userProgress = userDoc.data()?['progressSummary'] ?? {};
-          });
+          if (mounted) {
+            setState(() {
+              _userProgress = userDoc.data()?['progressSummary'] ?? {};
+            });
+          }
         }
       }
     } catch (e) {
-      print('Error loading realms: $e');
+      // print('Error loading realms: $e');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _refreshData() async {
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
     await _loadData();
   }
 
@@ -109,7 +120,7 @@ class _LearnScreenState extends State<LearnScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -136,7 +147,7 @@ class _LearnScreenState extends State<LearnScreen> {
     final completedRealms = _getCompletedRealms();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: RefreshIndicator(
         onRefresh: _refreshData,
         color: const Color(0xFF3B82F6),
@@ -190,10 +201,7 @@ class _LearnScreenState extends State<LearnScreen> {
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   if (_isLoading)
-                    const Center(
-                      heightFactor: 10,
-                      child: CircularProgressIndicator(),
-                    )
+                    const GridSkeleton(itemCount: 6, crossAxisCount: 2)
                   else
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +213,7 @@ class _LearnScreenState extends State<LearnScreen> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 2),
                               ),
@@ -256,7 +264,7 @@ class _LearnScreenState extends State<LearnScreen> {
                               gradient: LinearGradient(
                                 colors: [
                                   Color(realm.color),
-                                  Color(realm.color).withOpacity(0.7),
+                                  Color(realm.color).withValues(alpha: 0.7),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
@@ -264,7 +272,7 @@ class _LearnScreenState extends State<LearnScreen> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(realm.color).withOpacity(0.3),
+                                  color: Color(realm.color).withValues(alpha: 0.3),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -293,7 +301,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                             Container(
                                               padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(0.3),
+                                                color: Colors.white.withValues(alpha: 0.3),
                                                 borderRadius: BorderRadius.circular(12),
                                               ),
                                               child: Text(
@@ -306,20 +314,56 @@ class _LearnScreenState extends State<LearnScreen> {
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    realm.name,
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.white,
-                                                    ),
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          realm.name,
+                                                          style: const TextStyle(
+                                                            fontSize: 20,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (_downloadedRealms.contains(realm.id))
+                                                        Container(
+                                                          padding: const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 4,
+                                                          ),
+                                                          decoration: BoxDecoration(
+                                                            color: Colors.white.withValues(alpha: 0.3),
+                                                            borderRadius: BorderRadius.circular(12),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              const Icon(
+                                                                Icons.download_done,
+                                                                color: Colors.white,
+                                                                size: 14,
+                                                              ),
+                                                              const SizedBox(width: 4),
+                                                              const Text(
+                                                                'Downloaded',
+                                                                style: TextStyle(
+                                                                  fontSize: 11,
+                                                                  color: Colors.white,
+                                                                  fontWeight: FontWeight.w600,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                    ],
                                                   ),
                                                   const SizedBox(height: 4),
                                                   Text(
                                                     '${realm.totalLevels} Levels',
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      color: Colors.white.withOpacity(0.9),
+                                                      color: Colors.white.withValues(alpha: 0.9),
                                                     ),
                                                   ),
                                                 ],
@@ -329,7 +373,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                               Container(
                                                 padding: const EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white.withOpacity(0.3),
+                                                  color: Colors.white.withValues(alpha: 0.3),
                                                   shape: BoxShape.circle,
                                                 ),
                                                 child: const Icon(
@@ -345,7 +389,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                           realm.description,
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color: Colors.white.withOpacity(0.95),
+                                            color: Colors.white.withValues(alpha: 0.95),
                                             height: 1.4,
                                           ),
                                           maxLines: 2,
@@ -358,7 +402,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                             borderRadius: BorderRadius.circular(8),
                                             child: LinearProgressIndicator(
                                               value: progress,
-                                              backgroundColor: Colors.white.withOpacity(0.3),
+                                              backgroundColor: Colors.white.withValues(alpha: 0.3),
                                               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                                               minHeight: 8,
                                             ),
@@ -379,7 +423,7 @@ class _LearnScreenState extends State<LearnScreen> {
                                           width: double.infinity,
                                           padding: const EdgeInsets.symmetric(vertical: 12),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.3),
+                                            color: Colors.white.withValues(alpha: 0.3),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           child: Row(
@@ -409,7 +453,7 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                             ),
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                 ]),

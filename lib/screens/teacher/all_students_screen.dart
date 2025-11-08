@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import 'student_detail_screen.dart';
 
 class AllStudentsScreen extends StatefulWidget {
-  const AllStudentsScreen({Key? key}) : super(key: key);
+  const AllStudentsScreen({super.key});
 
   @override
   State<AllStudentsScreen> createState() => _AllStudentsScreenState();
 }
 
 class _AllStudentsScreenState extends State<AllStudentsScreen> {
-  List<Map<String, dynamic>> _students = [];
+  final List<Map<String, dynamic>> _students = [];
   bool _isLoading = true;
   String _sortBy = 'xp'; // xp, name, completion
 
@@ -115,7 +115,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
 
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading students: $e');
+      // print('Error loading students: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -144,10 +144,10 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
   }
 
   Color _getGradeColor(String grade) {
-    if (grade.startsWith('A')) return AppColors.success;
-    if (grade.startsWith('B')) return AppColors.primary;
-    if (grade.startsWith('C')) return AppColors.warning;
-    return AppColors.error;
+    if (grade.startsWith('A')) return AppDesignSystem.success;
+    if (grade.startsWith('B')) return AppDesignSystem.primaryIndigo;
+    if (grade.startsWith('C')) return AppDesignSystem.warning;
+    return AppDesignSystem.error;
   }
 
   Future<void> _viewStudentDetails(Map<String, dynamic> student) async {
@@ -176,7 +176,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            style: TextButton.styleFrom(foregroundColor: AppDesignSystem.error),
             child: const Text('Remove'),
           ),
         ],
@@ -233,7 +233,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${student['name']} removed successfully'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppDesignSystem.success,
         ),
       );
 
@@ -245,7 +245,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppDesignSystem.error,
         ),
       );
     }
@@ -254,14 +254,14 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: Column(
         children: [
           // Header
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppColors.success, AppColors.success.withOpacity(0.7)],
+                colors: [AppDesignSystem.success, AppDesignSystem.success.withValues(alpha: 0.7)],
               ),
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -358,7 +358,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                           width: 50,
                                           height: 50,
                                           decoration: BoxDecoration(
-                                            gradient: AppColors.primaryGradient,
+                                            gradient: AppDesignSystem.gradientPrimary,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Center(
@@ -413,25 +413,25 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                           Icons.stars,
                                           '${student['totalXP']}',
                                           'XP',
-                                          AppColors.accent,
+                                          AppDesignSystem.primaryAmber,
                                         ),
                                         _buildMiniStat(
                                           Icons.check_circle,
                                           '${student['completedLevels']}/${student['totalLevels']}',
                                           'Levels',
-                                          AppColors.success,
+                                          AppDesignSystem.success,
                                         ),
                                         _buildMiniStat(
                                           Icons.school,
                                           '${student['avgScore'].toStringAsFixed(0)}%',
                                           'Avg Score',
-                                          AppColors.primary,
+                                          AppDesignSystem.primaryIndigo,
                                         ),
                                         _buildMiniStat(
                                           Icons.emoji_events,
                                           '${student['badges']}',
                                           'Badges',
-                                          AppColors.warning,
+                                          AppDesignSystem.warning,
                                         ),
                                       ],
                                     ),
@@ -459,8 +459,8 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                             label: const Text('Remove'),
                                             style: OutlinedButton.styleFrom(
                                               padding: const EdgeInsets.symmetric(vertical: 8),
-                                              foregroundColor: AppColors.error,
-                                              side: BorderSide(color: AppColors.error),
+                                              foregroundColor: AppDesignSystem.error,
+                                              side: BorderSide(color: AppDesignSystem.error),
                                             ),
                                           ),
                                         ),
@@ -485,7 +485,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                             Text(
                                               '${student['completionRate'].toStringAsFixed(0)}%',
                                               style: AppTextStyles.bodySmall.copyWith(
-                                                color: AppColors.success,
+                                                color: AppDesignSystem.success,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -497,8 +497,8 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                           child: LinearProgressIndicator(
                                             value: student['completionRate'] / 100,
                                             minHeight: 8,
-                                            backgroundColor: AppColors.textLight,
-                                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.success),
+                                            backgroundColor: AppDesignSystem.backgroundWhite,
+                                            valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.success),
                                           ),
                                         ),
                                       ],
@@ -528,14 +528,14 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.white,
+          color: isSelected ? AppDesignSystem.primaryIndigo : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.primary),
+          border: Border.all(color: AppDesignSystem.primaryIndigo),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppColors.primary,
+            color: isSelected ? Colors.white : AppDesignSystem.primaryIndigo,
             fontWeight: FontWeight.w600,
             fontSize: 12,
           ),
@@ -561,7 +561,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           label,
           style: TextStyle(
             fontSize: 10,
-            color: AppColors.textSecondary,
+            color: AppDesignSystem.textSecondary,
           ),
         ),
       ],

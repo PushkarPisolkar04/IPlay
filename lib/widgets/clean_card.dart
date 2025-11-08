@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 import '../core/constants/app_spacing.dart';
 
 /// Clean white card with subtle shadow and border
@@ -12,24 +12,24 @@ class CleanCard extends StatelessWidget {
   final Border? border;
   
   const CleanCard({
-    Key? key,
+    super.key,
     required this.child,
     this.color,
     this.padding,
     this.onTap,
     this.borderRadius,
     this.border,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color ?? AppColors.background,
+        color: color ?? AppDesignSystem.backgroundLight,
         borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
-        boxShadow: const [AppColors.cardShadow],
+        boxShadow: AppDesignSystem.shadowMD,
         border: border ?? Border.all(
-          color: AppColors.border,
+          color: AppDesignSystem.backgroundGrey,
           width: 1,
         ),
       ),
@@ -57,13 +57,13 @@ class ColoredCard extends StatelessWidget {
   final double? borderRadius;
   
   const ColoredCard({
-    Key? key,
+    super.key,
     required this.child,
     required this.color,
     this.padding,
     this.onTap,
     this.borderRadius,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class ColoredCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
-        boxShadow: const [AppColors.cardShadow],
+        boxShadow: AppDesignSystem.shadowMD,
       ),
       child: Material(
         color: Colors.transparent,

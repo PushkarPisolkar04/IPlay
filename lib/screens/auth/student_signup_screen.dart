@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -9,7 +8,7 @@ import '../../core/services/auth_service.dart';
 
 /// Student Signup Screen with Classroom Code option
 class StudentSignupScreen extends StatefulWidget {
-  const StudentSignupScreen({Key? key}) : super(key: key);
+  const StudentSignupScreen({super.key});
 
   @override
   State<StudentSignupScreen> createState() => _StudentSignupScreenState();
@@ -195,8 +194,8 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
 
       if (!mounted) return;
 
-      // Navigate to main screen
-      Navigator.pushReplacementNamed(context, '/main');
+      // Navigate to student tutorial screen
+      Navigator.pushReplacementNamed(context, '/student-tutorial');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -249,7 +248,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -268,7 +267,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                 Text(
                   'Start your IPR learning journey!',
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
                 
@@ -280,7 +279,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Full Name',
                     hintText: 'Enter your name',
-                    prefixIcon: Icon(Icons.person, color: AppColors.primary),
+                    prefixIcon: Icon(Icons.person, color: AppDesignSystem.primaryIndigo),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -299,7 +298,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     hintText: 'your@email.com',
-                    prefixIcon: Icon(Icons.email, color: AppColors.accent),
+                    prefixIcon: Icon(Icons.email, color: AppDesignSystem.primaryAmber),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -321,11 +320,11 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     hintText: 'Min 8 characters',
-                    prefixIcon: const Icon(Icons.lock, color: AppColors.secondary),
+                    prefixIcon: const Icon(Icons.lock, color: AppDesignSystem.primaryPink),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.secondary,
+                        color: AppDesignSystem.primaryPink,
                       ),
                       onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
@@ -350,11 +349,11 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
                     hintText: 'Re-enter password',
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppColors.secondary),
+                    prefixIcon: const Icon(Icons.lock_outline, color: AppDesignSystem.primaryPink),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.secondary,
+                        color: AppDesignSystem.primaryPink,
                       ),
                       onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                     ),
@@ -372,12 +371,12 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                 // Avatar Selection
                 Row(
                   children: [
-                    Icon(Icons.face, size: 20, color: AppColors.primary),
+                    Icon(Icons.face, size: 20, color: AppDesignSystem.primaryIndigo),
                     const SizedBox(width: 8),
                     Text(
                       'Select Avatar',
                       style: AppTextStyles.cardTitle.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -395,15 +394,15 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
-                          color: isSelected ? AppColors.primary.withOpacity(0.2) : Colors.grey[100],
+                          color: isSelected ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.2) : Colors.grey[100],
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                            color: isSelected ? AppColors.primary : Colors.grey[300]!,
+                            color: isSelected ? AppDesignSystem.primaryIndigo : Colors.grey[300]!,
                             width: isSelected ? 3 : 1,
                           ),
                           boxShadow: isSelected ? [
                             BoxShadow(
-                              color: AppColors.primary.withOpacity(0.3),
+                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -432,9 +431,9 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                 // Classroom Code Toggle
                 Container(
                   decoration: BoxDecoration(
-                    color: AppColors.info.withOpacity(0.1),
+                    color: AppDesignSystem.info.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.info.withOpacity(0.3)),
+                    border: Border.all(color: AppDesignSystem.info.withValues(alpha: 0.3)),
                   ),
                   child: CheckboxListTile(
                     value: _hasClassroomCode,
@@ -442,17 +441,17 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                     title: Text(
                       'I have a classroom code',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.primary,
+                        color: AppDesignSystem.primaryIndigo,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     subtitle: Text(
                       _hasClassroomCode ? 'School & state will be auto-fetched' : 'You\'ll learn solo',
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                     ),
-                    activeColor: AppColors.primary,
+                    activeColor: AppDesignSystem.primaryIndigo,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                 ),
@@ -467,7 +466,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Classroom Code',
                       hintText: 'CLS-XXXXX',
-                      prefixIcon: Icon(Icons.class_, color: AppColors.success),
+                      prefixIcon: Icon(Icons.class_, color: AppDesignSystem.success),
                     ),
                   ),
                   
@@ -475,12 +474,12 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.info.withOpacity(0.1),
+                      color: AppDesignSystem.info.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.info, color: AppColors.info, size: 20),
+                        Icon(Icons.info, color: AppDesignSystem.info, size: 20),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -502,7 +501,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                     isExpanded: true,
                     decoration: const InputDecoration(
                       labelText: 'State',
-                      prefixIcon: Icon(Icons.location_on, color: AppColors.info),
+                      prefixIcon: Icon(Icons.location_on, color: AppDesignSystem.info),
                       contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                     ),
                     items: _states.map((state) {
@@ -526,7 +525,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                     decoration: const InputDecoration(
                       labelText: 'School Name (Optional)',
                       hintText: 'Enter your school name',
-                      prefixIcon: Icon(Icons.school, color: AppColors.warning),
+                      prefixIcon: Icon(Icons.school, color: AppDesignSystem.warning),
                     ),
                   ),
                 ],

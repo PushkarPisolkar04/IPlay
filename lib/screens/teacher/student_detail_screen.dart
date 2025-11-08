@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/progress_bar.dart';
+import '../../widgets/loading_skeleton.dart';
+import '../../services/simplified_chat_service.dart';
+import '../chat/chat_screen.dart';
 
 class StudentDetailScreen extends StatefulWidget {
   final String studentId;
   final String studentName;
 
   const StudentDetailScreen({
-    Key? key,
+    super.key,
     required this.studentId,
     required this.studentName,
-  }) : super(key: key);
+  });
 
   @override
   State<StudentDetailScreen> createState() => _StudentDetailScreenState();
@@ -24,6 +28,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   List<String> _badges = [];
   Map<String, dynamic> _progressSummary = {};
   bool _isLoading = true;
+  final SimplifiedChatService _chatService = SimplifiedChatService();
 
   @override
   void initState() {
@@ -48,8 +53,71 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
 
       setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading student data: $e');
+      // print('Error loading student data: $e');
       setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _startChat() async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please log in to send messages'),
+              backgroundColor: AppDesignSystem.error,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Show loading
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+
+      // Create or get existing chat
+      final chatId = await _chatService.createTeacherStudentChat(
+        teacherId: currentUser.uid,
+        studentId: widget.studentId,
+      );
+
+      if (mounted) {
+        // Close loading dialog
+        Navigator.of(context).pop();
+
+        // Navigate to chat screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(
+              chatId: chatId,
+              otherUserName: widget.studentName,
+              otherUserAvatar: _studentData?['avatarUrl'],
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        // Close loading dialog if open
+        Navigator.of(context).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to start chat: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
     }
   }
 
@@ -57,17 +125,20 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: Text(widget.studentName),
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: ProfileSkeleton(),
+        ),
       );
     }
 
     if (_studentData == null) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: Text(widget.studentName),
         ),
@@ -80,7 +151,19 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
     final userLevel = (totalXP / 200).floor() + 1;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _startChat,
+        backgroundColor: AppDesignSystem.primaryIndigo,
+        icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+        label: const Text(
+          'Message',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
       body: CustomScrollView(
         slivers: [
           // Header
@@ -104,7 +187,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -145,7 +228,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         Icons.stars,
                         '$totalXP',
                         'Total XP',
-                        AppColors.accent,
+                        AppDesignSystem.primaryAmber,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -154,7 +237,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         Icons.local_fire_department,
                         '$currentStreak',
                         'Day Streak',
-                        AppColors.warning,
+                        AppDesignSystem.warning,
                       ),
                     ),
                   ],
@@ -169,7 +252,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         Icons.emoji_events,
                         '${_badges.length}',
                         'Badges',
-                        AppColors.success,
+                        AppDesignSystem.success,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -178,7 +261,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         Icons.school,
                         '${_progressSummary.length}',
                         'Realms',
-                        AppColors.primary,
+                        AppDesignSystem.primaryIndigo,
                       ),
                     ),
                   ],
@@ -227,10 +310,10 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           vertical: 12,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.success.withOpacity(0.1),
+                          color: AppDesignSystem.success.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.success.withOpacity(0.3),
+                            color: AppDesignSystem.success.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -238,7 +321,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                           children: [
                             const Icon(
                               Icons.emoji_events,
-                              color: AppColors.success,
+                              color: AppDesignSystem.success,
                               size: 20,
                             ),
                             const SizedBox(width: 8),
@@ -305,7 +388,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                                 children: [
                                   Icon(
                                     completed ? Icons.check_circle : Icons.circle_outlined,
-                                    color: completed ? AppColors.success : Colors.grey,
+                                    color: completed ? AppDesignSystem.success : Colors.grey,
                                     size: 24,
                                   ),
                                   const SizedBox(width: 12),
@@ -320,7 +403,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                               const SizedBox(height: 12),
                               ProgressBar(
                                 progress: progress,
-                                color: completed ? AppColors.success : AppColors.primary,
+                                color: completed ? AppDesignSystem.success : AppDesignSystem.primaryIndigo,
                                 backgroundColor: Colors.grey[300]!,
                                 height: 8,
                               ),
@@ -334,7 +417,7 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
 
                 const SizedBox(height: 24),
               ]),

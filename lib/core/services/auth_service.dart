@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../models/user_model.dart';
 
 /// Authentication service
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  
+  // Initialize GoogleSignIn conditionally - on web it needs client ID in index.html
+  late final GoogleSignIn? _googleSignIn = kIsWeb ? null : GoogleSignIn();
 
   /// Get current user stream
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -52,8 +55,13 @@ class AuthService {
   /// Sign in with Google
   Future<UserCredential> signInWithGoogle() async {
     try {
+      // Google Sign-In not configured for web
+      if (kIsWeb || _googleSignIn == null) {
+        throw Exception('Google sign-in is not available on web. Please use email/password sign-in.');
+      }
+
       // Trigger Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
       
       if (googleUser == null) {
         throw Exception('Google sign-in canceled');
@@ -141,10 +149,11 @@ class AuthService {
   /// Sign out
   Future<void> signOut() async {
     try {
-      await Future.wait([
-        _auth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      final futures = <Future>[_auth.signOut()];
+      if (_googleSignIn != null) {
+        futures.add(_googleSignIn!.signOut());
+      }
+      await Future.wait(futures);
     } catch (e) {
       throw Exception('Sign out failed: $e');
     }

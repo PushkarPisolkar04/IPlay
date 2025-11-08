@@ -46,7 +46,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Error loading user data: $e');
+        // print('Error loading user data: $e');
       }
     } finally {
       _isLoading = false;
@@ -80,7 +80,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Sign up error: $e');
+        // print('Sign up error: $e');
       }
       return false;
     } finally {
@@ -107,7 +107,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Sign in error: $e');
+        // print('Sign in error: $e');
       }
       return false;
     } finally {
@@ -127,7 +127,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Google sign in error: $e');
+        // print('Google sign in error: $e');
       }
       return false;
     } finally {
@@ -145,7 +145,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Sign out error: $e');
+        // print('Sign out error: $e');
       }
     }
   }
@@ -167,7 +167,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Update role error: $e');
+        // print('Update role error: $e');
       }
     } finally {
       _isLoading = false;
@@ -187,7 +187,7 @@ class AuthProvider with ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       if (kDebugMode) {
-        print('Update profile error: $e');
+        // print('Update profile error: $e');
       }
     } finally {
       _isLoading = false;

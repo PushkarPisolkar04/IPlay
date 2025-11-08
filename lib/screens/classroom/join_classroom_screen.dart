@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/clean_card.dart';
+import 'qr_scanner_screen.dart';
 
 /// Join Classroom Screen - For students to join classrooms using codes
 class JoinClassroomScreen extends StatefulWidget {
-  const JoinClassroomScreen({Key? key}) : super(key: key);
+  const JoinClassroomScreen({super.key});
 
   @override
   State<JoinClassroomScreen> createState() => _JoinClassroomScreenState();
@@ -20,6 +21,21 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
   final TextEditingController _codeController = TextEditingController();
   bool _isLoading = false;
   Map<String, dynamic>? _foundClassroom;
+  String _inviteSource = 'manual'; // manual, link, code, qr
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if we received a code from deep link
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      if (args != null && args['code'] != null) {
+        _codeController.text = args['code'];
+        _inviteSource = args['source'] ?? 'link';
+        _searchClassroom();
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -78,7 +94,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception('Not authenticated');
 
-      print('Student joining classroom - User ID: ${user.uid}');
+      // print('Student joining classroom - User ID: ${user.uid}');
 
       // Get student's name
       final userDoc = await FirebaseFirestore.instance
@@ -89,15 +105,14 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       if (!userDoc.exists) throw Exception('User not found');
       
       final studentName = userDoc.data()?['displayName'] ?? 'Student';
-      final studentRole = userDoc.data()?['role'];
       final classroomId = _foundClassroom!['id'];
       final requiresApproval = _foundClassroom!['requiresApproval'] ?? false;
 
-      print('Student name: $studentName, role: $studentRole');
-      print('Classroom ID: $classroomId, requiresApproval: $requiresApproval');
+      // print('Student name: $studentName, role: $studentRole');
+      // print('Classroom ID: $classroomId, requiresApproval: $requiresApproval');
 
       if (requiresApproval) {
-        print('Creating join request (requires approval)...');
+        // print('Creating join request (requires approval)...');
         
         // Create join request
         await FirebaseFirestore.instance
@@ -112,9 +127,10 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'reviewNote': null,
           'requestedAt': Timestamp.now(),
           'resolvedAt': null,
+          'inviteSource': _inviteSource,
         });
 
-        print('Join request created, adding to pendingStudentIds...');
+        // print('Join request created, adding to pendingStudentIds...');
         
         // Add student to pending list
         await FirebaseFirestore.instance
@@ -124,7 +140,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'pendingStudentIds': FieldValue.arrayUnion([user.uid]),
         });
 
-        print('Successfully added to pending list!');
+        // print('Successfully added to pending list!');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +151,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           ),
         );
       } else {
-        print('Direct join (no approval needed)...');
+        // print('Direct join (no approval needed)...');
         
         // Direct join (no approval needed)
         await FirebaseFirestore.instance
@@ -146,7 +162,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'updatedAt': Timestamp.now(),
         });
 
-        print('Added to studentIds, updating user profile...');
+        // print('Added to studentIds, updating user profile...');
 
         // Get classroom's schoolId to update student profile
         final schoolId = _foundClassroom!['schoolId'];
@@ -161,7 +177,17 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'updatedAt': Timestamp.now(),
         });
 
-        print('Successfully joined classroom with schoolId: $schoolId!');
+        // Track invite source in classroom analytics
+        await FirebaseFirestore.instance
+            .collection('classrooms')
+            .doc(classroomId)
+            .collection('analytics')
+            .doc('invite_sources')
+            .set({
+          _inviteSource: FieldValue.increment(1),
+        }, SetOptions(merge: true));
+
+        // print('Successfully joined classroom with schoolId: $schoolId!');
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -190,7 +216,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Join Classroom'),
         backgroundColor: Colors.transparent,
@@ -204,12 +231,12 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CleanCard(
-                color: AppColors.secondary.withOpacity(0.1),
+                color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.group_add,
-                      color: AppColors.secondary,
+                      color: AppDesignSystem.primaryPink,
                       size: 32,
                     ),
                     const SizedBox(width: 12),
@@ -249,12 +276,40 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
               
               const SizedBox(height: AppSpacing.md),
               
-              if (_foundClassroom == null)
+              if (_foundClassroom == null) ...[
                 PrimaryButton(
                   text: _isLoading ? 'Searching...' : 'Search Classroom',
                   onPressed: _isLoading ? () {} : _searchClassroom,
                   fullWidth: true,
                 ),
+                
+                const SizedBox(height: AppSpacing.md),
+                
+                // QR Scanner Button
+                OutlinedButton.icon(
+                  onPressed: _isLoading ? null : () async {
+                    final scannedCode = await Navigator.push<String>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QRScannerScreen(),
+                      ),
+                    );
+                    
+                    if (scannedCode != null && mounted) {
+                      _codeController.text = scannedCode;
+                      _inviteSource = 'qr';
+                      _searchClassroom();
+                    }
+                  },
+                  icon: const Icon(Icons.qr_code_scanner),
+                  label: const Text('Scan QR Code'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    side: const BorderSide(color: AppDesignSystem.primaryIndigo),
+                    foregroundColor: AppDesignSystem.primaryIndigo,
+                  ),
+                ),
+              ],
               
               const SizedBox(height: AppSpacing.xl),
               
@@ -267,7 +322,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 
                 CleanCard(
-                  color: AppColors.success.withOpacity(0.1),
+                  color: AppDesignSystem.success.withValues(alpha: 0.1),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -277,7 +332,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                             width: 56,
                             height: 56,
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: AppDesignSystem.primaryIndigo,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -315,7 +370,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                             const Icon(
                               Icons.location_city,
                               size: 16,
-                              color: AppColors.textSecondary,
+                              color: AppDesignSystem.textSecondary,
                             ),
                             const SizedBox(width: 8),
                             Text(
@@ -335,7 +390,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                                 ? Icons.lock 
                                 : Icons.lock_open,
                             size: 16,
-                            color: AppColors.textSecondary,
+                            color: AppDesignSystem.textSecondary,
                           ),
                           const SizedBox(width: 8),
                           Text(

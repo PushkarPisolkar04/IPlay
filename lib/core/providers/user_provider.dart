@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 
@@ -32,7 +31,7 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       if (kDebugMode) {
-        print('UserProvider initialization error: $e');
+        // print('UserProvider initialization error: $e');
       }
     } finally {
       _isLoading = false;
@@ -49,7 +48,7 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       if (kDebugMode) {
-        print('Error loading user profile: $e');
+        // print('Error loading user profile: $e');
       }
       notifyListeners();
     }

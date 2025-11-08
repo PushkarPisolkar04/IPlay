@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../settings/settings_screen.dart';
-import 'comprehensive_leaderboard_screen.dart';
+import '../leaderboard/unified_leaderboard_screen.dart';
 import 'school_settings_screen.dart';
-import 'school_announcements_screen.dart';
+import '../announcements/unified_announcements_screen.dart';
 import '../teacher/quiz_performance_screen.dart';
-import '../teacher/generate_report_screen.dart';
+import 'principal_generate_report_screen.dart';
 
 class PrincipalDashboardScreen extends StatefulWidget {
   const PrincipalDashboardScreen({super.key});
@@ -21,9 +22,29 @@ class PrincipalDashboardScreen extends StatefulWidget {
 
 class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
   int _selectedIndex = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   List<Widget> get _screens => [
-    _PrincipalOverviewTab(onNavigate: (index) => setState(() => _selectedIndex = index)),
+    _PrincipalOverviewTab(onNavigate: (index) {
+      setState(() => _selectedIndex = index);
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }),
     const _SchoolClassroomsTab(),
     const _SchoolAnalyticsTab(),
     const _SchoolTeachersTab(),
@@ -33,8 +54,11 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => _selectedIndex = index);
+        },
         children: _screens,
       ),
       bottomNavigationBar: Container(
@@ -46,7 +70,7 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -74,7 +98,14 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
+      onTap: () {
+        setState(() => _selectedIndex = index);
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
@@ -89,7 +120,7 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: isSelected ? [
             BoxShadow(
-              color: const Color(0xFF9333EA).withOpacity(0.3),
+              color: const Color(0xFF9333EA).withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -238,7 +269,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('Error loading principal data: $e');
+      // print('Error loading principal data: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -256,7 +287,24 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(child: LoadingSkeleton(height: 80, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  SizedBox(width: 12),
+                  Expanded(child: LoadingSkeleton(height: 80, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                ],
+              ),
+              SizedBox(height: 16),
+              ListSkeleton(itemCount: 3),
+            ],
+          ),
+        ),
       );
     }
 
@@ -296,49 +344,109 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _getGreeting(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.w500,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _getGreeting(),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white70,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                _user?.displayName ?? 'Principal',
-                                style: const TextStyle(
-                                  fontSize: 28,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.amber.withOpacity(0.3),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
+                                const SizedBox(height: 4),
+                                Text(
+                                  _user?.displayName ?? 'Principal',
+                                  style: const TextStyle(
+                                    fontSize: 28,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             ),
-                            child: const Text(
-                              'Principal',
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                          ),
+                          Row(
+                            children: [
+                              // Notification bell icon
+                              StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('notifications')
+                                    .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                    .where('read', isEqualTo: false)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+                                  
+                                  return Stack(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.notifications_outlined,
+                                          color: Colors.white,
+                                          size: 26,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, '/notifications');
+                                        },
+                                      ),
+                                      if (unreadCount > 0)
+                                        Positioned(
+                                          right: 8,
+                                          top: 8,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            constraints: const BoxConstraints(
+                                              minWidth: 18,
+                                              minHeight: 18,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                                style: const TextStyle(
+                                                  color: Color(0xFF6B46C1),
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
                               ),
-                            ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.amber.withValues(alpha: 0.3),
+                                      blurRadius: 10,
+                                      spreadRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  'Principal',
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -346,7 +454,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
+                          color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -376,7 +484,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
+                                    color: Colors.white.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -392,7 +500,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
+                                    color: Colors.white.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -492,7 +600,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange.withOpacity(0.1),
+                                  color: Colors.orange.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Icon(Icons.person_add_alt, color: Colors.orange, size: 24),
@@ -536,7 +644,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SchoolAnnouncementsScreen(schoolId: _schoolId!),
+                              builder: (context) => const UnifiedAnnouncementsScreen(),
                             ),
                           );
                         },
@@ -545,10 +653,10 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(Icons.campaign, color: AppColors.primary, size: 24),
+                              child: const Icon(Icons.campaign, color: AppDesignSystem.primaryIndigo, size: 24),
                             ),
                             const SizedBox(width: 16),
                             const Expanded(
@@ -588,7 +696,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ComprehensiveLeaderboardScreen(schoolId: _schoolId!),
+                              builder: (context) => const UnifiedLeaderboardScreen(),
                             ),
                           );
                         },
@@ -597,7 +705,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.amber.withOpacity(0.1),
+                                color: Colors.amber.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(Icons.leaderboard, color: Colors.amber, size: 24),
@@ -650,7 +758,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFEC4899).withOpacity(0.1),
+                                color: const Color(0xFFEC4899).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(Icons.quiz, color: Color(0xFFEC4899), size: 24),
@@ -691,19 +799,25 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                       // Generate Report
                       CleanCard(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const GenerateReportScreen(),
-                            ),
-                          );
+                          if (_schoolId != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PrincipalGenerateReportScreen(schoolId: _schoolId!),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('School ID not found')),
+                            );
+                          }
                         },
                         child: Row(
                           children: [
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFEF4444).withOpacity(0.1),
+                                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(Icons.description, color: Color(0xFFEF4444), size: 24),
@@ -715,7 +829,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Generate Report',
+                                    'Generate Reports',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -724,7 +838,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    'Create student performance reports',
+                                    'School-wide and classroom reports',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey,
@@ -755,7 +869,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(Icons.settings, color: Colors.grey, size: 24),
@@ -814,12 +928,12 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3), width: 2),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -985,7 +1099,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('Error loading teachers: $e');
+      // print('Error loading teachers: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -1108,7 +1222,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: ListSkeleton(itemCount: 5),
       );
     }
 
@@ -1195,10 +1309,10 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.orange.withOpacity(0.3), width: 2),
+                            border: Border.all(color: Colors.orange.withValues(alpha: 0.3), width: 2),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -1211,7 +1325,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                                 children: [
                                   CircleAvatar(
                                     radius: 24,
-                                    backgroundColor: Colors.orange.withOpacity(0.1),
+                                    backgroundColor: Colors.orange.withValues(alpha: 0.1),
                                     backgroundImage: teacher['avatarUrl'] != null
                                         ? AssetImage(teacher['avatarUrl'])
                                         : null,
@@ -1249,7 +1363,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: Colors.orange.withOpacity(0.1),
+                                      color: Colors.orange.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: const Text(
@@ -1353,7 +1467,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -1363,12 +1477,12 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                             children: [
                               CircleAvatar(
                                 radius: 24,
-                                backgroundColor: AppColors.primary.withOpacity(0.1),
+                                backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                                 backgroundImage: teacher['avatarUrl'] != null
                                     ? AssetImage(teacher['avatarUrl'])
                                     : null,
                                 child: teacher['avatarUrl'] == null
-                                    ? const Icon(Icons.person, color: AppColors.primary)
+                                    ? const Icon(Icons.person, color: AppDesignSystem.primaryIndigo)
                                     : null,
                               ),
                               const SizedBox(width: 12),
@@ -1495,7 +1609,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('Error loading classrooms: $e');
+      // print('Error loading classrooms: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -1506,7 +1620,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: ListSkeleton(itemCount: 5),
       );
     }
 
@@ -1614,7 +1728,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -1628,12 +1742,12 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                                   Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(
-                                      color: AppColors.primary.withOpacity(0.1),
+                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: const Icon(
                                       Icons.class_,
-                                      color: AppColors.primary,
+                                      color: AppDesignSystem.primaryIndigo,
                                       size: 24,
                                     ),
                                   ),
@@ -1702,7 +1816,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                       decoration: BoxDecoration(
-                                        color: Colors.grey.withOpacity(0.1),
+                                        color: Colors.grey.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
@@ -1757,7 +1871,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -1776,7 +1890,7 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
             label,
             style: TextStyle(
               fontSize: 10,
-              color: color.withOpacity(0.8),
+              color: color.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -1802,8 +1916,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
   
   // Analytics data
   List<Map<String, dynamic>> _topStudents = [];
-  Map<String, int> _realmCompletions = {};
-  int _totalCompletedLevels = 0;
+  final Map<String, int> _realmCompletions = {};
   int _totalStudents = 0;
   double _avgXP = 0;
   int _activeThisWeek = 0;
@@ -1903,7 +2016,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      print('Error loading analytics: $e');
+      // print('Error loading analytics: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -1914,7 +2027,24 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  SizedBox(width: 12),
+                  Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                ],
+              ),
+              SizedBox(height: 16),
+              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+              SizedBox(height: 16),
+              ListSkeleton(itemCount: 3),
+            ],
+          ),
+        ),
       );
     }
 
@@ -2104,10 +2234,10 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
-                            border: rank <= 3 ? Border.all(color: rankColor.withOpacity(0.3), width: 2) : null,
+                            border: rank <= 3 ? Border.all(color: rankColor.withValues(alpha: 0.3), width: 2) : null,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -2119,7 +2249,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                                 width: 32,
                                 height: 32,
                                 decoration: BoxDecoration(
-                                  color: rankColor.withOpacity(0.2),
+                                  color: rankColor.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -2137,12 +2267,12 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                               const SizedBox(width: 12),
                               CircleAvatar(
                                 radius: 20,
-                                backgroundColor: AppColors.primary.withOpacity(0.1),
+                                backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                                 backgroundImage: student['avatarUrl'] != null
                                     ? AssetImage(student['avatarUrl'])
                                     : null,
                                 child: student['avatarUrl'] == null
-                                    ? const Icon(Icons.person, color: AppColors.primary, size: 20)
+                                    ? const Icon(Icons.person, color: AppDesignSystem.primaryIndigo, size: 20)
                                     : null,
                               ),
                               const SizedBox(width: 12),
@@ -2160,7 +2290,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF59E0B).withOpacity(0.1),
+                                  color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -2229,7 +2359,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -2254,7 +2384,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                                   style: const TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.primary,
+                                    color: AppDesignSystem.primaryIndigo,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
@@ -2292,7 +2422,7 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -2410,7 +2540,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
 
       setState(() => _isLoading = false);
     } catch (e) {
-      print('Error loading data: $e');
+      // print('Error loading data: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -2442,7 +2572,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const ProfileSkeleton();
     }
 
     return Scaffold(
@@ -2503,7 +2633,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
+                            color: Colors.black.withValues(alpha: 0.08),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -2691,10 +2821,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: AppColors.primary, size: 20),
+          child: Icon(icon, color: AppDesignSystem.primaryIndigo, size: 20),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -2731,7 +2861,7 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

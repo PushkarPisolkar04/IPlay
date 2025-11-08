@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
@@ -11,9 +11,9 @@ class ClassroomAnalyticsScreen extends StatefulWidget {
   final ClassroomModel classroom;
 
   const ClassroomAnalyticsScreen({
-    Key? key,
+    super.key,
     required this.classroom,
-  }) : super(key: key);
+  });
 
   @override
   State<ClassroomAnalyticsScreen> createState() => _ClassroomAnalyticsScreenState();
@@ -90,7 +90,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading analytics: $e');
+      // print('Error loading analytics: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -98,7 +98,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: Text('${widget.classroom.name} Analytics'),
         backgroundColor: Colors.transparent,
@@ -122,7 +122,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                             'Total Students',
                             '${_analytics['totalStudents']}',
                             Icons.people,
-                            AppColors.primary,
+                            AppDesignSystem.primaryIndigo,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -131,7 +131,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                             'Active (7d)',
                             '${_analytics['activeStudents']}',
                             Icons.online_prediction,
-                            AppColors.success,
+                            AppDesignSystem.success,
                           ),
                         ),
                       ],
@@ -144,16 +144,16 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                             'Avg XP',
                             '${_analytics['averageXP']}',
                             Icons.star,
-                            AppColors.warning,
+                            AppDesignSystem.warning,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: _buildStatCard(
                             'Avg Badges',
-                            '${(_analytics['averageBadges'] as double).toStringAsFixed(1)}',
+                            (_analytics['averageBadges'] as double).toStringAsFixed(1),
                             Icons.emoji_events,
-                            AppColors.error,
+                            AppDesignSystem.error,
                           ),
                         ),
                       ],
@@ -175,13 +175,13 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                             const Icon(
                               Icons.people_outline,
                               size: 48,
-                              color: AppColors.textTertiary,
+                              color: AppDesignSystem.textTertiary,
                             ),
                             const SizedBox(height: 12),
                             Text(
                               'No Students Yet',
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.textSecondary,
+                                color: AppDesignSystem.textSecondary,
                               ),
                             ),
                           ],
@@ -195,7 +195,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                           padding: const EdgeInsets.only(bottom: 12),
                           child: _buildStudentCard(student, index + 1),
                         );
-                      }).toList(),
+                      }),
                   ],
                 ),
               ),
@@ -217,7 +217,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
           Text(
             label,
             style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -254,7 +254,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: rank <= 3 ? AppColors.warning.withOpacity(0.2) : AppColors.border,
+              color: rank <= 3 ? AppDesignSystem.warning.withValues(alpha: 0.2) : AppDesignSystem.backgroundGrey,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Center(
@@ -262,7 +262,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                 '#$rank',
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: rank <= 3 ? AppColors.warning : AppColors.textSecondary,
+                  color: rank <= 3 ? AppDesignSystem.warning : AppDesignSystem.textSecondary,
                 ),
               ),
             ),
@@ -272,14 +272,14 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
           // Avatar
           CircleAvatar(
             radius: 24,
-            backgroundColor: AppColors.primary.withOpacity(0.2),
+            backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
             backgroundImage: student['avatarUrl'] != null
                 ? NetworkImage(student['avatarUrl'])
                 : null,
             child: student['avatarUrl'] == null
                 ? Text(
                     (student['displayName'] as String).substring(0, 1).toUpperCase(),
-                    style: AppTextStyles.h3.copyWith(color: AppColors.primary),
+                    style: AppTextStyles.h3.copyWith(color: AppDesignSystem.primaryIndigo),
                   )
                 : null,
           ),
@@ -298,15 +298,15 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.star, size: 14, color: AppColors.warning),
+                    const Icon(Icons.star, size: 14, color: AppDesignSystem.warning),
                     const SizedBox(width: 4),
                     Text('$totalXP XP', style: AppTextStyles.bodySmall),
                     const SizedBox(width: 12),
-                    const Icon(Icons.local_fire_department, size: 14, color: AppColors.error),
+                    const Icon(Icons.local_fire_department, size: 14, color: AppDesignSystem.error),
                     const SizedBox(width: 4),
                     Text('$currentStreak', style: AppTextStyles.bodySmall),
                     const SizedBox(width: 12),
-                    const Icon(Icons.emoji_events, size: 14, color: AppColors.primary),
+                    const Icon(Icons.emoji_events, size: 14, color: AppDesignSystem.primaryIndigo),
                     const SizedBox(width: 4),
                     Text('$badgeCount', style: AppTextStyles.bodySmall),
                   ],
@@ -315,7 +315,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                 Text(
                   'Last active: $lastActiveText',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
               ],

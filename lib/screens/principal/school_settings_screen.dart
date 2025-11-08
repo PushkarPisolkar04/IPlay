@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
 
 class SchoolSettingsScreen extends StatefulWidget {
@@ -58,7 +58,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
         });
       }
     } catch (e) {
-      print('Error loading school data: $e');
+      // print('Error loading school data: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -453,7 +453,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                         onChanged: (value) {
                                           setState(() => _isActive = value);
                                         },
-                                        activeColor: AppColors.primary,
+                                        activeColor: AppDesignSystem.primaryIndigo,
                                       ),
                                     ],
                                   ),
@@ -465,7 +465,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                               ElevatedButton(
                                 onPressed: _isSaving ? null : _saveSettings,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
+                                  backgroundColor: AppDesignSystem.primaryIndigo,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(

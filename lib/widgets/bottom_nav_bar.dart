@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
-import '../core/constants/app_spacing.dart';
+import '../core/design/app_design_system.dart';
 
 /// Bottom navigation bar with icons AND labels
 class BottomNavBar extends StatelessWidget {
@@ -8,10 +7,10 @@ class BottomNavBar extends StatelessWidget {
   final Function(int) onTap;
   
   const BottomNavBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -57,10 +56,16 @@ class BottomNavBar extends StatelessWidget {
                 onTap: () => onTap(3),
               ),
               _NavItem(
-                icon: Icons.person_outline,
-                label: 'Profile',
+                icon: Icons.chat_bubble_outline,
+                label: 'Messages',
                 isSelected: currentIndex == 4,
                 onTap: () => onTap(4),
+              ),
+              _NavItem(
+                icon: Icons.person_outline,
+                label: 'Profile',
+                isSelected: currentIndex == 5,
+                onTap: () => onTap(5),
               ),
             ],
           ),
@@ -77,12 +82,11 @@ class _NavItem extends StatelessWidget {
   final VoidCallback onTap;
   
   const _NavItem({
-    Key? key,
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,7 @@ class _NavItem extends StatelessWidget {
             Icon(
               icon,
               size: 24,
-              color: isSelected ? AppColors.primary : AppColors.textTertiary,
+              color: isSelected ? AppDesignSystem.primaryIndigo : AppDesignSystem.textTertiary,
             ),
             const SizedBox(height: 4),
             Text(
@@ -105,7 +109,7 @@ class _NavItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                color: isSelected ? AppColors.primary : AppColors.textTertiary,
+                color: isSelected ? AppDesignSystem.primaryIndigo : AppDesignSystem.textTertiary,
               ),
             ),
           ],

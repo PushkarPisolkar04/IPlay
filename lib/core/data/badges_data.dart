@@ -1,4 +1,4 @@
-import '../models/badge_model.dart';
+import '../../models/badge_model.dart';
 
 /// All 35 badge definitions for IPlay
 /// Categories: Milestone (10), Streak (6), Mastery (7), Social (6), Special (6)

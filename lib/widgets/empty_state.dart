@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/constants/app_colors.dart';
+import '../core/design/app_design_system.dart';
 
 class EmptyState extends StatelessWidget {
   final IconData icon;
@@ -9,13 +9,13 @@ class EmptyState extends StatelessWidget {
   final VoidCallback? onAction;
 
   const EmptyState({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.message,
     this.actionText,
     this.onAction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +25,17 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 96, color: AppColors.textSecondary.withOpacity(0.5)),
+            Icon(icon, size: 96, color: AppDesignSystem.textSecondary.withValues(alpha: 0.5)),
             const SizedBox(height: 24),
             Text(
               title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppDesignSystem.textPrimary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               message,
-              style: const TextStyle(fontSize: 16, color: AppColors.textSecondary),
+              style: const TextStyle(fontSize: 16, color: AppDesignSystem.textSecondary),
               textAlign: TextAlign.center,
             ),
             if (actionText != null && onAction != null) ...[
@@ -45,7 +45,7 @@ class EmptyState extends StatelessWidget {
                 icon: const Icon(Icons.add),
                 label: Text(actionText!),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppDesignSystem.primaryIndigo,
                   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                 ),
               ),
@@ -60,7 +60,7 @@ class EmptyState extends StatelessWidget {
 // Predefined empty states
 class EmptyClassrooms extends StatelessWidget {
   final VoidCallback? onCreate;
-  const EmptyClassrooms({Key? key, this.onCreate}) : super(key: key);
+  const EmptyClassrooms({super.key, this.onCreate});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class EmptyClassrooms extends StatelessWidget {
 }
 
 class EmptyBadges extends StatelessWidget {
-  const EmptyBadges({Key? key}) : super(key: key);
+  const EmptyBadges({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class EmptyBadges extends StatelessWidget {
 }
 
 class EmptyCertificates extends StatelessWidget {
-  const EmptyCertificates({Key? key}) : super(key: key);
+  const EmptyCertificates({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class EmptyCertificates extends StatelessWidget {
 }
 
 class EmptyAnnouncements extends StatelessWidget {
-  const EmptyAnnouncements({Key? key}) : super(key: key);
+  const EmptyAnnouncements({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class EmptyAnnouncements extends StatelessWidget {
 
 class EmptyAssignments extends StatelessWidget {
   final VoidCallback? onCreate;
-  const EmptyAssignments({Key? key, this.onCreate}) : super(key: key);
+  const EmptyAssignments({super.key, this.onCreate});
 
   @override
   Widget build(BuildContext context) {

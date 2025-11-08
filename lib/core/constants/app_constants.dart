@@ -69,5 +69,50 @@ class AppConstants {
   // Default Values
   static const String defaultAvatarUrl = 'assets/icons/app_icon.png';
   static const String defaultState = 'Delhi'; // Default state for new users (will be updated during profile setup)
+  
+  // Support & Contact
+  static const String supportEmail = 'support@iplay.com';
+  
+  // Realm IDs - Single Source of Truth
+  static const List<String> realmIds = [
+    'realm_copyright',
+    'realm_trademark',
+    'realm_patent',
+    'realm_design',
+    'realm_gi',
+    'realm_trade_secrets',
+  ];
+  
+  // Realm names mapping
+  static const Map<String, String> realmNames = {
+    'realm_copyright': 'Copyright',
+    'copyright': 'Copyright',
+    'realm_trademark': 'Trademark',
+    'trademark': 'Trademark',
+    'realm_patent': 'Patent',
+    'patent': 'Patent',
+    'realm_design': 'Industrial Design',
+    'industrial_design': 'Industrial Design',
+    'realm_gi': 'Geographical Indication',
+    'gi': 'Geographical Indication',
+    'realm_trade_secrets': 'Trade Secrets',
+    'trade_secrets': 'Trade Secrets',
+  };
+  
+  // Realm icons/emojis
+  static const Map<String, String> realmIcons = {
+    'realm_copyright': '©️',
+    'copyright': '©️',
+    'realm_trademark': '™️',
+    'trademark': '™️',
+    'realm_patent': '🔬',
+    'patent': '🔬',
+    'realm_design': '🎨',
+    'industrial_design': '🎨',
+    'realm_gi': '🌍',
+    'gi': '🌍',
+    'realm_trade_secrets': '🔒',
+    'trade_secrets': '🔒',
+  };
 }
 

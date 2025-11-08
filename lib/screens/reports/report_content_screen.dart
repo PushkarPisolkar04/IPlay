@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/report_service.dart';
 import '../../providers/auth_provider.dart';
@@ -11,11 +11,11 @@ class ReportContentScreen extends StatefulWidget {
   final String? reportedItemTitle; // Optional title for display
 
   const ReportContentScreen({
-    Key? key,
+    super.key,
     required this.reportType,
     required this.reportedItemId,
     this.reportedItemTitle,
-  }) : super(key: key);
+  });
 
   @override
   State<ReportContentScreen> createState() => _ReportContentScreenState();
@@ -60,13 +60,8 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
 
       await _reportService.submitReport(
         reportType: widget.reportType,
-        reportedItemId: widget.reportedItemId,
-        reporterId: user.uid,
-        reporterName: user.displayName,
-        reason: _selectedReason!,
-        description: _descriptionController.text.trim().isEmpty 
-            ? null 
-            : _descriptionController.text.trim(),
+        contentId: widget.reportedItemId,
+        description: '${_selectedReason!}${_descriptionController.text.trim().isEmpty ? '' : ': ${_descriptionController.text.trim()}'}',
       );
 
       if (mounted) {
@@ -103,9 +98,10 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Report Content'),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -119,13 +115,13 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
               Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  color: AppColors.warning.withOpacity(0.1),
+                  color: AppDesignSystem.warning.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.warning.withOpacity(0.3)),
+                  border: Border.all(color: AppDesignSystem.warning.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline, color: AppColors.warning),
+                    const Icon(Icons.info_outline, color: AppDesignSystem.warning),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -143,14 +139,14 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                 Text(
                   'Reporting:',
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppDesignSystem.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(12.0),
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
+                    color: AppDesignSystem.backgroundWhite,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -186,12 +182,12 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         color: isSelected 
-                            ? AppColors.primary.withOpacity(0.1)
-                            : AppColors.cardBackground,
+                            ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.1)
+                            : AppDesignSystem.backgroundWhite,
                         border: Border.all(
                           color: isSelected 
-                              ? AppColors.primary
-                              : AppColors.cardBackground,
+                              ? AppDesignSystem.primaryIndigo
+                              : AppDesignSystem.backgroundWhite,
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -203,16 +199,16 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                                 ? Icons.radio_button_checked 
                                 : Icons.radio_button_unchecked,
                             color: isSelected 
-                                ? AppColors.primary 
-                                : AppColors.textSecondary,
+                                ? AppDesignSystem.primaryIndigo 
+                                : AppDesignSystem.textSecondary,
                           ),
                           const SizedBox(width: 12),
                           Text(
                             reason,
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: isSelected 
-                                  ? AppColors.textPrimary 
-                                  : AppColors.textSecondary,
+                                  ? AppDesignSystem.textPrimary 
+                                  : AppDesignSystem.textSecondary,
                             ),
                           ),
                         ],
@@ -241,7 +237,7 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   filled: true,
-                  fillColor: AppColors.cardBackground,
+                  fillColor: AppDesignSystem.backgroundWhite,
                 ),
               ),
               const SizedBox(height: 32),
@@ -250,7 +246,7 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
               ElevatedButton(
                 onPressed: _isSubmitting ? null : _submitReport,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.error,
+                  backgroundColor: AppDesignSystem.error,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

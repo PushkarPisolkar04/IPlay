@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
 
 class CreateAnnouncementScreen extends StatefulWidget {
   final bool isSchoolWide;
   final String? classroomId;
+  final String? schoolId;
   
-  const CreateAnnouncementScreen({super.key, this.isSchoolWide = false, this.classroomId});
+  const CreateAnnouncementScreen({
+    super.key,
+    this.isSchoolWide = false,
+    this.classroomId,
+    this.schoolId,
+  });
 
   @override
   State<CreateAnnouncementScreen> createState() => _CreateAnnouncementScreenState();
@@ -54,7 +60,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         }
       });
     } catch (e) {
-      print('Error loading classrooms: $e');
+      // print('Error loading classrooms: $e');
     }
   }
 
@@ -103,13 +109,13 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         
         announcementData['schoolId'] = schoolId;
         
-        print('Creating announcement: $announcementData');
+        // print('Creating announcement: $announcementData');
         
-        final docRef = await FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
         
-        print('Announcement created with ID: ${docRef.id}');
+        // print('Announcement created');
       } else {
         // Classroom announcement (for teachers)
         final classroomId = widget.classroomId ?? _selectedClassroomId;
@@ -117,13 +123,13 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         
         announcementData['classroomId'] = classroomId;
         
-        print('Creating classroom announcement: $announcementData');
+        // print('Creating classroom announcement: $announcementData');
         
-        final docRef = await FirebaseFirestore.instance
+        await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
         
-        print('Classroom announcement created with ID: ${docRef.id}');
+        // print('Classroom announcement created');
       }
 
       if (mounted) {
@@ -154,7 +160,8 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: Text(widget.isSchoolWide ? 'School Announcement' : 'Classroom Announcement'),
         backgroundColor: Colors.transparent,
@@ -177,7 +184,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                         children: [
                           Icon(
                             widget.isSchoolWide ? Icons.school : Icons.class_,
-                            color: AppColors.primary,
+                            color: AppDesignSystem.primaryIndigo,
                           ),
                           const SizedBox(width: 8),
                           Text(
@@ -325,7 +332,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
               ElevatedButton(
                 onPressed: _isSubmitting ? null : _postAnnouncement,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppDesignSystem.primaryIndigo,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

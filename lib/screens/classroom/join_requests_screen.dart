@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/join_request_service.dart';
 import '../../core/models/join_request_model.dart';
@@ -12,10 +12,10 @@ class JoinRequestsScreen extends StatefulWidget {
   final String classroomName;
 
   const JoinRequestsScreen({
-    Key? key,
+    super.key,
     required this.classroomId,
     this.classroomName = '',
-  }) : super(key: key);
+  });
 
   @override
   State<JoinRequestsScreen> createState() => _JoinRequestsScreenState();
@@ -122,7 +122,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
             ),
           ],
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
       ),
       body: _isLoading
@@ -142,7 +142,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppColors.textSecondary),
+            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -170,7 +170,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
             const Icon(
               Icons.inbox_outlined,
               size: 80,
-              color: AppColors.textSecondary,
+              color: AppDesignSystem.textSecondary,
             ),
             const SizedBox(height: 24),
             Text(
@@ -181,7 +181,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
             Text(
               'All join requests have been processed.',
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: AppDesignSystem.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -231,10 +231,10 @@ class _RequestCard extends StatelessWidget {
               children: [
                 // Avatar
                 CircleAvatar(
-                  backgroundColor: AppColors.primary.withOpacity(0.1),
+                  backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                   child: Text(
                     request.studentName[0].toUpperCase(),
-                    style: AppTextStyles.h3.copyWith(color: AppColors.primary),
+                    style: AppTextStyles.h3.copyWith(color: AppDesignSystem.primaryIndigo),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -252,7 +252,7 @@ class _RequestCard extends StatelessWidget {
                       Text(
                         'Requested ${DateFormat('MMM dd, yyyy').format(request.requestedAt)}',
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textSecondary,
+                          color: AppDesignSystem.textSecondary,
                         ),
                       ),
                     ],
@@ -271,7 +271,7 @@ class _RequestCard extends StatelessWidget {
                     icon: const Icon(Icons.check_circle, size: 18),
                     label: const Text('Approve'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.success,
+                      backgroundColor: AppDesignSystem.success,
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -283,7 +283,7 @@ class _RequestCard extends StatelessWidget {
                     icon: const Icon(Icons.cancel, size: 18),
                     label: const Text('Reject'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.error,
+                      foregroundColor: AppDesignSystem.error,
                     ),
                   ),
                 ),
@@ -341,7 +341,7 @@ class _RejectDialogState extends State<_RejectDialog> {
             Navigator.pop(context, _reasonController.text.trim());
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
+            backgroundColor: AppDesignSystem.error,
             foregroundColor: Colors.white,
           ),
           child: const Text('Reject'),

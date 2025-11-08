@@ -1,4 +1,4 @@
-import '../models/level_model.dart';
+import '../../models/level_model.dart';
 
 final List<LevelModel> patentLevelsData = [
   LevelModel(

@@ -1,11 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
+import '../../utils/haptic_feedback_util.dart';
+import '../../services/sound_service.dart';
+import '../../services/app_rating_service.dart';
+import '../../services/app_tour_service.dart';
 import '../../widgets/clean_card.dart';
 import '../profile/edit_profile_screen.dart';
 import 'privacy_policy_screen.dart';
@@ -14,7 +23,7 @@ import 'data_security_screen.dart';
 
 /// Settings Screen - App settings, privacy, terms, logout
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -28,11 +37,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _announcementsNotif = true;
   bool _joinRequestsNotif = true;
   bool _badgesNotif = true;
+  
+  // App settings
+  bool _hapticFeedbackEnabled = true;
+  bool _soundEffectsEnabled = true;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _loadHapticSetting();
+    _loadSoundSetting();
+  }
+  
+  Future<void> _loadHapticSetting() async {
+    setState(() {
+      _hapticFeedbackEnabled = HapticFeedbackUtil.isEnabled;
+    });
+  }
+  
+  Future<void> _loadSoundSetting() async {
+    setState(() {
+      _soundEffectsEnabled = SoundService.isEnabled;
+    });
   }
 
   Future<void> _loadUserData() async {
@@ -56,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -76,11 +103,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         });
       }
     } catch (e) {
-      print('Error updating notification setting: $e');
+      // print('Error updating notification setting: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to update setting: ${e.toString()}'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppDesignSystem.error,
         ),
       );
     }
@@ -130,6 +157,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             ),
                           ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('notifications')
+                                  .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                  .where('read', isEqualTo: false)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+                                
+                                return Stack(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.notifications_outlined,
+                                        color: Colors.white,
+                                        size: 26,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/notifications');
+                                      },
+                                    ),
+                                    if (unreadCount > 0)
+                                      Positioned(
+                                        right: 8,
+                                        top: 8,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 18,
+                                            minHeight: 18,
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                              style: const TextStyle(
+                                                color: Color(0xFF3B82F6),
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -140,6 +222,58 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.all(20),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
+                  // Email Verification Banner
+                  if (FirebaseAuth.instance.currentUser != null && 
+                      !FirebaseAuth.instance.currentUser!.emailVerified) ...[
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppDesignSystem.warning.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppDesignSystem.warning),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.warning_amber, color: AppDesignSystem.warning),
+                              const SizedBox(width: 8),
+                              const Expanded(
+                                child: Text(
+                                  'Email Not Verified',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Please verify your email to access all features.',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () => _resendVerificationEmail(),
+                              icon: const Icon(Icons.email, size: 18),
+                              label: const Text('Resend Verification Email'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppDesignSystem.warning,
+                                foregroundColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                  ],
+                  
                   // Account Section
                   Text(
                     'Account',
@@ -239,6 +373,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   
                   const SizedBox(height: AppSpacing.lg),
                   
+                  // App Settings Section
+                  Text(
+                    'App Settings',
+                    style: AppTextStyles.sectionHeader,
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  
+                  CleanCard(
+                    child: Column(
+                      children: [
+                        _SettingsSwitchTile(
+                          icon: Icons.vibration,
+                          title: 'Haptic Feedback',
+                          subtitle: 'Vibrate on button press and interactions',
+                          value: _hapticFeedbackEnabled,
+                          onChanged: (value) async {
+                            setState(() => _hapticFeedbackEnabled = value);
+                            await HapticFeedbackUtil.setEnabled(value);
+                            // Give immediate feedback if enabling
+                            if (value) {
+                              HapticFeedbackUtil.mediumImpact();
+                            }
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _SettingsSwitchTile(
+                          icon: Icons.volume_up,
+                          title: 'Sound Effects',
+                          subtitle: 'Play sounds for XP, badges, and interactions',
+                          value: _soundEffectsEnabled,
+                          onChanged: (value) async {
+                            setState(() => _soundEffectsEnabled = value);
+                            await SoundService.setEnabled(value);
+                            // Give immediate feedback if enabling
+                            if (value) {
+                              await SoundService.playSuccess();
+                            }
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _SettingsTile(
+                          icon: Icons.tour,
+                          title: 'Reset App Tour',
+                          subtitle: 'Show feature tooltips again',
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () async {
+                            final appTourService = AppTourService();
+                            await appTourService.resetAllTours();
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('App tour reset successfully')),
+                              );
+                            }
+                          },
+                        ),
+                        const Divider(height: 1),
+                        _SettingsTile(
+                          icon: Icons.download,
+                          title: 'Export My Data',
+                          subtitle: 'Download all your data as JSON',
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () => _exportUserData(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const SizedBox(height: AppSpacing.lg),
+                  
                   // Privacy & Legal Section
                   Text(
                     'Privacy & Legal',
@@ -318,6 +521,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         const Divider(height: 1),
                         _SettingsTile(
+                          icon: Icons.star,
+                          title: 'Rate App',
+                          subtitle: 'Enjoying IPlay? Rate us on the store',
+                          trailing: const Icon(Icons.chevron_right, size: 20),
+                          onTap: () => _rateApp(),
+                        ),
+                        const Divider(height: 1),
+                        _SettingsTile(
                           icon: Icons.code,
                           title: 'Version',
                           subtitle: '1.0.0',
@@ -342,7 +553,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     'Danger Zone',
                     style: AppTextStyles.sectionHeader.copyWith(
-                      color: AppColors.error,
+                      color: AppDesignSystem.error,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
@@ -354,8 +565,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           icon: Icons.delete_forever,
                           title: 'Delete Account',
                           subtitle: 'Permanently delete your account',
-                          titleColor: AppColors.error,
-                          trailing: const Icon(Icons.chevron_right, size: 20, color: AppColors.error),
+                          titleColor: AppDesignSystem.error,
+                          trailing: const Icon(Icons.chevron_right, size: 20, color: AppDesignSystem.error),
                           onTap: () => _showDeleteAccountDialog(),
                         ),
                       ],
@@ -379,7 +590,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.error,
+                        backgroundColor: AppDesignSystem.error,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -399,6 +610,141 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  // Resend Verification Email
+  Future<void> _resendVerificationEmail() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Verification email sent! Please check your inbox.'),
+              backgroundColor: AppDesignSystem.success,
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
+    }
+  }
+
+  // Export User Data
+  Future<void> _exportUserData() async {
+    try {
+      // Show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      );
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception('Not authenticated');
+
+      // Collect all user data
+      final Map<String, dynamic> exportData = {
+        'exportDate': DateTime.now().toIso8601String(),
+        'userId': user.uid,
+        'email': user.email,
+      };
+
+      // Get user profile
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists) {
+        exportData['profile'] = userDoc.data();
+      }
+
+      // Get progress data
+      final progressDocs = await FirebaseFirestore.instance
+          .collection('progress')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      exportData['progress'] = progressDocs.docs.map((d) => d.data()).toList();
+
+      // Get badges
+      final badgesDocs = await FirebaseFirestore.instance
+          .collection('user_badges')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      exportData['badges'] = badgesDocs.docs.map((d) => d.data()).toList();
+
+      // Get certificates
+      final certsDocs = await FirebaseFirestore.instance
+          .collection('certificates')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      exportData['certificates'] = certsDocs.docs.map((d) => d.data()).toList();
+
+      // Get XP history
+      final xpDocs = await FirebaseFirestore.instance
+          .collection('xp_history')
+          .where('userId', isEqualTo: user.uid)
+          .orderBy('timestamp', descending: true)
+          .limit(100)
+          .get();
+      exportData['xpHistory'] = xpDocs.docs.map((d) => d.data()).toList();
+
+      // Convert to JSON
+      final jsonString = const JsonEncoder.withIndent('  ').convert(exportData);
+
+      // Save to file
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/iplay_data_export_${DateTime.now().millisecondsSinceEpoch}.json');
+      await file.writeAsString(jsonString);
+
+      if (!mounted) return;
+
+      // Close loading dialog
+      Navigator.pop(context);
+
+      // Share the file
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        subject: 'IPlay Data Export',
+        text: 'Your IPlay data export from ${DateTime.now().toString().split(' ')[0]}',
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Data exported successfully!'),
+            backgroundColor: AppDesignSystem.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      // Close loading dialog
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error exporting data: ${e.toString()}'),
+          backgroundColor: AppDesignSystem.error,
+        ),
+      );
+    }
+  }
+
   // Launch URL
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -409,7 +755,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Could not open $url'),
-            backgroundColor: AppColors.error,
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
+    }
+  }
+
+  // Rate App
+  Future<void> _rateApp() async {
+    try {
+      await AppRatingService.openAppStore();
+      await AppRatingService.markAsRated();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Thank you for rating IPlay!'),
+            backgroundColor: AppDesignSystem.success,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      // print('Error opening app store: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not open app store. Please try again later.'),
+            backgroundColor: AppDesignSystem.error,
           ),
         );
       }
@@ -445,12 +819,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(height: 12),
                 Text(
                   'Version: 1.0.0',
-                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
                 ),
                 SizedBox(height: 4),
                 Text(
                   'Made with ❤️ in India',
-                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
                 ),
               ],
             ),
@@ -486,7 +860,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
               child: const Text(
                 'Logout',
-                style: TextStyle(color: AppColors.error),
+                style: TextStyle(color: AppDesignSystem.error),
               ),
             ),
           ],
@@ -498,40 +872,69 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // Perform Logout
   Future<void> _performLogout() async {
     try {
+      // Show loading dialog
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          );
         },
       );
 
+      // Sign out from Firebase
       await FirebaseAuth.instance.signOut();
 
-      if (!mounted) return;
-      Navigator.of(context).pop(); // Close loading
+      // Clear SharedPreferences cache
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+      } catch (e) {
+        // print('Error clearing SharedPreferences: $e');
+        // Continue with logout even if cache clear fails
+      }
 
+      if (!mounted) return;
+      
+      // Close loading dialog
+      Navigator.of(context).pop();
+
+      // Navigate to auth screen and clear all previous routes
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/auth',
         (Route<dynamic> route) => false,
       );
 
+      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Successfully logged out'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppDesignSystem.success,
           duration: Duration(seconds: 2),
         ),
       );
     } catch (e) {
-      print('Error during logout: $e');
+      // print('Error during logout: $e');
+      
       if (!mounted) return;
-      Navigator.of(context).pop(); // Close loading
+      
+      // Close loading dialog
+      Navigator.of(context).pop();
 
+      // Show error with retry option
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Logout failed: ${e.toString()}'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppDesignSystem.error,
+          duration: const Duration(seconds: 4),
+          action: SnackBarAction(
+            label: 'Retry',
+            textColor: Colors.white,
+            onPressed: () => _performLogout(),
+          ),
         ),
       );
     }
@@ -547,7 +950,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         return AlertDialog(
           title: const Row(
             children: [
-              Icon(Icons.warning, color: AppColors.error),
+              Icon(Icons.warning, color: AppDesignSystem.error),
               SizedBox(width: 8),
               Text('Delete Account'),
             ],
@@ -590,14 +993,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Please type DELETE to confirm'),
-                      backgroundColor: AppColors.warning,
+                      backgroundColor: AppDesignSystem.warning,
                     ),
                   );
                 }
               },
               child: const Text(
                 'Delete',
-                style: TextStyle(color: AppColors.error),
+                style: TextStyle(color: AppDesignSystem.error),
               ),
             ),
           ],
@@ -640,12 +1043,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Account deleted successfully'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppDesignSystem.success,
           duration: Duration(seconds: 2),
         ),
       );
     } catch (e) {
-      print('Error during account deletion: $e');
+      // print('Error during account deletion: $e');
       if (!mounted) return;
       Navigator.of(context).pop(); // Close loading
 
@@ -654,7 +1057,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please sign out and sign in again before deleting your account'),
-            backgroundColor: AppColors.error,
+            backgroundColor: AppDesignSystem.error,
             duration: Duration(seconds: 4),
           ),
         );
@@ -662,7 +1065,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Account deletion failed: ${e.toString()}'),
-            backgroundColor: AppColors.error,
+            backgroundColor: AppDesignSystem.error,
           ),
         );
       }
@@ -680,14 +1083,13 @@ class _SettingsTile extends StatelessWidget {
   final Color? titleColor;
 
   const _SettingsTile({
-    Key? key,
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.trailing,
     this.onTap,
     this.titleColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -699,7 +1101,7 @@ class _SettingsTile extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
-              Icon(icon, color: titleColor ?? AppColors.textPrimary, size: 24),
+              Icon(icon, color: titleColor ?? AppDesignSystem.textPrimary, size: 24),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -738,13 +1140,12 @@ class _SettingsSwitchTile extends StatelessWidget {
   final Function(bool) onChanged;
 
   const _SettingsSwitchTile({
-    Key? key,
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -752,7 +1153,7 @@ class _SettingsSwitchTile extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.textPrimary, size: 24),
+          Icon(icon, color: AppDesignSystem.textPrimary, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -773,7 +1174,7 @@ class _SettingsSwitchTile extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColors.primary,
+            activeColor: AppDesignSystem.primaryIndigo,
           ),
         ],
       ),

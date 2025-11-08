@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
 
 /// Edit Profile Screen - Edit user profile information
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -23,17 +23,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? _currentUserId;
   String? _userRole;
   bool _isPrincipal = false;
-  
-  final List<String> _indianStates = [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
-    'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
-    'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
-    'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
-    'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
-    'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry',
-  ];
 
   List<String> _avatarOptions = [];
 
@@ -81,7 +70,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
       }
     } catch (e) {
-      print('Error loading user data: $e');
+      // print('Error loading user data: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -93,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Please select an avatar'),
-          backgroundColor: AppColors.warning,
+          backgroundColor: AppDesignSystem.warning,
         ),
       );
       return;
@@ -119,17 +108,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Profile updated successfully!'),
-          backgroundColor: AppColors.success,
+          backgroundColor: AppDesignSystem.success,
         ),
       );
     } catch (e) {
-      print('Error saving profile: $e');
+      // print('Error saving profile: $e');
       if (!mounted) return;
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppDesignSystem.error,
         ),
       );
     } finally {
@@ -142,7 +131,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
@@ -222,7 +212,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         shape: BoxShape.circle,
                                         border: Border.all(
                                           color: isSelected 
-                                              ? AppColors.primary 
+                                              ? AppDesignSystem.primaryIndigo 
                                               : Colors.grey.shade300,
                                           width: isSelected ? 3 : 2,
                                         ),
@@ -318,7 +308,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: ElevatedButton(
                               onPressed: _isSaving ? null : _saveProfile,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
+                                backgroundColor: AppDesignSystem.primaryIndigo,
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(

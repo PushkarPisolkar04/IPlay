@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/content_service.dart';
@@ -9,15 +9,17 @@ import '../../core/models/realm_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/progress_bar.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/loading_skeleton.dart';
+import 'level_preview_screen.dart';
 
 /// Realm Detail Screen - Shows levels within a realm
 class RealmDetailScreen extends StatefulWidget {
   final Map<String, dynamic> realm;
   
   const RealmDetailScreen({
-    Key? key,
+    super.key,
     required this.realm,
-  }) : super(key: key);
+  });
 
   @override
   State<RealmDetailScreen> createState() => _RealmDetailScreenState();
@@ -31,6 +33,9 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
   Set<int> _completedLevels = {};
   int _currentLevelNumber = 1;
   bool _isLoading = true;
+  bool _isDownloaded = false;
+  bool _isDownloading = false;
+  double _downloadProgress = 0.0;
 
   @override
   void initState() {
@@ -45,6 +50,9 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
       // Load levels from ContentService
       _levels = _contentService.getLevelsForRealm(realmId);
       
+      // Check if realm is downloaded for offline
+      _isDownloaded = await _contentService.isRealmAvailableOffline(realmId);
+      
       // Load user progress from ProgressService
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -57,11 +65,236 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
         }
       }
     } catch (e) {
-      print('Error loading realm data: $e');
+      // print('Error loading realm data: $e');
     } finally {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _downloadRealmForOffline() async {
+    final realmId = widget.realm['realmId'] as String;
+    
+    setState(() {
+      _isDownloading = true;
+      _downloadProgress = 0.0;
+    });
+
+    try {
+      // Show download dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Downloading Realm'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Downloading all levels and content for offline access...'),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: _downloadProgress,
+                    backgroundColor: AppDesignSystem.backgroundGrey,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      widget.realm['color'] is Color 
+                          ? widget.realm['color'] as Color 
+                          : Color(widget.realm['color'] as int? ?? AppDesignSystem.primaryIndigo.value),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${(_downloadProgress * 100).toInt()}%',
+                    style: AppTextStyles.bodySmall,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+      // Download each level with progress updates
+      for (int i = 0; i < _levels.length; i++) {
+        final level = _levels[i];
+        final levelId = level.id;
+        
+        // Load and cache level content
+        await _contentService.getLevelContent(levelId);
+        
+        // Update progress
+        setState(() {
+          _downloadProgress = (i + 1) / _levels.length;
+        });
+        
+        // Update dialog
+        if (mounted) {
+          // Force rebuild of dialog
+          Navigator.of(context).pop();
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: const Text('Downloading Realm'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Downloading level ${i + 1} of ${_levels.length}...'),
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(
+                    value: _downloadProgress,
+                    backgroundColor: AppDesignSystem.backgroundGrey,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      widget.realm['color'] is Color 
+                          ? widget.realm['color'] as Color 
+                          : Color(widget.realm['color'] as int? ?? AppDesignSystem.primaryIndigo.value),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${(_downloadProgress * 100).toInt()}%',
+                    style: AppTextStyles.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      }
+
+      // Mark realm as downloaded
+      final success = await _contentService.downloadRealmForOffline(realmId);
+      
+      if (success) {
+        setState(() {
+          _isDownloaded = true;
+        });
+        
+        // Close dialog
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+        
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.white),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Realm downloaded! You can now access it offline.',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: AppDesignSystem.success,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      } else {
+        throw Exception('Download failed');
+      }
+    } catch (e) {
+      // print('Error downloading realm: $e');
+      
+      // Close dialog
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+      
+      // Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 8),
+                const Expanded(
+                  child: Text(
+                    'Failed to download realm. Please try again.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: AppDesignSystem.error,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } finally {
+      setState(() {
+        _isDownloading = false;
+        _downloadProgress = 0.0;
+      });
+    }
+  }
+
+  Future<void> _deleteOfflineRealm() async {
+    final realmId = widget.realm['realmId'] as String;
+    
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Offline Content'),
+        content: const Text(
+          'Are you sure you want to delete the offline content for this realm? '
+          'You can download it again later.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: AppDesignSystem.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    
+    if (confirmed == true) {
+      try {
+        await _contentService.deleteOfflineRealm(realmId);
+        
+        setState(() {
+          _isDownloaded = false;
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Offline content deleted'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      } catch (e) {
+        // print('Error deleting offline realm: $e');
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Failed to delete offline content'),
+              backgroundColor: AppDesignSystem.error,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -105,7 +338,7 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     final String title = widget.realm['title'] ?? 'Realm';
     
     // Handle color - might be int or Color object
-    Color color = AppColors.primary;
+    Color color = AppDesignSystem.primaryIndigo;
     if (widget.realm['color'] != null) {
       if (widget.realm['color'] is Color) {
         color = widget.realm['color'] as Color;
@@ -118,15 +351,13 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
           title: Text(title),
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const ListSkeleton(itemCount: 5),
       );
     }
 
@@ -136,23 +367,36 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     final totalXP = _getTotalXP();
     
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: Text(title),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.download_outlined),
-            onPressed: () {
-              // TODO: Download realm for offline
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Offline download coming soon!'),
-                ),
-              );
-            },
-          ),
+          if (_isDownloaded)
+            IconButton(
+              icon: const Icon(Icons.download_done),
+              color: AppDesignSystem.success,
+              onPressed: _deleteOfflineRealm,
+              tooltip: 'Downloaded - Tap to delete',
+            )
+          else
+            IconButton(
+              icon: _isDownloading 
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Icon(Icons.download_outlined),
+              onPressed: _isDownloading ? null : _downloadRealmForOffline,
+              tooltip: _isDownloaded 
+                  ? 'Downloaded' 
+                  : 'Download for offline',
+            ),
         ],
       ),
       body: SingleChildScrollView(
@@ -165,7 +409,7 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
               width: double.infinity,
               height: 180,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
               ),
               child: Icon(
@@ -206,7 +450,7 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
                           const Icon(
                             Icons.stars,
                             size: 16,
-                            color: AppColors.accent,
+                            color: AppDesignSystem.primaryAmber,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -250,6 +494,21 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
             // Dynamic level items from ContentService
             ...(_levels.map((level) {
               final status = _getLevelStatus(level.levelNumber);
+              
+              // Try to get difficulty from level description or default based on level number
+              String difficulty = 'Basic';
+              if (level.description.contains('Intermediate')) {
+                difficulty = 'Intermediate';
+              } else if (level.description.contains('Advanced')) {
+                difficulty = 'Advanced';
+              } else if (level.levelNumber <= 3) {
+                difficulty = 'Basic';
+              } else if (level.levelNumber <= 6) {
+                difficulty = 'Intermediate';
+              } else {
+                difficulty = 'Advanced';
+              }
+              
               return Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.cardSpacing),
                 child: _LevelItem(
@@ -259,12 +518,18 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
                   stars: _completedLevels.contains(level.levelNumber) ? 5 : 0, // TODO: Track actual stars
                   status: status,
                   color: color,
+                  difficulty: difficulty,
+                  estimatedMinutes: level.estimatedMinutes,
                   onTap: () {
-                    // Navigate to level content screen
-                    Navigator.pushNamed(
+                    // Navigate to level preview screen
+                    Navigator.push(
                       context,
-                      '/level-content',
-                      arguments: {'level': level},
+                      MaterialPageRoute(
+                        builder: (context) => LevelPreviewScreen(
+                          levelId: level.id,
+                          realmId: widget.realm['realmId'] as String,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -274,18 +539,39 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
             const SizedBox(height: AppSpacing.lg),
             
             // Download button
-            SecondaryButton(
-              text: 'Download Offline',
-              onPressed: () {},
-              fullWidth: true,
-              icon: Icons.download,
-            ),
+            if (!_isDownloaded)
+              SecondaryButton(
+                text: _isDownloading ? 'Downloading...' : 'Download for Offline',
+                onPressed: _isDownloading ? null : _downloadRealmForOffline,
+                fullWidth: true,
+                icon: _isDownloading ? null : Icons.download,
+              )
+            else
+              SecondaryButton(
+                text: 'Delete Offline Content',
+                onPressed: _deleteOfflineRealm,
+                fullWidth: true,
+                icon: Icons.delete_outline,
+              ),
             
             const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),
     );
+  }
+
+  Color _getDifficultyColor(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'basic':
+        return Colors.green;
+      case 'intermediate':
+        return Colors.orange;
+      case 'advanced':
+        return Colors.red;
+      default:
+        return AppDesignSystem.textSecondary;
+    }
   }
 }
 
@@ -300,9 +586,10 @@ class _LevelItem extends StatelessWidget {
   final LevelStatus status;
   final Color color;
   final VoidCallback onTap;
+  final String? difficulty;
+  final int? estimatedMinutes;
   
   const _LevelItem({
-    Key? key,
     required this.levelNumber,
     required this.title,
     required this.xp,
@@ -310,7 +597,22 @@ class _LevelItem extends StatelessWidget {
     required this.status,
     required this.color,
     required this.onTap,
-  }) : super(key: key);
+    this.difficulty,
+    this.estimatedMinutes,
+  });
+  
+  Color _getDifficultyColor(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'basic':
+        return Colors.green;
+      case 'intermediate':
+        return Colors.orange;
+      case 'advanced':
+        return Colors.red;
+      default:
+        return AppDesignSystem.textSecondary;
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -320,8 +622,8 @@ class _LevelItem extends StatelessWidget {
     
     return CleanCard(
       color: isCurrent 
-          ? color.withOpacity(0.05) 
-          : AppColors.background,
+          ? color.withValues(alpha: 0.05) 
+          : AppDesignSystem.backgroundLight,
       onTap: isLocked ? null : onTap,
       child: Opacity(
         opacity: isLocked ? 0.6 : 1.0,
@@ -333,10 +635,10 @@ class _LevelItem extends StatelessWidget {
               height: 48,
               decoration: BoxDecoration(
                 color: isCompleted
-                    ? AppColors.success.withOpacity(0.15)
+                    ? AppDesignSystem.success.withValues(alpha: 0.15)
                     : isCurrent
-                        ? color.withOpacity(0.15)
-                        : AppColors.backgroundGrey,
+                        ? color.withValues(alpha: 0.15)
+                        : AppDesignSystem.backgroundGrey,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -346,10 +648,10 @@ class _LevelItem extends StatelessWidget {
                         ? Icons.play_arrow
                         : Icons.lock,
                 color: isCompleted
-                    ? AppColors.success
+                    ? AppDesignSystem.success
                     : isCurrent
                         ? color
-                        : AppColors.textTertiary,
+                        : AppDesignSystem.textTertiary,
                 size: 24,
               ),
             ),
@@ -368,10 +670,10 @@ class _LevelItem extends StatelessWidget {
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
                           color: isCompleted
-                              ? AppColors.success
+                              ? AppDesignSystem.success
                               : isCurrent
                                   ? color
-                                  : AppColors.textSecondary,
+                                  : AppDesignSystem.textSecondary,
                         ),
                       ),
                     ],
@@ -383,43 +685,87 @@ class _LevelItem extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
                     children: [
-                      if (isCompleted) ...[
-                        Row(
-                          children: List.generate(
-                            5,
-                            (index) => Icon(
-                              index < stars
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              size: 14,
-                              color: AppColors.accent,
+                      // Difficulty badge
+                      if (difficulty != null)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _getDifficultyColor(difficulty!).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            difficulty!,
+                            style: AppTextStyles.caption.copyWith(
+                              color: _getDifficultyColor(difficulty!),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '•',
-                          style: AppTextStyles.bodySmall,
+                      // Estimated time
+                      if (estimatedMinutes != null)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 12,
+                              color: AppDesignSystem.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '$estimatedMinutes min',
+                              style: AppTextStyles.caption,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                      ],
-                      Icon(
-                        Icons.stars,
-                        size: 14,
-                        color: isLocked
-                            ? AppColors.textTertiary
-                            : AppColors.accent,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        isCompleted ? '$xp XP' : '0/$xp XP',
-                        style: AppTextStyles.bodySmall,
+                      // XP reward
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.stars,
+                            size: 12,
+                            color: isLocked
+                                ? AppDesignSystem.textTertiary
+                                : AppDesignSystem.primaryAmber,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            isCompleted ? '$xp XP' : '+$xp XP',
+                            style: AppTextStyles.caption.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: isLocked
+                                  ? AppDesignSystem.textTertiary
+                                  : AppDesignSystem.primaryAmber,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                  if (isCompleted) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: List.generate(
+                        5,
+                        (index) => Icon(
+                          index < stars
+                              ? Icons.star
+                              : Icons.star_border,
+                          size: 14,
+                          color: AppDesignSystem.primaryAmber,
+                        ),
+                      ),
+                    ),
+                  ],
                   if (isLocked) ...[
                     const SizedBox(height: 4),
                     Text(

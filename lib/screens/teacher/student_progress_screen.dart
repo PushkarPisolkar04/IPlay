@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class StudentProgressScreen extends StatefulWidget {
-  const StudentProgressScreen({Key? key}) : super(key: key);
+  const StudentProgressScreen({super.key});
 
   @override
   State<StudentProgressScreen> createState() => _StudentProgressScreenState();
 }
 
 class _StudentProgressScreenState extends State<StudentProgressScreen> {
-  List<Map<String, dynamic>> _students = [];
+  final List<Map<String, dynamic>> _students = [];
   bool _isLoading = true;
   String? _selectedClassroomId;
   List<Map<String, dynamic>> _classrooms = [];
@@ -48,7 +49,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         await _loadStudents();
       }
     } catch (e) {
-      print('Error loading data: $e');
+      // print('Error loading data: $e');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -123,20 +124,20 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
 
       if (mounted) setState(() {});
     } catch (e) {
-      print('Error loading students: $e');
+      // print('Error loading students: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       body: Column(
         children: [
           // Header
           Container(
             decoration: const BoxDecoration(
-              gradient: AppColors.primaryGradient,
+              gradient: AppDesignSystem.gradientPrimary,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),
@@ -170,13 +171,13 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedClassroomId,
-                        dropdownColor: AppColors.primary,
+                        dropdownColor: AppDesignSystem.primaryIndigo,
                         style: const TextStyle(color: Colors.white, fontSize: 14),
                         icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
                         items: _classrooms.map((classroom) {
@@ -205,7 +206,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           // Students List
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const ListSkeleton(itemCount: 5)
                 : _students.isEmpty
                     ? const Center(child: Text('No students enrolled'))
                     : RefreshIndicator(
@@ -224,7 +225,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                   gradient: isTop3
                                       ? LinearGradient(
                                           colors: [
-                                            AppColors.accent.withOpacity(0.1),
+                                            AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
                                             Colors.white,
                                           ],
                                         )
@@ -233,8 +234,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: isTop3 
-                                        ? AppColors.accent.withOpacity(0.3)
-                                        : AppColors.textLight,
+                                        ? AppDesignSystem.primaryAmber.withValues(alpha: 0.3)
+                                        : AppDesignSystem.backgroundWhite,
                                   ),
                                 ),
                                 child: CleanCard(
@@ -268,7 +269,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                               width: 36,
                                               height: 36,
                                               decoration: BoxDecoration(
-                                                color: AppColors.textLight,
+                                                color: AppDesignSystem.backgroundWhite,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Center(
@@ -312,7 +313,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                               Icons.stars,
                                               '${student['totalXP']}',
                                               'Total XP',
-                                              AppColors.accent,
+                                              AppDesignSystem.primaryAmber,
                                             ),
                                           ),
                                           Expanded(
@@ -320,7 +321,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                               Icons.check_circle,
                                               '${student['completedLevels']}',
                                               'Levels',
-                                              AppColors.success,
+                                              AppDesignSystem.success,
                                             ),
                                           ),
                                           Expanded(
@@ -328,7 +329,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                               Icons.local_fire_department,
                                               '${student['currentStreak']}',
                                               'Streak',
-                                              AppColors.error,
+                                              AppDesignSystem.error,
                                             ),
                                           ),
                                           Expanded(
@@ -336,7 +337,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                               Icons.school,
                                               '${student['avgScore'].toStringAsFixed(0)}%',
                                               'Avg Score',
-                                              AppColors.primary,
+                                              AppDesignSystem.primaryIndigo,
                                             ),
                                           ),
                                         ],
@@ -346,17 +347,85 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
                                         const SizedBox(height: 12),
                                         Row(
                                           children: [
-                                            Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
+                                            Icon(Icons.access_time, size: 14, color: AppDesignSystem.textSecondary),
                                             const SizedBox(width: 4),
                                             Text(
                                               'Last active: ${_formatDate(student['lastActive'])}',
                                               style: AppTextStyles.bodySmall.copyWith(
-                                                color: AppColors.textSecondary,
+                                                color: AppDesignSystem.textSecondary,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ],
+                                      
+                                      // Message button
+                                      const SizedBox(height: 12),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: OutlinedButton.icon(
+                                          onPressed: () async {
+                                            // Get or create chat with student
+                                            try {
+                                              final currentUser = FirebaseAuth.instance.currentUser;
+                                              if (currentUser == null) return;
+                                              
+                                              // Query for existing chat
+                                              final chatsQuery = await FirebaseFirestore.instance
+                                                  .collection('chats')
+                                                  .where('participants', arrayContains: currentUser.uid)
+                                                  .get();
+                                              
+                                              String? chatId;
+                                              for (var doc in chatsQuery.docs) {
+                                                final participants = List<String>.from(doc.data()['participants'] ?? []);
+                                                if (participants.contains(student['id'])) {
+                                                  chatId = doc.id;
+                                                  break;
+                                                }
+                                              }
+                                              
+                                              // Create chat if doesn't exist
+                                              if (chatId == null) {
+                                                final newChat = await FirebaseFirestore.instance.collection('chats').add({
+                                                  'participants': [currentUser.uid, student['id']],
+                                                  'createdAt': FieldValue.serverTimestamp(),
+                                                  'lastMessage': '',
+                                                  'lastMessageAt': FieldValue.serverTimestamp(),
+                                                });
+                                                chatId = newChat.id;
+                                              }
+                                              
+                                              if (mounted) {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  '/chat',
+                                                  arguments: {
+                                                    'chatId': chatId,
+                                                    'otherUserName': student['name'],
+                                                  },
+                                                );
+                                              }
+                                            } catch (e) {
+                                              // print('Error opening chat: $e');
+                                              if (mounted) {
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(content: Text('Failed to open chat')),
+                                                );
+                                              }
+                                            }
+                                          },
+                                          icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                                          label: const Text('Message Student'),
+                                          style: OutlinedButton.styleFrom(
+                                            foregroundColor: AppDesignSystem.primaryIndigo,
+                                            side: BorderSide(color: AppDesignSystem.primaryIndigo),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -388,7 +457,7 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           label,
           style: TextStyle(
             fontSize: 10,
-            color: AppColors.textSecondary,
+            color: AppDesignSystem.textSecondary,
           ),
         ),
       ],

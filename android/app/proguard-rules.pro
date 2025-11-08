@@ -20,3 +20,11 @@
 # Keep Kotlin metadata
 -keep class kotlin.Metadata { *; }
 
+# Keep Play Core classes (for Flutter deferred components)
+-dontwarn com.google.android.play.core.**
+-keep class com.google.android.play.core.** { *; }
+
+# Keep Flutter Play Store classes
+-keep class io.flutter.embedding.android.FlutterPlayStoreSplitApplication { *; }
+-keep class io.flutter.embedding.engine.deferredcomponents.** { *; }
+

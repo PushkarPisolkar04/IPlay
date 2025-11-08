@@ -1,12 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/progress_model.dart';
 import '../models/user_model.dart';
+import '../../services/sound_service.dart';
 import 'badge_service.dart';
+import 'offline_progress_manager.dart';
+import '../utils/debouncer.dart';
+import '../utils/firebase_batch_helper.dart';
 
 /// Service to manage user progress across realms and levels
 class ProgressService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final BadgeService _badgeService = BadgeService();
+  final OfflineProgressManager _offlineManager = OfflineProgressManager.instance;
+  final FirebaseBatchHelper _batchHelper = FirebaseBatchHelper();
+  
+  // Debouncer for progress updates (save every 30 seconds)
+  final _progressDebouncer = Debouncer(delay: const Duration(seconds: 30));
+  
+  // Pending progress updates
+  final Map<String, Map<String, dynamic>> _pendingUpdates = {};
 
   /// Get user's progress for all realms
   Future<List<ProgressModel>> getUserProgress(String userId) async {
@@ -20,7 +33,7 @@ class ProgressService {
           .map((doc) => ProgressModel.fromMap(doc.data()))
           .toList();
     } catch (e) {
-      print('Error getting user progress: $e');
+      // print('Error getting user progress: $e');
       return [];
     }
   }
@@ -39,7 +52,7 @@ class ProgressService {
       if (!doc.exists) return null;
       return ProgressModel.fromMap(doc.data()!);
     } catch (e) {
-      print('Error getting realm progress: $e');
+      // print('Error getting realm progress: $e');
       return null;
     }
   }
@@ -57,7 +70,7 @@ class ProgressService {
       // Current level and all previous levels are unlocked
       return levelNumber <= progress.currentLevelNumber;
     } catch (e) {
-      print('Error checking level unlock: $e');
+      // print('Error checking level unlock: $e');
       return levelNumber == 1; // Default to first level only
     }
   }
@@ -73,6 +86,29 @@ class ProgressService {
     String? newBadge,
   }) async {
     try {
+      // Check if device is online
+      final connectivityResult = await Connectivity().checkConnectivity();
+      final isOffline = connectivityResult.contains(ConnectivityResult.none);
+
+      if (isOffline) {
+        // Save progress offline
+        await _offlineManager.saveProgressLocally(
+          userId: userId,
+          contentId: '${realmId}_level_$levelNumber',
+          contentType: 'level',
+          xpEarned: xpEarned,
+          quizScore: quizScore,
+          totalQuestions: totalQuestions,
+          completionPercentage: 100,
+          accuracy: (quizScore / totalQuestions * 100).round(),
+          startedAt: DateTime.now(),
+          completedAt: DateTime.now(),
+        );
+        
+        // print('Progress saved offline: ${realmId}_level_$levelNumber, XP: $xpEarned');
+        return;
+      }
+
       final batch = _firestore.batch();
 
       // Update realm progress using top-level collection with composite ID
@@ -160,18 +196,21 @@ class ProgressService {
       // Commit all updates
       await batch.commit();
 
+      // Play XP gain sound
+      SoundService.playXPGain();
+
       // Update streak
       await _updateStreak(userId);
       
       // Check for new badges (don't wait for this)
       _badgeService.checkAndAwardBadges(userId).then((newBadges) {
         if (newBadges.isNotEmpty) {
-          print('New badges unlocked: $newBadges');
+          // print('New badges unlocked: $newBadges');
           // Badge notification will be handled by the UI
         }
       });
     } catch (e) {
-      print('Error completing level: $e');
+      // print('Error completing level: $e');
       rethrow;
     }
   }
@@ -209,7 +248,7 @@ class ProgressService {
         'lastActiveDate': Timestamp.now(),
       });
     } catch (e) {
-      print('Error updating streak: $e');
+      // print('Error updating streak: $e');
     }
   }
 
@@ -241,7 +280,7 @@ class ProgressService {
         'realmsCompleted': realmsCompleted,
       };
     } catch (e) {
-      print('Error getting progress summary: $e');
+      // print('Error getting progress summary: $e');
       return {
         'totalLevelsCompleted': 0,
         'totalXPEarned': 0,
@@ -268,9 +307,76 @@ class ProgressService {
       }
       await batch.commit();
     } catch (e) {
-      print('Error resetting progress: $e');
+      // print('Error resetting progress: $e');
       rethrow;
     }
   }
+  /// Save progress with debouncing (batches updates every 30 seconds)
+  /// This reduces Firebase write operations significantly
+  void saveProgressDebounced({
+    required String userId,
+    required String realmId,
+    required Map<String, dynamic> updates,
+  }) {
+    final docId = '${userId}__$realmId';
+    
+    // Merge with existing pending updates
+    if (_pendingUpdates.containsKey(docId)) {
+      _pendingUpdates[docId]!.addAll(updates);
+    } else {
+      _pendingUpdates[docId] = updates;
+    }
+    
+    // Debounce the actual save
+    _progressDebouncer.call(() async {
+      if (_pendingUpdates.isEmpty) return;
+      
+      try {
+        // Batch all pending updates
+        final operations = _pendingUpdates.entries.map((entry) {
+          return BatchOperation.update(
+            _firestore.collection('progress').doc(entry.key),
+            entry.value,
+          );
+        }).toList();
+        
+        await _batchHelper.executeBatch(operations);
+        
+        // print('✅ Saved ${_pendingUpdates.length} debounced progress updates');
+        _pendingUpdates.clear();
+      } catch (e) {
+        // print('❌ Error saving debounced progress: $e');
+      }
+    });
+  }
+  
+  /// Force save all pending progress updates immediately
+  /// Call this when user navigates away or app goes to background
+  Future<void> flushPendingUpdates() async {
+    _progressDebouncer.cancel();
+    
+    if (_pendingUpdates.isEmpty) return;
+    
+    try {
+      final operations = _pendingUpdates.entries.map((entry) {
+        return BatchOperation.update(
+          _firestore.collection('progress').doc(entry.key),
+          entry.value,
+        );
+      }).toList();
+      
+      await _batchHelper.executeBatch(operations);
+      
+      // print('✅ Flushed ${_pendingUpdates.length} pending progress updates');
+      _pendingUpdates.clear();
+    } catch (e) {
+      // print('❌ Error flushing pending updates: $e');
+    }
+  }
+  
+  /// Dispose the service and flush pending updates
+  Future<void> dispose() async {
+    await flushPendingUpdates();
+    _progressDebouncer.dispose();
+  }
 }
-

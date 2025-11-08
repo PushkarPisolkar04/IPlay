@@ -1,0 +1,115 @@
+{
+  "levelId": "trademark_level_1",
+  "realmId": "trademark",
+  "levelNumber": 1,
+  "name": "Introduction to Trademarks",
+  "difficulty": "Basic",
+  "xpReward": 100,
+  "estimatedMinutes": 8,
+  "videoUrl": "dQw4w9WgXcQ",
+  "videoDuration": 300,
+  "contentBlocks": [
+    {
+      "type": "text",
+      "content": "A trademark is a distinctive sign, symbol, word, or combination that identifies and distinguishes the goods or services of one business from those of others. It serves as a badge of origin and helps consumers recognize products they trust."
+    },
+    {
+      "type": "text",
+      "content": "Trademarks can take many forms including words, logos, slogans, colors, sounds, and even shapes. The key requirement is that they must be distinctive and capable of identifying the source of goods or services."
+    },
+    {
+      "type": "image",
+      "content": "https://via.placeholder.com/400x300/EC4899/FFFFFF?text=Trademark+Symbol",
+      "caption": "The ® symbol indicates a registered trademark"
+    },
+    {
+      "type": "example",
+      "content": "The Nike 'Swoosh' logo is one of the world's most recognizable trademarks. It instantly identifies Nike products and distinguishes them from competitors. The company has invested heavily in building brand recognition around this simple but distinctive mark.",
+      "metadata": {
+        "title": "Nike Swoosh Example"
+      }
+    },
+    {
+      "type": "text",
+      "content": "Unlike copyright which protects creative expression, trademarks protect brand identity. They help prevent consumer confusion and protect the goodwill that businesses build in their brands over time."
+    },
+    {
+      "type": "text",
+      "content": "In India, trademarks are governed by the Trade Marks Act, 1999. Registration provides nationwide protection and exclusive rights to use the mark in connection with the registered goods or services."
+    },
+    {
+      "type": "case_study",
+      "content": "A small Indian tea company developed a unique name and logo for their premium tea blend. After registering the trademark, they discovered another company using a similar mark. The trademark registration gave them legal grounds to stop the infringement and protect their brand identity.",
+      "metadata": {
+        "title": "Tea Brand Protection Case"
+      }
+    }
+  ],
+  "keyTakeaways": [
+    "Trademarks identify and distinguish goods or services from one business",
+    "They can be words, logos, slogans, colors, sounds, or shapes",
+    "Trademarks protect brand identity and prevent consumer confusion",
+    "Registration provides nationwide protection in India",
+    "The ® symbol indicates a registered trademark"
+  ],
+  "quizQuestions": [
+    {
+      "question": "What is the primary purpose of a trademark?",
+      "options": [
+        "To protect creative works",
+        "To identify and distinguish goods or services",
+        "To protect inventions",
+        "To protect trade secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "The primary purpose of a trademark is to identify and distinguish the goods or services of one business from those of others, helping consumers recognize products they trust."
+    },
+    {
+      "question": "Which of the following can be a trademark?",
+      "options": [
+        "Only words",
+        "Only logos",
+        "Words, logos, sounds, colors, and shapes",
+        "Only registered symbols"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trademarks can take many forms including words, logos, slogans, colors, sounds, and even shapes, as long as they are distinctive and identify the source of goods or services."
+    },
+    {
+      "question": "What does the ® symbol indicate?",
+      "options": [
+        "Copyright protection",
+        "Patent pending",
+        "Registered trademark",
+        "Trade secret"
+      ],
+      "correctIndex": 2,
+      "explanation": "The ® symbol indicates that a trademark has been officially registered with the trademark office and the owner has exclusive rights to use it."
+    },
+    {
+      "question": "What is the main difference between copyright and trademark?",
+      "options": [
+        "There is no difference",
+        "Copyright protects creative expression, trademark protects brand identity",
+        "Trademark lasts longer",
+        "Copyright is more expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright protects original creative works and their expression, while trademarks protect brand identity and help distinguish goods or services in the marketplace."
+    },
+    {
+      "question": "Which law governs trademarks in India?",
+      "options": [
+        "Copyright Act, 1957",
+        "Patent Act, 1970",
+        "Trade Marks Act, 1999",
+        "Design Act, 2000"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trademarks in India are governed by the Trade Marks Act, 1999, which provides the legal framework for registration and protection of trademarks."
+    }
+  ],
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-01-15T00:00:00Z"
+}

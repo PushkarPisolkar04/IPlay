@@ -13,12 +13,8 @@ class BadgePopulator {
   Future<void> populateBadges({bool overwrite = false}) async {
     final badges = BadgesData.getAllBadges();
     
-    print('🏅 Starting badge population...');
-    print('Total badges to upload: ${badges.length}');
-
-    int created = 0;
-    int updated = 0;
-    int skipped = 0;
+    // print('🏅 Starting badge population...');
+    // print('Total badges to upload: ${badges.length}');
 
     for (final badge in badges) {
       try {
@@ -26,31 +22,24 @@ class BadgePopulator {
         final doc = await docRef.get();
 
         if (doc.exists && !overwrite) {
-          print('⏭️  Skipping ${badge.id} (already exists)');
-          skipped++;
+          // print('⏭️  Skipping ${badge.id} (already exists)');
           continue;
         }
 
         await docRef.set(badge.toFirestore());
         
         if (doc.exists) {
-          print('🔄 Updated: ${badge.name} (${badge.category})');
-          updated++;
+          // print('🔄 Updated: ${badge.name} (${badge.category})');
         } else {
-          print('✅ Created: ${badge.name} (${badge.category})');
-          created++;
+          // print('✅ Created: ${badge.name} (${badge.category})');
         }
       } catch (e) {
-        print('❌ Error uploading ${badge.id}: $e');
+        // print('❌ Error uploading ${badge.id}: $e');
       }
     }
 
-    print('\n📊 Badge Population Summary:');
-    print('  ✅ Created: $created');
-    print('  🔄 Updated: $updated');
-    print('  ⏭️  Skipped: $skipped');
-    print('  📦 Total: ${created + updated + skipped}/${badges.length}');
-    print('🎉 Badge population complete!');
+    // print('\n📊 Badge Population Summary:');
+    // print('🎉 Badge population complete!');
   }
 
   /// Populate badges by category
@@ -74,11 +63,11 @@ class BadgePopulator {
         badges = BadgesData.getSpecialBadges();
         break;
       default:
-        print('❌ Invalid category: $category');
+        // print('❌ Invalid category: $category');
         return;
     }
 
-    print('🏅 Populating $category badges (${badges.length} total)...');
+    // print('🏅 Populating $category badges (${badges.length} total)...');
 
     for (final badge in badges) {
       try {
@@ -86,23 +75,23 @@ class BadgePopulator {
         final doc = await docRef.get();
 
         if (doc.exists && !overwrite) {
-          print('⏭️  Skipping ${badge.id}');
+          // print('⏭️  Skipping ${badge.id}');
           continue;
         }
 
         await docRef.set(badge.toFirestore());
-        print('✅ Uploaded: ${badge.name}');
+        // print('✅ Uploaded: ${badge.name}');
       } catch (e) {
-        print('❌ Error: $e');
+        // print('❌ Error: $e');
       }
     }
 
-    print('✅ $category badges populated!');
+    // print('✅ $category badges populated!');
   }
 
   /// Delete all badges (use with caution)
   Future<void> clearAllBadges() async {
-    print('🗑️  Deleting all badges...');
+    // print('🗑️  Deleting all badges...');
     
     final snapshot = await _firestore.collection('badges').get();
     final batch = _firestore.batch();
@@ -112,17 +101,17 @@ class BadgePopulator {
     }
 
     await batch.commit();
-    print('✅ All badges deleted (${snapshot.docs.length} total)');
+    // print('✅ All badges deleted (${snapshot.docs.length} total)');
   }
 
   /// Verify badge counts
   Future<void> verifyBadges() async {
-    print('🔍 Verifying badge setup...\n');
+    // print('🔍 Verifying badge setup...\n');
 
     final snapshot = await _firestore.collection('badges').get();
     final totalCount = snapshot.docs.length;
 
-    print('📊 Total badges in Firestore: $totalCount/35');
+    // print('📊 Total badges in Firestore: $totalCount/35');
 
     // Count by category
     final categories = ['milestone', 'streak', 'mastery', 'social', 'special'];
@@ -135,14 +124,13 @@ class BadgePopulator {
           .where((doc) => doc.data()['category'] == category)
           .length;
 
-      final status = actual == expected ? '✅' : '❌';
-      print('$status $category: $actual/$expected');
+      // print('${actual == expected ? '✅' : '❌'} $category: $actual/$expected');
     }
 
     if (totalCount == 35) {
-      print('\n🎉 All badges verified successfully!');
+      // print('\n🎉 All badges verified successfully!');
     } else {
-      print('\n⚠️  Badge count mismatch. Expected 35, found $totalCount');
+      // print('\n⚠️  Badge count mismatch. Expected 35, found $totalCount');
     }
   }
 }

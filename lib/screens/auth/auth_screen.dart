@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -7,11 +7,11 @@ import 'signin_screen.dart';
 
 /// Auth Screen - Main authentication screen (NO SKIP BUTTON)
 class AuthScreen extends StatelessWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+  const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print('✅ AuthScreen: Building auth screen');
+    // print('✅ AuthScreen: Building auth screen');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -33,7 +33,7 @@ class AuthScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -64,7 +64,7 @@ class AuthScreen extends StatelessWidget {
                     Text(
                       'Learn IPR through fun games',
                       style: AppTextStyles.bodyLarge.copyWith(
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),

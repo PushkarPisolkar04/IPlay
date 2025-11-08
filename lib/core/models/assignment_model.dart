@@ -15,6 +15,8 @@ class AssignmentModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isActive;
+  final String? createdBy; // For Firebase security rules
+  final String? schoolId; // For principal access
 
   AssignmentModel({
     required this.id,
@@ -29,6 +31,8 @@ class AssignmentModel {
     required this.createdAt,
     required this.updatedAt,
     this.isActive = true,
+    this.createdBy,
+    this.schoolId,
   });
 
   /// Convert to Firestore document
@@ -46,6 +50,8 @@ class AssignmentModel {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isActive': isActive,
+      'createdBy': createdBy ?? teacherId, // Default to teacherId for backwards compatibility
+      'schoolId': schoolId,
     };
   }
 
@@ -66,6 +72,8 @@ class AssignmentModel {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       isActive: data['isActive'] as bool? ?? true,
+      createdBy: data['createdBy'] as String?,
+      schoolId: data['schoolId'] as String?,
     );
   }
 
@@ -83,6 +91,8 @@ class AssignmentModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isActive,
+    String? createdBy,
+    String? schoolId,
   }) {
     return AssignmentModel(
       id: id ?? this.id,
@@ -97,6 +107,8 @@ class AssignmentModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isActive: isActive ?? this.isActive,
+      createdBy: createdBy ?? this.createdBy,
+      schoolId: schoolId ?? this.schoolId,
     );
   }
 }

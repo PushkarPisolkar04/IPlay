@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../core/constants/app_colors.dart';
-import '../core/constants/app_spacing.dart';
 import '../core/constants/app_text_styles.dart';
 import '../widgets/clean_card.dart';
 
@@ -10,7 +8,7 @@ import '../widgets/clean_card.dart';
 class DailyChallengeCard extends StatefulWidget {
   final VoidCallback? onTap;
 
-  const DailyChallengeCard({Key? key, this.onTap}) : super(key: key);
+  const DailyChallengeCard({super.key, this.onTap});
 
   @override
   State<DailyChallengeCard> createState() => _DailyChallengeCardState();
@@ -85,7 +83,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
         });
       }
     } catch (e) {
-      print('Error loading challenge status: $e');
+      // print('Error loading challenge status: $e');
       setState(() {
         _status = 'locked';
         _isLoading = false;
@@ -97,7 +95,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return CleanCard(
-        child: Container(
+        child: SizedBox(
           height: 120,
           child: const Center(child: CircularProgressIndicator()),
         ),
@@ -112,7 +110,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: _getMainColor().withOpacity(0.3),
+              color: _getMainColor().withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -127,7 +125,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -157,7 +155,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                             margin: const EdgeInsets.only(left: 8),
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Text(
@@ -175,7 +173,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                     Text(
                       _getSubtitle(),
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     if (_status == 'completed') ...[
@@ -185,7 +183,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -208,7 +206,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Row(
@@ -258,7 +256,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
         );
       case 'completed':
         return const LinearGradient(
-          colors: [Color(0xFF56ab2f), Color(0xFF a8e063)],
+          colors: [Color(0xFF56ab2f), Color(0xFFa8e063)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         );

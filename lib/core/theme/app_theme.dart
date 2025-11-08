@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import '../design/app_design_system.dart';
 import '../constants/app_spacing.dart';
 import '../constants/app_text_styles.dart';
 
@@ -11,14 +11,14 @@ class AppTheme {
       
       // Color scheme
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        primary: AppColors.primary,
-        secondary: AppColors.secondary,
-        surface: AppColors.background,
-        error: AppColors.error,
+        seedColor: AppDesignSystem.primaryIndigo,
+        primary: AppDesignSystem.primaryIndigo,
+        secondary: AppDesignSystem.primaryPink,
+        surface: AppDesignSystem.backgroundLight,
+        error: AppDesignSystem.error,
       ),
       
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: AppDesignSystem.backgroundLight,
       fontFamily: AppTextStyles.fontFamily,
       
       // AppBar Theme
@@ -26,8 +26,8 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        foregroundColor: AppColors.textPrimary,
-        iconTheme: IconThemeData(color: AppColors.textPrimary),
+        foregroundColor: AppDesignSystem.textPrimary,
+        iconTheme: IconThemeData(color: AppDesignSystem.textPrimary),
         titleTextStyle: AppTextStyles.h3,
       ),
       
@@ -36,10 +36,10 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: AppRadius.large,
-          side: const BorderSide(color: AppColors.border, width: 1),
+          side: const BorderSide(color: AppDesignSystem.backgroundGrey, width: 1),
         ),
-        color: AppColors.background,
-        shadowColor: AppColors.cardShadow.color,
+        color: AppDesignSystem.backgroundLight,
+        shadowColor: AppDesignSystem.shadowMD.first.color,
       ),
       
       // Button Themes
@@ -50,8 +50,8 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.large,
           ),
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.textWhite,
+          backgroundColor: AppDesignSystem.primaryIndigo,
+          foregroundColor: AppDesignSystem.backgroundWhite,
           textStyle: AppTextStyles.buttonLarge,
         ),
       ),
@@ -62,15 +62,15 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.large,
           ),
-          side: const BorderSide(color: AppColors.primary, width: 2),
-          foregroundColor: AppColors.primary,
+          side: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+          foregroundColor: AppDesignSystem.primaryIndigo,
           textStyle: AppTextStyles.buttonLarge,
         ),
       ),
       
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: AppDesignSystem.primaryIndigo,
           textStyle: AppTextStyles.buttonMedium,
         ),
       ),
@@ -90,21 +90,21 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.large,
-          borderSide: const BorderSide(color: AppColors.primary, width: 2.5),
+          borderSide: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: AppRadius.large,
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
+          borderSide: const BorderSide(color: AppDesignSystem.error, width: 2),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: AppRadius.large,
-          borderSide: const BorderSide(color: AppColors.error, width: 2.5),
+          borderSide: const BorderSide(color: AppDesignSystem.error, width: 2.5),
         ),
         labelStyle: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textSecondary,
+          color: AppDesignSystem.textSecondary,
         ),
         hintStyle: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textTertiary,
+          color: AppDesignSystem.textTertiary,
         ),
       ),
       
@@ -126,14 +126,14 @@ class AppTheme {
       
       // Divider Theme
       dividerTheme: const DividerThemeData(
-        color: AppColors.divider,
+        color: AppDesignSystem.backgroundGrey,
         thickness: 1,
         space: 1,
       ),
       
       // Icon Theme
       iconTheme: const IconThemeData(
-        color: AppColors.textPrimary,
+        color: AppDesignSystem.textPrimary,
         size: 24,
       ),
     );

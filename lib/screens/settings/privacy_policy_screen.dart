@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../widgets/clean_card.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
-  const PrivacyPolicyScreen({Key? key}) : super(key: key);
+  const PrivacyPolicyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Privacy Policy'),
         backgroundColor: Colors.transparent,
@@ -31,7 +31,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        color: AppDesignSystem.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -39,7 +39,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       'Last updated: ${DateTime.now().year}',
                       style: const TextStyle(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: AppDesignSystem.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -136,7 +136,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.primary,
+              color: AppDesignSystem.primaryIndigo,
             ),
           ),
           const SizedBox(height: 8),
@@ -144,7 +144,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             content,
             style: const TextStyle(
               fontSize: 14,
-              color: AppColors.textPrimary,
+              color: AppDesignSystem.textPrimary,
               height: 1.6,
             ),
           ),

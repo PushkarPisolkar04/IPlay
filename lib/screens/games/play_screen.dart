@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import 'ipr_quiz_master_game.dart';
@@ -9,7 +9,7 @@ import 'match_ipr_game.dart';
 
 /// Play/Games Screen - All 7 Games
 class PlayScreen extends StatefulWidget {
-  const PlayScreen({Key? key}) : super(key: key);
+  const PlayScreen({super.key});
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -19,7 +19,6 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _isLoading = true;
   int _totalGameXP = 0;
   int _gamesPlayed = 0;
-  Map<String, int> _gameScores = {};
 
   @override
   void initState() {
@@ -48,25 +47,28 @@ class _PlayScreenState extends State<PlayScreen> {
         if (gameProgress != null) {
           _totalGameXP = (gameProgress['totalXP'] as num?)?.toInt() ?? 0;
           _gamesPlayed = (gameProgress['gamesPlayed'] as num?)?.toInt() ?? 0;
-          
-          final scores = gameProgress['scores'] as Map<String, dynamic>?;
-          if (scores != null) {
-            _gameScores = scores.map((key, value) => MapEntry(key, (value as num).toInt()));
-          }
         }
       }
 
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
-      print('Error loading game data: $e');
-      setState(() => _isLoading = false);
+      // print('Error loading game data: $e');
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
+  }
+
+  Future<void> _refreshData() async {
+    await _loadGameData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
         title: const Text('Play Games', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
@@ -74,9 +76,13 @@ class _PlayScreenState extends State<PlayScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-              child: Column(
+          : RefreshIndicator(
+              onRefresh: _refreshData,
+              color: const Color(0xFFEC4899),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Stats card
@@ -91,7 +97,7 @@ class _PlayScreenState extends State<PlayScreen> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFEC4899).withOpacity(0.3),
+                          color: const Color(0xFFEC4899).withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -122,7 +128,7 @@ class _PlayScreenState extends State<PlayScreen> {
                         Container(
                           width: 1,
                           height: 60,
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                         ),
                         Expanded(
                           child: Column(
@@ -277,6 +283,7 @@ class _PlayScreenState extends State<PlayScreen> {
                     isImplemented: false,
                   ),
                 ],
+                ),
               ),
             ),
     );
@@ -299,7 +306,7 @@ class _PlayScreenState extends State<PlayScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -318,7 +325,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -400,7 +407,7 @@ class _PlayScreenState extends State<PlayScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
