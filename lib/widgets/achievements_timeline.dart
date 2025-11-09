@@ -92,8 +92,7 @@ class AchievementsTimeline extends StatelessWidget {
     return achievements;
   }
 
-  Achievement? _getNextMilestone() {
-    final achievements = _buildAchievements();
+  Achievement? _getNextMilestone(List<Achievement> achievements) {
     return achievements.firstWhere(
       (a) => !a.achieved,
       orElse: () => achievements.last,
@@ -103,7 +102,7 @@ class AchievementsTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final achievements = _buildAchievements();
-    final nextMilestone = _getNextMilestone();
+    final nextMilestone = _getNextMilestone(achievements);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

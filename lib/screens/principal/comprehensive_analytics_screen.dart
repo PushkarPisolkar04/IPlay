@@ -624,7 +624,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
-                        realmNames[realmId] ?? realmId,
+                        AppConstants.realmNames[realmId] ?? realmId,
                         style: const TextStyle(fontSize: 10),
                       ),
                     );

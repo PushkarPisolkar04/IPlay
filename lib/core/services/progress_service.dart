@@ -111,9 +111,9 @@ class ProgressService {
 
       final batch = _firestore.batch();
 
-      // Update realm progress using top-level collection with composite ID
-      // Format: userId__realmId__levelNumber
-      final progressDocId = '${userId}__${realmId}_level_$levelNumber';
+      // Update realm progress using per-realm document
+      // Format: userId__realmId
+      final progressDocId = '${userId}__$realmId';
       final progressRef = _firestore
           .collection('progress')
           .doc(progressDocId);
@@ -122,29 +122,35 @@ class ProgressService {
       
       if (progressDoc.exists) {
         // Update existing progress
+        final currentData = progressDoc.data()!;
+        final completedLevels = List<int>.from(currentData['completedLevels'] ?? []);
+        
+        // Add level to completed list if not already there
+        if (!completedLevels.contains(levelNumber)) {
+          completedLevels.add(levelNumber);
+        }
+        
+        // Sort completed levels
+        completedLevels.sort();
+        
+        // Current level is the next uncompleted level
+        final currentLevel = completedLevels.length + 1;
+        
         batch.update(progressRef, {
+          'completedLevels': completedLevels,
+          'currentLevelNumber': currentLevel,
           'xpEarned': FieldValue.increment(xpEarned),
-          'attemptsCount': FieldValue.increment(1),
-          'lastAttemptAt': Timestamp.now(),
-          'completedAt': Timestamp.now(),
-          'status': 'completed',
+          'lastAccessedAt': Timestamp.now(),
         });
       } else {
         // Create new progress document
         final newProgress = {
           'userId': userId,
-          'contentId': '${realmId}_level_$levelNumber',
-          'contentType': 'level',
-          'contentVersion': '1.0.0',
-          'status': 'completed',
-          'completionPercentage': 100,
+          'realmId': realmId,
+          'completedLevels': [levelNumber],
+          'currentLevelNumber': levelNumber + 1,
           'xpEarned': xpEarned,
-          'attemptsCount': 1,
-          'accuracy': (quizScore / totalQuestions * 100).round(),
-          'timeSpentSeconds': 0, // TODO: Track time spent
-          'startedAt': Timestamp.now(),
-          'completedAt': Timestamp.now(),
-          'lastAttemptAt': Timestamp.now(),
+          'lastAccessedAt': Timestamp.now(),
         };
         batch.set(progressRef, newProgress);
       }
@@ -293,19 +299,14 @@ class ProgressService {
   /// Reset progress for a realm (for testing/admin purposes)
   Future<void> resetRealmProgress(String userId, String realmId) async {
     try {
-      // Delete all progress documents for this user and realm
-      final snapshot = await _firestore
-          .collection('progress')
-          .where('userId', isEqualTo: userId)
-          .where('contentId', isGreaterThanOrEqualTo: '${realmId}_')
-          .where('contentId', isLessThan: '${realmId}_\uf8ff')
-          .get();
+      // Delete the progress document for this user and realm
+      final docId = '${userId}__$realmId';
+      await _firestore.collection('progress').doc(docId).delete();
       
-      final batch = _firestore.batch();
-      for (final doc in snapshot.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit();
+      // Also clear from user's progressSummary
+      await _firestore.collection('users').doc(userId).update({
+        'progressSummary.$realmId': FieldValue.delete(),
+      });
     } catch (e) {
       // print('Error resetting progress: $e');
       rethrow;

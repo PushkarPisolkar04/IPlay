@@ -166,74 +166,58 @@ class OfflineSyncService {
     final contentId = progress['content_id'] as String;
     final contentType = progress['content_type'] as String;
     final xpEarned = progress['xp_earned'] as int;
-    final completionPercentage = progress['completion_percentage'] as int;
-    final accuracy = progress['accuracy'] as int?;
-    final timeSpentSeconds = progress['time_spent_seconds'] as int?;
-    final startedAt = progress['started_at'] as int;
     final completedAt = progress['completed_at'] as int?;
-
-    // Create progress document ID
-    final progressDocId = '${userId}__$contentId';
-    final progressRef = _firestore.collection('progress').doc(progressDocId);
 
     final batch = _firestore.batch();
 
-    // Check if progress already exists
-    final existingDoc = await progressRef.get();
-
-    if (existingDoc.exists) {
-      // Update existing progress
-      batch.update(progressRef, {
-        'xpEarned': FieldValue.increment(xpEarned),
-        'attemptsCount': FieldValue.increment(1),
-        'lastAttemptAt': Timestamp.now(),
-        'completedAt': completedAt != null
-            ? Timestamp.fromMillisecondsSinceEpoch(completedAt)
-            : FieldValue.serverTimestamp(),
-        'status': 'completed',
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } else {
-      // Create new progress document
-      batch.set(progressRef, {
-        'userId': userId,
-        'contentId': contentId,
-        'contentType': contentType,
-        'contentVersion': '1.0.0',
-        'status': 'completed',
-        'completionPercentage': completionPercentage,
-        'xpEarned': xpEarned,
-        'attemptsCount': 1,
-        'accuracy': accuracy ?? 0,
-        'timeSpentSeconds': timeSpentSeconds ?? 0,
-        'startedAt': Timestamp.fromMillisecondsSinceEpoch(startedAt),
-        'completedAt': completedAt != null
-            ? Timestamp.fromMillisecondsSinceEpoch(completedAt)
-            : FieldValue.serverTimestamp(),
-        'lastAttemptAt': Timestamp.now(),
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    }
-
-    // Update user's total XP
-    final userRef = _firestore.collection('users').doc(userId);
-    batch.update(userRef, {
-      'totalXP': FieldValue.increment(xpEarned),
-      'lastActiveDate': FieldValue.serverTimestamp(),
-      'updatedAt': FieldValue.serverTimestamp(),
-    });
-
-    // If it's a level completion, update progressSummary
+    // If it's a level completion, update per-realm progress
     if (contentType == 'level' && contentId.contains('_level_')) {
       final parts = contentId.split('_level_');
       if (parts.length == 2) {
-        final realmId = 'realm_${parts[0]}';
+        final realmId = parts[0];
         final levelNumber = int.tryParse(parts[1]);
         
         if (levelNumber != null) {
-          // Get current user data to update progressSummary
+          // Update per-realm progress document
+          final progressDocId = '${userId}__$realmId';
+          final progressRef = _firestore.collection('progress').doc(progressDocId);
+          
+          final progressDoc = await progressRef.get();
+          
+          if (progressDoc.exists) {
+            // Update existing progress
+            final currentData = progressDoc.data()!;
+            final completedLevels = List<int>.from(currentData['completedLevels'] ?? []);
+            
+            if (!completedLevels.contains(levelNumber)) {
+              completedLevels.add(levelNumber);
+            }
+            completedLevels.sort();
+            
+            final currentLevel = completedLevels.length + 1;
+            
+            batch.update(progressRef, {
+              'completedLevels': completedLevels,
+              'currentLevelNumber': currentLevel,
+              'xpEarned': FieldValue.increment(xpEarned),
+              'lastAccessedAt': Timestamp.now(),
+            });
+          } else {
+            // Create new progress document
+            batch.set(progressRef, {
+              'userId': userId,
+              'realmId': realmId,
+              'completedLevels': [levelNumber],
+              'currentLevelNumber': levelNumber + 1,
+              'xpEarned': xpEarned,
+              'lastAccessedAt': Timestamp.now(),
+            });
+          }
+          
+          // Update user's progressSummary
+          final userRef = _firestore.collection('users').doc(userId);
           final userDoc = await userRef.get();
+          
           if (userDoc.exists) {
             final userData = userDoc.data();
             final progressSummary = userData?['progressSummary'] ?? {};
@@ -249,6 +233,9 @@ class OfflineSyncService {
             final isCompleted = levelsCompleted.length >= totalLevels;
             
             batch.update(userRef, {
+              'totalXP': FieldValue.increment(xpEarned),
+              'lastActiveDate': FieldValue.serverTimestamp(),
+              'updatedAt': FieldValue.serverTimestamp(),
               'progressSummary.$realmId': {
                 'completed': isCompleted,
                 'levelsCompleted': levelsCompleted.length,
@@ -260,6 +247,14 @@ class OfflineSyncService {
           }
         }
       }
+    } else {
+      // For non-level content, just update user XP
+      final userRef = _firestore.collection('users').doc(userId);
+      batch.update(userRef, {
+        'totalXP': FieldValue.increment(xpEarned),
+        'lastActiveDate': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
     }
 
     // Commit the batch

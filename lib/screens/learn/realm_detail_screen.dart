@@ -36,6 +36,10 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
   bool _isDownloaded = false;
   bool _isDownloading = false;
   double _downloadProgress = 0.0;
+  
+  // Cached XP calculations
+  int _cachedEarnedXP = 0;
+  int _cachedTotalXP = 0;
 
   @override
   void initState() {
@@ -64,6 +68,9 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
           });
         }
       }
+      
+      // Calculate cached XP values
+      _updateCachedXP();
     } catch (e) {
       // print('Error loading realm data: $e');
     } finally {
@@ -71,6 +78,16 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
         _isLoading = false;
       });
     }
+  }
+  
+  void _updateCachedXP() {
+    _cachedEarnedXP = 0;
+    for (final level in _levels) {
+      if (_completedLevels.contains(level.levelNumber)) {
+        _cachedEarnedXP += level.xpReward;
+      }
+    }
+    _cachedTotalXP = _levels.fold(0, (sum, level) => sum + level.xpReward);
   }
 
   Future<void> _downloadRealmForOffline() async {
@@ -320,17 +337,11 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
   }
 
   int _getEarnedXP() {
-    int totalXP = 0;
-    for (final level in _levels) {
-      if (_completedLevels.contains(level.levelNumber)) {
-        totalXP += level.xpReward;
-      }
-    }
-    return totalXP;
+    return _cachedEarnedXP;
   }
 
   int _getTotalXP() {
-    return _levels.fold(0, (sum, level) => sum + level.xpReward);
+    return _cachedTotalXP;
   }
   
   @override

@@ -10,6 +10,8 @@ class AppDesignSystem {
   static const Color primaryPink = Color(0xFFEC4899);
   static const Color primaryGreen = Color(0xFF10B981);
   static const Color primaryAmber = Color(0xFFF59E0B);
+  static const Color primaryTeal = Color(0xFF14B8A6);
+  static const Color primaryOrange = Color(0xFFF97316);
 
   // ============================================================================
   // SECONDARY COLORS

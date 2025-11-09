@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/design/app_design_system.dart';
 import '../../services/simplified_chat_service.dart';
-import '../../widgets/cached_avatar.dart';
+import '../../widgets/avatar_widget.dart';
 import '../../widgets/loading_skeleton.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -124,10 +124,9 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            CachedAvatar(
-              avatarUrl: widget.otherUserAvatar,
-              fallbackText: widget.otherUserName,
-              radius: 16,
+            AvatarWidget(
+              initials: widget.otherUserName.substring(0, 1).toUpperCase(),
+              size: 32,
               backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
             ),
             const SizedBox(width: 12),

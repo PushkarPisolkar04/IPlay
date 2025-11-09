@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import '../core/design/app_design_system.dart';
+import '../core/providers/notification_provider.dart';
 
-/// Notification bell icon with real-time unread count badge
+/// Notification bell icon with cached unread count badge
 class NotificationBellIcon extends StatelessWidget {
   const NotificationBellIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    
-    if (user == null) {
-      return const SizedBox.shrink();
-    }
-
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('notifications')
-          .where('toUserId', isEqualTo: user.uid)
-          .where('read', isEqualTo: false)
-          .snapshots(),
-      builder: (context, snapshot) {
-        final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+    return Consumer<NotificationProvider>(
+      builder: (context, notificationProvider, child) {
+        final unreadCount = notificationProvider.unreadCount;
 
         return Stack(
           children: [

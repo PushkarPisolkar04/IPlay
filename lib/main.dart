@@ -6,6 +6,7 @@ import 'core/services/firebase_service.dart';
 import 'core/services/service_initializer.dart';
 import 'core/services/crash_recovery_service.dart';
 import 'core/providers/user_provider.dart';
+import 'core/providers/notification_provider.dart';
 import 'screens/splash/splash_screen.dart';
 import 'screens/auth/auth_screen.dart';
 import 'screens/auth/role_selection_screen.dart';
@@ -146,6 +147,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()..initialize()),
       ],
       child: MaterialApp(
         navigatorKey: _navigatorKey,

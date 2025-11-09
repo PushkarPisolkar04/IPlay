@@ -24,6 +24,10 @@ class _LearnScreenState extends State<LearnScreen> {
   Map<String, dynamic> _userProgress = {};
   Set<String> _downloadedRealms = {};
   bool _isLoading = true;
+  
+  // Cached calculations to avoid recomputing in build
+  int _cachedTotalXP = 0;
+  int _cachedCompletedRealms = 0;
 
   @override
   void initState() {
@@ -62,6 +66,7 @@ class _LearnScreenState extends State<LearnScreen> {
           if (mounted) {
             setState(() {
               _userProgress = userDoc.data()?['progressSummary'] ?? {};
+              _updateCachedStats();
             });
           }
         }
@@ -75,6 +80,22 @@ class _LearnScreenState extends State<LearnScreen> {
         });
       }
     }
+  }
+  
+  void _updateCachedStats() {
+    _cachedTotalXP = 0;
+    _cachedCompletedRealms = 0;
+    
+    _userProgress.forEach((key, value) {
+      if (value is Map) {
+        if (value.containsKey('xpEarned')) {
+          _cachedTotalXP += (value['xpEarned'] as num).toInt();
+        }
+        if (value['completed'] == true) {
+          _cachedCompletedRealms++;
+        }
+      }
+    });
   }
 
   Future<void> _refreshData() async {
@@ -97,23 +118,11 @@ class _LearnScreenState extends State<LearnScreen> {
   }
 
   int _getTotalXP() {
-    int totalXP = 0;
-    _userProgress.forEach((key, value) {
-      if (value is Map && value.containsKey('xpEarned')) {
-        totalXP += (value['xpEarned'] as num).toInt();
-      }
-    });
-    return totalXP;
+    return _cachedTotalXP;
   }
 
   int _getCompletedRealms() {
-    int count = 0;
-    _userProgress.forEach((key, value) {
-      if (value is Map && value['completed'] == true) {
-        count++;
-      }
-    });
-    return count;
+    return _cachedCompletedRealms;
   }
 
   Widget _buildStatChip(IconData icon, String text) {

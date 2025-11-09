@@ -10,6 +10,7 @@ import '../../widgets/avatar_widget.dart';
 import '../../widgets/stat_card.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../widgets/notification_bell_icon.dart';
 import '../settings/settings_screen.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
 import 'create_classroom_screen.dart';
@@ -179,6 +180,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
   String? _schoolId;
   String? _schoolName;
   Map<String, dynamic>? _schoolData;
+  List<Map<String, dynamic>> _classrooms = [];
   
   int _totalClassrooms = 0;
   int _totalStudents = 0;
@@ -226,6 +228,16 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
             .get();
         
         _totalClassrooms = classroomsSnapshot.docs.length;
+        
+        // Populate classrooms list for assignment creation
+        _classrooms = classroomsSnapshot.docs.map((doc) {
+          final data = doc.data();
+          return {
+            'id': doc.id,
+            'name': data['name'] ?? 'Unnamed Classroom',
+            'studentCount': data['studentIds']?.length ?? 0,
+          };
+        }).toList();
         
       int totalStudentsCount = 0;
       int activeCount = 0;
@@ -384,58 +396,7 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                           Row(
                             children: [
                               // Notification bell icon
-                              StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('notifications')
-                                    .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                                    .where('read', isEqualTo: false)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
-                                  
-                                  return Stack(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pushNamed(context, '/notifications');
-                                        },
-                                      ),
-                                      if (unreadCount > 0)
-                                        Positioned(
-                                          right: 8,
-                                          top: 8,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            constraints: const BoxConstraints(
-                                              minWidth: 18,
-                                              minHeight: 18,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                unreadCount > 99 ? '99+' : unreadCount.toString(),
-                                                style: TextStyle(
-                                                  color: AppDesignSystem.primaryPink,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
-                              ),
+                              const NotificationBellIcon(),
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),

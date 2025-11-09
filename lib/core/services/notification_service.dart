@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +8,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  
+  // Stream subscriptions for proper disposal
+  StreamSubscription<String>? _tokenRefreshSubscription;
+  StreamSubscription<RemoteMessage>? _foregroundMessageSubscription;
+  StreamSubscription<RemoteMessage>? _messageOpenedAppSubscription;
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
@@ -46,7 +52,7 @@ class NotificationService {
       }
 
       // Listen for token refresh
-      _fcm.onTokenRefresh.listen((newToken) async {
+      _tokenRefreshSubscription = _fcm.onTokenRefresh.listen((newToken) async {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           await _firestore.collection('users').doc(user.uid).update({
@@ -57,7 +63,7 @@ class NotificationService {
       });
 
       // Handle foreground messages
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _foregroundMessageSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         // print('Got a message whilst in the foreground!');
         // print('Message data: ${message.data}');
 
@@ -68,7 +74,7 @@ class NotificationService {
       });
 
       // Handle background message tap
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      _messageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         // print('Message clicked!');
         _handleNotificationTap(message);
       });
@@ -210,5 +216,12 @@ class NotificationService {
     // print('Notification tapped: ${message.data}');
     // Navigate to appropriate screen based on notification data
     // This can be handled in main.dart with a global navigator key
+  }
+  
+  /// Dispose and clean up subscriptions
+  void dispose() {
+    _tokenRefreshSubscription?.cancel();
+    _foregroundMessageSubscription?.cancel();
+    _messageOpenedAppSubscription?.cancel();
   }
 }

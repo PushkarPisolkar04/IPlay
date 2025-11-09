@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,6 +33,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _certificateCount = 0;
   int _bookmarkCount = 0;
   bool _isLoading = true;
+  
+  // Stream subscriptions for proper disposal
+  StreamSubscription<QuerySnapshot>? _bookmarkSubscription;
+  StreamSubscription<DocumentSnapshot>? _userSubscription;
+  StreamSubscription<List<dynamic>>? _certificateSubscription;
 
   @override
   void initState() {
@@ -46,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       // Listen to bookmark changes in real-time
-      BookmarkService().getBookmarksStream().listen((snapshot) {
+      _bookmarkSubscription = BookmarkService().getBookmarksStream().listen((snapshot) {
         if (mounted) {
           setState(() {
             _bookmarkCount = snapshot.docs.length;
@@ -59,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _setupRealtimeListener() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      FirebaseFirestore.instance
+      _userSubscription = FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
           .snapshots()
@@ -79,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       // Listen to certificate changes in real-time
-      _certificateService.watchUserCertificates(currentUser.uid).listen((certificates) {
+      _certificateSubscription = _certificateService.watchUserCertificates(currentUser.uid).listen((certificates) {
         if (mounted) {
           setState(() {
             _certificateCount = certificates.length;
@@ -149,6 +155,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (e) {
       // print('Error loading classroom info: $e');
     }
+  }
+  
+  @override
+  void dispose() {
+    _bookmarkSubscription?.cancel();
+    _userSubscription?.cancel();
+    _certificateSubscription?.cancel();
+    super.dispose();
   }
 
   // Calculate user level from total XP
