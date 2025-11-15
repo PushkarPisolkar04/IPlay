@@ -434,9 +434,13 @@ service cloud.firestore {
     // No student-to-student messaging, no group chats
     // ============================================================================
     match /chats/{chatId} {
-      // Only participants can read - allow both get and list operations
-      allow get, list: if isAuthenticated() && 
-                          request.auth.uid in resource.data.participants;
+      // Helper function to check if user is participant in this chat
+      function isChatParticipant() {
+        return request.auth.uid in resource.data.participants;
+      }
+      
+      // Only participants can read chats
+      allow read: if isAuthenticated() && isChatParticipant();
       
       // Both teachers and students can create chats (teacher-to-student only)
       allow create: if (isTeacher() || isStudent()) && 
@@ -444,27 +448,26 @@ service cloud.firestore {
                        request.auth.uid in request.resource.data.participants &&
                        request.resource.data.participants.size() == 2;
       
-      // No group chats allowed
-      allow create: if false && request.resource.data.type == 'group';
-      
       // Participants can update (for read receipts, last message)
-      allow update: if isAuthenticated() && 
-                       request.auth.uid in resource.data.participants;
+      allow update: if isAuthenticated() && isChatParticipant();
       
       // Messages subcollection
       match /messages/{messageId} {
+        // Helper function to check if user is participant
+        function isParticipant() {
+          return request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        }
+        
         // Participants can read messages - allow both get and list
-        allow get, list: if isAuthenticated() && 
-                            request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        allow read: if isAuthenticated() && isParticipant();
         
         // Participants can send messages (with content moderation)
         allow create: if isAuthenticated() && 
-                         request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants &&
+                         isParticipant() &&
                          request.resource.data.senderId == request.auth.uid;
         
         // Participants can update (for read receipts)
-        allow update: if isAuthenticated() && 
-                         request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        allow update: if isAuthenticated() && isParticipant();
         
         // Messages cannot be deleted
         allow delete: if false;

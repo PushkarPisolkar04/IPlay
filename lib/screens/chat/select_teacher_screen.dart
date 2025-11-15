@@ -34,7 +34,7 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
       if (classroomIds.isEmpty) return [];
 
       Set<String> teacherIds = {};
-      Map<String, String> teacherClassrooms = {};
+      Map<String, Map<String, dynamic>> teacherClassroomInfo = {};
 
       // Get teachers from classrooms
       for (String classroomId in classroomIds) {
@@ -48,9 +48,15 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
         final classroomData = classroomDoc.data()!;
         final teacherId = classroomData['teacherId'] as String;
         final classroomName = classroomData['name'] as String;
+        final grade = classroomData['grade'] ?? '';
+        final section = classroomData['section'] ?? '';
 
         teacherIds.add(teacherId);
-        teacherClassrooms[teacherId] = classroomName;
+        teacherClassroomInfo[teacherId] = {
+          'name': classroomName,
+          'grade': grade,
+          'section': section,
+        };
       }
 
       List<Map<String, dynamic>> teachers = [];
@@ -66,11 +72,15 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
 
         final teacherData = teacherDoc.data()!;
 
+        final classroomInfo = teacherClassroomInfo[teacherId];
         teachers.add({
           'id': teacherId,
           'name': teacherData['displayName'] ?? 'Teacher',
           'avatarUrl': teacherData['avatarUrl'],
-          'classroom': teacherClassrooms[teacherId] ?? 'Unknown',
+          'email': teacherData['email'],
+          'classroom': classroomInfo?['name'] ?? 'Unknown',
+          'grade': classroomInfo?['grade'] ?? '',
+          'section': classroomInfo?['section'] ?? '',
         });
       }
 
@@ -245,26 +255,51 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
                       const SizedBox(height: 4),
                       Text(
                         teacher['classroom'],
-                        style: TextStyle(
-                          color: AppDesignSystem.textSecondary,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          'Teacher',
+                      if (teacher['grade'] != null && teacher['grade'].toString().isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          'Grade ${teacher['grade']}${teacher['section'] != null && teacher['section'].toString().isNotEmpty ? ' - ${teacher['section']}' : ''}',
                           style: TextStyle(
-                            color: AppDesignSystem.primaryIndigo,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
+                            color: AppDesignSystem.textSecondary,
+                            fontSize: 13,
                           ),
                         ),
+                      ],
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.school,
+                                  size: 12,
+                                  color: AppDesignSystem.primaryIndigo,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Teacher',
+                                  style: TextStyle(
+                                    color: AppDesignSystem.primaryIndigo,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
