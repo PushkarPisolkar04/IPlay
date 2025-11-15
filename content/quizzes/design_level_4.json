@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "design_level_4",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "design_4_q1",
+      "question": "Note: This level content is pending. What is industrial design?",
+      "options": [
+        "Factory design",
+        "Visual appearance of products",
+        "Manufacturing process",
+        "Business strategy"
+      ],
+      "correctIndex": 1,
+      "explanation": "Industrial design protects the visual appearance of products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q2",
+      "question": "Which Act governs designs in India?",
+      "options": [
+        "Designs Act, 2000",
+        "Copyright Act, 1957",
+        "Patent Act, 1970",
+        "Trade Marks Act, 1999"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Designs Act, 2000 governs industrial design protection in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q3",
+      "question": "What must a design be to qualify for protection?",
+      "options": [
+        "Expensive",
+        "Novel and original",
+        "Colorful",
+        "Large"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design must be both novel (new) and original (not obvious) to qualify for protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q4",
+      "question": "Can functional features be protected as designs?",
+      "options": [
+        "Yes, always",
+        "No, only aesthetic features",
+        "Only if patented",
+        "Only if expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only aesthetic features can be protected as designs; functional features are protected by patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q5",
+      "question": "What is the term of design protection?",
+      "options": [
+        "5 years",
+        "10 years, extendable to 15",
+        "20 years",
+        "Life + 60 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design protection lasts 10 years from registration, extendable for another 5 years.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q6",
+      "question": "What is design infringement?",
+      "options": [
+        "Using similar colors",
+        "Unauthorized copying of a registered design",
+        "Using same materials",
+        "Selling at lower price"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design infringement is unauthorized copying or imitation of a registered design.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q7",
+      "question": "What is the grace period for design registration in India?",
+      "options": [
+        "No grace period",
+        "6 months",
+        "12 months",
+        "24 months"
+      ],
+      "correctIndex": 1,
+      "explanation": "India provides a 6-month grace period for registration after disclosure by the applicant.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q8",
+      "question": "Can you register a design for multiple products?",
+      "options": [
+        "Yes, one registration covers all",
+        "No, separate registration for each class",
+        "Only similar products",
+        "Only with extra fee"
+      ],
+      "correctIndex": 1,
+      "explanation": "Separate registrations are needed for different product classes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q9",
+      "question": "What is prior art in design law?",
+      "options": [
+        "Ancient art",
+        "All existing designs before filing date",
+        "Only registered designs",
+        "Only famous designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art includes all existing designs and publications before the filing date.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q10",
+      "question": "Who can apply for design registration?",
+      "options": [
+        "Only companies",
+        "The creator or their assignee",
+        "Only government",
+        "Only manufacturers"
+      ],
+      "correctIndex": 1,
+      "explanation": "The creator of the design or their assignee can apply for registration.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q11",
+      "question": "What is the 'eye appeal' test?",
+      "options": [
+        "A vision test",
+        "Design must be judged by visual appearance",
+        "A color test",
+        "A size test"
+      ],
+      "correctIndex": 1,
+      "explanation": "The eye appeal test means designs are judged by their visual appearance, not function.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q12",
+      "question": "Can a design be cancelled after registration?",
+      "options": [
+        "No, never",
+        "Yes, if it lacks novelty or was wrongly registered",
+        "Only by owner",
+        "Only after 10 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design can be cancelled if found to lack novelty or if wrongly registered.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q13",
+      "question": "What remedies are available for infringement?",
+      "options": [
+        "Only warnings",
+        "Injunction, damages, and account of profits",
+        "No remedies",
+        "Only apology"
+      ],
+      "correctIndex": 1,
+      "explanation": "Remedies include injunction, damages, and account of profits from infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q14",
+      "question": "What is design piracy?",
+      "options": [
+        "Sea theft",
+        "Unauthorized copying of designs",
+        "Legal copying",
+        "Licensing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design piracy is unauthorized copying or imitation of registered designs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q15",
+      "question": "Can you license a registered design?",
+      "options": [
+        "No, never",
+        "Yes, design rights can be licensed",
+        "Only to family",
+        "Only to government"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registered design rights can be licensed to others for use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q16",
+      "question": "What is the 'must-fit' exception?",
+      "options": [
+        "Designs for clothing",
+        "Features dictated solely by function cannot be protected",
+        "Designs for furniture",
+        "Designs for shoes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The must-fit exception means purely functional features cannot be protected as designs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q17",
+      "question": "What is design assignment?",
+      "options": [
+        "Homework",
+        "Transfer of design ownership",
+        "Design testing",
+        "Design approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design assignment is the transfer of design ownership from one party to another.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q18",
+      "question": "Can you claim priority from a foreign application?",
+      "options": [
+        "No, never",
+        "Yes, within 6 months under Paris Convention",
+        "Only from neighboring countries",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Priority can be claimed from a foreign application filed within 6 months under Paris Convention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q19",
+      "question": "What is the informed user test?",
+      "options": [
+        "A test for designers",
+        "Test to determine if designs create different impressions",
+        "A test for manufacturers",
+        "A test for price"
+      ],
+      "correctIndex": 1,
+      "explanation": "The informed user test determines if designs create different overall impressions to a knowledgeable user.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q20",
+      "question": "What is design freedom?",
+      "options": [
+        "Freedom to copy",
+        "Range of design choices available",
+        "Freedom from registration",
+        "Freedom from fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design freedom refers to the range of design choices available when creating a product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q21",
+      "question": "Who can file an infringement suit?",
+      "options": [
+        "Anyone",
+        "The registered proprietor",
+        "Only government",
+        "Only lawyers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only the registered proprietor (owner) can file a design infringement suit.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q22",
+      "question": "What is the role of design drawings?",
+      "options": [
+        "For decoration",
+        "To clearly show the design for registration",
+        "For marketing",
+        "For pricing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design drawings clearly show the design's appearance for registration purposes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q23",
+      "question": "Can a design be restored after lapse?",
+      "options": [
+        "No, never",
+        "Yes, within prescribed time limits",
+        "Only by court order",
+        "Only if expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "A lapsed design can be restored within prescribed time limits upon payment of fees.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_4_q24",
+      "question": "What is the benefit of design registration?",
+      "options": [
+        "No benefit",
+        "Exclusive rights to use and prevent copying",
+        "Only marketing benefit",
+        "Only tax benefit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration provides exclusive rights to use the design and prevent copying.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_4_q25",
+      "question": "What is design prosecution?",
+      "options": [
+        "Criminal case",
+        "Process of obtaining design registration",
+        "Design testing",
+        "Design manufacturing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design prosecution is the process of obtaining design registration through the Design Office.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

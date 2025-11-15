@@ -1,0 +1,39 @@
+{
+  "id": "trademark_level_6",
+  "realmId": "realm_trademark",
+  "levelNumber": 6,
+  "name": "Passing Off (Protecting Unregistered Marks)",
+  "description": "What if your brand isn't registered? Learn about 'Passing Off', the common law right to protect your reputation.",
+  "summary": "This level explains the crucial tort of 'Passing Off', which protects unregistered trademarks (those using ™). You'll learn the 'Classical Trinity' (Goodwill, Misrepresentation, Damage) required to win a case.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=OSjRQxvH2SU",
+  "videoDuration": 270,
+  
+  "content": "## Passing Off (Protecting Unregistered Marks)\n\nIn the last level, we saw that 'Infringement' is the legal action you take when you have a **registered** trademark (®). \n\nBut what if your mark isn't registered? What if you only have a ™? Do you have any rights? \n\nYes! You are protected by a 'common law' action called **Passing Off**. \n\nThe core idea of passing off is simple:\n> **'No one has any right to represent their goods as the goods of somebody else.'**\n\nIt's not about a 'registered right'; it's about protecting your 'business reputation' or **'Goodwill'** from being stolen by a competitor who is deceiving the public.\n\n### The 'Classical Trinity': The 3 Tests for Passing Off\n\nTo win a passing off case, you must prove three specific things to the court. This is much harder than an infringement case, where you just show your registration certificate.\n\n1.  **Goodwill or Reputation:** You must prove that you have built a reputation in the market. You must show that customers *associate* your mark (e.t., 'Amar Sweets') with *your* specific business. (e.g., sales figures, ad spend, customer surveys).\n\n2.  **Misrepresentation:** You must prove that the new company is using a similar mark (e.t., 'New Amar Sweets') in a way that *misrepresents* a connection to you. You must prove this will cause, or is likely to cause, *confusion* in the minds of consumers.\n\n3.  **Damage:** You must prove that you have suffered (or are likely to suffer) *damage* to your business as a result of this confusion. This damage can be a loss of sales (customers going to them by mistake) or damage to your *reputation* (if their product is low-quality).\n\n--- \n\n### 💡 Level 6 Case Study: 'Amar Sweets' vs. 'New Amar Sweets'\n\n* **The Original:** 'Amar Sweets' is a famous local shop in Jaipur, running for 30 years. It's well-known, but the owner never registered the trademark. He uses 'Amar Sweets™'.\n* **The Newcomer:** A new shop opens across the street called 'Shri Amar Sweets'.\n* **The Lawsuit:** The original owner sues for **Passing Off**. \n\n* **The Verdict:** The owner of 'Amar Sweets' will likely win if he can prove the 'Trinity':\n    1.  **Goodwill:** Yes, 30 years of business and a loyal customer base prove he has a strong reputation.\n    2.  **Misrepresentation:** Yes, a competitor opening next door with a nearly identical name is a clear attempt to confuse customers into thinking it's a branch or the same business.\n    3.  **Damage:** Yes, he can show that customers are confused, and he is losing sales to the imposter.\n\nThis is why 'Passing Off' is a vital tool for small, local businesses who have a strong reputation but may not have a formal registration.",
+  
+  "keyPoints": [
+    "Passing Off is a legal action to protect UNREGISTERED (™) marks.",
+    "It is a 'common law' right based on protecting 'Goodwill' and 'Reputation'.",
+    "It prevents a competitor from 'passing off' their goods as if they were yours.",
+    "To win, you must prove the 'Classical Trinity': Goodwill, Misrepresentation, and Damage.",
+    "Infringement (for ®) is a statutory right, while Passing Off (for ™) is a common law right and is harder to prove."
+  ],
+  
+  "learningObjectives": [
+    "Define 'Passing Off' and identify when it is used.",
+    "Differentiate between a 'Passing Off' action (for ™) and an 'Infringement' action (for ®).",
+    "List the three elements of the 'Classical Trinity' (Goodwill, Misrepresentation, Damage).",
+    "Analyze a case study (like a local shop) and apply the three-step test."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:00:00Z"
+}

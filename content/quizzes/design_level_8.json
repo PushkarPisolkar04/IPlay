@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "design_level_8",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "design_8_q1",
+      "question": "What is international design protection?",
+      "options": [
+        "Domestic only",
+        "Protecting designs in multiple countries",
+        "Export license",
+        "Import permit"
+      ],
+      "correctIndex": 1,
+      "explanation": "International design protection involves securing design rights in multiple countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q2",
+      "question": "What is the Hague System?",
+      "options": [
+        "A weather system",
+        "International design registration system",
+        "A tax system",
+        "A trade system"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Hague System allows international registration of industrial designs in multiple countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q3",
+      "question": "Is India a member of the Hague System?",
+      "options": [
+        "Yes",
+        "No, but considering joining",
+        "Yes, since 2000",
+        "Banned from joining"
+      ],
+      "correctIndex": 1,
+      "explanation": "India is not currently a member of the Hague System but has been considering joining.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q4",
+      "question": "What is design harmonization?",
+      "options": [
+        "Musical designs",
+        "Aligning design laws across countries",
+        "Color matching",
+        "Price matching"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design harmonization is the process of aligning design laws and procedures across countries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q5",
+      "question": "Can you register the same design in multiple countries?",
+      "options": [
+        "No, never",
+        "Yes, through separate applications or Hague System",
+        "Only in neighboring countries",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "You can register the same design in multiple countries through separate applications or the Hague System.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q6",
+      "question": "What is design priority under Paris Convention?",
+      "options": [
+        "VIP treatment",
+        "Right to claim earlier filing date within 6 months",
+        "Fast processing",
+        "Discount"
+      ],
+      "correctIndex": 1,
+      "explanation": "Paris Convention allows claiming priority from a foreign application filed within 6 months.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q7",
+      "question": "What is design territoriality?",
+      "options": [
+        "Land ownership",
+        "Design rights are limited to the country of registration",
+        "Geographic design",
+        "Regional design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design territoriality means design rights are limited to the country where they are registered.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q8",
+      "question": "Can you enforce Indian design rights in the US?",
+      "options": [
+        "Yes, automatically",
+        "No, need separate US registration",
+        "Only with permission",
+        "Only for exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indian design rights cannot be enforced in the US; separate US registration is required.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q9",
+      "question": "What is design reciprocity?",
+      "options": [
+        "Returning designs",
+        "Mutual recognition of design rights between countries",
+        "Design exchange",
+        "Design trade"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design reciprocity is mutual recognition and protection of design rights between countries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q10",
+      "question": "What is the benefit of Hague System?",
+      "options": [
+        "Lower costs",
+        "Single application for multiple countries",
+        "Faster processing",
+        "Better quality"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Hague System allows filing a single international application for design protection in multiple countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q11",
+      "question": "What is design translation?",
+      "options": [
+        "Language conversion",
+        "Converting design documents for foreign applications",
+        "Design transfer",
+        "Design transformation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design translation involves converting design documents and descriptions for foreign applications.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q12",
+      "question": "Can you claim priority from multiple countries?",
+      "options": [
+        "Yes, from multiple applications",
+        "No, only one country",
+        "Only from neighboring countries",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "You can claim priority from multiple foreign applications if filed within the priority period.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q13",
+      "question": "What is design globalization?",
+      "options": [
+        "World travel",
+        "Expanding design protection globally",
+        "International trade",
+        "Global manufacturing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design globalization is the strategy of expanding design protection to multiple countries globally.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q14",
+      "question": "What is design localization?",
+      "options": [
+        "Finding location",
+        "Adapting designs for local markets",
+        "Local manufacturing",
+        "Local sales"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design localization is adapting designs to meet local market preferences and requirements.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q15",
+      "question": "Can you register a design in EU as a single application?",
+      "options": [
+        "No, separate for each country",
+        "Yes, through Community Design system",
+        "Only for large companies",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "The EU Community Design system allows a single application for protection across all EU member states.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q16",
+      "question": "What is design convention priority?",
+      "options": [
+        "VIP status",
+        "Priority right under Paris Convention",
+        "First in line",
+        "Fast processing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Convention priority is the right to claim an earlier filing date under the Paris Convention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q17",
+      "question": "What is design national phase?",
+      "options": [
+        "Country stage",
+        "Entering individual countries after international application",
+        "National holiday",
+        "National design"
+      ],
+      "correctIndex": 1,
+      "explanation": "National phase is the stage of entering individual countries after filing an international application.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q18",
+      "question": "Can you register a design in China?",
+      "options": [
+        "No, never",
+        "Yes, through Chinese design system",
+        "Only for Chinese companies",
+        "Only with government permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Anyone can register a design in China through the Chinese design registration system.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q19",
+      "question": "What is design portfolio management?",
+      "options": [
+        "Carrying designs",
+        "Managing design rights across multiple countries",
+        "Design collection",
+        "Design storage"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design portfolio management involves managing and maintaining design rights across multiple jurisdictions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q20",
+      "question": "What is design cost optimization?",
+      "options": [
+        "Reducing prices",
+        "Strategically selecting countries for design protection",
+        "Cheap manufacturing",
+        "Discount shopping"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design cost optimization involves strategically selecting countries for protection based on business needs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q21",
+      "question": "Can you register a design in Japan?",
+      "options": [
+        "No, never",
+        "Yes, through Japanese design system",
+        "Only for Japanese companies",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Anyone can register a design in Japan through the Japanese design registration system.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q22",
+      "question": "What is design watch service?",
+      "options": [
+        "Clock design",
+        "Monitoring for design infringement globally",
+        "Time tracking",
+        "Design timing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design watch service monitors for potential design infringement across multiple countries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q23",
+      "question": "What is design annuity?",
+      "options": [
+        "Yearly payment",
+        "Annual maintenance fees for design registration",
+        "Design pension",
+        "Design salary"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design annuity refers to annual maintenance fees required to keep design registration active.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_8_q24",
+      "question": "Can you register a design in South Korea?",
+      "options": [
+        "No, never",
+        "Yes, through Korean design system",
+        "Only for Korean companies",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Anyone can register a design in South Korea through the Korean design registration system.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_8_q25",
+      "question": "What is design strategy for global brands?",
+      "options": [
+        "Marketing plan",
+        "Comprehensive plan for worldwide design protection",
+        "Sales strategy",
+        "Manufacturing plan"
+      ],
+      "correctIndex": 1,
+      "explanation": "Global design strategy is a comprehensive plan for protecting designs worldwide based on business priorities.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

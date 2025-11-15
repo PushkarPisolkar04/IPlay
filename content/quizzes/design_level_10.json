@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "design_level_10",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "design_10_q1",
+      "question": "What is AI-generated design?",
+      "options": [
+        "Human design",
+        "Design created using artificial intelligence",
+        "Automated design",
+        "Robot design"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI-generated design is design created or assisted by artificial intelligence algorithms.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q2",
+      "question": "Can AI-generated designs be registered?",
+      "options": [
+        "Yes, always",
+        "Unclear, legal framework is evolving",
+        "No, never",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "The legal status of AI-generated designs is unclear and evolving as laws catch up with technology.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q3",
+      "question": "What is 3D printing impact on design?",
+      "options": [
+        "No impact",
+        "Enables rapid prototyping and customization",
+        "Only negative impact",
+        "Only for toys"
+      ],
+      "correctIndex": 1,
+      "explanation": "3D printing enables rapid prototyping, customization, and new design possibilities.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q4",
+      "question": "What is parametric design?",
+      "options": [
+        "Design with parameters",
+        "Design using algorithms and parameters",
+        "Design measurement",
+        "Design calculation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Parametric design uses algorithms and parameters to create designs that can be easily modified.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q5",
+      "question": "What is generative design?",
+      "options": [
+        "General design",
+        "AI exploring design options based on constraints",
+        "Design generation",
+        "Design creation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generative design uses AI to explore multiple design options based on specified constraints and goals.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q6",
+      "question": "What is virtual reality in design?",
+      "options": [
+        "Fake design",
+        "Immersive 3D environment for design visualization",
+        "Video game",
+        "Computer simulation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Virtual reality allows designers and users to experience and interact with designs in immersive 3D environments.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q7",
+      "question": "What is augmented reality in design?",
+      "options": [
+        "Enhanced design",
+        "Overlaying digital design elements on real world",
+        "Better design",
+        "Improved design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Augmented reality overlays digital design elements onto the real world for visualization and interaction.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q8",
+      "question": "What is digital twin in design?",
+      "options": [
+        "Two designs",
+        "Virtual replica of physical product",
+        "Design copy",
+        "Design duplicate"
+      ],
+      "correctIndex": 1,
+      "explanation": "A digital twin is a virtual replica of a physical product used for testing and simulation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q9",
+      "question": "What is blockchain for design?",
+      "options": [
+        "Chain design",
+        "Technology for design authentication and ownership",
+        "Design security",
+        "Design encryption"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blockchain can be used to authenticate designs and establish proof of ownership and creation date.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q10",
+      "question": "What is IoT impact on design?",
+      "options": [
+        "No impact",
+        "Designs must consider connectivity and data",
+        "Only negative",
+        "Only for electronics"
+      ],
+      "correctIndex": 1,
+      "explanation": "Internet of Things requires designs to consider connectivity, data collection, and smart features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q11",
+      "question": "What is sustainable design future?",
+      "options": [
+        "No future",
+        "Focus on eco-friendly and circular design",
+        "Same as now",
+        "Unknown"
+      ],
+      "correctIndex": 1,
+      "explanation": "Future design will increasingly focus on sustainability, eco-friendly materials, and circular economy principles.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q12",
+      "question": "What is biometric design?",
+      "options": [
+        "Biology design",
+        "Design incorporating biological measurements",
+        "Medical design",
+        "Health design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Biometric design incorporates biological measurements like fingerprints or facial recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q13",
+      "question": "What is adaptive design?",
+      "options": [
+        "Flexible design",
+        "Design that adjusts to user needs and context",
+        "Changing design",
+        "Variable design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Adaptive design automatically adjusts to user needs, preferences, and context.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q14",
+      "question": "What is design for metaverse?",
+      "options": [
+        "Universe design",
+        "Designing for virtual worlds and experiences",
+        "Space design",
+        "Future design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for metaverse involves creating products and experiences for virtual worlds and digital spaces.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q15",
+      "question": "What is quantum computing impact on design?",
+      "options": [
+        "No impact",
+        "Potential for complex design simulations",
+        "Only negative",
+        "Unknown"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quantum computing could enable complex design simulations and optimizations currently impossible.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q16",
+      "question": "What is design automation?",
+      "options": [
+        "Automatic design",
+        "Using software to automate design tasks",
+        "Robot design",
+        "Machine design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design automation uses software and AI to automate repetitive or complex design tasks.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q17",
+      "question": "What is design for sustainability?",
+      "options": [
+        "Long-lasting design",
+        "Designing with environmental responsibility",
+        "Durable design",
+        "Strong design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for sustainability considers environmental impact, recyclability, and resource efficiency.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q18",
+      "question": "What is design ethics in AI age?",
+      "options": [
+        "Design morals",
+        "Responsible design considering AI impact",
+        "Design rules",
+        "Design laws"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design ethics in AI age involves responsible design that considers privacy, bias, and societal impact.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q19",
+      "question": "What is design for circular economy?",
+      "options": [
+        "Round design",
+        "Design for reuse, repair, and recycling",
+        "Circle design",
+        "Loop design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for circular economy focuses on creating products that can be reused, repaired, and recycled.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q20",
+      "question": "What is design personalization?",
+      "options": [
+        "Personal design",
+        "Customizing design for individual users",
+        "Private design",
+        "Individual design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design personalization involves customizing products and experiences for individual user preferences.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q21",
+      "question": "What is design for aging population?",
+      "options": [
+        "Old design",
+        "Design considering needs of elderly users",
+        "Vintage design",
+        "Classic design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for aging population considers the specific needs and abilities of elderly users.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q22",
+      "question": "What is design for climate change?",
+      "options": [
+        "Weather design",
+        "Design adapting to environmental changes",
+        "Temperature design",
+        "Season design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for climate change involves creating products that adapt to and mitigate environmental changes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q23",
+      "question": "What is design democratization?",
+      "options": [
+        "Political design",
+        "Making design tools accessible to everyone",
+        "Public design",
+        "Common design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design democratization is making design tools and knowledge accessible to everyone, not just professionals.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_10_q24",
+      "question": "What is design for inclusion?",
+      "options": [
+        "Including everyone",
+        "Designing for diverse users and abilities",
+        "Group design",
+        "Team design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design for inclusion ensures products are usable by people with diverse backgrounds, abilities, and needs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_10_q25",
+      "question": "What is the future of design protection?",
+      "options": [
+        "No future",
+        "Technology-driven with AI and blockchain",
+        "Same as now",
+        "Unknown"
+      ],
+      "correctIndex": 1,
+      "explanation": "Future design protection will likely be technology-driven, using AI for monitoring and blockchain for authentication.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

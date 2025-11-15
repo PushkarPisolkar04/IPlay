@@ -1,0 +1,1021 @@
+{
+  "id": "innovation_lab",
+  "name": "Innovation Lab",
+  "description": "Design products and learn about IP filing",
+  "summary": "Unleash your creativity! Use drawing tools to design products, logos, and packaging. Then answer questions about IP protection to learn what can be patented, copyrighted, or trademarked.",
+  "iconPath": "assets/games/innovation_lab.png",
+  "color": "0xFF4CAF50",
+  "difficulty": "hard",
+  "gameType": "creative",
+  "xpReward": 100,
+  "estimatedMinutes": 15,
+  "questionsPerGame": 5,
+  "randomSelection": true,
+  "allowRetry": true,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-12T00:00:00Z",
+  "rewards": {
+    "completion": 100,
+    "perfectScore": 200,
+    "firstTime": 120,
+    "highScore": 250
+  },
+  "leaderboard": {
+    "enabled": true,
+    "scope": ["classroom", "school", "global"]
+  },
+  "drawingTools": [
+    {
+      "id": "pencil",
+      "name": "Pencil",
+      "icon": "edit",
+      "type": "freehand",
+      "strokeWidthRange": [1, 5],
+      "defaultStrokeWidth": 2,
+      "supportsOpacity": true,
+      "supportsColor": true
+    },
+    {
+      "id": "brush",
+      "name": "Brush",
+      "icon": "brush",
+      "type": "freehand",
+      "strokeWidthRange": [5, 30],
+      "defaultStrokeWidth": 10,
+      "supportsOpacity": true,
+      "supportsColor": true
+    },
+    {
+      "id": "eraser",
+      "name": "Eraser",
+      "icon": "auto_fix_high",
+      "type": "eraser",
+      "strokeWidthRange": [10, 50],
+      "defaultStrokeWidth": 20,
+      "supportsOpacity": false,
+      "supportsColor": false
+    },
+    {
+      "id": "line",
+      "name": "Line",
+      "icon": "remove",
+      "type": "shape",
+      "strokeWidthRange": [1, 10],
+      "defaultStrokeWidth": 2,
+      "supportsOpacity": true,
+      "supportsColor": true,
+      "supportsFill": false
+    },
+    {
+      "id": "rectangle",
+      "name": "Rectangle",
+      "icon": "crop_square",
+      "type": "shape",
+      "strokeWidthRange": [1, 10],
+      "defaultStrokeWidth": 2,
+      "supportsOpacity": true,
+      "supportsColor": true,
+      "supportsFill": true
+    },
+    {
+      "id": "circle",
+      "name": "Circle",
+      "icon": "circle",
+      "type": "shape",
+      "strokeWidthRange": [1, 10],
+      "defaultStrokeWidth": 2,
+      "supportsOpacity": true,
+      "supportsColor": true,
+      "supportsFill": true
+    },
+    {
+      "id": "polygon",
+      "name": "Polygon",
+      "icon": "change_history",
+      "type": "shape",
+      "strokeWidthRange": [1, 10],
+      "defaultStrokeWidth": 2,
+      "supportsOpacity": true,
+      "supportsColor": true,
+      "supportsFill": true,
+      "minSides": 3,
+      "maxSides": 8
+    },
+    {
+      "id": "text",
+      "name": "Text",
+      "icon": "text_fields",
+      "type": "text",
+      "fontSizeRange": [12, 72],
+      "defaultFontSize": 24,
+      "supportsOpacity": true,
+      "supportsColor": true,
+      "supportsBold": true,
+      "supportsItalic": true
+    }
+  ],
+  "colorPalette": [
+    {"name": "Black", "hex": "#000000"},
+    {"name": "White", "hex": "#FFFFFF"},
+    {"name": "Red", "hex": "#F44336"},
+    {"name": "Pink", "hex": "#E91E63"},
+    {"name": "Purple", "hex": "#9C27B0"},
+    {"name": "Deep Purple", "hex": "#673AB7"},
+    {"name": "Indigo", "hex": "#3F51B5"},
+    {"name": "Blue", "hex": "#2196F3"},
+    {"name": "Light Blue", "hex": "#03A9F4"},
+    {"name": "Cyan", "hex": "#00BCD4"},
+    {"name": "Teal", "hex": "#009688"},
+    {"name": "Green", "hex": "#4CAF50"},
+    {"name": "Light Green", "hex": "#8BC34A"},
+    {"name": "Lime", "hex": "#CDDC39"},
+    {"name": "Yellow", "hex": "#FFEB3B"},
+    {"name": "Amber", "hex": "#FFC107"},
+    {"name": "Orange", "hex": "#FF9800"},
+    {"name": "Deep Orange", "hex": "#FF5722"},
+    {"name": "Brown", "hex": "#795548"},
+    {"name": "Grey", "hex": "#9E9E9E"},
+    {"name": "Blue Grey", "hex": "#607D8B"}
+  ],
+  "templates": [
+    {
+      "id": "template_001",
+      "name": "Product Blueprint",
+      "category": "product_design",
+      "description": "Technical blueprint template for designing products with grid and measurement guides",
+      "thumbnailUrl": "assets/templates/product_blueprint_thumb.png",
+      "difficulty": "medium",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 20,
+        "gridColor": "#E3F2FD",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_bg",
+            "name": "Background Grid",
+            "visible": true,
+            "locked": true,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_sketch",
+            "name": "Sketch Layer",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "horizontal", "position": 0.5},
+          {"type": "vertical", "position": 0.5}
+        ]
+      }
+    },
+    {
+      "id": "template_002",
+      "name": "Logo Design",
+      "category": "branding",
+      "description": "Template for creating brand logos with circular and square guides",
+      "thumbnailUrl": "assets/templates/logo_design_thumb.png",
+      "difficulty": "easy",
+      "templateData": {
+        "gridEnabled": false,
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_guides",
+            "name": "Guide Shapes",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.3
+          },
+          {
+            "id": "layer_logo",
+            "name": "Logo Design",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "circle", "centerX": 0.5, "centerY": 0.5, "radius": 0.3},
+          {"type": "square", "centerX": 0.5, "centerY": 0.5, "size": 0.6}
+        ]
+      }
+    },
+    {
+      "id": "template_003",
+      "name": "Packaging Design",
+      "category": "packaging",
+      "description": "Template for designing product packaging with fold lines and dimensions",
+      "thumbnailUrl": "assets/templates/packaging_design_thumb.png",
+      "difficulty": "hard",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 15,
+        "gridColor": "#FFF3E0",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_template",
+            "name": "Box Template",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.5
+          },
+          {
+            "id": "layer_design",
+            "name": "Package Design",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_text",
+            "name": "Text & Labels",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "template_004",
+      "name": "App Icon Design",
+      "category": "digital",
+      "description": "Template for designing mobile app icons with rounded square guide",
+      "thumbnailUrl": "assets/templates/app_icon_thumb.png",
+      "difficulty": "easy",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 10,
+        "gridColor": "#F3E5F5",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_guide",
+            "name": "Icon Guide",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.4
+          },
+          {
+            "id": "layer_icon",
+            "name": "Icon Design",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "rounded_square", "centerX": 0.5, "centerY": 0.5, "size": 0.8, "cornerRadius": 0.2}
+        ]
+      }
+    },
+    {
+      "id": "template_005",
+      "name": "Poster Design",
+      "category": "marketing",
+      "description": "Template for creating promotional posters with title and content areas",
+      "thumbnailUrl": "assets/templates/poster_design_thumb.png",
+      "difficulty": "medium",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 25,
+        "gridColor": "#E8F5E9",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_background",
+            "name": "Background",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_content",
+            "name": "Content",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_text",
+            "name": "Text",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "horizontal", "position": 0.2},
+          {"type": "horizontal", "position": 0.8}
+        ]
+      }
+    },
+    {
+      "id": "template_006",
+      "name": "Business Card",
+      "category": "branding",
+      "description": "Template for designing professional business cards with standard dimensions",
+      "thumbnailUrl": "assets/templates/business_card_thumb.png",
+      "difficulty": "easy",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 5,
+        "gridColor": "#FFF9C4",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_front",
+            "name": "Front Side",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_logo",
+            "name": "Logo",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_info",
+            "name": "Contact Info",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "template_007",
+      "name": "T-Shirt Design",
+      "category": "fashion",
+      "description": "Template for creating t-shirt graphics with print area guide",
+      "thumbnailUrl": "assets/templates/tshirt_design_thumb.png",
+      "difficulty": "medium",
+      "templateData": {
+        "gridEnabled": false,
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_tshirt",
+            "name": "T-Shirt Outline",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.3
+          },
+          {
+            "id": "layer_print_area",
+            "name": "Print Area Guide",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.2
+          },
+          {
+            "id": "layer_design",
+            "name": "Design",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "rectangle", "x": 0.3, "y": 0.25, "width": 0.4, "height": 0.4}
+        ]
+      }
+    },
+    {
+      "id": "template_008",
+      "name": "Infographic Layout",
+      "category": "information",
+      "description": "Template for creating educational infographics with section guides",
+      "thumbnailUrl": "assets/templates/infographic_thumb.png",
+      "difficulty": "hard",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 30,
+        "gridColor": "#E1F5FE",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_header",
+            "name": "Header",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_content1",
+            "name": "Content Section 1",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_content2",
+            "name": "Content Section 2",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_footer",
+            "name": "Footer",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "horizontal", "position": 0.15},
+          {"type": "horizontal", "position": 0.5},
+          {"type": "horizontal", "position": 0.85}
+        ]
+      }
+    },
+    {
+      "id": "template_009",
+      "name": "Product Label",
+      "category": "packaging",
+      "description": "Template for designing product labels with regulatory information areas",
+      "thumbnailUrl": "assets/templates/product_label_thumb.png",
+      "difficulty": "medium",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 10,
+        "gridColor": "#FCE4EC",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_border",
+            "name": "Label Border",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.5
+          },
+          {
+            "id": "layer_brand",
+            "name": "Brand Area",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_info",
+            "name": "Product Info",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "horizontal", "position": 0.4},
+          {"type": "horizontal", "position": 0.7}
+        ]
+      }
+    },
+    {
+      "id": "template_010",
+      "name": "Patent Diagram",
+      "category": "technical",
+      "description": "Template for creating technical patent diagrams with numbered callouts",
+      "thumbnailUrl": "assets/templates/patent_diagram_thumb.png",
+      "difficulty": "hard",
+      "templateData": {
+        "gridEnabled": true,
+        "gridSize": 15,
+        "gridColor": "#ECEFF1",
+        "backgroundColor": "#FFFFFF",
+        "layers": [
+          {
+            "id": "layer_grid",
+            "name": "Technical Grid",
+            "visible": true,
+            "locked": true,
+            "opacity": 0.4
+          },
+          {
+            "id": "layer_main_drawing",
+            "name": "Main Drawing",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_callouts",
+            "name": "Numbered Callouts",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          },
+          {
+            "id": "layer_labels",
+            "name": "Labels",
+            "visible": true,
+            "locked": false,
+            "opacity": 1.0
+          }
+        ],
+        "guides": [
+          {"type": "horizontal", "position": 0.5},
+          {"type": "vertical", "position": 0.5}
+        ]
+      }
+    }
+  ],
+  "ipQuestions": [
+    {
+      "id": "ip_q_001",
+      "question": "You designed a unique logo for your brand. What type of IP protection should you seek?",
+      "context": "Your logo is a distinctive visual symbol that represents your business.",
+      "options": [
+        "Patent - to protect the design innovation",
+        "Trademark - to protect the brand identity",
+        "Copyright - to protect the artistic work",
+        "Trade Secret - to keep it confidential"
+      ],
+      "correctIndex": 1,
+      "explanation": "Logos are protected by trademark law because they serve as brand identifiers. While logos may also have copyright protection as artistic works, trademark is the primary protection for brand symbols.",
+      "educationalContent": {
+        "title": "Trademark Protection for Logos",
+        "content": "Trademarks protect brand identifiers including logos, names, and slogans. A registered trademark gives you exclusive rights to use the mark in commerce and prevents others from using confusingly similar marks. Logos can be registered as trademarks to protect your brand identity.",
+        "examples": [
+          "Nike Swoosh - Registered trademark",
+          "Apple's bitten apple - Registered trademark",
+          "McDonald's Golden Arches - Registered trademark"
+        ]
+      },
+      "difficulty": "easy",
+      "points": 15
+    },
+    {
+      "id": "ip_q_002",
+      "question": "You invented a new mechanical device with moving parts. What IP protection is most appropriate?",
+      "context": "Your device has a unique mechanism that solves a technical problem in a novel way.",
+      "options": [
+        "Design Patent - for the appearance",
+        "Utility Patent - for the functional innovation",
+        "Copyright - for the design drawings",
+        "Trademark - for the product name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Utility patents protect functional inventions and how they work. Since your device has a novel mechanism that solves a technical problem, a utility patent is the appropriate protection.",
+      "educationalContent": {
+        "title": "Utility Patents vs Design Patents",
+        "content": "Utility patents protect how an invention works and what it does. They cover functional aspects, processes, and methods. Design patents protect only the ornamental appearance of an article. If your invention has a novel functional mechanism, you need a utility patent.",
+        "examples": [
+          "Utility Patent: A new type of door hinge mechanism",
+          "Design Patent: The decorative shape of a door handle",
+          "Both: A uniquely shaped and functionally innovative bottle"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_003",
+      "question": "You wrote a novel and created illustrations for it. What protects your work automatically?",
+      "context": "You've completed an original literary work with accompanying artwork.",
+      "options": [
+        "Patent - must file application",
+        "Trademark - must register the title",
+        "Copyright - automatic upon creation",
+        "Trade Secret - must keep it confidential"
+      ],
+      "correctIndex": 2,
+      "explanation": "Copyright protection arises automatically when you create an original work of authorship. No registration is required for copyright to exist, though registration provides additional legal benefits.",
+      "educationalContent": {
+        "title": "Automatic Copyright Protection",
+        "content": "Copyright protects original works of authorship including books, music, art, and software. Protection begins automatically when you fix the work in a tangible medium. Registration is optional but recommended for enforcement benefits.",
+        "examples": [
+          "Books and novels - automatic copyright",
+          "Paintings and illustrations - automatic copyright",
+          "Music compositions - automatic copyright",
+          "Software code - automatic copyright"
+        ]
+      },
+      "difficulty": "easy",
+      "points": 15
+    },
+    {
+      "id": "ip_q_004",
+      "question": "Your company developed a secret recipe for a beverage. What's the best way to protect it?",
+      "context": "The recipe gives you a competitive advantage, and you want to keep it confidential.",
+      "options": [
+        "Patent - to get exclusive rights for 20 years",
+        "Trade Secret - to keep it confidential indefinitely",
+        "Copyright - to protect the recipe text",
+        "Trademark - to protect the product name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trade secrets are ideal for recipes because they can be protected indefinitely as long as they remain secret. Patents require public disclosure and expire after 20 years, which may not be desirable for a recipe.",
+      "educationalContent": {
+        "title": "Trade Secrets vs Patents",
+        "content": "Trade secrets protect confidential business information that provides competitive advantage. Unlike patents, trade secrets don't require disclosure and can last forever if kept secret. However, if someone independently discovers or reverse-engineers your secret, you have no protection.",
+        "examples": [
+          "Coca-Cola formula - trade secret for over 100 years",
+          "KFC's 11 herbs and spices - trade secret",
+          "Google's search algorithm - trade secret"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_005",
+      "question": "You created a unique bottle shape for your perfume. What type of protection should you seek?",
+      "context": "The bottle shape is distinctive and ornamental, making your product recognizable.",
+      "options": [
+        "Design Patent - for the ornamental design",
+        "Utility Patent - for the bottle function",
+        "Copyright - for the artistic design",
+        "Only Trademark - as trade dress"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design patents protect the ornamental appearance of functional items. A unique bottle shape is perfect for design patent protection. It may also qualify for trademark protection as trade dress if it becomes distinctive.",
+      "educationalContent": {
+        "title": "Design Patents for Product Appearance",
+        "content": "Design patents protect the visual ornamental characteristics of an article. They cover the shape, configuration, and surface ornamentation. Design patents last 15 years from grant and protect against copying the appearance.",
+        "examples": [
+          "Coca-Cola bottle shape - design patent and trademark",
+          "iPhone design - multiple design patents",
+          "Crocs shoe design - design patent"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_006",
+      "question": "Can you patent a mathematical formula or algorithm in India?",
+      "context": "You discovered a new mathematical method for solving a complex problem.",
+      "options": [
+        "Yes, if it's novel and non-obvious",
+        "Yes, but only if used in software",
+        "No, mathematical methods are not patentable",
+        "Yes, if it has commercial application"
+      ],
+      "correctIndex": 2,
+      "explanation": "Under Indian patent law, mathematical methods, algorithms, and abstract ideas are explicitly excluded from patentability. They are considered discoveries of natural laws rather than inventions.",
+      "educationalContent": {
+        "title": "What Cannot Be Patented in India",
+        "content": "Section 3 of the Indian Patents Act lists exclusions including: mathematical methods, business methods, algorithms, computer programs per se, and abstract ideas. However, if an algorithm is part of a technical application that produces a technical effect, it may be patentable.",
+        "examples": [
+          "Not Patentable: A mathematical formula for calculating interest",
+          "Not Patentable: A pure software algorithm",
+          "Potentially Patentable: A technical process using an algorithm to control a machine"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_007",
+      "question": "You designed packaging with your brand name and logo. What protections apply?",
+      "context": "The packaging has both functional and branding elements.",
+      "options": [
+        "Only Trademark for the brand elements",
+        "Only Copyright for the artistic design",
+        "Trademark for brand, Copyright for artwork, possibly Design Patent",
+        "Only Patent for the packaging design"
+      ],
+      "correctIndex": 2,
+      "explanation": "Packaging can have multiple layers of IP protection: trademark for brand names and logos, copyright for original artwork and graphics, and design patent for unique ornamental shapes.",
+      "educationalContent": {
+        "title": "Layered IP Protection",
+        "content": "Many products benefit from multiple types of IP protection simultaneously. This is called 'layered protection' and provides comprehensive coverage for different aspects of your creation.",
+        "examples": [
+          "iPhone: Utility patents (technology), Design patents (appearance), Trademarks (Apple logo, iPhone name), Copyright (software)",
+          "Coca-Cola: Trade secret (formula), Trademark (name, logo), Design patent (bottle shape)",
+          "Book: Copyright (text, illustrations), Trademark (series name, publisher logo)"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_008",
+      "question": "Your app has a unique user interface design. What can you protect?",
+      "context": "The app has distinctive visual elements and underlying code.",
+      "options": [
+        "Only Copyright for the code",
+        "Only Design Patent for the UI",
+        "Copyright for code and graphics, possibly Design Patent for UI",
+        "Only Trademark for the app name"
+      ],
+      "correctIndex": 2,
+      "explanation": "Software apps can have copyright protection for the code and original graphics automatically. Unique UI designs may also qualify for design patent protection if they're ornamental and non-functional.",
+      "educationalContent": {
+        "title": "Protecting Software and Apps",
+        "content": "Software receives automatic copyright protection for the code. Original graphics, icons, and artwork also have copyright. Unique UI designs can get design patents. The app name and logo can be trademarked. Innovative technical features might be patentable.",
+        "examples": [
+          "Copyright: Source code, graphics, documentation",
+          "Design Patent: Unique icon designs, UI layouts",
+          "Trademark: App name, logo, distinctive colors",
+          "Utility Patent: Novel technical features or methods"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_009",
+      "question": "You improved an existing product by making it more efficient. Is this patentable?",
+      "context": "Your improvement is a novel modification that significantly enhances performance.",
+      "options": [
+        "No, improvements cannot be patented",
+        "Yes, if the improvement is novel and non-obvious",
+        "Only if you own the original patent",
+        "No, only completely new inventions are patentable"
+      ],
+      "correctIndex": 1,
+      "explanation": "Improvements to existing products can be patented if they meet the criteria of novelty, non-obviousness, and utility. These are called 'improvement patents' and are very common.",
+      "educationalContent": {
+        "title": "Improvement Patents",
+        "content": "You don't need to invent something completely new to get a patent. Improvements to existing technology can be patented if they're novel and non-obvious. However, you may need a license from the original patent holder to practice your improvement.",
+        "examples": [
+          "LED improvements: Many patents on improving LED efficiency",
+          "Battery technology: Continuous improvements to lithium-ion batteries",
+          "Drug formulations: New delivery methods for existing drugs"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_010",
+      "question": "Can you copyright the name of your product or business?",
+      "context": "You created a unique name for your new product line.",
+      "options": [
+        "Yes, names are protected by copyright",
+        "No, but you can trademark the name",
+        "Yes, if the name is creative enough",
+        "No, names cannot be protected"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright does not protect names, titles, or short phrases. However, product and business names can be protected as trademarks if they're used to identify the source of goods or services.",
+      "educationalContent": {
+        "title": "What Copyright Doesn't Protect",
+        "content": "Copyright protects original works of authorship but NOT: names, titles, short phrases, slogans, ideas, procedures, methods, systems, processes, concepts, principles, or discoveries. Many of these can be protected by other IP rights like trademarks or patents.",
+        "examples": [
+          "Cannot Copyright: Product names, business names, book titles",
+          "Can Trademark: Product names, business names, slogans",
+          "Can Copyright: The book content, logo artwork, advertising copy"
+        ]
+      },
+      "difficulty": "easy",
+      "points": 15
+    },
+    {
+      "id": "ip_q_011",
+      "question": "Your design is purely aesthetic with no functional purpose. What protection is best?",
+      "context": "You created an ornamental design for a decorative item.",
+      "options": [
+        "Utility Patent",
+        "Design Patent and Copyright",
+        "Only Trademark",
+        "Trade Secret"
+      ],
+      "correctIndex": 1,
+      "explanation": "Purely aesthetic designs can be protected by both design patents (for the ornamental appearance of useful articles) and copyright (for artistic works). Both protections can apply simultaneously.",
+      "educationalContent": {
+        "title": "Design Patent vs Copyright for Designs",
+        "content": "Design patents protect ornamental designs for useful articles (like a decorative lamp). Copyright protects artistic works (like a sculpture). Some designs can qualify for both. Copyright is automatic; design patents require application.",
+        "examples": [
+          "Design Patent: Ornamental design of a chair, vase, or phone case",
+          "Copyright: Sculpture, painting, or graphic design",
+          "Both: Decorative lamp that's both functional and artistic"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_012",
+      "question": "How long does copyright protection last in India for original artwork?",
+      "context": "You created original illustrations and want to know the protection duration.",
+      "options": [
+        "20 years from creation",
+        "Life of author plus 60 years",
+        "50 years from creation",
+        "Life of author plus 70 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "In India, copyright for original artistic works lasts for the lifetime of the author plus 60 years after their death. This provides long-term protection for creative works.",
+      "educationalContent": {
+        "title": "Copyright Duration in India",
+        "content": "Copyright duration varies by type of work: Literary, dramatic, musical, and artistic works - life plus 60 years. Photographs - 60 years from publication. Cinematograph films - 60 years from publication. Sound recordings - 60 years from publication.",
+        "examples": [
+          "Book written in 2024 by author who dies in 2050: Protected until 2110",
+          "Photograph published in 2024: Protected until 2084",
+          "Movie released in 2024: Protected until 2084"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_013",
+      "question": "You want to protect your brand's distinctive color scheme. Is this possible?",
+      "context": "Your brand uses a unique combination of colors that customers recognize.",
+      "options": [
+        "No, colors cannot be protected",
+        "Yes, through trademark as trade dress",
+        "Yes, through copyright",
+        "Yes, through design patent"
+      ],
+      "correctIndex": 1,
+      "explanation": "Distinctive color schemes can be protected as trademarks (trade dress) if they've acquired secondary meaning and identify the source of goods. Examples include Tiffany Blue and Cadbury Purple.",
+      "educationalContent": {
+        "title": "Non-Traditional Trademarks",
+        "content": "Trademarks aren't limited to words and logos. Non-traditional trademarks include: colors, sounds, smells, shapes, and even motion. These require proof that consumers associate them with your brand (secondary meaning).",
+        "examples": [
+          "Tiffany Blue (Pantone 1837) - trademarked color",
+          "Cadbury Purple - trademarked color for chocolate",
+          "UPS Brown - trademarked color for delivery services",
+          "T-Mobile Magenta - trademarked color"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_014",
+      "question": "Your invention uses a known process in a new way. Is this patentable?",
+      "context": "You applied an existing method to a different field with surprising results.",
+      "options": [
+        "No, the process already exists",
+        "Yes, if the new application is novel and non-obvious",
+        "Only if you invented the original process",
+        "No, you can only patent completely new processes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Applying a known process in a new way can be patentable if the new application is novel, non-obvious, and produces unexpected results. This is called a 'new use' patent.",
+      "educationalContent": {
+        "title": "New Use Patents",
+        "content": "Patents can be granted for new uses of known products or processes. The key is that the new use must be non-obvious to someone skilled in the field. Many pharmaceutical patents are for new uses of existing drugs.",
+        "examples": [
+          "Aspirin: Originally for pain, later patented for heart attack prevention",
+          "Minoxidil: Originally for blood pressure, later patented for hair growth",
+          "Botox: Originally for muscle spasms, later patented for wrinkles"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_015",
+      "question": "You created a character for your story. How is it protected?",
+      "context": "The character has a distinctive appearance, personality, and backstory.",
+      "options": [
+        "Copyright protects the character automatically",
+        "Must trademark the character name",
+        "Must patent the character design",
+        "Characters cannot be protected"
+      ],
+      "correctIndex": 0,
+      "explanation": "Original characters are protected by copyright as part of the creative work. Well-developed characters with distinctive traits receive strong copyright protection. The name can also be trademarked if used commercially.",
+      "educationalContent": {
+        "title": "Copyright Protection for Characters",
+        "content": "Fictional characters are protected by copyright if they're sufficiently developed and distinctive. Visual depictions, names, and characteristics are all protected. Famous characters can also be trademarked for merchandise.",
+        "examples": [
+          "Mickey Mouse - copyright and trademark",
+          "Harry Potter - copyright and trademark",
+          "Superman - copyright and trademark",
+          "Sherlock Holmes - now in public domain (copyright expired)"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_016",
+      "question": "What makes an invention 'non-obvious' for patent purposes?",
+      "context": "You need to understand the non-obviousness requirement for patentability.",
+      "options": [
+        "It must be completely unique in history",
+        "A person skilled in the field wouldn't find it obvious",
+        "It must be complex and difficult to understand",
+        "It must be a breakthrough invention"
+      ],
+      "correctIndex": 1,
+      "explanation": "Non-obviousness means the invention wouldn't be obvious to a person having ordinary skill in the relevant field. It's not about complexity but about whether the invention represents an inventive step beyond existing knowledge.",
+      "educationalContent": {
+        "title": "The Non-Obviousness Requirement",
+        "content": "For a patent, an invention must be: 1) Novel (new), 2) Non-obvious (inventive step), and 3) Useful. Non-obviousness is judged from the perspective of someone skilled in the field at the time of invention. Small improvements can be non-obvious if they produce unexpected results.",
+        "examples": [
+          "Obvious: Adding a handle to an existing cup design",
+          "Non-obvious: A new material that makes cups unbreakable",
+          "Obvious: Making a product in a different color",
+          "Non-obvious: A color-changing material that indicates temperature"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_017",
+      "question": "Can you patent a business method or process in India?",
+      "context": "You developed a novel way of conducting business transactions.",
+      "options": [
+        "Yes, business methods are patentable",
+        "Yes, if implemented in software",
+        "No, business methods are not patentable in India",
+        "Yes, if it's novel and non-obvious"
+      ],
+      "correctIndex": 2,
+      "explanation": "Business methods are explicitly excluded from patentability under Section 3(k) of the Indian Patents Act. This includes methods of doing business, mathematical methods, and algorithms.",
+      "educationalContent": {
+        "title": "Business Method Patents in India",
+        "content": "Unlike the US, India does not allow patents for business methods. Section 3 of the Patents Act excludes: business methods, mathematical methods, algorithms, and computer programs per se. However, technical applications that produce technical effects may be patentable.",
+        "examples": [
+          "Not Patentable in India: Amazon's one-click ordering method",
+          "Not Patentable in India: A new accounting method",
+          "Potentially Patentable: A technical system that implements a process with technical effects"
+        ]
+      },
+      "difficulty": "hard",
+      "points": 25
+    },
+    {
+      "id": "ip_q_018",
+      "question": "Your product design is both functional and decorative. What should you file?",
+      "context": "The design serves a practical purpose but also has unique aesthetic appeal.",
+      "options": [
+        "Only Utility Patent for function",
+        "Only Design Patent for appearance",
+        "Both Utility Patent and Design Patent",
+        "Neither, it's not protectable"
+      ],
+      "correctIndex": 2,
+      "explanation": "When a product has both functional innovations and ornamental design features, you can file both a utility patent (for how it works) and a design patent (for how it looks). These protect different aspects.",
+      "educationalContent": {
+        "title": "Dual Patent Protection",
+        "content": "Products can have both utility and design patents simultaneously. The utility patent protects the functional aspects and how it works. The design patent protects the ornamental appearance. Both provide different types of protection.",
+        "examples": [
+          "iPhone: Utility patents for technology, design patents for appearance",
+          "Dyson vacuum: Utility patents for cyclone technology, design patents for unique shape",
+          "Crocs shoes: Utility patents for material and ventilation, design patents for appearance"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_019",
+      "question": "You photographed a public monument. Who owns the copyright to the photo?",
+      "context": "You took an original photograph of a famous public building.",
+      "options": [
+        "The monument owner",
+        "The government",
+        "You, as the photographer",
+        "No one, it's public domain"
+      ],
+      "correctIndex": 2,
+      "explanation": "The photographer owns the copyright to their photograph, even if the subject is a public monument or building. The copyright is in the photograph itself, not the subject matter.",
+      "educationalContent": {
+        "title": "Copyright in Photography",
+        "content": "Photographers automatically own copyright in their original photographs. This applies even when photographing public places, buildings, or monuments. However, commercial use may require property releases in some cases.",
+        "examples": [
+          "You own copyright: Your photo of the Taj Mahal",
+          "You own copyright: Your photo of a public street",
+          "You own copyright: Your photo of a celebrity in public",
+          "Note: Commercial use may have additional restrictions"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    },
+    {
+      "id": "ip_q_020",
+      "question": "What's the main difference between a trademark and a trade name?",
+      "context": "You're setting up a business and need to understand the terminology.",
+      "options": [
+        "They're the same thing",
+        "Trademark identifies goods/services; trade name identifies the business",
+        "Trade name is registered; trademark is not",
+        "Trademark is for products; trade name is for logos"
+      ],
+      "correctIndex": 1,
+      "explanation": "A trademark identifies and distinguishes goods or services. A trade name (business name) identifies the business entity itself. A business can have one trade name but multiple trademarks for different products.",
+      "educationalContent": {
+        "title": "Trademark vs Trade Name",
+        "content": "Trade Name: The official name of your business entity (e.g., 'Apple Inc.'). Trademark: A mark that identifies your goods or services (e.g., 'iPhone', Apple logo). One business can have many trademarks but typically one trade name.",
+        "examples": [
+          "Trade Name: Procter & Gamble Company",
+          "Trademarks: Tide, Pampers, Gillette, Oral-B (all owned by P&G)",
+          "Trade Name: Tata Sons Limited",
+          "Trademarks: Tata Tea, Tata Motors, Titan, Tanishq (all owned by Tata)"
+        ]
+      },
+      "difficulty": "medium",
+      "points": 20
+    }
+  ]
+}

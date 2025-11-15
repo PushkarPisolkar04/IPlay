@@ -1,0 +1,40 @@
+﻿{
+  "id": "patent_level_2",
+  "realmId": "realm_patent",
+  "levelNumber": 2,
+  "name": "The 3 Pillars of Patentability",
+  "description": "Just having an 'idea' isn't enough. Your invention must pass three strict tests to be patentable.",
+  "summary": "This is the core of patent law. Learn the three essential pillars every invention must have: it must be New (Novelty), it must be Clever (Inventive Step), and it must Work (Industrial Application).",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=MaKWTOA0pxs",
+  "videoDuration": 2113,
+  
+  "content": "## The 3 Pillars of Patentability\n\nYou can't patent just any idea. To be eligible for a patent, your invention must stand on three 'pillars'. It must pass three tests that are used by every patent office in the world.\n\n### 1. Pillar 1: Novelty (It must be NEW)\n\nThis is the easiest test to understand. Your invention must be **new**. It cannot be something that is already known to the public.\n\n* **The Test:** Has this *exact* invention been described in any publication, sold in any market, or used in public *anywhere in the world* before you filed your patent application? \n* **'Prior Art':** This existing knowledge is called 'Prior Art'. It includes all old patents, scientific papers, websites, products, and public demonstrations.\n* **The Rule:** If your invention is already part of the 'prior art', it is not novel, and you cannot get a patent. You can't patent something that already exists.\n\n### 2. Pillar 2: Inventive Step (It must be CLEVER)\n\nThis is the hardest and most important test. This pillar is known as **'Inventive Step'** (the term used in Europe and much of the world) or **'Non-Obviousness'** (the term used in the United States).\n\n* **The Test:** Is the invention an *obvious* next step to a person who is a normal 'person skilled in the art' (e.g., a normal car mechanic, a normal software engineer)?\n* **The Rule:** If a normal expert in your field would look at the existing 'prior art' and say, 'Oh yeah, that's an obvious combination' or 'a simple next step', then your invention lacks an 'inventive step', and you cannot get a patent.\n\n### 3. Pillar 3: Industrial Application (It must WORK)\n\nThis pillar is known as **'Industrial Application'** (globally) or **'Utility'** (in the US).\n\n* **The Test:** Can your invention be made or used in some kind of industry? Does it have a practical, useful purpose?\n* **The Rule:** You cannot patent a mere scientific theory, a mathematical formula, or a fantasy machine that breaks the laws of physics (like a 'perpetual motion machine'). Your invention must be 'useful' and have a real-world, practical application.\n\n--- \n\n### 💡 Level 2 Case Study: The 'Obviousness' Test\n\n* **The Problem:** You have a metal knife and a metal fork. You want to make an 'eating tool'.\n* **'Invention' A:** You weld the fork to one end of the knife handle and the knife blade to the other. \n    * **Verdict:** This is **NOT patentable**. It is **obvious**. A 'person skilled in the art' would find it an obvious combination of two known items.\n* **'Invention' B:** You invent the **Swiss Army Knife**—a complex, spring-loaded mechanism that allows 10 different tools to be safely folded into a single, compact handle. \n    * **Verdict:** This is **PATENTABLE**. It is **not obvious**. It involves a truly clever and *inventive step* to solve the folding and locking problems. It is new, non-obvious, and has industrial application.",
+  
+  "keyPoints": [
+    "To be patentable, an invention must pass 3 tests: Novelty, Inventive Step, and Industrial Application.",
+    "**Novelty:** The invention must be new. It cannot be part of the existing 'prior art'.",
+    "**Inventive Step (Non-Obviousness):** This is the key test. The invention cannot be an 'obvious' step for a normal expert.",
+    "**Industrial Application (Utility):** The invention must be useful in the real world and not just a scientific theory.",
+    "A simple combination of existing parts is 'obvious', but a new mechanism to combine them (like a Swiss Army Knife) is 'inventive'."
+  ],
+  
+  "learningObjectives": [
+    "List the three pillars of patentability (Novelty, Inventive Step, Industrial Application).",
+    "Define 'Novelty' and the concept of 'prior art'.",
+    "Define 'Inventive Step' (or 'Non-Obviousness') and who the 'person skilled in the art' is.",
+    "Define 'Industrial Application' (or 'Utility') and explain what it excludes.",
+    "Analyze a simple case to distinguish an 'obvious' idea from an 'inventive' one."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:40:00Z"
+}

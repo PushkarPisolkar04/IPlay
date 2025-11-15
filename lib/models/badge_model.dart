@@ -5,7 +5,7 @@ class BadgeModel {
   final String id;
   final String name;
   final String description;
-  final String icon; // Emoji icon
+  final String iconPath; // Asset path for badge icon
   final String category; // milestone, streak, mastery, social, special
   final int xpBonus; // XP awarded when badge is unlocked
   final String rarity; // common, rare, epic, legendary
@@ -18,7 +18,8 @@ class BadgeModel {
     required this.id,
     required this.name,
     required this.description,
-    String? icon,
+    String? iconPath,
+    String? icon, // Backward compatibility
     String? iconEmoji, // Backward compatibility
     required this.category,
     required this.xpBonus,
@@ -29,13 +30,14 @@ class BadgeModel {
     int? order,
     int? displayOrder, // Backward compatibility
     this.isActive = true,
-  }) : icon = icon ?? iconEmoji ?? '🏅',
+  }) : iconPath = iconPath ?? icon ?? iconEmoji ?? 'assets/badges/default_badge.png',
        criteriaType = criteriaType ?? (condition?['type'] as String?) ?? 'manual',
        criteriaValue = criteriaValue ?? condition?['value'],
        order = order ?? displayOrder ?? 0;
   
-  // Alias for backward compatibility
-  String get iconEmoji => icon;
+  // Aliases for backward compatibility
+  String get icon => iconPath;
+  String get iconEmoji => iconPath;
   int get displayOrder => order;
 
   /// Convert to Firestore document
@@ -44,7 +46,7 @@ class BadgeModel {
       'id': id,
       'name': name,
       'description': description,
-      'icon': icon,
+      'iconPath': iconPath,
       'category': category,
       'xpBonus': xpBonus,
       'rarity': rarity,
@@ -62,7 +64,7 @@ class BadgeModel {
       id: data['id'] as String,
       name: data['name'] as String,
       description: data['description'] as String,
-      icon: (data['icon'] ?? data['iconEmoji']) as String, // Support both field names
+      iconPath: (data['iconPath'] ?? data['icon'] ?? data['iconEmoji']) as String?, // Support all field names
       category: data['category'] as String,
       xpBonus: data['xpBonus'] as int? ?? 0,
       rarity: data['rarity'] as String,

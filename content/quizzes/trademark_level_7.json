@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_7",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_7_q1",
+      "question": "What is 'Trademark Dilution' primarily meant to protect?",
+      "options": [
+        "Only registered trademarks",
+        "Famous or well-known marks",
+        "Newly applied trademarks",
+        "Expired trademarks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dilution protects famous or well-known marks from harm even when there's no consumer confusion, as per Section 29(4) of the Trade Marks Act, 1999.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q2",
+      "question": "Under which section of the Indian Trade Marks Act is 'dilution' recognized?",
+      "options": [
+        "Section 9",
+        "Section 11",
+        "Section 29(4)",
+        "Section 31"
+      ],
+      "correctIndex": 2,
+      "explanation": "Section 29(4) of the Trade Marks Act, 1999, deals with trademark dilution of well-known marks.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q3",
+      "question": "Which of the following is NOT required to prove dilution?",
+      "options": [
+        "Fame of the mark",
+        "Consumer confusion",
+        "Use of a similar mark",
+        "Unfair advantage or harm to reputation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Consumer confusion is not required in dilution cases; the harm occurs due to weakening of a famous mark’s distinctiveness or reputation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q4",
+      "question": "Dilution by 'Blurring' means:",
+      "options": [
+        "Using a mark in a way that damages its reputation",
+        "Using a famous mark for unrelated goods, weakening its uniqueness",
+        "Misrepresenting a product’s source",
+        "Using identical packaging"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dilution by blurring occurs when a famous mark’s distinctiveness is weakened because it’s used for unrelated goods or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q5",
+      "question": "Dilution by 'Tarnishment' occurs when:",
+      "options": [
+        "The mark’s reputation is harmed by unsavory association",
+        "The mark is used for unrelated products",
+        "Two companies have similar domain names",
+        "A descriptive mark gains secondary meaning"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tarnishment happens when a famous mark is linked to inferior or unsavory goods, harming its reputation (e.g., 'TATA' used for adult magazines).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q6",
+      "question": "Which case is a classic example of dilution by blurring?",
+      "options": [
+        "Mercedes-Benz vs. Benz Underwear",
+        "TATA vs. TATA Weight Scales",
+        "Dove Soap vs. Dove Chocolate",
+        "Starbux vs. Starbucks"
+      ],
+      "correctIndex": 0,
+      "explanation": "In Mercedes-Benz vs. Benz Underwear, the unrelated use of 'Benz' diluted the distinctiveness of the luxury automobile brand.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q7",
+      "question": "In India, protection against dilution applies to:",
+      "options": [
+        "All trademarks",
+        "Only unregistered trademarks",
+        "Well-known registered trademarks",
+        "Logos used internationally"
+      ],
+      "correctIndex": 2,
+      "explanation": "Section 29(4) protects well-known registered trademarks from dilution, even across dissimilar goods or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q8",
+      "question": "Which of the following is most likely an example of 'tarnishment'?",
+      "options": [
+        "Using 'Kodak' for shoes",
+        "Using 'TATA' for an adult magazine",
+        "Using 'Apple' for a fruit shop",
+        "Using 'Nikee' for sneakers"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘TATA’ for adult magazines damages the reputation of a respected business, which constitutes dilution by tarnishment.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q9",
+      "question": "Which type of mark cannot be diluted?",
+      "options": [
+        "Generic marks",
+        "Famous marks",
+        "Registered marks",
+        "Invented marks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Generic marks have no distinctiveness to dilute, so they cannot be protected from dilution.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_7_q10",
+      "question": "The term 'well-known mark' is defined under which section of the Indian Trade Marks Act?",
+      "options": [
+        "Section 2(1)(zg)",
+        "Section 9",
+        "Section 29",
+        "Section 11(2)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Section 2(1)(zg) defines a 'well-known trademark' under Indian law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    
+    {
+      "id": "trademark_7_q11",
+      "question": "What is the key difference between infringement and dilution?",
+      "options": [
+        "Dilution needs confusion; infringement does not",
+        "Infringement needs confusion; dilution does not",
+        "Both require confusion",
+        "Both apply only to identical goods"
+      ],
+      "correctIndex": 1,
+      "explanation": "Infringement requires likelihood of confusion, while dilution protects famous marks even when confusion is absent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q12",
+      "question": "A small company starts using 'Google Furniture'. Which doctrine applies?",
+      "options": [
+        "Passing off",
+        "Descriptive fair use",
+        "Trademark dilution",
+        "Comparative advertising"
+      ],
+      "correctIndex": 2,
+      "explanation": "Using 'Google' for furniture blurs the unique identity of the famous mark, qualifying as trademark dilution.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q13",
+      "question": "Which of these factors strengthens a dilution claim?",
+      "options": [
+        "The mark is newly registered",
+        "The mark is used only locally",
+        "The mark has extensive reputation and recognition",
+        "The mark is descriptive"
+      ],
+      "correctIndex": 2,
+      "explanation": "Only marks with extensive recognition and strong distinctiveness qualify for dilution protection.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q14",
+      "question": "‘TATA Weight Scales’ case illustrates which concept?",
+      "options": [
+        "Blurring",
+        "Tarnishment",
+        "Infringement",
+        "Deceptive similarity"
+      ],
+      "correctIndex": 0,
+      "explanation": "‘TATA Weight Scales’ weakens the mark’s unique identity for unrelated goods — a case of blurring.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q15",
+      "question": "Which is NOT a form of dilution?",
+      "options": [
+        "Blurring",
+        "Tarnishment",
+        "Deceptive similarity",
+        "Free-riding"
+      ],
+      "correctIndex": 2,
+      "explanation": "Deceptive similarity concerns confusion, not dilution. Dilution occurs without confusion.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q16",
+      "question": "What must the plaintiff prove in a dilution case?",
+      "options": [
+        "That the defendant intended to deceive consumers",
+        "That the mark is well-known and its distinctiveness is harmed",
+        "That confusion existed",
+        "That both marks are registered"
+      ],
+      "correctIndex": 1,
+      "explanation": "In dilution cases, proving harm to a famous mark’s distinctiveness or reputation is sufficient.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q17",
+      "question": "The mark 'Kodak' used for shoes would most likely be an example of:",
+      "options": [
+        "Infringement",
+        "Blurring",
+        "Tarnishment",
+        "Passing off"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Kodak Shoes’ is unrelated to cameras but weakens the distinctiveness of ‘Kodak’, thus blurring.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q18",
+      "question": "Which of the following cannot claim dilution protection?",
+      "options": [
+        "Mercedes-Benz",
+        "Google",
+        "Apple (for electronics)",
+        "Best Bakery"
+      ],
+      "correctIndex": 3,
+      "explanation": "‘Best Bakery’ is not a famous or distinctive mark; only famous marks get dilution protection.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q19",
+      "question": "Why was 'Benz Underwear' found infringing in the Mercedes-Benz case?",
+      "options": [
+        "Because it caused confusion",
+        "Because it diluted a famous mark",
+        "Because it copied packaging",
+        "Because it was registered abroad"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Benz Underwear’ diluted the distinctiveness of ‘Mercedes-Benz’, a well-known mark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_7_q20",
+      "question": "A 'well-known mark' enjoys protection even for dissimilar goods because:",
+      "options": [
+        "It’s automatically registered worldwide",
+        "It represents national interest",
+        "Its unique identity deserves protection from dilution",
+        "It’s used by multiple companies"
+      ],
+      "correctIndex": 2,
+      "explanation": "Well-known marks are protected even across different product categories to prevent dilution of their identity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_7_q21",
+      "question": "A parody using a famous mark in poor taste could amount to:",
+      "options": [
+        "Fair use",
+        "Tarnishment",
+        "Passing off",
+        "Comparative advertising"
+      ],
+      "correctIndex": 1,
+      "explanation": "A parody that damages the image of a famous mark can amount to dilution by tarnishment.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_7_q22",
+      "question": "How can a brand defend against a dilution claim?",
+      "options": [
+        "By showing fair use or parody exception",
+        "By denying use of a mark",
+        "By proving confusion existed",
+        "By filing for passing off"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fair use, news reporting, and parody are defenses against dilution if there’s no intent to harm reputation.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_7_q23",
+      "question": "Which famous case globally established the concept of dilution?",
+      "options": [
+        "Coca-Cola vs. Koke Company",
+        "Panavision vs. Toeppen",
+        "Schechter’s 'Kodak' doctrine",
+        "Starbucks vs. Charbucks"
+      ],
+      "correctIndex": 2,
+      "explanation": "Frank Schechter introduced dilution in the 1927 'Kodak' doctrine — arguing that distinctiveness, not confusion, must be protected.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_7_q24",
+      "question": "Which of these would most likely be *excluded* from dilution protection?",
+      "options": [
+        "Marks with short-term local fame",
+        "Marks with nationwide reputation",
+        "Marks recognized by courts as 'well-known'",
+        "Internationally famous marks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only marks with substantial, widespread recognition get dilution protection; local fame isn’t sufficient.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_7_q25",
+      "question": "Dilution protection aims to prevent:",
+      "options": [
+        "Consumer confusion",
+        "Trademark piracy",
+        "Loss of uniqueness of famous marks",
+        "Registration delays"
+      ],
+      "correctIndex": 2,
+      "explanation": "The goal of dilution law is to preserve the uniqueness and selling power of famous trademarks.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

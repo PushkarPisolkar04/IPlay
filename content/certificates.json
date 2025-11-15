@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:00:00Z",
+  "description": "Certificate templates for realm completion",
+  "templates": [
+    {
+      "id": "realm_completion",
+      "name": "Realm Completion Certificate",
+      "description": "Awarded when a student completes all levels in a realm",
+      "template": {
+        "title": "Certificate of Achievement",
+        "subtitle": "This is to certify that",
+        "bodyText": "has successfully completed the {realmName} and demonstrated mastery of {subject} concepts",
+        "footer": "IPlay - Intellectual Property Learning Platform",
+        "signatureLabel": "Authorized by IPlay",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#6366F1",
+        "accentColor": "#EC4899",
+        "fontFamily": "Poppins",
+        "includeQRCode": true,
+        "includeSerialNumber": true,
+        "includeDate": true,
+        "includeScore": false
+      },
+      "realms": {
+        "realm_copyright": {
+          "realmName": "Copyright Realm",
+          "subject": "Copyright Law and Protection",
+          "iconPath": "assets/logos/copyright_logo.png",
+          "color": "#FF6B35"
+        },
+        "realm_trademark": {
+          "realmName": "Trademark Realm",
+          "subject": "Trademark Law and Brand Protection",
+          "iconPath": "assets/logos/trademark_logo.png",
+          "color": "#2196F3"
+        },
+        "realm_patent": {
+          "realmName": "Patent Realm",
+          "subject": "Patent Law and Innovation Protection",
+          "iconPath": "assets/logos/patent_logo.png",
+          "color": "#4CAF50"
+        },
+        "realm_design": {
+          "realmName": "Industrial Design Realm",
+          "subject": "Industrial Design Protection",
+          "iconPath": "assets/logos/design_logo.png",
+          "color": "#E91E63"
+        },
+        "realm_gi": {
+          "realmName": "Geographical Indication Realm",
+          "subject": "Geographical Indication Protection",
+          "iconPath": "assets/logos/gi_logo.png",
+          "color": "#FFC107"
+        },
+        "realm_trade_secrets": {
+          "realmName": "Trade Secrets Realm",
+          "subject": "Trade Secret Protection",
+          "iconPath": "assets/logos/trade_secrets_logo.png",
+          "color": "#9C27B0"
+        }
+      }
+    },
+    {
+      "id": "ipr_champion",
+      "name": "IPR Champion Certificate",
+      "description": "Awarded when a student completes all 6 realms",
+      "template": {
+        "title": "IPR Champion Certificate",
+        "subtitle": "This is to certify that",
+        "bodyText": "has successfully completed all 6 Intellectual Property Rights realms and achieved mastery in Copyright, Trademark, Patent, Industrial Design, Geographical Indication, and Trade Secrets",
+        "footer": "IPlay - Intellectual Property Learning Platform",
+        "signatureLabel": "Authorized by IPlay",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#FFD700",
+        "accentColor": "#FF6B35",
+        "fontFamily": "Poppins",
+        "includeQRCode": true,
+        "includeSerialNumber": true,
+        "includeDate": true,
+        "includeScore": true
+      }
+    }
+  ],
+  "serialNumberFormat": "IPLAY-{YEAR}-{REALM}-{NUMBER}",
+  "qrCodeData": {
+    "baseUrl": "https://iplay.app/verify/",
+    "includeUserId": true,
+    "includeRealmId": true,
+    "includeCertificateId": true,
+    "includeDate": true
+  },
+  "storage": {
+    "path": "certificates/{userId}/{certificateId}.pdf",
+    "thumbnailPath": "certificates/{userId}/thumbnails/{certificateId}.png"
+  }
+}

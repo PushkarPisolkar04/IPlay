@@ -1,0 +1,108 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:00:00Z",
+  "description": "Notification templates for various app events",
+  "templates": {
+    "badge_unlocked": {
+      "title": "🎉 Badge Unlocked!",
+      "body": "You've earned the {badgeName} badge! +{xpBonus} XP",
+      "action": "view_badge",
+      "priority": "high",
+      "sound": "badge_unlock.mp3"
+    },
+    "level_complete": {
+      "title": "✅ Level Complete!",
+      "body": "Great job! You completed {levelName}. +{xpReward} XP",
+      "action": "view_progress",
+      "priority": "normal",
+      "sound": "level_complete.mp3"
+    },
+    "realm_complete": {
+      "title": "🏆 Realm Complete!",
+      "body": "Congratulations! You've mastered the {realmName}. Certificate earned!",
+      "action": "view_certificate",
+      "priority": "high",
+      "sound": "realm_complete.mp3"
+    },
+    "streak_milestone": {
+      "title": "🔥 Streak Milestone!",
+      "body": "{streakDays} day streak! Keep it up! +{xpBonus} XP",
+      "action": "view_profile",
+      "priority": "normal",
+      "sound": "streak.mp3"
+    },
+    "daily_challenge": {
+      "title": "🎯 Daily Challenge Available!",
+      "body": "New daily challenge is ready. Complete it to earn {xpReward} XP!",
+      "action": "open_daily_challenge",
+      "priority": "normal",
+      "sound": "notification.mp3"
+    },
+    "assignment_new": {
+      "title": "📝 New Assignment",
+      "body": "{teacherName} posted a new assignment: {assignmentTitle}",
+      "action": "view_assignment",
+      "priority": "high",
+      "sound": "notification.mp3"
+    },
+    "assignment_graded": {
+      "title": "✅ Assignment Graded",
+      "body": "Your assignment '{assignmentTitle}' has been graded. Score: {score}%",
+      "action": "view_assignment",
+      "priority": "normal",
+      "sound": "notification.mp3"
+    },
+    "announcement_new": {
+      "title": "📢 New Announcement",
+      "body": "{teacherName}: {announcementPreview}",
+      "action": "view_announcement",
+      "priority": "normal",
+      "sound": "notification.mp3"
+    },
+    "join_request_approved": {
+      "title": "✅ Join Request Approved",
+      "body": "You've been added to {classroomName}!",
+      "action": "view_classroom",
+      "priority": "high",
+      "sound": "notification.mp3"
+    },
+    "join_request_denied": {
+      "title": "❌ Join Request Denied",
+      "body": "Your request to join {classroomName} was not approved.",
+      "action": "none",
+      "priority": "normal",
+      "sound": "notification.mp3"
+    },
+    "leaderboard_rank_up": {
+      "title": "📈 Rank Up!",
+      "body": "You're now #{rank} in the {scope} leaderboard!",
+      "action": "view_leaderboard",
+      "priority": "normal",
+      "sound": "notification.mp3"
+    },
+    "content_flagged": {
+      "title": "⚠️ Content Flagged",
+      "body": "Inappropriate content detected in {contentType}. Principal notified.",
+      "action": "view_report",
+      "priority": "high",
+      "sound": "alert.mp3",
+      "recipientRole": "principal"
+    },
+    "report_escalated": {
+      "title": "🚨 Report Escalated",
+      "body": "Moderation report #{reportId} requires admin attention.",
+      "action": "view_report",
+      "priority": "urgent",
+      "sound": "alert.mp3",
+      "recipientRole": "admin"
+    }
+  },
+  "settings": {
+    "defaultSound": "notification.mp3",
+    "defaultPriority": "normal",
+    "quietHoursStart": "22:00",
+    "quietHoursEnd": "08:00",
+    "groupSimilar": true,
+    "maxPerDay": 20
+  }
+}

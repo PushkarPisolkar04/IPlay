@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_2",
+  "realmId": "realm_gi",
+  "levelNumber": 2,
+  "name": "The Legal Framework (GI Act, 1999)",
+  "description": "Learn about India's GI law and how it protects regional products under the Geographical Indications Act.",
+  "summary": "Understand the Indian legal framework for GI protection, including the GI Act 1999, the GI Registry, and how GIs are registered and enforced in India.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 240,
+  
+  "content": "## The Legal Framework (GI Act, 1999)\n\nIn Level 1, we learned *what* a GI is. Now, let's understand *how* it's protected under Indian law.\n\n### The Geographical Indications of Goods (Registration and Protection) Act, 1999\n\nIndia's GI protection is governed by the **Geographical Indications of Goods (Registration and Protection) Act, 1999**, which came into force on **September 15, 2003**.\n\nThis Act was created to comply with India's obligations under the **TRIPS Agreement** (Trade-Related Aspects of Intellectual Property Rights) of the World Trade Organization (WTO).\n\n### The GI Registry\n\nThe **Geographical Indications Registry** is located in **Chennai** and operates under the **Office of the Controller General of Patents, Designs, and Trade Marks**.\n\n**Website:** https://ipindia.gov.in/geographical-indication.htm\n\nThe Registry is responsible for:\n- Examining GI applications\n- Registering GIs\n- Maintaining the GI Register\n- Publishing the GI Journal\n\n### What Can Be Registered as a GI?\n\nUnder the Act, a GI can be registered for:\n\n1. **Agricultural goods** - Crops, spices, fruits (e.g., Alphonso Mango, Nagpur Orange)\n2. **Natural goods** - Minerals, natural products (e.g., Kashmir Saffron)\n3. **Manufactured goods** - Handicrafts, textiles, processed foods (e.g., Kanchipuram Silk, Mysore Sandalwood Oil)\n\n**Important:** Services cannot be registered as GIs in India (only goods).\n\n### Who Can Apply for GI Registration?\n\nUnlike trademarks (where a company applies), GI applications must be filed by:\n\n1. **An association of persons** - A group of producers/manufacturers from that region\n2. **A producers' organization** - A cooperative or federation\n3. **Any organization or authority** - Established by law to represent the interests of producers\n\n**Example:** The Tea Board of India applied for 'Darjeeling Tea' on behalf of all Darjeeling tea producers.\n\n### Duration of GI Protection\n\nA registered GI is valid for **10 years** from the date of registration and can be **renewed indefinitely** for further periods of 10 years.\n\n### Enforcement\n\nUnauthorized use of a registered GI is a **criminal offense** under the Act. Penalties include:\n- **Imprisonment** for a term of 6 months to 3 years\n- **Fine** ranging from ₹50,000 to ₹2,00,000\n\n--- \n\n### 💡 Level 2 Case Study: The First Indian GI\n\n* **The Product:** Darjeeling Tea (West Bengal)\n* **The Milestone:** On October 11, 2003, 'Darjeeling Tea' became the **first product in India** to be registered as a Geographical Indication (GI Registration No. 1).\n* **The Applicant:** The Tea Board of India applied on behalf of all 87 tea gardens in the Darjeeling district.\n* **The Impact:** This registration gave legal teeth to fight fake 'Darjeeling' tea being sold globally. The Tea Board estimates that before GI registration, only 25% of tea sold as 'Darjeeling' worldwide was genuine. The GI has helped combat this fraud.",
+  
+  "keyPoints": [
+    "GI protection in India is governed by the Geographical Indications Act, 1999.",
+    "The GI Registry is located in Chennai and operates under the Controller General of Patents.",
+    "Only goods (agricultural, natural, manufactured) can be registered as GIs, not services.",
+    "GI applications must be filed by associations of producers, not individual companies.",
+    "A registered GI is valid for 10 years and can be renewed indefinitely.",
+    "Unauthorized use of a registered GI is a criminal offense with imprisonment and fines."
+  ],
+  
+  "learningObjectives": [
+    "Identify the Indian law that governs GI protection.",
+    "Explain who can apply for GI registration in India.",
+    "State the duration of GI protection and renewal process.",
+    "Describe the penalties for unauthorized use of a registered GI."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:10:00Z"
+}

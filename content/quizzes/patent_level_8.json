@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_8",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_8_q1",
+      "question": "What is a Patent Troll?",
+      "options": [
+        "A patent attorney",
+        "A company that owns patents but makes no products",
+        "A patent examiner",
+        "A patent inventor"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Patent Troll (NPE) is a company that owns patents but doesn't make or sell any products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q2",
+      "question": "What is the formal name for a Patent Troll?",
+      "options": [
+        "Patent Holder",
+        "Non-Practicing Entity (NPE)",
+        "Patent Office",
+        "Patent Agent"
+      ],
+      "correctIndex": 1,
+      "explanation": "The formal term is Non-Practicing Entity (NPE).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q3",
+      "question": "What is the Patent Troll business model?",
+      "options": [
+        "Invent and sell products",
+        "Buy patents, wait for others to innovate, then sue",
+        "License patents fairly",
+        "Donate patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "They buy patents, wait for others to create successful products, then sue for infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q4",
+      "question": "Why do companies often settle with Patent Trolls?",
+      "options": [
+        "Trolls are right",
+        "Lawsuits cost millions, so settling is cheaper",
+        "It's required by law",
+        "Trolls are friendly"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patent lawsuits cost millions, so it's often cheaper to settle even if you'd likely win.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q5",
+      "question": "What is a Standard Essential Patent (SEP)?",
+      "options": [
+        "A basic patent",
+        "A patent you must use to comply with a standard like 5G",
+        "An expensive patent",
+        "A government patent"
+      ],
+      "correctIndex": 1,
+      "explanation": "An SEP is a patent you must infringe to comply with a technical standard like 5G or Wi-Fi.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q6",
+      "question": "What is a technical 'standard'?",
+      "options": [
+        "A quality level",
+        "Technology everyone agrees to use (like Wi-Fi, 5G, USB-C)",
+        "A patent type",
+        "A law"
+      ],
+      "correctIndex": 1,
+      "explanation": "A standard is technology everyone agrees to use so products from different companies work together.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q7",
+      "question": "What is the 'hold-up' problem with SEPs?",
+      "options": [
+        "Traffic jams",
+        "A patent owner could block an entire industry",
+        "Slow internet",
+        "High prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "An SEP owner could 'hold up' an entire industry by refusing to license or charging excessive fees.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q8",
+      "question": "What does FRAND stand for?",
+      "options": [
+        "Free and Random",
+        "Fair, Reasonable, And Non-Discriminatory",
+        "Fast Registration And Notification",
+        "Federal Rules And Norms"
+      ],
+      "correctIndex": 1,
+      "explanation": "FRAND stands for Fair, Reasonable, And Non-Discriminatory licensing terms.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q9",
+      "question": "What must SEP owners agree to?",
+      "options": [
+        "Give patents away free",
+        "License on FRAND terms to everyone",
+        "Only license to friends",
+        "Charge maximum prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "SEP owners must agree to license their patents on FRAND terms to everyone, including competitors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q10",
+      "question": "Why are tech companies suing over SEPs?",
+      "options": [
+        "They don't want to pay",
+        "They're fighting over what 'fair and reasonable' royalty means",
+        "They want free patents",
+        "They're bored"
+      ],
+      "correctIndex": 1,
+      "explanation": "They're fighting over what constitutes a 'fair and reasonable' royalty rate.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q11",
+      "question": "Can you make a 5G phone without using SEPs?",
+      "options": [
+        "Yes, easily",
+        "No, you must use SEPs to comply with 5G standard",
+        "Only in some countries",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, you must use SEPs to comply with the 5G standard - that's what makes them 'essential'.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q12",
+      "question": "What do Patent Trolls typically buy?",
+      "options": [
+        "New patents",
+        "Broad, old, or vague patents from bankrupt companies",
+        "Expensive patents",
+        "Government patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "They typically buy broad, old, or vague patents from bankrupt companies.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q13",
+      "question": "Why is Patent Trolling considered problematic?",
+      "options": [
+        "It's illegal",
+        "It drains money from real innovators without contributing innovation",
+        "It's expensive",
+        "It's slow"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's seen as legal extortion that drains money from real innovators without contributing any innovation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q14",
+      "question": "What is a Standard-Setting Organization (SSO)?",
+      "options": [
+        "A government agency",
+        "A group that creates technical standards like 5G",
+        "A patent office",
+        "A court"
+      ],
+      "correctIndex": 1,
+      "explanation": "An SSO is a group of companies and experts that create technical standards.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q15",
+      "question": "Can an SEP owner refuse to license to a competitor?",
+      "options": [
+        "Yes, freely",
+        "No, they must license on FRAND terms",
+        "Only in some cases",
+        "Only with court approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, they committed to license on FRAND terms to everyone, including competitors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q16",
+      "question": "What are companies like Apple and Samsung fighting about?",
+      "options": [
+        "Who invented smartphones",
+        "What royalty rate is 'fair and reasonable' for SEPs",
+        "Who has more patents",
+        "Market share"
+      ],
+      "correctIndex": 1,
+      "explanation": "They're fighting over what constitutes a 'fair and reasonable' royalty rate for SEPs.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_8_q17",
+      "question": "Is 1% or 0.1% a fair royalty for a phone chip?",
+      "options": [
+        "Clearly 1%",
+        "Clearly 0.1%",
+        "This is what companies are fighting about in court",
+        "Neither"
+      ],
+      "correctIndex": 2,
+      "explanation": "This is exactly what companies are fighting about - there's no clear answer.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_8_q18",
+      "question": "Do Patent Trolls invent anything?",
+      "options": [
+        "Yes, everything",
+        "No, they just buy and enforce patents",
+        "Sometimes",
+        "Always"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, they don't invent anything - they just buy patents and sue others.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q19",
+      "question": "What is the 'troll toll'?",
+      "options": [
+        "A bridge fee",
+        "The settlement amount companies pay to avoid expensive lawsuits",
+        "A patent fee",
+        "A licensing fee"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'troll toll' is the settlement amount companies pay to avoid expensive patent litigation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q20",
+      "question": "Which companies are involved in SEP wars?",
+      "options": [
+        "Small startups",
+        "Tech giants like Apple, Samsung, Nokia, Qualcomm",
+        "Retailers",
+        "Banks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tech giants like Apple, Samsung, Nokia, Ericsson, and Qualcomm are heavily involved in SEP litigation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_8_q21",
+      "question": "What does 'Non-Discriminatory' mean in FRAND?",
+      "options": [
+        "No discrimination by race",
+        "Must offer similar terms to all licensees",
+        "Must be free",
+        "Must be expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Non-Discriminatory' means you must offer similar licensing terms to all licensees.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q22",
+      "question": "Why do standards need SEPs?",
+      "options": [
+        "They don't",
+        "Standards often require patented technology to work",
+        "To make money",
+        "To create lawsuits"
+      ],
+      "correctIndex": 1,
+      "explanation": "Standards often require patented technology to function, making those patents 'essential'.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q23",
+      "question": "Can you avoid SEPs by using a different standard?",
+      "options": [
+        "Yes, easily",
+        "Not if you want your product to work with others (like 5G phones)",
+        "Always",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Not if you want interoperability - you need to use the standard everyone else uses.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_8_q24",
+      "question": "What is the biggest patent battlefield today?",
+      "options": [
+        "Copyright",
+        "Standard Essential Patents (SEPs)",
+        "Trademarks",
+        "Trade secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "SEPs are the biggest and most expensive patent battlefield, especially in tech.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_8_q25",
+      "question": "Why is the FRAND commitment important?",
+      "options": [
+        "It's not",
+        "It prevents SEP owners from holding up entire industries",
+        "It increases prices",
+        "It eliminates patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "FRAND prevents SEP owners from using their essential patents to hold up entire industries.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

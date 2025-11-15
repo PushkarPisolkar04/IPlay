@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_3",
+  "realmId": "realm_gi",
+  "levelNumber": 3,
+  "name": "Famous Indian Agricultural GIs",
+  "description": "Explore India's most famous agricultural GIs - from Alphonso Mango to Kashmir Saffron.",
+  "summary": "Discover the agricultural products that have earned GI status in India. Learn what makes them unique and how GI protection helps farmers and producers.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 300,
+  
+  "content": "## Famous Indian Agricultural GIs\n\nIndia's agricultural diversity is reflected in its GI registrations. Let's explore some of the most famous agricultural GIs and understand what makes each one special.\n\n### 1. Alphonso Mango (Maharashtra)\n\n**GI Registration:** 2018\n\n**What Makes it Special:**\n- Grown in the Konkan region of Maharashtra (Ratnagiri, Sindhudurg, Raigad)\n- Unique sweet taste, rich saffron color, and smooth texture\n- The laterite soil, coastal climate, and traditional cultivation methods create its distinctive flavor\n- Known as the 'King of Mangoes'\n\n**GI Protection:** Only mangoes grown in the specified Konkan districts can be sold as 'Alphonso' or 'Hapus'.\n\n### 2. Basmati Rice (Punjab, Haryana, Uttarakhand, Delhi, Himachal Pradesh, J&K, Western UP)\n\n**GI Registration:** 2008\n\n**What Makes it Special:**\n- Extra-long slender grains that elongate at least twice upon cooking\n- Distinctive aroma and flavor\n- Grown in the Indo-Gangetic plains with specific soil and climatic conditions\n- Aged for at least 1-2 years before sale\n\n**GI Protection:** Only rice grown in the specified regions of North India can be called 'Basmati'.\n\n### 3. Kashmir Saffron (Jammu & Kashmir)\n\n**GI Registration:** 2020\n\n**What Makes it Special:**\n- Grown in the Karewa (highlands) of Kashmir at 1,600-1,800 meters altitude\n- Longer and thicker stigmas compared to Iranian saffron\n- Higher crocin content (color strength), safranal (aroma), and picrocrocin (flavor)\n- Cultivated using traditional methods passed down for centuries\n\n**GI Protection:** Only saffron grown in the Pampore region of Kashmir can be sold as 'Kashmir Saffron'.\n\n### 4. Nagpur Orange (Maharashtra)\n\n**GI Registration:** 2014\n\n**What Makes it Special:**\n- Grown in the Nagpur district and surrounding areas\n- Loose-skinned variety with excellent juice content\n- Perfect balance of sweetness and acidity\n- The black cotton soil and climate of Vidarbha region create its unique taste\n\n### 5. Coorg Green Cardamom (Karnataka)\n\n**GI Registration:** 2005\n\n**What Makes it Special:**\n- Grown in the Western Ghats of Coorg (Kodagu) district\n- Bold, green pods with high essential oil content\n- Intense aroma and flavor due to high rainfall and shade-grown cultivation\n- Traditional cultivation under natural forest canopy\n\n### 6. Mizo Chilli (Mizoram)\n\n**GI Registration:** 2018\n\n**What Makes it Special:**\n- Grown in the hilly terrain of Mizoram\n- Extremely pungent with high capsaicin content\n- Unique flavor profile different from other Indian chillies\n- Traditional jhum cultivation methods\n\n--- \n\n### 💡 Level 3 Case Study: The Basmati Battle\n\n* **The Issue:** In the 1990s, a US company (RiceTec) tried to patent 'Basmati' rice lines and sell American-grown rice as 'Basmati'.\n* **India's Response:** The Indian government challenged this, arguing that 'Basmati' is a geographical indication tied to the Indo-Gangetic plains, not a generic term.\n* **The Outcome:** After years of legal battle, RiceTec was forced to drop the use of 'Basmati' for its American rice. India later registered 'Basmati' as a GI in 2008, strengthening its legal protection.\n* **The Lesson:** GI registration is crucial for protecting India's agricultural heritage from misappropriation by foreign companies.",
+  
+  "keyPoints": [
+    "India has numerous agricultural GIs covering fruits, spices, rice, and other crops.",
+    "Alphonso Mango (Konkan region) is known as the 'King of Mangoes' and has GI protection.",
+    "Basmati Rice can only be called 'Basmati' if grown in specific North Indian regions.",
+    "Kashmir Saffron has higher crocin, safranal, and picrocrocin than other saffron varieties.",
+    "GI protection prevents foreign companies from misappropriating Indian agricultural product names.",
+    "Each GI product has unique qualities due to specific geographical, climatic, and traditional factors."
+  ],
+  
+  "learningObjectives": [
+    "Identify at least 5 famous Indian agricultural GIs.",
+    "Explain what makes each GI product unique to its region.",
+    "Describe the Basmati case and its importance for GI protection.",
+    "Understand how geographical and climatic factors contribute to GI products."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:20:00Z"
+}

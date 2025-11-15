@@ -1,0 +1,40 @@
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Wave Projectile - Enhanced -->
+  <defs>
+    <radialGradient id="shieldWaveGrad">
+      <stop offset="0%" style="stop-color:#64B5F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2196F3;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#1976D2;stop-opacity:0.3" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Outer wave ring -->
+  <circle cx="12" cy="12" r="10" fill="none" stroke="#64B5F6" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
+  
+  <!-- Middle wave ring -->
+  <circle cx="12" cy="12" r="7" fill="none" stroke="#42A5F5" stroke-width="2" opacity="0.7" filter="url(#glow)"/>
+  
+  <!-- Inner core -->
+  <circle cx="12" cy="12" r="5" fill="url(#shieldWaveGrad)" opacity="0.9"/>
+  
+  <!-- Copyright symbol background -->
+  <circle cx="12" cy="12" r="4" fill="#0D47A1" opacity="0.3"/>
+  
+  <!-- Copyright symbol -->
+  <circle cx="12" cy="12" r="3.5" fill="none" stroke="white" stroke-width="1.5"/>
+  <path d="M 14 10.5 Q 13 9.5 12 9.5 Q 10.5 9.5 9.5 10.5 Q 9 11 9 12 Q 9 13 9.5 13.5 Q 10.5 14.5 12 14.5 Q 13 14.5 14 13.5" 
+        fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Energy particles -->
+  <circle cx="6" cy="12" r="1" fill="#64B5F6" opacity="0.6"/>
+  <circle cx="18" cy="12" r="1" fill="#64B5F6" opacity="0.6"/>
+  <circle cx="12" cy="6" r="1" fill="#64B5F6" opacity="0.6"/>
+  <circle cx="12" cy="18" r="1" fill="#64B5F6" opacity="0.6"/>
+</svg>

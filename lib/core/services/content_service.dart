@@ -1,102 +1,194 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/realm_model.dart';
-import '../data/realms_data.dart';
-import '../data/copyright_levels_data.dart';
-import '../database/content_database_helper.dart';
 
-/// Service to manage learning content (realms and levels)
+/// Service to manage learning content (realms and levels) from local JSON files
 class ContentService {
-  final ContentDatabaseHelper _dbHelper = ContentDatabaseHelper.instance;
-  /// Get all realms
-  List<RealmModel> getAllRealms() {
-    return RealmsData.getAllRealms();
+  List<RealmModel>? _cachedRealms;
+  Map<String, List<LevelModel>> _cachedLevels = {};
+  Map<String, Map<String, dynamic>> _cachedQuizzes = {};
+
+  /// Get all realms from JSON
+  Future<List<RealmModel>> getAllRealms() async {
+    if (_cachedRealms != null) return _cachedRealms!;
+    
+    try {
+      final jsonString = await rootBundle.loadString('content/realms_v1.0.0.json');
+      final jsonData = json.decode(jsonString);
+      
+      final realms = (jsonData['realms'] as List)
+          .map((r) {
+            try {
+              return RealmModel.fromJson(r as Map<String, dynamic>);
+            } catch (e) {
+              print('Error parsing realm: $e');
+              print('Realm data: $r');
+              rethrow;
+            }
+          })
+          .toList();
+      
+      _cachedRealms = realms;
+      return realms;
+    } catch (e, stackTrace) {
+      print('Error loading realms: $e');
+      print('Stack trace: $stackTrace');
+      return [];
+    }
+  }
+
+  /// Get all realms synchronously (for widgets that need immediate data)
+  List<RealmModel> getAllRealmsSync() {
+    return _cachedRealms ?? [];
   }
 
   /// Get a specific realm by ID
   RealmModel? getRealmById(String realmId) {
-    return RealmsData.getRealmById(realmId);
+    return _cachedRealms?.firstWhere(
+      (r) => r.id == realmId,
+      orElse: () => _cachedRealms!.first,
+    );
   }
 
-  /// Get all levels for a specific realm
-  List<LevelModel> getLevelsForRealm(String realmId) {
-    switch (realmId) {
-      case 'realm_copyright':
-        return CopyrightLevelsData.getAllLevels();
-      // TODO: Add other realms when content is ready
-      case 'realm_trademark':
-      case 'realm_patent':
-      case 'realm_design':
-      case 'realm_gi':
-      case 'realm_trade_secrets':
-        return _generatePlaceholderLevels(realmId);
-      default:
-        return [];
+  /// Get all levels for a specific realm from JSON
+  Future<List<LevelModel>> getLevelsForRealm(String realmId) async {
+    if (_cachedLevels.containsKey(realmId)) {
+      return _cachedLevels[realmId]!;
+    }
+
+    try {
+      // Load all level files for this realm
+      final levels = <LevelModel>[];
+      
+      // Try to load 10 levels (adjust based on your content)
+      for (int i = 1; i <= 10; i++) {
+        try {
+          final levelId = '${realmId.replaceAll('realm_', '')}_level_$i';
+          final level = await getLevelById(levelId);
+          if (level != null) {
+            levels.add(level);
+          } else {
+            break;
+          }
+        } catch (e) {
+          // Level doesn't exist, stop loading
+          break;
+        }
+      }
+      
+      _cachedLevels[realmId] = levels;
+      return levels;
+    } catch (e) {
+      print('Error loading levels for $realmId: $e');
+      return [];
     }
   }
 
-  /// Get a specific level by ID
-  LevelModel? getLevelById(String levelId) {
-    // Check Copyright realm
-    final copyrightLevel = CopyrightLevelsData.getLevelById(levelId);
-    if (copyrightLevel != null) return copyrightLevel;
-
-    // TODO: Check other realms when content is ready
-
-    return null;
+  /// Get a specific level by ID from JSON
+  /// Note: Does NOT cache to ensure quiz questions are reshuffled on each load
+  Future<LevelModel?> getLevelById(String levelId) async {
+    try {
+      print('📚 Loading level: $levelId');
+      
+      // Load level content
+      final jsonString = await rootBundle.loadString('content/levels/$levelId.json');
+      print('✅ Level JSON loaded successfully');
+      
+      final jsonData = json.decode(jsonString) as Map<String, dynamic>;
+      print('✅ Level JSON parsed. Keys: ${jsonData.keys.join(", ")}');
+      
+      // Ensure required fields exist with proper defaults
+      if (!jsonData.containsKey('content')) {
+        jsonData['content'] = jsonData['description'] ?? '';
+      }
+      
+      // Load quiz questions from separate file and randomly select 5
+      // This happens on EVERY load so retaking quiz gives different questions
+      List<Map<String, dynamic>> quizQuestions = [];
+      try {
+        print('📝 Loading quiz for: $levelId');
+        final quizString = await rootBundle.loadString('content/quizzes/$levelId.json');
+        final quizData = json.decode(quizString) as Map<String, dynamic>;
+        final questions = quizData['questions'] as List<dynamic>?;
+        if (questions != null) {
+          print('✅ Found ${questions.length} quiz questions');
+          
+          // Convert all questions to map format
+          final allQuestions = questions.map((q) {
+            final question = q as Map<String, dynamic>;
+            return {
+              'question': question['question'] as String,
+              'options': (question['options'] as List<dynamic>)
+                  .map((e) => e.toString())
+                  .toList(),
+              'correctIndex': question['correctIndex'] as int,
+              'explanation': question['explanation'] as String,
+            };
+          }).toList();
+          
+          // Randomly shuffle and select 5 questions (different each time!)
+          allQuestions.shuffle();
+          quizQuestions = allQuestions.take(5).toList();
+          print('✅ Selected 5 random questions for quiz');
+        }
+      } catch (e) {
+        print('⚠️ Error loading quiz for $levelId: $e');
+      }
+      
+      // Merge quiz into level data
+      jsonData['quiz'] = quizQuestions;
+      
+      print('✅ Creating LevelModel with ${quizQuestions.length} quiz questions');
+      print('Level data: id=${jsonData['id']}, realmId=${jsonData['realmId']}, levelNumber=${jsonData['levelNumber']}');
+      
+      final level = LevelModel.fromJson(jsonData);
+      print('✅ Level loaded successfully: ${level.name}');
+      
+      return level;
+    } catch (e, stackTrace) {
+      print('❌ Error loading level $levelId: $e');
+      print('Stack trace: $stackTrace');
+      return null;
+    }
+  }
+  
+  /// Get level content as JSON (for backward compatibility)
+  Future<Map<String, dynamic>?> getLevelContent(String levelId) async {
+    try {
+      final jsonString = await rootBundle.loadString('content/levels/$levelId.json');
+      return json.decode(jsonString) as Map<String, dynamic>;
+    } catch (e) {
+      print('Error loading level content $levelId: $e');
+      return null;
+    }
   }
 
-  /// Generate placeholder levels for realms without content yet
-  List<LevelModel> _generatePlaceholderLevels(String realmId) {
-    final realm = getRealmById(realmId);
-    if (realm == null) return [];
+  /// Get quiz for a specific level from JSON
+  Future<Map<String, dynamic>?> getQuizForLevel(String levelId) async {
+    if (_cachedQuizzes.containsKey(levelId)) {
+      return _cachedQuizzes[levelId];
+    }
 
-    return List.generate(realm.totalLevels, (index) {
-      final levelNumber = index + 1;
-      return LevelModel(
-        id: '${realmId}_level_$levelNumber',
-        realmId: realmId,
-        levelNumber: levelNumber,
-        name: 'Level $levelNumber (Coming Soon)',
-        description: 'This level is under development',
-        content: '''
-# Coming Soon!
-
-This level is currently being developed. Check back soon for complete content on ${realm.name}.
-
-## What to expect:
-- Comprehensive video lessons
-- Detailed text content
-- Interactive quizzes
-- Practical examples
-
-Stay tuned! 🚀
-''',
-        keyPoints: [
-          'Content coming soon',
-          'Check back for updates',
-        ],
-        quiz: [
-          QuizQuestion(
-            question: 'This level is under development. Ready to explore other realms?',
-            options: ['Yes, let\'s go!', 'I\'ll wait', 'Show me more', 'Take me back'],
-            correctIndex: 0,
-            explanation: 'Great! More content is being added regularly. Check back soon!',
-          ),
-        ],
-        xpReward: 50,
-        estimatedMinutes: 5,
-      );
-    });
+    try {
+      final jsonString = await rootBundle.loadString('content/quizzes/$levelId.json');
+      final jsonData = json.decode(jsonString);
+      _cachedQuizzes[levelId] = jsonData;
+      return jsonData;
+    } catch (e) {
+      print('Error loading quiz for $levelId: $e');
+      return null;
+    }
   }
 
   /// Search levels by query
-  List<LevelModel> searchLevels(String query) {
+  Future<List<LevelModel>> searchLevels(String query) async {
     if (query.isEmpty) return [];
 
     final allLevels = <LevelModel>[];
-    for (final realm in getAllRealms()) {
-      allLevels.addAll(getLevelsForRealm(realm.id));
+    final realms = await getAllRealms();
+    for (final realm in realms) {
+      final levels = await getLevelsForRealm(realm.id);
+      allLevels.addAll(levels);
     }
 
     final lowerQuery = query.toLowerCase();
@@ -107,135 +199,25 @@ Stay tuned! 🚀
     }).toList();
   }
 
-  /// Load level content from JSON assets
-  Future<Map<String, dynamic>?> loadLevelFromAssets(String levelId) async {
-    try {
-      // Try to load from assets
-      final jsonString = await rootBundle.loadString('assets/content/$levelId.json');
-      return json.decode(jsonString) as Map<String, dynamic>;
-    } catch (e) {
-      // print('Error loading level $levelId from assets: $e');
-      return null;
-    }
+  /// Clear cache
+  void clearCache() {
+    _cachedRealms = null;
+    _cachedLevels.clear();
+    _cachedQuizzes.clear();
   }
 
-  /// Get level content with caching
-  Future<Map<String, dynamic>?> getLevelContent(String levelId) async {
-    // First, check cache
-    final cached = await _dbHelper.getCachedLevel(levelId);
-    if (cached != null) {
-      // Check if cache is still valid (less than 24 hours old)
-      final cachedAt = DateTime.fromMillisecondsSinceEpoch(cached['cached_at'] as int);
-      final now = DateTime.now();
-      if (now.difference(cachedAt).inHours < 24) {
-        return json.decode(cached['content_json'] as String) as Map<String, dynamic>;
+  /// Preload all content at app startup
+  Future<void> preloadContent() async {
+    await getAllRealms();
+    // Optionally preload first level of each realm
+    final realms = _cachedRealms ?? [];
+    for (final realm in realms) {
+      try {
+        await getLevelsForRealm(realm.id);
+      } catch (e) {
+        print('Error preloading ${realm.id}: $e');
       }
     }
-
-    // Load from assets
-    final content = await loadLevelFromAssets(levelId);
-    if (content != null) {
-      // Cache the content
-      await _dbHelper.cacheLevelContent(
-        levelId: levelId,
-        realmId: content['realmId'] as String,
-        contentJson: json.encode(content),
-        version: content['version'] as String,
-        updatedAt: content['updatedAt'] as String,
-      );
-    }
-
-    return content;
-  }
-
-  /// Check if content version needs update
-  Future<bool> needsContentUpdate(String realmId, String currentVersion) async {
-    final versionInfo = await _dbHelper.getContentVersion(realmId);
-    if (versionInfo == null) return true;
-
-    final cachedVersion = versionInfo['version'] as String;
-    return _compareVersions(currentVersion, cachedVersion) > 0;
-  }
-
-  /// Compare semantic versions (returns 1 if v1 > v2, -1 if v1 < v2, 0 if equal)
-  int _compareVersions(String v1, String v2) {
-    final parts1 = v1.split('.').map(int.parse).toList();
-    final parts2 = v2.split('.').map(int.parse).toList();
-
-    for (int i = 0; i < 3; i++) {
-      if (parts1[i] > parts2[i]) return 1;
-      if (parts1[i] < parts2[i]) return -1;
-    }
-    return 0;
-  }
-
-  /// Download realm for offline access
-  Future<bool> downloadRealmForOffline(String realmId) async {
-    try {
-      final realm = getRealmById(realmId);
-      if (realm == null) return false;
-
-      int totalSize = 0;
-      int levelsCount = 0;
-
-      // Load and cache all levels for this realm
-      for (int i = 1; i <= realm.totalLevels; i++) {
-        final levelId = '${realmId.replaceAll('realm_', '')}_level_$i';
-        final content = await getLevelContent(levelId);
-        
-        if (content != null) {
-          levelsCount++;
-          totalSize += json.encode(content).length;
-        }
-      }
-
-      // Mark realm as downloaded
-      await _dbHelper.markRealmDownloaded(
-        realmId: realmId,
-        totalSize: totalSize,
-        levelsCount: levelsCount,
-      );
-
-      return true;
-    } catch (e) {
-      // print('Error downloading realm $realmId: $e');
-      return false;
-    }
-  }
-
-  /// Check if realm is available offline
-  Future<bool> isRealmAvailableOffline(String realmId) async {
-    return await _dbHelper.isRealmDownloaded(realmId);
-  }
-
-  /// Get all downloaded realms
-  Future<List<String>> getDownloadedRealmIds() async {
-    final downloaded = await _dbHelper.getDownloadedRealms();
-    return downloaded.map((r) => r['realm_id'] as String).toList();
-  }
-
-  /// Delete offline realm data
-  Future<void> deleteOfflineRealm(String realmId) async {
-    await _dbHelper.deleteRealmCache(realmId);
-  }
-
-  /// Clear all cached content
-  Future<void> clearAllCache() async {
-    await _dbHelper.clearAllCache();
-  }
-
-  /// Update content version for a realm
-  Future<void> updateRealmVersion(String realmId, String version) async {
-    await _dbHelper.updateContentVersion(
-      realmId: realmId,
-      version: version,
-    );
-  }
-
-  /// Get cached levels count for a realm
-  Future<int> getCachedLevelsCount(String realmId) async {
-    final levels = await _dbHelper.getCachedLevelsForRealm(realmId);
-    return levels.length;
   }
 }
 

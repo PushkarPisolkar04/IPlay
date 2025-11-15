@@ -1,0 +1,367 @@
+{
+  "levelId": "trademark_level_1",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+
+    {
+      "id": "trademark_1_q1",
+      "question": "What is the main purpose of a trademark?",
+      "options": [
+        "To protect the inventor’s idea",
+        "To identify the source of goods or services",
+        "To prevent copying of technology",
+        "To register a company name"
+      ],
+      "correctIndex": 1,
+      "explanation": "A trademark acts as a source identifier — helping consumers recognize the origin of goods or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q2",
+      "question": "Which of the following can be a trademark?",
+      "options": [
+        "A logo",
+        "A slogan",
+        "A word or brand name",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Trademarks can include words, logos, slogans, shapes, or even sounds that identify the source of goods or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q3",
+      "question": "Trademarks help consumers by:",
+      "options": [
+        "Making products cheaper",
+        "Reducing advertising costs",
+        "Preventing confusion about product origin",
+        "Ensuring product safety"
+      ],
+      "correctIndex": 2,
+      "explanation": "The main goal of trademark law is to prevent consumer confusion about the origin of goods or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q4",
+      "question": "Which of the following is an example of a 'word mark'?",
+      "options": [
+        "Nike Swoosh logo",
+        "Coca-Cola written name",
+        "Intel jingle sound",
+        "Shape of a Coca-Cola bottle"
+      ],
+      "correctIndex": 1,
+      "explanation": "A word mark protects the text-based name or word representation of a brand, like 'Coca-Cola'.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q5",
+      "question": "What does the ™ symbol mean?",
+      "options": [
+        "Registered trademark under Indian law",
+        "Trademark pending registration",
+        "Trade secret protection",
+        "Patent granted"
+      ],
+      "correctIndex": 1,
+      "explanation": "™ indicates that a trademark claim is being made but it may not yet be officially registered.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q6",
+      "question": "The ® symbol can be used only when:",
+      "options": [
+        "You have applied for trademark registration",
+        "You plan to use the mark",
+        "Your trademark is officially registered",
+        "You use a unique logo"
+      ],
+      "correctIndex": 2,
+      "explanation": "The ® symbol denotes a registered trademark with the authorities.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q7",
+      "question": "Which of these is NOT a purpose of trademark law?",
+      "options": [
+        "Prevent consumer confusion",
+        "Identify source of goods",
+        "Protect original creative works",
+        "Build brand recognition"
+      ],
+      "correctIndex": 2,
+      "explanation": "Protecting creative works is the domain of copyright, not trademark law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q8",
+      "question": "A logo like the 'Apple' symbol on devices primarily serves to:",
+      "options": [
+        "Indicate product design",
+        "Show ownership of the company",
+        "Act as a source identifier for consumers",
+        "Indicate government approval"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Apple logo tells consumers that the product comes from Apple Inc. — it acts as a source identifier.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q9",
+      "question": "Which of these is an example of a slogan trademark?",
+      "options": [
+        "“Just Do It” by Nike",
+        "The Nike Swoosh symbol",
+        "The Apple logo",
+        "Shape of a perfume bottle"
+      ],
+      "correctIndex": 0,
+      "explanation": "“Just Do It” is a registered slogan mark owned by Nike, acting as a strong brand identifier.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_1_q10",
+      "question": "The main goal of trademark protection is to:",
+      "options": [
+        "Prevent copying of inventions",
+        "Encourage artistic creativity",
+        "Prevent consumer confusion and unfair competition",
+        "Protect trade secrets"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trademark law ensures that consumers aren’t misled and that businesses compete fairly under distinct brand identities.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_1_q11",
+      "question": "Which of these best describes a 'logo mark'?",
+      "options": [
+        "A graphic design representing a brand",
+        "A legal document for registration",
+        "A slogan used in advertising",
+        "A sound associated with a company"
+      ],
+      "correctIndex": 0,
+      "explanation": "A logo mark uses a graphic or symbol (like Nike’s swoosh) to represent a brand visually.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q12",
+      "question": "Why is the 'Nike Swoosh' a powerful trademark?",
+      "options": [
+        "It directly describes shoes",
+        "It’s unique and instantly recognizable",
+        "It’s registered only in the US",
+        "It contains the company’s name"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Nike Swoosh is distinctive, easily recognizable, and symbolizes brand origin — making it a strong mark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q13",
+      "question": "In India, trademarks are governed by which law?",
+      "options": [
+        "The Patents Act, 1970",
+        "The Copyright Act, 1957",
+        "The Trade Marks Act, 1999",
+        "The Design Act, 2000"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trademark protection in India is regulated under the Trade Marks Act, 1999.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q14",
+      "question": "Which example best shows consumer confusion?",
+      "options": [
+        "Two companies using similar-looking logos for similar products",
+        "A company changing its logo every year",
+        "Using a long brand name",
+        "Selling multiple products under one brand"
+      ],
+      "correctIndex": 0,
+      "explanation": "When two brands have similar marks on related goods, consumers may confuse the source — a key issue trademark law prevents.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q15",
+      "question": "Which of the following is NOT a type of trademark?",
+      "options": [
+        "Word mark",
+        "Design mark",
+        "Idea mark",
+        "Slogan mark"
+      ],
+      "correctIndex": 2,
+      "explanation": "There’s no concept of an 'idea mark' — trademarks protect identifiers like words, logos, or slogans, not ideas.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q16",
+      "question": "A trademark helps businesses to:",
+      "options": [
+        "Build brand loyalty and recognition",
+        "Protect inventions",
+        "Keep trade secrets safe",
+        "Obtain copyright licenses"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trademarks enable brands to stand out and build loyalty through consistent recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q17",
+      "question": "Which of the following is the best example of a ‘source identifier’?",
+      "options": [
+        "The design of a store",
+        "The brand logo on a product",
+        "The quality of goods",
+        "The advertisement content"
+      ],
+      "correctIndex": 1,
+      "explanation": "A brand logo or name identifies the source of a product or service — the essence of a trademark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q18",
+      "question": "Which of these would likely cause trademark infringement?",
+      "options": [
+        "Selling unrelated products under a similar name",
+        "Creating a different logo for a different market",
+        "Using a common word with unique design",
+        "Selling goods under an identical name and logo as another brand"
+      ],
+      "correctIndex": 3,
+      "explanation": "Using an identical or confusingly similar mark for similar goods constitutes infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q19",
+      "question": "If two shoe brands use a similar checkmark logo, what principle applies?",
+      "options": [
+        "Trade secret violation",
+        "Consumer confusion test",
+        "Patent overlap",
+        "Fair use doctrine"
+      ],
+      "correctIndex": 1,
+      "explanation": "The consumer confusion test determines if the average buyer would likely confuse the two sources.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_1_q20",
+      "question": "The Nike Swoosh is an example of which type of mark?",
+      "options": [
+        "Word mark",
+        "Logo mark",
+        "Sound mark",
+        "Shape mark"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Swoosh is a graphic logo mark representing the brand visually.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_1_q21",
+      "question": "Why can’t generic names like 'Shoe' or 'Soap' be trademarks?",
+      "options": [
+        "They’re already protected by copyright",
+        "They fail to identify a specific source",
+        "They are too old to register",
+        "They describe chemical properties"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic terms describe the product itself and cannot distinguish one source from another.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_1_q22",
+      "question": "Which of these statements about trademarks is FALSE?",
+      "options": [
+        "A trademark can include sounds or colors",
+        "Trademarks never expire once registered",
+        "Trademark rights can be renewed indefinitely",
+        "Trademarks help protect brand identity"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademarks do expire if not renewed; they require periodic renewal (typically every 10 years).",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_1_q23",
+      "question": "The ‘consumer confusion’ test in trademark law is used to:",
+      "options": [
+        "Check product quality",
+        "Determine registration fees",
+        "Assess whether two marks are deceptively similar",
+        "Decide copyright originality"
+      ],
+      "correctIndex": 2,
+      "explanation": "The test assesses if consumers might mistake one brand’s goods for another’s — the heart of trademark disputes.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_1_q24",
+      "question": "In the case study of Nike, why is the Swoosh globally recognized?",
+      "options": [
+        "It’s a descriptive design",
+        "It’s simple, distinctive, and consistently used",
+        "It changes often with product design",
+        "It uses multiple words and images"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Swoosh’s simplicity and consistent branding have made it one of the world’s most recognized trademarks.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_1_q25",
+      "question": "What is the key difference between a trademark and a brand?",
+      "options": [
+        "There is no difference",
+        "Trademark is legal protection; brand is consumer perception",
+        "Brand is registered; trademark is not",
+        "Trademark is temporary; brand is permanent"
+      ],
+      "correctIndex": 1,
+      "explanation": "A trademark is the legal right protecting identifiers, while a brand is the emotional and market perception built around them.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

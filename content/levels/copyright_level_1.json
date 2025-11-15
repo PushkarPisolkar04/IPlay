@@ -1,0 +1,39 @@
+{
+  "id": "copyright_level_1",
+  "realmId": "realm_copyright",
+  "levelNumber": 1,
+  "name": "What is Copyright? (The 'Expression' Idea)",
+  "description": "Start your journey. Learn the #1 rule: Copyright protects *expression*, not *ideas*.",
+  "summary": "Discover the basics of copyright. This level explains what it is, why it's automatic, and the crucial difference between a creative idea and its fixed expression.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=uk_pE1kbgcE",
+  "videoDuration": 138,
+  
+  "content": "## What is Copyright? (The 'Expression' Idea)\n\nWelcome to the first realm! Copyright is like a magic, automatic shield that protects a creator's original work. As soon as you write a song, paint a picture, or code an app, copyright protection clicks on. You don't have to fill out a form or pay a fee for it to exist.\n\nIt's a legal right that gives the creator (the 'author') the *exclusive* right to do certain things with their work, like:\n\n* Make copies of it\n* Sell or distribute it\n* Create new works based on it (called 'derivatives')\n* Perform or display it publicly\n\n### The Most Important Rule: Idea vs. Expression\n\nThis is the core concept of copyright. If you remember one thing, remember this:\n\n> **Copyright protects the *expression* of an idea, not the *idea* itself.**\n\nWhat does this mean? \n\n* **An Idea (NOT protected):** A story about a boy wizard who goes to a magic school and fights a dark lord.\n* **An Expression (PROTECTED):** The specific book *Harry Potter and the Philosopher's Stone*, with its unique characters (Harry, Ron, Hermione), plot points, and specific sentences.\n\nThis rule is why multiple people can create works based on the same *idea* (like 'a star-crossed romance') without infringing on each other.\n\n--- \n\n### 💡 Level 1 Case Study: The 'Rival Lovers' Idea\n\nLet's see this in action:\n\n* **The Idea:** Two young lovers from feuding families.\n\n* **Expression 1 (Protected):** William Shakespeare's play **'Romeo and Juliet'** (1597). The specific characters, the setting in Verona, the balcony scene, the dialogue—that is all protected expression.\n\n* **Expression 2 (Protected):** The musical **'West Side Story'** (1957). It's the *same idea* but a totally different expression. The feuding families are rival street gangs (the Jets and the Sharks) in 1950s New York. The music, choreography, and new script are a new, original expression and are also protected by copyright.\n\n'West Side Story' does *not* infringe on 'Romeo and Juliet' because it only used the unprotectable *idea*, not the specific *expression*.",
+  
+  "keyPoints": [
+    "Copyright is an *automatic* legal shield for original creative works.",
+    "It gives creators exclusive rights to copy, sell, and perform their work.",
+    "It protects the **expression** of an idea, not the **idea** itself.",
+    "Covers literature, art, music, drama, and software.",
+    "You don't need to register to be protected (but registration helps in court)."
+  ],
+  
+  "learningObjectives": [
+    "Define what copyright is.",
+    "Explain the critical 'idea vs. expression' difference.",
+    "Identify the main types of works protected by copyright.",
+    "Use a case study to distinguish between a concept and its expression."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 8,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T16:50:00Z"
+}

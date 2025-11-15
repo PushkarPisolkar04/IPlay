@@ -37,7 +37,9 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
   }
 
   Future<void> _loadStudentData() async {
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
 
     try {
       final userDoc = await FirebaseFirestore.instance
@@ -51,10 +53,14 @@ class _StudentDetailScreenState extends State<StudentDetailScreen> {
         _progressSummary = Map<String, dynamic>.from(_studentData?['progressSummary'] ?? {});
       }
 
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
       // print('Error loading student data: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

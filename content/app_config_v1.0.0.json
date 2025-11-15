@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T00:00:00Z",
+  "description": "Global app configuration for IPlay - IPR Learning Platform",
+  "xpRewards": {
+    "levelComplete": 150,
+    "levelCompleteReplay": 50,
+    "quizPerfect": 50,
+    "quizPass": 30,
+    "quizFail": 10,
+    "dailyChallenge": 100,
+    "dailyChallengePerfect": 150,
+    "gameComplete": 75,
+    "gameHighScore": 100,
+    "streakMilestone3": 50,
+    "streakMilestone7": 100,
+    "streakMilestone14": 150,
+    "streakMilestone30": 300,
+    "streakMilestone60": 500,
+    "streakMilestone100": 1000,
+    "assignmentComplete": 100,
+    "assignmentPerfect": 150,
+    "badgeUnlock": 0,
+    "firstLogin": 50,
+    "profileComplete": 25,
+    "classroomJoin": 25
+  },
+  "streakRules": {
+    "resetHour": 0,
+    "gracePeriodHours": 24,
+    "minActivityForStreak": "xp_gain",
+    "streakFreeze": {
+      "enabled": true,
+      "maxFreezes": 3,
+      "earnedAt": [10, 30, 60]
+    }
+  },
+  "featureFlags": {
+    "dailyChallenges": true,
+    "games": true,
+    "leaderboards": true,
+    "certificates": true,
+    "chat": true,
+    "offlineMode": true,
+    "socialSharing": true,
+    "assignments": true,
+    "announcements": true,
+    "moderation": true,
+    "badges": true,
+    "notifications": true,
+    "darkMode": true
+  },
+  "limits": {
+    "dailyXPCap": 1000,
+    "maxClassroomSize": 50,
+    "maxAssignmentAttachments": 5,
+    "maxMessageLength": 500,
+    "maxChatMessages": 100,
+    "maxAnnouncementLength": 1000,
+    "minPasswordLength": 8,
+    "maxProfileImageSize": 5242880,
+    "quizTimeLimit": 600,
+    "levelVideoMaxDuration": 900
+  },
+  "leaderboardSettings": {
+    "updateInterval": 300,
+    "scopes": ["classroom", "school", "state", "national"],
+    "topRanksShown": 10,
+    "showUserRank": true
+  },
+  "contentSettings": {
+    "cacheExpiry": 86400,
+    "autoDownloadLevels": false,
+    "videoQuality": "auto",
+    "offlineContentLimit": 10
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "trademark_level_4",
+  "realmId": "realm_trademark",
+  "levelNumber": 4,
+  "name": "Registration Process (The ® vs. ™ Symbols)",
+  "description": "Learn the all-important difference between 'TM' and 'R' and the steps to get from one to the other.",
+  "summary": "This level explains the practical difference between the ™ (Unregistered) and ® (Registered) symbols. You'll learn the 5-step process for registering a trademark in India, from search to certificate.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=RGSLFNHlxPA",
+  "videoDuration": 436,
+  
+  "content": "## The ® vs. ™ Symbols: A Simple Guide\n\nYou've seen both of these symbols. They are the most visible part of trademark law, but they mean very different things.\n\n### The ™ Symbol (Trademark)\n\n* **What it means:** 'Unregistered Trademark'.\n* **When to use it:** You can use the ™ symbol *any time* you are *claiming* a mark as your own, even if you have not filed a single piece of paperwork. \n* **What it does:** It acts as a warning to competitors, saying 'I am using this name/logo as my brand'. It gives you some limited 'common law' rights in your specific geographic area, but it's much weaker than being registered.\n\n### The ® Symbol (Registered)\n\n* **What it means:** 'Registered Trademark'.\n* **When to use it:** You can *only* use the ® symbol after your trademark has been officially approved and registered by the government's Trade Marks Registry.\n* **What it does:** This is the ultimate shield. It grants you nationwide protection, exclusive rights, and the full power of the law. Using the ® symbol when you are *not* registered is illegal and a punishable offense.\n\n--- \n\n## The 5-Step Registration Journey (How to get the ®)\n\nSo, how do you get that powerful ® symbol? You follow a legal process, which generally has 5 steps in India:\n\n**Step 1: The Trademark Search**\nThis is the most critical first step. Before you even apply, you (or a lawyer) must search the Trade Marks Registry database to see if your proposed mark is already taken or is 'confusingly similar' to an existing one. If you find a conflict, you should pick a new name.\n\n**Step 2: Application Filing**\nThis is the formal application. You file a form (TM-A) with the Registry, specifying your mark, your business, and (very importantly) the 'Classes' of goods/services you will use it for (e.g., Class 25 for clothing, Class 42 for software).\n\n**Step 3: Examination**\nThe government's 'Examiner' will review your application. They check if it's distinctive (Level 2) and if it violates any rules (Level 3). If they have an objection, they issue an 'Examination Report', and you have a chance to respond and argue your case.\n\n**Step 4: Publication in the Journal**\nIf the Examiner is satisfied, your mark is published in the official Trade Marks Journal. This starts a 4-month 'opposition period' where *any* member of the public (usually a competitor) can object to your registration, saying it would harm their brand.\n\n**Step 5: Registration & Certificate**\nIf no one opposes your mark (or if you win an opposition case), your trademark is officially registered! You are issued a Certificate of Registration, and you can now legally start using the ® symbol. The registration is valid for 10 years and can be renewed indefinitely.",
+  
+  "keyPoints": [
+    "The ™ symbol means 'Unregistered Trademark' and can be used by anyone to *claim* a mark.",
+    "The ® symbol means 'Registered Trademark' and can ONLY be used after official government registration.",
+    "Using ® without registration is illegal.",
+    "The first step to register is always a 'Trademark Search'.",
+    "Registration involves: Filing an Application, Examination, Publication in the Journal, and then Registration.",
+    "A trademark registration is valid for 10 years and is renewable."
+  ],
+  
+  "learningObjectives": [
+    "Define and differentiate the legal meaning of the ™ and ® symbols.",
+    "Explain when to use the ™ symbol and when to use the ® symbol.",
+    "List the 5 main steps of the trademark registration process in India.",
+    "Define the 'opposition period' and what its purpose is."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:50:00Z"
+}

@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "design_level_1",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "design_1_q1",
+      "question": "What does industrial design primarily protect?",
+      "options": [
+        "The functional mechanism of a product",
+        "The visual appearance of a product",
+        "The brand name of a product",
+        "The manufacturing process"
+      ],
+      "correctIndex": 1,
+      "explanation": "Industrial design protects the visual appearance - shape, configuration, pattern, or ornamentation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q2",
+      "question": "Which Act governs industrial designs in India?",
+      "options": [
+        "Copyright Act, 1957",
+        "Designs Act, 2000",
+        "Patent Act, 1970",
+        "Trade Marks Act, 1999"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Designs Act, 2000 governs industrial design protection in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q3",
+      "question": "What is the 'eye appeal' test in design law?",
+      "options": [
+        "The design must be functional",
+        "The design must be visually appealing and judged by the eye",
+        "The design must be expensive",
+        "The design must be colorful"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'eye appeal' test means the design is judged by visual appearance, not function.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q4",
+      "question": "Which of these is an example of 'shape' in design protection?",
+      "options": [
+        "The color of a product",
+        "The contour of a Coca-Cola bottle",
+        "The brand name on packaging",
+        "The taste of a beverage"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Coca-Cola bottle's distinctive contour shape is a famous example of design protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q5",
+      "question": "What does 'configuration' mean in design law?",
+      "options": [
+        "The arrangement or layout of elements",
+        "The chemical composition",
+        "The price structure",
+        "The marketing strategy"
+      ],
+      "correctIndex": 0,
+      "explanation": "Configuration refers to the arrangement or layout of visual elements in a design.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q6",
+      "question": "How is industrial design different from a patent?",
+      "options": [
+        "Design protects appearance, patent protects function",
+        "Design protects function, patent protects appearance",
+        "They are the same thing",
+        "Design is for software, patent is for hardware"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design protects how a product looks, while patents protect how it works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q7",
+      "question": "How is industrial design different from trademark?",
+      "options": [
+        "Design protects product appearance, trademark protects brand identity",
+        "They protect the same thing",
+        "Design is for services, trademark is for goods",
+        "Trademark protects appearance, design protects names"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design protects the visual appearance of products, while trademarks protect brand identifiers.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q8",
+      "question": "How is industrial design different from copyright?",
+      "options": [
+        "Copyright protects artistic works, design protects industrial products",
+        "They are identical protections",
+        "Copyright is for machines, design is for art",
+        "Design lasts longer than copyright"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copyright protects artistic/literary works, while design protects the appearance of mass-produced industrial products.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q9",
+      "question": "Which element is NOT protected under design law?",
+      "options": [
+        "Shape",
+        "Pattern",
+        "Ornamentation",
+        "Functionality"
+      ],
+      "correctIndex": 3,
+      "explanation": "Design law protects visual features, not functional aspects (which are protected by patents).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q10",
+      "question": "What is an example of 'ornamentation' in design?",
+      "options": [
+        "The engine of a car",
+        "Decorative patterns on a smartphone case",
+        "The software in a device",
+        "The weight of a product"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ornamentation refers to decorative elements like patterns or embellishments on a product.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q11",
+      "question": "Why do companies invest in design protection?",
+      "options": [
+        "To protect the visual identity and prevent copying",
+        "To increase manufacturing costs",
+        "To make products more expensive",
+        "To avoid marketing"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design protection prevents competitors from copying the distinctive visual appearance of products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q12",
+      "question": "Which famous product is known for its protected bottle design?",
+      "options": [
+        "Pepsi bottle",
+        "Coca-Cola contour bottle",
+        "Water bottle",
+        "Wine bottle"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Coca-Cola contour bottle is one of the most famous examples of design protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q13",
+      "question": "What aspect of the iPhone is protected by design rights?",
+      "options": [
+        "The iOS operating system",
+        "The visual appearance and shape",
+        "The processor speed",
+        "The App Store"
+      ],
+      "correctIndex": 1,
+      "explanation": "The iPhone's distinctive visual appearance and shape are protected by design rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q14",
+      "question": "Which Royal Enfield element can be protected as a design?",
+      "options": [
+        "The engine mechanism",
+        "The distinctive body shape and styling",
+        "The fuel efficiency",
+        "The brand name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Royal Enfield's distinctive body shape and styling can be protected as industrial design.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q15",
+      "question": "What does 'pattern' mean in design law?",
+      "options": [
+        "The business model",
+        "Repeated decorative elements or motifs",
+        "The manufacturing process",
+        "The pricing strategy"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pattern refers to repeated decorative elements or motifs on a product's surface.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q16",
+      "question": "Can the functional shape of a screwdriver be protected as a design?",
+      "options": [
+        "Yes, if it's visually distinctive",
+        "No, purely functional features cannot be protected",
+        "Yes, always",
+        "Only if it's expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Purely functional features cannot be protected as designs; only aesthetic features qualify.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q17",
+      "question": "What is the primary purpose of design protection?",
+      "options": [
+        "To protect technical innovations",
+        "To protect the aesthetic appearance of products",
+        "To protect brand names",
+        "To protect manufacturing secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design protection exists to safeguard the aesthetic appearance of products from copying.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q18",
+      "question": "Which of these products would benefit most from design protection?",
+      "options": [
+        "A uniquely shaped furniture piece",
+        "A chemical formula",
+        "A company slogan",
+        "A software algorithm"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uniquely shaped furniture benefits from design protection for its visual appearance.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q19",
+      "question": "What makes the Coca-Cola bottle design special?",
+      "options": [
+        "Its distinctive contour shape that's instantly recognizable",
+        "Its material composition",
+        "Its manufacturing cost",
+        "Its storage capacity"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Coca-Cola bottle's distinctive contour shape makes it instantly recognizable and protectable.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q20",
+      "question": "Under the Designs Act 2000, what must a design be applied to?",
+      "options": [
+        "Services",
+        "An article (physical product)",
+        "Software",
+        "Ideas"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design must be applied to an article (a physical product) to be protected.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q21",
+      "question": "Which of these is NOT a component of design protection?",
+      "options": [
+        "Shape",
+        "Configuration",
+        "Performance",
+        "Ornamentation"
+      ],
+      "correctIndex": 2,
+      "explanation": "Performance is a functional aspect, not a visual one, so it's not protected by design law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q22",
+      "question": "Why is 'look and feel' important in design law?",
+      "options": [
+        "It determines the product's price",
+        "It's what consumers see and what design law protects",
+        "It affects the product's weight",
+        "It determines manufacturing time"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'look and feel' is the visual appearance that consumers see and what design law protects.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q23",
+      "question": "Can a textile pattern be protected as a design?",
+      "options": [
+        "Yes, if it's visually distinctive",
+        "No, only 3D shapes can be protected",
+        "Only if it's hand-made",
+        "Only if it's expensive"
+      ],
+      "correctIndex": 0,
+      "explanation": "Textile patterns can be protected as designs if they are visually distinctive.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_1_q24",
+      "question": "What is the key difference between design and utility?",
+      "options": [
+        "Design is about appearance, utility is about function",
+        "They are the same thing",
+        "Design is cheaper than utility",
+        "Utility is visual, design is functional"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design focuses on visual appearance, while utility (function) is protected by patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_1_q25",
+      "question": "Which statement best describes industrial design?",
+      "options": [
+        "Protection for the ornamental or aesthetic aspects of an article",
+        "Protection for how a machine works",
+        "Protection for brand names",
+        "Protection for secret formulas"
+      ],
+      "correctIndex": 0,
+      "explanation": "Industrial design protects the ornamental or aesthetic aspects of useful articles.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

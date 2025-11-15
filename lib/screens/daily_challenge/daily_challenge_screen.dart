@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../core/models/daily_challenge_model.dart';
-import '../../providers/auth_provider.dart';
 
 class DailyChallengeScreen extends StatefulWidget {
   const DailyChallengeScreen({super.key});
@@ -38,7 +38,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     });
 
     try {
-      final userId = Provider.of<AuthProvider>(context, listen: false).currentUser?.uid;
+      final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) throw Exception('User not logged in');
 
       // Get today's challenge
@@ -83,7 +83,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     setState(() => _isSubmitting = true);
 
     try {
-      final userId = Provider.of<AuthProvider>(context, listen: false).currentUser!.uid;
+      final userId = FirebaseAuth.instance.currentUser!.uid;
 
       // Calculate score
       int correctCount = 0;
@@ -177,10 +177,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
   Widget _buildErrorState() {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
             const SizedBox(height: 16),

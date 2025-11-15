@@ -1,0 +1,148 @@
+Patent Detective Object Images Required
+========================================
+
+This directory should contain images for patent information cards showing the patented objects.
+
+Required Patent Object Images (97 total):
+
+Office Scene:
+- ergonomic_chair.png
+- computer_mouse.png
+- led_lamp.png
+- sticky_notes.png
+- stapler.png
+- wireless_keyboard.png
+
+Kitchen Scene:
+- microwave.png
+- refrigerator.png
+- nonstick_pan.png
+- electric_kettle.png
+- can_opener.png
+- dishwasher.png
+- blender.png
+
+Living Room Scene:
+- television.png
+- remote_control.png
+- vacuum_cleaner.png
+- air_conditioner.png
+- ceiling_fan.png
+- recliner.png
+
+Garage Workshop Scene:
+- power_drill.png
+- adjustable_wrench.png
+- circular_saw.png
+- measuring_tape.png
+- safety_goggles.png
+- cordless_screwdriver.png
+
+Classroom Scene:
+- ballpoint_pen.png
+- whiteboard.png
+- calculator.png
+- ring_binder.png
+- pencil_sharpener.png
+- overhead_projector.png
+- eraser.png
+
+Playground Scene:
+- swing_set.png
+- slide.png
+- seesaw.png
+- monkey_bars.png
+- merry_go_round.png
+- spring_rider.png
+
+Hospital Room Scene:
+- stethoscope.png
+- blood_pressure_monitor.png
+- iv_stand.png
+- thermometer.png
+- hospital_bed.png
+- pulse_oximeter.png
+
+Gym Scene:
+- treadmill.png
+- exercise_bike.png
+- dumbbells.png
+- rowing_machine.png
+- resistance_bands.png
+- yoga_mat.png
+
+Bathroom Scene:
+- toothbrush.png
+- toilet_paper.png
+- hair_dryer.png
+- shower_head.png
+- electric_razor.png
+- bathroom_scale.png
+- soap_dispenser.png
+
+Car Interior Scene:
+- airbag.png
+- seatbelt.png
+- gps_navigation.png
+- rearview_mirror.png
+- cup_holder.png
+- windshield_wipers.png
+
+Bedroom Scene:
+- alarm_clock.png
+- electric_blanket.png
+- bedside_lamp.png
+- memory_foam_pillow.png
+- closet_organizer.png
+- humidifier.png
+
+Garden Scene:
+- lawn_mower.png
+- garden_hose.png
+- sprinkler.png
+- wheelbarrow.png
+- pruning_shears.png
+- compost_bin.png
+
+Library Scene:
+- ereader.png
+- bookshelf.png
+- reading_lamp.png
+- card_catalog.png
+- bookmark.png
+- book_scanner.png
+
+Restaurant Kitchen Scene:
+- commercial_oven.png
+- food_processor.png
+- commercial_fridge.png
+- deep_fryer.png
+- stand_mixer.png
+- chefs_knife.png
+- sous_vide.png
+- fire_suppression.png
+
+Science Laboratory Scene:
+- microscope.png
+- bunsen_burner.png
+- centrifuge.png
+- ph_meter.png
+- pipette.png
+- spectrophotometer.png
+- safety_shower.png
+- autoclave.png
+
+Image Requirements:
+- Resolution: 400x400 pixels (for info cards)
+- Format: PNG with transparent background preferred
+- Style: Clear, recognizable product images
+- Quality: High-quality for display in patent information cards
+- Content: Show the object clearly, ideally isolated on transparent background
+
+Note: These are placeholder references. Actual images need to be created or sourced.
+For development, you can use:
+- Product photography
+- Stock images (with proper licensing)
+- Icon libraries
+- Simple illustrations
+- AI-generated images

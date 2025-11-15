@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_9",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_9_q1",
+      "question": "What were the 'Smartphone Wars'?",
+      "options": [
+        "A price war",
+        "Global patent lawsuits between Apple and Samsung",
+        "A marketing campaign",
+        "A trade war"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Smartphone Wars were massive global patent lawsuits between Apple and Samsung in the 2010s.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q2",
+      "question": "What two types of patents were central to the Smartphone Wars?",
+      "options": [
+        "Copyright and Trademark",
+        "Utility Patents and Design Patents",
+        "Trade Secrets and GI",
+        "Only Utility Patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "The wars involved both Utility Patents (how it works) and Design Patents (how it looks).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q3",
+      "question": "What is a Utility Patent?",
+      "options": [
+        "A patent on appearance",
+        "A patent on how something works (functionality)",
+        "A patent on names",
+        "A patent on secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Utility Patent protects how something works - the functionality and methods.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q4",
+      "question": "What is a Design Patent?",
+      "options": [
+        "A patent on functionality",
+        "A patent on the ornamental look of a product",
+        "A patent on names",
+        "A patent on processes"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Design Patent protects the ornamental, visual appearance of a product.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q5",
+      "question": "What was Apple's 'Slide to Unlock' patent?",
+      "options": [
+        "A design patent",
+        "A utility patent on the function of swiping to unlock",
+        "A trademark",
+        "A trade secret"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Slide to Unlock' was a utility patent on the method/function of swiping to unlock a device.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q6",
+      "question": "What was Apple's 'Pinch to Zoom' patent?",
+      "options": [
+        "A design patent",
+        "A utility patent on the method of using two fingers to zoom",
+        "A trademark",
+        "A copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Pinch to Zoom' was a utility patent on the method of using two fingers to pinch and zoom.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q7",
+      "question": "What did Apple's design patent protect?",
+      "options": [
+        "The iOS software",
+        "The look: rectangular device with rounded corners and grid of icons",
+        "The processor",
+        "The camera"
+      ],
+      "correctIndex": 1,
+      "explanation": "Apple's design patent protected the iPhone's look: rectangular with rounded corners and grid of colorful icons.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q8",
+      "question": "What was Samsung's defense against the design patent?",
+      "options": [
+        "They didn't copy",
+        "You can't patent a generic rectangle with rounded corners",
+        "They invented it first",
+        "It's a trade secret"
+      ],
+      "correctIndex": 1,
+      "explanation": "Samsung argued you can't patent a generic shape like a 'rectangle with rounded corners'.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q9",
+      "question": "How many continents did the Smartphone Wars span?",
+      "options": [
+        "One",
+        "Two",
+        "Four",
+        "Six"
+      ],
+      "correctIndex": 2,
+      "explanation": "The wars spanned four continents with lawsuits in multiple countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q10",
+      "question": "How did the Smartphone Wars end?",
+      "options": [
+        "Apple won everything",
+        "Samsung won everything",
+        "They settled",
+        "Still ongoing"
+      ],
+      "correctIndex": 2,
+      "explanation": "After years of litigation, Apple and Samsung eventually settled.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q11",
+      "question": "What did the Smartphone Wars prove?",
+      "options": [
+        "Patents are useless",
+        "A product's look and feel can be as valuable as its function",
+        "Only utility patents matter",
+        "Design doesn't matter"
+      ],
+      "correctIndex": 1,
+      "explanation": "The wars proved that a product's look and feel (design patents) can be as valuable as functionality.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q12",
+      "question": "Were the results consistent across all countries?",
+      "options": [
+        "Yes, Apple won everywhere",
+        "Yes, Samsung won everywhere",
+        "No, results were mixed in different countries",
+        "No lawsuits occurred"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, results were mixed - some countries sided with Apple, others with Samsung.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q13",
+      "question": "What other IP rights were involved besides patents?",
+      "options": [
+        "None",
+        "Copyright (for code), Trademarks (for logos), and SEPs",
+        "Only trademarks",
+        "Only copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "The wars also involved Copyright for code, Trademarks for logos, and SEPs for 3G technology.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_9_q14",
+      "question": "What made this a 'total IP war'?",
+      "options": [
+        "It was expensive",
+        "It involved all forms of IP: patents, copyright, trademarks, SEPs",
+        "It lasted long",
+        "It was global"
+      ],
+      "correctIndex": 1,
+      "explanation": "It was a 'total IP war' because it involved all forms of IP protection simultaneously.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q15",
+      "question": "Can you patent a 'rectangle with rounded corners'?",
+      "options": [
+        "Yes, always",
+        "It's controversial - depends on specific design details",
+        "No, never",
+        "Only in the US"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's controversial - it depends on the specific design details and how generic the shape is.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_9_q16",
+      "question": "What was the initial US jury verdict?",
+      "options": [
+        "Samsung won",
+        "Apple won with massive damages",
+        "Tie",
+        "Dismissed"
+      ],
+      "correctIndex": 1,
+      "explanation": "The initial US jury sided with Apple and awarded massive damages for infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q17",
+      "question": "What is the difference between utility and design patents?",
+      "options": [
+        "No difference",
+        "Utility protects function, design protects appearance",
+        "Utility is cheaper",
+        "Design lasts longer"
+      ],
+      "correctIndex": 1,
+      "explanation": "Utility patents protect how something works (function), design patents protect how it looks (appearance).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q18",
+      "question": "Can one product have both utility and design patents?",
+      "options": [
+        "No, only one type",
+        "Yes, like the iPhone had both",
+        "Only in the US",
+        "Only for phones"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, one product can have both types - the iPhone had utility patents for functions and design patents for appearance.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q19",
+      "question": "What was controversial about Apple's design patent?",
+      "options": [
+        "It was too expensive",
+        "Whether you can patent such a basic, generic shape",
+        "It was too long",
+        "It was international"
+      ],
+      "correctIndex": 1,
+      "explanation": "The controversy was whether such a basic, generic shape (rectangle with rounded corners) should be patentable.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_9_q20",
+      "question": "How much money was involved in the Smartphone Wars?",
+      "options": [
+        "Thousands",
+        "Millions",
+        "Billions of dollars",
+        "Trillions"
+      ],
+      "correctIndex": 2,
+      "explanation": "The wars involved billions of dollars in damages, settlements, and legal fees.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_9_q21",
+      "question": "What lesson did companies learn from the Smartphone Wars?",
+      "options": [
+        "Patents don't matter",
+        "Design and appearance are valuable IP assets",
+        "Only function matters",
+        "Avoid patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "Companies learned that design and appearance are valuable IP assets worth protecting and fighting for.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q22",
+      "question": "Were design patents considered important before the Smartphone Wars?",
+      "options": [
+        "Yes, always",
+        "Not as much - the wars elevated their importance",
+        "No, never",
+        "Only in fashion"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design patents weren't as prominent before - the Smartphone Wars elevated their importance in tech.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_9_q23",
+      "question": "What is the 'grid of 16 colorful square icons'?",
+      "options": [
+        "A utility patent",
+        "Part of Apple's design patent for iPhone appearance",
+        "A trademark",
+        "A copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "The grid of icons was part of Apple's design patent protecting the iPhone's visual appearance.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q24",
+      "question": "Can you patent a gesture like 'pinch to zoom'?",
+      "options": [
+        "No, gestures can't be patented",
+        "Yes, as a utility patent on the method",
+        "Only as a design patent",
+        "Only as a trademark"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent the method/function of a gesture as a utility patent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_9_q25",
+      "question": "What blurred in the Smartphone Wars?",
+      "options": [
+        "Nothing",
+        "The line between functional utility patents and aesthetic design patents",
+        "Copyright and patents",
+        "Trademarks and patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "The wars blurred the line between functional utility patents and aesthetic design patents.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

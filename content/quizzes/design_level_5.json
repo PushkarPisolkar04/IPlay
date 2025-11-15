@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "design_level_5",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "design_5_q1",
+      "question": "What elements can be protected under design law?",
+      "options": [
+        "Only color",
+        "Shape, configuration, pattern, and ornamentation",
+        "Only size",
+        "Only weight"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design law protects shape, configuration, pattern, and ornamentation of products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q2",
+      "question": "Can a textile pattern be registered as a design?",
+      "options": [
+        "No, never",
+        "Yes, if it's novel and original",
+        "Only if hand-made",
+        "Only if expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Textile patterns can be registered as designs if they meet novelty and originality criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q3",
+      "question": "What is 'design dilution'?",
+      "options": [
+        "Making designs smaller",
+        "Weakening of design distinctiveness through similar designs",
+        "Adding water",
+        "Reducing quality"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design dilution occurs when a design's distinctiveness is weakened by similar designs in the market.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q4",
+      "question": "Can you register a design for packaging?",
+      "options": [
+        "No, never",
+        "Yes, if the packaging design is novel and original",
+        "Only for food",
+        "Only for medicine"
+      ],
+      "correctIndex": 1,
+      "explanation": "Packaging designs can be registered if they are novel, original, and aesthetic.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q5",
+      "question": "What is the 'significant difference' test?",
+      "options": [
+        "A price test",
+        "Test to determine if design creates different overall impression",
+        "A size test",
+        "A weight test"
+      ],
+      "correctIndex": 1,
+      "explanation": "The significant difference test determines if a design creates a different overall impression from prior art.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q6",
+      "question": "Can a 3D shape be registered as a design?",
+      "options": [
+        "No, only 2D",
+        "Yes, 3D shapes can be registered",
+        "Only if flat",
+        "Only if small"
+      ],
+      "correctIndex": 1,
+      "explanation": "Three-dimensional shapes can be registered as designs if they meet the criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q7",
+      "question": "What is 'design searching'?",
+      "options": [
+        "Looking for designers",
+        "Searching existing designs to check novelty",
+        "Searching for buyers",
+        "Searching for prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design searching involves checking existing designs to ensure your design is novel.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q8",
+      "question": "Can color alone be registered as a design?",
+      "options": [
+        "Yes, always",
+        "No, color alone is not sufficient",
+        "Only bright colors",
+        "Only dark colors"
+      ],
+      "correctIndex": 1,
+      "explanation": "Color alone cannot be registered; it must be combined with shape, pattern, or configuration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q9",
+      "question": "What is 'design prosecution'?",
+      "options": [
+        "Criminal case",
+        "Process of obtaining design registration",
+        "Design testing",
+        "Design sale"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design prosecution is the process of obtaining design registration through the Design Office.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q10",
+      "question": "Can you register a design for furniture?",
+      "options": [
+        "No, never",
+        "Yes, if the design is novel and original",
+        "Only wooden furniture",
+        "Only expensive furniture"
+      ],
+      "correctIndex": 1,
+      "explanation": "Furniture designs can be registered if they meet novelty and originality requirements.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q11",
+      "question": "What is the role of design classification?",
+      "options": [
+        "To set prices",
+        "To organize designs into product categories",
+        "To determine quality",
+        "To restrict registration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design classification organizes designs into product categories for registration and searching.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q12",
+      "question": "Can you register a design for jewelry?",
+      "options": [
+        "No, never",
+        "Yes, jewelry designs can be registered",
+        "Only gold jewelry",
+        "Only expensive jewelry"
+      ],
+      "correctIndex": 1,
+      "explanation": "Jewelry designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q13",
+      "question": "What is 'design freedom'?",
+      "options": [
+        "Freedom to copy",
+        "Range of design choices available to a designer",
+        "Freedom from fees",
+        "Freedom from rules"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design freedom refers to the range of design choices available when creating a product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q14",
+      "question": "Can you register a design for electronic devices?",
+      "options": [
+        "No, never",
+        "Yes, if the design is novel and aesthetic",
+        "Only phones",
+        "Only computers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Electronic device designs can be registered if they are novel and focus on aesthetic features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q15",
+      "question": "What is the 'informed user' standard?",
+      "options": [
+        "A random person",
+        "A user with knowledge of the design field",
+        "A designer",
+        "A manufacturer"
+      ],
+      "correctIndex": 1,
+      "explanation": "The informed user is someone with knowledge of the design field who can assess design differences.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q16",
+      "question": "Can you register a design for toys?",
+      "options": [
+        "No, never",
+        "Yes, toy designs can be registered",
+        "Only educational toys",
+        "Only expensive toys"
+      ],
+      "correctIndex": 1,
+      "explanation": "Toy designs can be registered if they meet novelty and originality criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q17",
+      "question": "What is 'design validity'?",
+      "options": [
+        "How long design lasts",
+        "Whether design meets legal requirements for protection",
+        "Design price",
+        "Design quality"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design validity refers to whether a design meets all legal requirements for protection.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q18",
+      "question": "Can you register a design for vehicles?",
+      "options": [
+        "No, never",
+        "Yes, vehicle designs can be registered",
+        "Only cars",
+        "Only bikes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Vehicle designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q19",
+      "question": "What is 'design infringement analysis'?",
+      "options": [
+        "Checking prices",
+        "Comparing designs to determine if copying occurred",
+        "Checking quality",
+        "Checking size"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design infringement analysis involves comparing designs to determine if unauthorized copying occurred.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q20",
+      "question": "Can you register a design for footwear?",
+      "options": [
+        "No, never",
+        "Yes, footwear designs can be registered",
+        "Only leather shoes",
+        "Only expensive shoes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Footwear designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q21",
+      "question": "What is 'design portfolio'?",
+      "options": [
+        "A bag",
+        "Collection of registered designs owned by a company",
+        "A design book",
+        "A design tool"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design portfolio is the collection of registered designs owned by a person or company.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q22",
+      "question": "Can you register a design for home appliances?",
+      "options": [
+        "No, never",
+        "Yes, appliance designs can be registered",
+        "Only kitchen appliances",
+        "Only expensive appliances"
+      ],
+      "correctIndex": 1,
+      "explanation": "Home appliance designs can be registered if they meet novelty and originality requirements.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q23",
+      "question": "What is 'design strategy'?",
+      "options": [
+        "Marketing plan",
+        "Plan for protecting and managing design rights",
+        "Manufacturing plan",
+        "Sales plan"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design strategy is a plan for protecting and managing a company's design rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_5_q24",
+      "question": "Can you register a design for sports equipment?",
+      "options": [
+        "No, never",
+        "Yes, if the design is novel and aesthetic",
+        "Only balls",
+        "Only expensive equipment"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sports equipment designs can be registered if they are novel and focus on aesthetic features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_5_q25",
+      "question": "What is 'design enforcement'?",
+      "options": [
+        "Making designs",
+        "Taking action against design infringement",
+        "Selling designs",
+        "Testing designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design enforcement involves taking legal action against unauthorized copying or infringement.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

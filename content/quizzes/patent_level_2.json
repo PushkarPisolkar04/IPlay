@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_2",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_2_q1",
+      "question": "How many pillars of patentability must an invention pass?",
+      "options": [
+        "One",
+        "Two",
+        "Three",
+        "Four"
+      ],
+      "correctIndex": 2,
+      "explanation": "An invention must pass three tests: Novelty, Inventive Step, and Industrial Application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q2",
+      "question": "What does 'Novelty' mean in patent law?",
+      "options": [
+        "The invention must be expensive",
+        "The invention must be new and not part of prior art",
+        "The invention must be useful",
+        "The invention must be clever"
+      ],
+      "correctIndex": 1,
+      "explanation": "Novelty means the invention must be new and not already known to the public (not part of prior art).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q3",
+      "question": "What is 'prior art'?",
+      "options": [
+        "Ancient artwork",
+        "All existing knowledge about inventions before filing",
+        "Only registered patents",
+        "Only published papers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art is all existing knowledge - patents, papers, products, public demonstrations - before your filing date.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q4",
+      "question": "What is the hardest pillar of patentability to pass?",
+      "options": [
+        "Novelty",
+        "Inventive Step (Non-Obviousness)",
+        "Industrial Application",
+        "Disclosure"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inventive Step (Non-Obviousness) is the hardest and most important test.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q5",
+      "question": "What is 'Inventive Step' also called in the US?",
+      "options": [
+        "Utility",
+        "Non-Obviousness",
+        "Novelty",
+        "Disclosure"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inventive Step is called 'Non-Obviousness' in the United States.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q6",
+      "question": "Who is the 'person skilled in the art'?",
+      "options": [
+        "An artist",
+        "A normal expert in the relevant field",
+        "A patent attorney",
+        "A judge"
+      ],
+      "correctIndex": 1,
+      "explanation": "A 'person skilled in the art' is a normal expert in the relevant field (e.g., a normal engineer or mechanic).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q7",
+      "question": "What does 'Industrial Application' mean?",
+      "options": [
+        "Must be manufactured in a factory",
+        "Must be useful and have practical application",
+        "Must be expensive",
+        "Must be sold commercially"
+      ],
+      "correctIndex": 1,
+      "explanation": "Industrial Application means the invention must be useful and have a practical, real-world application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q8",
+      "question": "Can you patent a perpetual motion machine?",
+      "options": [
+        "Yes, if it's novel",
+        "Yes, if it's clever",
+        "No, it lacks industrial application (breaks laws of physics)",
+        "Only in some countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, you cannot patent fantasy machines that break the laws of physics - they lack industrial application.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q9",
+      "question": "What is 'Utility' in US patent law?",
+      "options": [
+        "The same as Industrial Application",
+        "The same as Novelty",
+        "The same as Inventive Step",
+        "A type of patent"
+      ],
+      "correctIndex": 0,
+      "explanation": "Utility is the US term for Industrial Application - the invention must be useful.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q10",
+      "question": "If an invention is an obvious combination of existing parts, can it be patented?",
+      "options": [
+        "Yes, always",
+        "Yes, if it's useful",
+        "No, it lacks inventive step",
+        "Only if it's novel"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, an obvious combination lacks inventive step and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q11",
+      "question": "What makes the Swiss Army Knife patentable?",
+      "options": [
+        "It's expensive",
+        "It's a clever, non-obvious mechanism to fold multiple tools",
+        "It's red",
+        "It's Swiss"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Swiss Army Knife has a clever, non-obvious spring-loaded mechanism - it has inventive step.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q12",
+      "question": "Can you patent a scientific theory?",
+      "options": [
+        "Yes, if it's new",
+        "Yes, if it's useful",
+        "No, it lacks industrial application",
+        "Only in Europe"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, you cannot patent mere scientific theories - they lack industrial application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q13",
+      "question": "What happens if your invention is already part of prior art?",
+      "options": [
+        "You can still patent it",
+        "It lacks novelty and cannot be patented",
+        "You need permission",
+        "You pay extra fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "If it's already part of prior art, it lacks novelty and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q14",
+      "question": "Which pillar asks 'Can it be made or used in industry'?",
+      "options": [
+        "Novelty",
+        "Inventive Step",
+        "Industrial Application",
+        "Disclosure"
+      ],
+      "correctIndex": 2,
+      "explanation": "Industrial Application asks whether the invention can be made or used in some kind of industry.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q15",
+      "question": "What is the test for Inventive Step?",
+      "options": [
+        "Is it new?",
+        "Is it an obvious next step to a person skilled in the art?",
+        "Is it useful?",
+        "Is it expensive?"
+      ],
+      "correctIndex": 1,
+      "explanation": "The test is whether it's an obvious next step to a normal expert in the field.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q16",
+      "question": "Can you patent a mathematical formula by itself?",
+      "options": [
+        "Yes, if it's new",
+        "Yes, if it's clever",
+        "No, it lacks industrial application",
+        "Only in the US"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, a pure mathematical formula lacks industrial application and cannot be patented by itself.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q17",
+      "question": "What does 'prior art' include?",
+      "options": [
+        "Only patents",
+        "Only scientific papers",
+        "Patents, papers, products, websites, and public demonstrations",
+        "Only registered inventions"
+      ],
+      "correctIndex": 2,
+      "explanation": "Prior art includes all existing knowledge: patents, papers, products, websites, and public demonstrations.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q18",
+      "question": "If a normal mechanic would say 'that's obvious', what does the invention lack?",
+      "options": [
+        "Novelty",
+        "Inventive Step",
+        "Industrial Application",
+        "Disclosure"
+      ],
+      "correctIndex": 1,
+      "explanation": "If it's obvious to a normal expert, it lacks Inventive Step.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q19",
+      "question": "Can you patent something that already exists?",
+      "options": [
+        "Yes, if you improve it",
+        "Yes, if you file first",
+        "No, it lacks novelty",
+        "Only in some countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, you cannot patent something that already exists - it lacks novelty.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q20",
+      "question": "What is the purpose of the Novelty requirement?",
+      "options": [
+        "To ensure the invention is new",
+        "To ensure it's clever",
+        "To ensure it's useful",
+        "To ensure it's disclosed"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Novelty requirement ensures the invention is new and not already known.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q21",
+      "question": "Which pillar is known as 'Non-Obviousness' in the US?",
+      "options": [
+        "Novelty",
+        "Inventive Step",
+        "Industrial Application",
+        "Utility"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inventive Step is called 'Non-Obviousness' in the United States.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q22",
+      "question": "Can you patent a discovery of a new mineral?",
+      "options": [
+        "Yes, if it's useful",
+        "Yes, if it's novel",
+        "No, it's a discovery not an invention",
+        "Only if you process it"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, discovering a natural mineral is a discovery, not an invention - it lacks novelty as an invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q23",
+      "question": "What makes an invention 'non-obvious'?",
+      "options": [
+        "It's expensive",
+        "It involves a truly clever and inventive step",
+        "It's new",
+        "It's useful"
+      ],
+      "correctIndex": 1,
+      "explanation": "Non-obvious means it involves a truly clever and inventive step beyond what's obvious to experts.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_2_q24",
+      "question": "All three pillars must be satisfied to get a patent. True or false?",
+      "options": [
+        "True",
+        "False - only two needed",
+        "False - only one needed",
+        "Depends on the country"
+      ],
+      "correctIndex": 0,
+      "explanation": "True - all three pillars (Novelty, Inventive Step, Industrial Application) must be satisfied.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_2_q25",
+      "question": "Why is welding a fork to a knife handle not patentable?",
+      "options": [
+        "It's not useful",
+        "It's not new",
+        "It's an obvious combination lacking inventive step",
+        "It's too simple"
+      ],
+      "correctIndex": 2,
+      "explanation": "It's an obvious combination that any person skilled in the art would think of - it lacks inventive step.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

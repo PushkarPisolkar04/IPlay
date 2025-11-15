@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "design_level_2",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "design_2_q1",
+      "question": "What are the two core criteria for design registration in India?",
+      "options": [
+        "Novelty and Originality",
+        "Functionality and Durability",
+        "Cost and Availability",
+        "Size and Weight"
+      ],
+      "correctIndex": 0,
+      "explanation": "A design must be both novel (new) and original (not obvious) to be registered.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q2",
+      "question": "What does 'novelty' mean in design law?",
+      "options": [
+        "The design is expensive",
+        "The design has not been previously published or used",
+        "The design is colorful",
+        "The design is functional"
+      ],
+      "correctIndex": 1,
+      "explanation": "Novelty means the design is new and has not been previously published or used anywhere in the world.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q3",
+      "question": "What is India's grace period for design registration?",
+      "options": [
+        "3 months",
+        "6 months",
+        "12 months",
+        "No grace period"
+      ],
+      "correctIndex": 1,
+      "explanation": "India provides a 6-month grace period where disclosure by the applicant doesn't destroy novelty.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q4",
+      "question": "What does 'originality' mean in design law?",
+      "options": [
+        "The design must be expensive",
+        "The design must show significant difference from existing designs",
+        "The design must be hand-made",
+        "The design must be colorful"
+      ],
+      "correctIndex": 1,
+      "explanation": "Originality means the design must show significant difference from prior art and not be obvious.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q5",
+      "question": "What is the 'significant difference' test?",
+      "options": [
+        "A test for price differences",
+        "A test to determine if a design is sufficiently different from prior art",
+        "A test for manufacturing quality",
+        "A test for color variations"
+      ],
+      "correctIndex": 1,
+      "explanation": "The significant difference test determines if a design is sufficiently different from existing designs to be considered original.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q6",
+      "question": "What is 'prior art' in design law?",
+      "options": [
+        "Ancient artwork",
+        "All existing designs and publications before the filing date",
+        "Only registered designs",
+        "Only famous designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art includes all existing designs, publications, and public disclosures before the filing date.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q7",
+      "question": "Why is a prior art search important?",
+      "options": [
+        "To find the cheapest manufacturer",
+        "To check if similar designs already exist",
+        "To determine the product price",
+        "To find competitors' addresses"
+      ],
+      "correctIndex": 1,
+      "explanation": "A prior art search helps determine if similar designs already exist, which could affect novelty.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q8",
+      "question": "If you publicly display your design at an exhibition, what happens to novelty?",
+      "options": [
+        "Novelty is destroyed immediately",
+        "Novelty is preserved if you file within 6 months (grace period)",
+        "Nothing happens",
+        "You can never register it"
+      ],
+      "correctIndex": 1,
+      "explanation": "India's 6-month grace period allows you to file after your own disclosure without losing novelty.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q9",
+      "question": "What is a common objection during design examination?",
+      "options": [
+        "The design is too expensive",
+        "Lack of novelty due to prior art",
+        "The design is too simple",
+        "The design is too colorful"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lack of novelty due to existing prior art is one of the most common objections.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q10",
+      "question": "In the Philips vs. Remington case, what was the key issue?",
+      "options": [
+        "Trademark infringement",
+        "Whether the shaver head design was novel and original",
+        "Patent validity",
+        "Copyright ownership"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case centered on whether Remington's shaver design was sufficiently different from Philips' design.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q11",
+      "question": "Can a design be registered if it's identical to an existing design?",
+      "options": [
+        "Yes, always",
+        "No, it lacks novelty",
+        "Yes, if it's in a different color",
+        "Only if it's cheaper"
+      ],
+      "correctIndex": 1,
+      "explanation": "An identical design lacks novelty and cannot be registered.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q12",
+      "question": "What does 'not previously published' mean?",
+      "options": [
+        "Not in books only",
+        "Not disclosed anywhere in the world in any form",
+        "Not in India only",
+        "Not in newspapers only"
+      ],
+      "correctIndex": 1,
+      "explanation": "The design must not have been disclosed anywhere in the world, in any form, before filing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q13",
+      "question": "If someone else publicly uses your design before you file, what happens?",
+      "options": [
+        "Nothing, you can still register",
+        "Your design loses novelty and cannot be registered",
+        "You get automatic protection",
+        "You can sue them immediately"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public use by someone else before filing destroys novelty, preventing registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q14",
+      "question": "What is the purpose of the grace period?",
+      "options": [
+        "To allow designers to test market response before filing",
+        "To delay payment of fees",
+        "To avoid registration",
+        "To increase costs"
+      ],
+      "correctIndex": 0,
+      "explanation": "The grace period allows designers to disclose their design (e.g., at exhibitions) and still file within 6 months.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q15",
+      "question": "Which of these would destroy novelty?",
+      "options": [
+        "Showing the design to your lawyer under NDA",
+        "Publishing the design in a magazine before filing",
+        "Keeping the design in your office",
+        "Discussing the design with your team"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public disclosure (like magazine publication) before filing destroys novelty.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q16",
+      "question": "What makes a design 'obvious'?",
+      "options": [
+        "It's expensive",
+        "It's a simple combination of known design elements with no creativity",
+        "It's colorful",
+        "It's large"
+      ],
+      "correctIndex": 1,
+      "explanation": "An obvious design is one that any designer could easily create by combining known elements without creativity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q17",
+      "question": "Who determines if a design is novel and original?",
+      "options": [
+        "The applicant",
+        "The Design Office examiner",
+        "The manufacturer",
+        "The consumer"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Design Office examiner reviews the application and determines if the design meets novelty and originality criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q18",
+      "question": "Can minor variations of an existing design be registered?",
+      "options": [
+        "Yes, always",
+        "No, they lack significant difference",
+        "Only if they're expensive",
+        "Only if they're colorful"
+      ],
+      "correctIndex": 1,
+      "explanation": "Minor variations don't meet the 'significant difference' test and lack originality.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q19",
+      "question": "What happens if your design is found to lack novelty during examination?",
+      "options": [
+        "Automatic approval",
+        "The application is objected to or refused",
+        "You get a refund",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "If novelty is lacking, the examiner will raise objections or refuse the application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q20",
+      "question": "In the Philips vs. Remington case, what type of product was involved?",
+      "options": [
+        "Mobile phones",
+        "Electric shavers",
+        "Computers",
+        "Televisions"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case involved the design of electric shaver heads.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q21",
+      "question": "What is the standard for 'significant difference'?",
+      "options": [
+        "Any tiny change is enough",
+        "The design must create a different overall impression to the informed user",
+        "The design must be in a different color",
+        "The design must be larger"
+      ],
+      "correctIndex": 1,
+      "explanation": "Significant difference means the design creates a different overall impression compared to prior art.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q22",
+      "question": "Can you register a design that you saw in another country?",
+      "options": [
+        "Yes, if it's not registered in India",
+        "No, prior art is worldwide",
+        "Yes, always",
+        "Only if you modify it slightly"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art is worldwide; a design disclosed anywhere in the world lacks novelty.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q23",
+      "question": "What is the benefit of the 6-month grace period?",
+      "options": [
+        "It allows you to test the market before committing to registration",
+        "It reduces registration fees",
+        "It guarantees approval",
+        "It extends protection duration"
+      ],
+      "correctIndex": 0,
+      "explanation": "The grace period allows designers to test market response or display at exhibitions before filing.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_2_q24",
+      "question": "Which of these is NOT a ground for objection?",
+      "options": [
+        "Lack of novelty",
+        "Lack of originality",
+        "High manufacturing cost",
+        "Purely functional design"
+      ],
+      "correctIndex": 2,
+      "explanation": "Manufacturing cost is not a criterion for design registration; novelty, originality, and non-functionality are.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_2_q25",
+      "question": "What must you prove to overcome a novelty objection?",
+      "options": [
+        "That your design is expensive",
+        "That your design is significantly different from the cited prior art",
+        "That your design is colorful",
+        "That your design is large"
+      ],
+      "correctIndex": 1,
+      "explanation": "To overcome a novelty objection, you must show your design is significantly different from prior art.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

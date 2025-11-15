@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_1",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_1_q1",
+      "question": "What does copyright primarily protect?",
+      "options": [
+        "Ideas and thoughts",
+        "Original creative expressions",
+        "Facts and data",
+        "Names and slogans"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright protects original creative expressions, not ideas or facts.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q2",
+      "question": "When does copyright protection begin in India?",
+      "options": [
+        "After registration",
+        "After publication",
+        "Automatically upon creation",
+        "After 5 years of use"
+      ],
+      "correctIndex": 2,
+      "explanation": "Copyright in India begins automatically once the work is created.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q3",
+      "question": "Which of these works can be protected by copyright?",
+      "options": [
+        "A poem written by a student",
+        "An idea for a novel",
+        "A slogan like 'Just Do It'",
+        "A mathematical formula"
+      ],
+      "correctIndex": 0,
+      "explanation": "Creative expressions like poems are protected; ideas, slogans, or formulas are not.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q4",
+      "question": "Which of the following is NOT protected by copyright?",
+      "options": [
+        "Painting",
+        "Software code",
+        "Scientific principle",
+        "Song lyrics"
+      ],
+      "correctIndex": 2,
+      "explanation": "Scientific principles are facts and are not copyrightable.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q5",
+      "question": "Who is considered the 'author' under copyright law?",
+      "options": [
+        "The person who publishes the work",
+        "The person who creates the work",
+        "The person who registers it",
+        "The company distributing it"
+      ],
+      "correctIndex": 1,
+      "explanation": "The person who creates the original expression is the author.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q6",
+      "question": "What is the main difference between an idea and its expression?",
+      "options": [
+        "Ideas can be owned, expressions cannot",
+        "Ideas are abstract, expressions are fixed and protectable",
+        "Ideas are protected, expressions are not",
+        "There is no difference"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright law only protects the fixed expression, not the underlying idea.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q7",
+      "question": "Which of the following is an example of an expression of an idea?",
+      "options": [
+        "The concept of a love story",
+        "The book 'Romeo and Juliet'",
+        "The word 'Love'",
+        "The feeling of affection"
+      ],
+      "correctIndex": 1,
+      "explanation": "A book like 'Romeo and Juliet' expresses an idea and is protectable under copyright.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q8",
+      "question": "Which of the following best describes 'automatic protection'?",
+      "options": [
+        "You must apply to get copyright",
+        "It happens only after publication",
+        "Protection exists from creation without registration",
+        "It requires a lawyer to validate"
+      ],
+      "correctIndex": 2,
+      "explanation": "Copyright protection exists automatically when a work is created.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q9",
+      "question": "Which work type is NOT literary under copyright law?",
+      "options": [
+        "Computer software code",
+        "Instruction manuals",
+        "Architectural design",
+        "Novels"
+      ],
+      "correctIndex": 2,
+      "explanation": "Architectural designs are protected under a different category, not literary works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q10",
+      "question": "What makes 'Romeo and Juliet' and 'West Side Story' different under copyright?",
+      "options": [
+        "They share the same idea but have different expressions",
+        "They are both in the public domain",
+        "They are identical works",
+        "They are not protected under copyright"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both share an idea but are expressed differently, hence each has its own protection.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q11",
+      "question": "Which of the following is an artistic work?",
+      "options": [
+        "A movie script",
+        "A musical performance",
+        "A sculpture",
+        "A mobile app"
+      ],
+      "correctIndex": 2,
+      "explanation": "A sculpture is considered an artistic work under copyright law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q12",
+      "question": "Why is copyright important for creators?",
+      "options": [
+        "It allows others to freely use their work",
+        "It protects their creative rights and provides control over use",
+        "It prevents them from publishing work",
+        "It applies only to famous authors"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright empowers creators by protecting their creative and economic interests.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q13",
+      "question": "Which of these can be both literary and artistic in nature?",
+      "options": [
+        "A film",
+        "A drawing",
+        "A software",
+        "A novel"
+      ],
+      "correctIndex": 0,
+      "explanation": "A film combines literary, artistic, and musical elements, protected as a composite work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q14",
+      "question": "Which statement best explains 'expression' in copyright law?",
+      "options": [
+        "It is the tangible or perceivable form of an idea",
+        "It refers to the mood of the author",
+        "It means publishing the work",
+        "It means sharing ideas in conversation"
+      ],
+      "correctIndex": 0,
+      "explanation": "Expression means a tangible form of an idea — written, drawn, or recorded.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q15",
+      "question": "Which medium is NOT covered under copyright protection?",
+      "options": [
+        "A song recorded on a phone",
+        "A hand-drawn comic",
+        "An idea written in a diary",
+        "A software program"
+      ],
+      "correctIndex": 2,
+      "explanation": "An unwritten idea in a diary is not considered a fixed expression.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q16",
+      "question": "Which of the following best describes the 'Expression Principle'?",
+      "options": [
+        "Copyright protects both ideas and expressions equally",
+        "Copyright protects only the expression of an idea, not the idea itself",
+        "Copyright expires as soon as an idea is expressed",
+        "Expressions are not protectable"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'Expression Principle' means that only the fixed form of an idea is protected.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q17",
+      "question": "Software is protected under which category?",
+      "options": [
+        "Artistic work",
+        "Literary work",
+        "Dramatic work",
+        "Cinematographic work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Software is treated as a literary work under copyright law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q18",
+      "question": "Copyright does NOT give the creator which of these rights?",
+      "options": [
+        "Right to reproduce",
+        "Right to distribute",
+        "Right to claim authorship",
+        "Right to invent a product"
+      ],
+      "correctIndex": 3,
+      "explanation": "Inventing is protected under patent law, not copyright.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q19",
+      "question": "Which of the following statements about copyright is FALSE?",
+      "options": [
+        "It protects creative works",
+        "It applies automatically",
+        "It protects facts and data",
+        "It gives exclusive rights to the author"
+      ],
+      "correctIndex": 2,
+      "explanation": "Copyright does not protect raw facts or data.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q20",
+      "question": "Which act governs copyright in India?",
+      "options": [
+        "Trade Marks Act, 1999",
+        "Copyright Act, 1957",
+        "Designs Act, 2000",
+        "Patent Act, 1970"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Copyright Act, 1957 governs copyright law in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q21",
+      "question": "What is an example of a dramatic work?",
+      "options": [
+        "A software code",
+        "A choreography script",
+        "A sound recording",
+        "A logo"
+      ],
+      "correctIndex": 1,
+      "explanation": "A choreography script or play is considered a dramatic work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q22",
+      "question": "If two students write similar poems independently, who gets copyright?",
+      "options": [
+        "Only the first to publish",
+        "Both independently",
+        "Neither, as they are similar",
+        "The one with registration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright is granted to both independent creators as long as each created it without copying.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_1_q23",
+      "question": "Which of these is an example of 'fixing' an expression?",
+      "options": [
+        "Telling a story verbally",
+        "Writing a poem in a notebook",
+        "Thinking of a song",
+        "Brainstorming ideas"
+      ],
+      "correctIndex": 1,
+      "explanation": "Writing a poem makes the expression tangible and protectable.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q24",
+      "question": "Can an idea for a new movie plot be copyrighted?",
+      "options": [
+        "Yes, automatically",
+        "Only after registration",
+        "No, only the screenplay or final movie can",
+        "Only if the idea is unique"
+      ],
+      "correctIndex": 2,
+      "explanation": "Only the fixed form (script or movie) is protected, not the idea for a plot.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_1_q25",
+      "question": "Why is 'Romeo and Juliet' often compared with 'West Side Story' in copyright discussions?",
+      "options": [
+        "They are legally the same work",
+        "They show idea-expression difference: same theme, different expression",
+        "They share copyright ownership",
+        "Both are unprotected works"
+      ],
+      "correctIndex": 1,
+      "explanation": "The two stories share a common idea but differ in expression — a key copyright concept.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

@@ -1,0 +1,367 @@
+{
+  "levelId": "trademark_level_3",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+
+    {
+      "id": "trademark_3_q1",
+      "question": "Which section of the Indian Trade Marks Act deals with absolute grounds for refusal of registration?",
+      "options": [
+        "Section 11",
+        "Section 9",
+        "Section 25",
+        "Section 18"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 9 of the Trade Marks Act, 1999 specifies the absolute grounds for refusal, including immoral or deceptive marks.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q2",
+      "question": "Which of these cannot be registered as a trademark?",
+      "options": [
+        "A unique invented word",
+        "A mark that is deceptive about the product",
+        "A logo with no prior use",
+        "A fanciful mark"
+      ],
+      "correctIndex": 1,
+      "explanation": "Deceptive marks mislead the public about the nature or quality of goods and are barred under Section 9.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q3",
+      "question": "Marks that hurt religious sentiments are:",
+      "options": [
+        "Prohibited from registration",
+        "Given limited protection",
+        "Automatically approved",
+        "Allowed if used commercially"
+      ],
+      "correctIndex": 0,
+      "explanation": "Section 9 prohibits marks that are likely to hurt religious sentiments of any class or section of citizens.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q4",
+      "question": "Which of the following cannot be trademarked under Indian law?",
+      "options": [
+        "A slogan",
+        "A national emblem",
+        "A brand name",
+        "A color combination"
+      ],
+      "correctIndex": 1,
+      "explanation": "National symbols like the Ashoka Chakra or Indian flag are prohibited under the Emblems and Names (Prevention of Improper Use) Act, 1950.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q5",
+      "question": "A shape that is necessary to obtain a technical result is:",
+      "options": [
+        "Registrable as a design only",
+        "Not registrable as a trademark",
+        "Always protected by copyright",
+        "Registrable under Section 11"
+      ],
+      "correctIndex": 1,
+      "explanation": "Functional shapes cannot be trademarked because that would unfairly block competitors from using useful designs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q6",
+      "question": "Which of the following marks would be rejected for being scandalous?",
+      "options": [
+        "A logo showing an obscene gesture",
+        "A mark with a made-up word",
+        "A stylized letter",
+        "A geometric pattern"
+      ],
+      "correctIndex": 0,
+      "explanation": "Marks that contain obscene or offensive material are refused registration under Section 9(2)(c).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q7",
+      "question": "Which doctrine prevents monopolization of useful product shapes?",
+      "options": [
+        "Doctrine of Fair Use",
+        "Functionality Doctrine",
+        "Dilution Doctrine",
+        "Distinctiveness Doctrine"
+      ],
+      "correctIndex": 1,
+      "explanation": "The functionality doctrine prevents granting trademark protection to functional product features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q8",
+      "question": "Can a trademark consist of a smell or sound?",
+      "options": [
+        "No, only visual marks are allowed",
+        "Yes, if they can be graphically represented",
+        "Yes, automatically",
+        "No, unless registered under copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "Non-traditional marks like sound or smell can be registered if graphically representable and distinctive.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q9",
+      "question": "Which of the following would most likely be rejected under Section 9?",
+      "options": [
+        "A mark misleading consumers about origin",
+        "A fanciful mark",
+        "A coined word",
+        "A suggestive slogan"
+      ],
+      "correctIndex": 0,
+      "explanation": "Deceptive marks mislead the public about geographical origin or quality and are barred under Section 9(2)(a).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_3_q10",
+      "question": "Which of these is an example of a functional feature not registrable as a trademark?",
+      "options": [
+        "The LEGO brick’s connecting studs",
+        "The Nike swoosh",
+        "The Coca-Cola logo",
+        "The Intel jingle"
+      ],
+      "correctIndex": 0,
+      "explanation": "The LEGO brick shape was denied trademark protection because its connecting function is essential to use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_3_q11",
+      "question": "Under Section 9, a mark will not be registered if it:",
+      "options": [
+        "Describes the quality or purpose of goods",
+        "Is completely invented",
+        "Is arbitrary in nature",
+        "Has been used for 5 years"
+      ],
+      "correctIndex": 0,
+      "explanation": "Marks that merely describe goods or their quality lack distinctiveness and are refused registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q12",
+      "question": "Which of these would be considered deceptive under trademark law?",
+      "options": [
+        "Using ‘SilkPure’ for polyester fabric",
+        "Using ‘Mountain Dew’ for soft drinks",
+        "Using ‘Google’ for a search engine",
+        "Using ‘Amazon’ for online retail"
+      ],
+      "correctIndex": 0,
+      "explanation": "‘SilkPure’ misleads consumers into believing the product is made of silk — a deceptive characteristic.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q13",
+      "question": "Which of these marks would be prohibited for being religiously sensitive?",
+      "options": [
+        "‘ShivPower’ for energy drinks",
+        "‘LightMax’ for bulbs",
+        "‘Cloud9’ for beverages",
+        "‘SparkUp’ for batteries"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using the name of a deity like ‘Shiv’ for commercial goods can hurt religious sentiments and is barred.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q14",
+      "question": "What was the legal issue in the LEGO brick case?",
+      "options": [
+        "Trademark infringement by shape",
+        "Functional shape not registrable",
+        "Copying of logo design",
+        "Passing off claim"
+      ],
+      "correctIndex": 1,
+      "explanation": "The LEGO brick’s shape was denied registration as it was essential to its function — covered by functionality doctrine.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q15",
+      "question": "Which of the following is NOT considered an absolute ground for refusal?",
+      "options": [
+        "Lack of distinctiveness",
+        "Scandalous or obscene marks",
+        "Confusion with an existing mark",
+        "Marks deceiving the public"
+      ],
+      "correctIndex": 2,
+      "explanation": "Confusion with existing marks falls under relative grounds (Section 11), not absolute grounds (Section 9).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q16",
+      "question": "Under Section 9, what happens if a mark is purely descriptive but gains distinctiveness?",
+      "options": [
+        "It can still be registered",
+        "It will always be rejected",
+        "It must be abandoned",
+        "It turns into a patent"
+      ],
+      "correctIndex": 0,
+      "explanation": "Descriptive marks may be accepted if they acquire distinctiveness through long-term use and consumer recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q17",
+      "question": "A brand uses the national flag in its logo. What will happen?",
+      "options": [
+        "It will get fast-track registration",
+        "It will be refused under Section 9 and Emblems Act",
+        "It will require government licensing",
+        "It will be automatically registered"
+      ],
+      "correctIndex": 1,
+      "explanation": "National symbols like the flag or Ashoka Chakra cannot be trademarked under the Emblems and Names Act.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q18",
+      "question": "Which of the following best defines the term 'scandalous mark'?",
+      "options": [
+        "A mark confusingly similar to another",
+        "A mark containing offensive or immoral matter",
+        "A mark that lacks distinctiveness",
+        "A mark that is functional"
+      ],
+      "correctIndex": 1,
+      "explanation": "Scandalous marks include vulgar, obscene, or socially offensive words or symbols.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q19",
+      "question": "A bottle shape designed purely for better grip would be refused because:",
+      "options": [
+        "It lacks artistic value",
+        "It is functional",
+        "It is too complex",
+        "It resembles a competitor’s design"
+      ],
+      "correctIndex": 1,
+      "explanation": "If the design is functional — i.e., necessary for use — it cannot be trademarked.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_3_q20",
+      "question": "Which of the following words is likely to be rejected as deceptive?",
+      "options": [
+        "PureHoney for artificial syrup",
+        "SkyNet for internet services",
+        "RedStone for jewelry",
+        "OceanBlue for paints"
+      ],
+      "correctIndex": 0,
+      "explanation": "‘PureHoney’ misleads consumers about the product composition, hence deceptive and not registrable.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_3_q21",
+      "question": "Why are functional shapes denied trademark protection?",
+      "options": [
+        "To prevent design monopolies that hinder competition",
+        "Because they are not creative",
+        "Because they are descriptive",
+        "Because they look similar"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trademark law avoids granting perpetual monopolies over functional product features, preserving fair competition.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_3_q22",
+      "question": "Can a company trademark a religious symbol like ‘Om’ for clothing?",
+      "options": [
+        "Yes, if used commercially",
+        "No, it’s prohibited under Section 9(2)(b)",
+        "Yes, with government approval",
+        "Only if it’s stylized uniquely"
+      ],
+      "correctIndex": 1,
+      "explanation": "Use of religious symbols like ‘Om’ is prohibited as it may offend religious sentiments.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_3_q23",
+      "question": "If a mark is denied under Section 9 but the applicant appeals, what must they prove?",
+      "options": [
+        "Distinctiveness acquired through use",
+        "That it’s fanciful",
+        "That it’s similar to another mark",
+        "That it’s been registered abroad"
+      ],
+      "correctIndex": 0,
+      "explanation": "Applicants can overcome Section 9 refusal by proving acquired distinctiveness or secondary meaning.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_3_q24",
+      "question": "Why did LEGO lose its trademark battle for the brick shape?",
+      "options": [
+        "It lacked secondary meaning",
+        "It was functional and essential to connect pieces",
+        "It copied another design",
+        "It was descriptive"
+      ],
+      "correctIndex": 1,
+      "explanation": "The LEGO brick’s studs were essential for functionality — not a distinctive brand feature.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_3_q25",
+      "question": "Which of these best summarizes Section 9’s purpose?",
+      "options": [
+        "To prevent misuse of distinct but immoral marks",
+        "To stop the registration of marks contrary to public interest",
+        "To regulate licensing of foreign marks",
+        "To promote marketing slogans"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 9 ensures only distinctive, lawful, and ethical marks enter the register — protecting public interest.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

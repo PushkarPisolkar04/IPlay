@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_8",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_8_q1",
+      "question": "Which of the following is an example of a non-traditional trademark?",
+      "options": [
+        "Word mark like 'Google'",
+        "Logo of Nike",
+        "Intel’s startup sound",
+        "Slogan 'Just Do It'"
+      ],
+      "correctIndex": 2,
+      "explanation": "Intel’s five-note startup sound is a registered non-traditional trademark — specifically, a sound mark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q2",
+      "question": "Which of these can qualify as a sound mark in India?",
+      "options": [
+        "A popular song",
+        "A distinctive jingle used for branding",
+        "Any ringtone",
+        "Background noise in a video"
+      ],
+      "correctIndex": 1,
+      "explanation": "A unique, brand-associated jingle (like ICICI’s tune) can be registered as a sound mark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q3",
+      "question": "What is the primary requirement for any non-traditional mark to be registered?",
+      "options": [
+        "It must be in color",
+        "It must be graphically representable and distinctive",
+        "It must be registered globally",
+        "It must include a logo"
+      ],
+      "correctIndex": 1,
+      "explanation": "Under Indian law, even non-traditional marks must be distinctive and graphically representable to qualify for registration.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q4",
+      "question": "The 'Intel bong' is an example of which type of trademark?",
+      "options": [
+        "Sound mark",
+        "Color mark",
+        "Shape mark",
+        "Word mark"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Intel 'bong' jingle is a globally recognized sound mark representing the Intel brand.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q5",
+      "question": "The 'Cadbury purple' color is protected as which type of trademark?",
+      "options": [
+        "Word mark",
+        "Color mark",
+        "Device mark",
+        "Shape mark"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cadbury has registered its distinctive purple color as a color mark in several jurisdictions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q6",
+      "question": "Which company is known for registering the unique blue color as a trademark?",
+      "options": [
+        "Pepsi",
+        "Tiffany & Co.",
+        "Facebook",
+        "Ford"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tiffany & Co. registered its specific shade of blue ('Tiffany Blue') as a color trademark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q7",
+      "question": "The Coca-Cola bottle shape is protected as what kind of mark?",
+      "options": [
+        "Word mark",
+        "Design patent",
+        "Shape mark (Trade Dress)",
+        "Collective mark"
+      ],
+      "correctIndex": 2,
+      "explanation": "The iconic Coca-Cola bottle is registered as a 3D shape mark, also considered trade dress.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q8",
+      "question": "Which of the following is considered the rarest form of non-traditional trademark?",
+      "options": [
+        "Color mark",
+        "Sound mark",
+        "Shape mark",
+        "Smell mark"
+      ],
+      "correctIndex": 3,
+      "explanation": "Smell marks are extremely rare because representing a scent graphically is difficult.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q9",
+      "question": "In India, which authority accepts sound mark applications?",
+      "options": [
+        "Copyright Board",
+        "Patent Office",
+        "Trade Marks Registry",
+        "Broadcast Authority"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sound marks are registered through the Trade Marks Registry using a graphical musical notation and audio file.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_8_q10",
+      "question": "What does 'trade dress' protect?",
+      "options": [
+        "The product’s outer appearance or packaging design",
+        "The slogan of the brand",
+        "The brand’s advertising jingle",
+        "The corporate registration details"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trade dress refers to the overall look and feel of a product — including packaging, color, and design — that indicates source.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_8_q11",
+      "question": "Which of these sound marks is registered in India?",
+      "options": [
+        "Airtel tune",
+        "WhatsApp notification sound",
+        "YouTube intro tone",
+        "Samsung ringtone"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Airtel tune composed by A.R. Rahman is one of the first sound marks registered in India.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q12",
+      "question": "Why are smell marks difficult to register?",
+      "options": [
+        "They can’t be patented",
+        "They are not graphically representable",
+        "They expire too quickly",
+        "They don’t meet distinctiveness requirements"
+      ],
+      "correctIndex": 1,
+      "explanation": "Graphical representation of a smell is difficult, which is a requirement for registration under trademark law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q13",
+      "question": "Which of the following colors has been registered as a trademark in India?",
+      "options": [
+        "Cadbury Purple (Pantone 2685C)",
+        "Ferrari Red",
+        "Apple Silver",
+        "Facebook Blue"
+      ],
+      "correctIndex": 0,
+      "explanation": "Cadbury successfully registered its distinct shade of purple in India for chocolates.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q14",
+      "question": "A perfume company tries to trademark the smell of roses. What’s the main issue?",
+      "options": [
+        "Lack of novelty",
+        "Not graphically representable and too common",
+        "Already registered by another company",
+        "Against public policy"
+      ],
+      "correctIndex": 1,
+      "explanation": "Common smells like roses lack distinctiveness and are difficult to represent graphically, so they can’t be registered.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q15",
+      "question": "What does the registration of a sound mark require in India?",
+      "options": [
+        "Video file and tagline",
+        "MP3 file and graphical notation of the tune",
+        "Lyrics and recording",
+        "Sheet music only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Applicants must submit both an MP3 file (≤30 seconds) and a graphical representation (musical notation).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q16",
+      "question": "Which international example set precedent for registering color marks?",
+      "options": [
+        "Tiffany Blue (USA)",
+        "Starbucks Green (UK)",
+        "McDonald’s Red (EU)",
+        "Nestlé Yellow (Japan)"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tiffany Blue became an iconic color mark, strengthening global recognition of color-based trademarks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q17",
+      "question": "What legal concept allows the Coca-Cola bottle shape to be protected without a logo?",
+      "options": [
+        "Design registration",
+        "Trade dress distinctiveness",
+        "Patent exclusivity",
+        "Descriptive fair use"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trade dress distinctiveness allows unique shapes and designs to be protected as trademarks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q18",
+      "question": "Which of these cannot be registered as a non-traditional mark in India?",
+      "options": [
+        "Color combination with secondary meaning",
+        "Unique shape of packaging",
+        "Pleasant fragrance of a common flower",
+        "Distinctive sound"
+      ],
+      "correctIndex": 2,
+      "explanation": "Common natural fragrances like flowers or fruits lack distinctiveness and can’t be registered.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q19",
+      "question": "Trade dress and shape marks differ mainly in:",
+      "options": [
+        "Registration process",
+        "Scope — trade dress covers overall appearance, not just shape",
+        "Applicable law",
+        "Duration of protection"
+      ],
+      "correctIndex": 1,
+      "explanation": "Shape marks protect a 3D form, while trade dress includes color, layout, and total presentation of the product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_8_q20",
+      "question": "In India, what form must accompany a color mark application?",
+      "options": [
+        "Pantone code or color sample",
+        "Verbal color description only",
+        "Trademark search report",
+        "Photograph of the product"
+      ],
+      "correctIndex": 0,
+      "explanation": "A Pantone code or equivalent visual specification is required for color mark applications in India.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_8_q21",
+      "question": "Which of the following could *theoretically* qualify as a smell mark?",
+      "options": [
+        "Smell of freshly cut grass for tennis balls",
+        "Rose fragrance for perfume",
+        "Vanilla scent for candles",
+        "Citrus scent for soap"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'freshly cut grass' scent for tennis balls is one of the few globally recognized smell marks (EU example).",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_8_q22",
+      "question": "Which is the first sound mark registered in India?",
+      "options": [
+        "Intel bong",
+        "Yahoo yodel",
+        "Airtel tune",
+        "ICICI jingle"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Airtel tune composed by A.R. Rahman became the first officially registered sound mark in India.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_8_q23",
+      "question": "Which of these characteristics makes a color mark registrable?",
+      "options": [
+        "Distinctive association with a single brand",
+        "Use by multiple brands",
+        "Seasonal relevance",
+        "Consumer preference for that color"
+      ],
+      "correctIndex": 0,
+      "explanation": "Color marks must acquire distinctiveness — consumers should associate that color with a specific source.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_8_q24",
+      "question": "Which legal doctrine protects the overall packaging and design of a product?",
+      "options": [
+        "Trade dress protection",
+        "Utility patent law",
+        "Industrial design law",
+        "Copyright protection"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trade dress protection safeguards the total commercial image — color, design, and configuration — of a product.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_8_q25",
+      "question": "Non-traditional marks are gaining importance because:",
+      "options": [
+        "Logos are becoming obsolete",
+        "Brands seek to protect sensory identities like sound and color",
+        "They replace copyright",
+        "They’re easier to register"
+      ],
+      "correctIndex": 1,
+      "explanation": "Modern branding focuses on multi-sensory recognition — protecting sounds, colors, and shapes as trademarks.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

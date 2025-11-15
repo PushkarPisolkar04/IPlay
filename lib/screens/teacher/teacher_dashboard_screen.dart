@@ -21,7 +21,7 @@ import 'quiz_performance_screen.dart';
 import 'generate_report_screen.dart';
 import '../announcements/unified_announcements_screen.dart';
 import 'create_announcement_screen.dart';
-import '../assignment/create_assignment_screen.dart';
+// import '../assignment/create_assignment_screen.dart'; // Removed - file uploads not needed
 import '../../core/services/join_request_service.dart';
 import '../../core/services/notification_service.dart';
 import '../../core/models/join_request_model.dart';
@@ -266,11 +266,15 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
       _activeStudents = activeCount;
       _avgClassXP = _totalStudents > 0 ? totalXP / _totalStudents : 0;
 
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     }
+  }
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -629,63 +633,14 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                             child: AppButton.accent(
                               text: 'Assignment',
                               icon: Icons.assignment,
-                              onPressed: () async {
-                                // Show classroom selection dialog if teacher has multiple classrooms
-                                if (_classrooms.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Please create a classroom first'),
-                                      backgroundColor: Colors.orange,
-                                    ),
-                                  );
-                                  return;
-                                }
-                                
-                                // If only one classroom, use it directly
-                                if (_classrooms.length == 1) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateAssignmentScreen(
-                                        classroomId: _classrooms[0]['id'],
-                                        classroomName: _classrooms[0]['name'],
-                                      ),
-                                    ),
-                                  ).then((_) => _loadData());
-                                } else {
-                                  // Show classroom selection dialog
-                                  final selected = await showDialog<Map<String, dynamic>>(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('Select Classroom'),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: _classrooms.map((classroom) {
-                                            return ListTile(
-                                              title: Text(classroom['name']),
-                                              subtitle: Text('${classroom['studentCount']} students'),
-                                              onTap: () => Navigator.pop(context, classroom),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                  
-                                  if (selected != null) {
-                                    if (!mounted) return;
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CreateAssignmentScreen(
-                                          classroomId: selected['id'],
-                                          classroomName: selected['name'],
-                                        ),
-                                      ),
-                                    ).then((_) => _loadData());
-                                  }
-                                }
+                              onPressed: () {
+                                // Assignment creation removed - file uploads not needed
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Assignment creation feature has been removed'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -1622,9 +1577,13 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
       // Load top performers
       await _loadTopPerformers(currentUser.uid);
 
-          setState(() => _isLoading = false);
-    } catch (e) {
+      if (mounted) {
         setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -2215,9 +2174,13 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
       }
       _totalStudents = totalStudentsCount;
 
-      setState(() => _isLoading = false);
-    } catch (e) {
+      if (mounted) {
         setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

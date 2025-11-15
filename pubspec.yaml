@@ -16,9 +16,9 @@ dependencies:
   firebase_core: ^3.15.2
   firebase_auth: ^5.7.0
   cloud_firestore: ^5.6.12
-  firebase_storage: ^12.4.10
   firebase_messaging: ^15.0.0
   firebase_crashlytics: ^4.2.0
+  firebase_analytics: ^11.3.3
   google_sign_in: ^6.3.0
   
   # State Management
@@ -99,9 +99,25 @@ flutter:
     - assets/icons/app_icon.png
     - assets/backgrounds/background1.png
     - assets/logos/logo.png
+    - assets/logos/
+    - assets/badges/
+    - assets/games/
+    - assets/trademarks/
+    - assets/products/
+    - assets/gi/
     - assets/stu_avatars/
     - assets/tea_avatars/
     - assets/content/
+    - assets/towers/
+    - assets/enemies/
+    - assets/projectiles/
+    - assets/maps/
+    - assets/patents/
+    - content/
+    - content/levels/
+    - content/quizzes/
+    - content/games/
+    - content/daily_challenges.json
 
 # App Icon Configuration
 flutter_launcher_icons:

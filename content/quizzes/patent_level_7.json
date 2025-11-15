@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_7",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_7_q1",
+      "question": "What is the main obligation of a patent owner?",
+      "options": [
+        "Pay fees",
+        "Obligation to 'work' (use/manufacture) the patent",
+        "License to everyone",
+        "Disclose secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "The main obligation is to 'work' the patent - to use or manufacture the invention in the country.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q2",
+      "question": "What is a Compulsory License?",
+      "options": [
+        "A voluntary license",
+        "A government-forced license to a competitor",
+        "A free license",
+        "An international license"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Compulsory License is when a government forces a patent owner to license their invention to a competitor.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q3",
+      "question": "Is a Compulsory License a theft of the patent?",
+      "options": [
+        "Yes, it's expropriation",
+        "No, the patent owner still receives reasonable royalty",
+        "Yes, it's illegal",
+        "No, it's free"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, it's not theft - the patent owner still receives a reasonable royalty payment.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q4",
+      "question": "When can a government issue a Compulsory License?",
+      "options": [
+        "Anytime",
+        "National emergency, public health, refusal to work patent, anti-competitive practices",
+        "Never",
+        "Only for drugs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Compulsory licenses can be issued for national emergencies, public health, failure to work the patent, or anti-competitive practices.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q5",
+      "question": "Which international agreement allows Compulsory Licenses?",
+      "options": [
+        "Paris Convention",
+        "TRIPS Agreement",
+        "Berne Convention",
+        "Madrid Protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "The WTO TRIPS Agreement explicitly allows compulsory licenses for specific reasons.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q6",
+      "question": "What is the most common reason for Compulsory Licenses?",
+      "options": [
+        "High prices",
+        "Public health emergencies",
+        "Competition",
+        "Taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public health emergencies (like access to life-saving drugs) are the most common reason.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q7",
+      "question": "Can a patent owner refuse to work their patent?",
+      "options": [
+        "Yes, with no consequences",
+        "Yes, but it may lead to compulsory licensing",
+        "No, it's illegal",
+        "Only for 5 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, but if they don't work it for several years, others can petition for a compulsory license.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q8",
+      "question": "What happened during the HIV/AIDS crisis regarding patents?",
+      "options": [
+        "No action",
+        "Countries like Brazil and South Africa issued compulsory licenses for generic drugs",
+        "All patents were cancelled",
+        "Drugs became free"
+      ],
+      "correctIndex": 1,
+      "explanation": "Countries issued compulsory licenses to get cheap generic versions of life-saving antiretroviral drugs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q9",
+      "question": "What is the purpose of the 'obligation to work' a patent?",
+      "options": [
+        "To increase taxes",
+        "To ensure patents encourage industry, not just block it",
+        "To punish inventors",
+        "To reduce prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "The obligation ensures patents encourage actual industry and innovation, not just blocking competitors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q10",
+      "question": "Can you get a patent just to block competitors without using it?",
+      "options": [
+        "Yes, that's the point",
+        "Yes, but you risk compulsory licensing",
+        "No, it's illegal",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, but if you don't work it, you risk having a compulsory license issued to competitors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q11",
+      "question": "What royalty does a compulsory licensee pay?",
+      "options": [
+        "Nothing",
+        "A reasonable royalty set by government",
+        "Full market price",
+        "Whatever they want"
+      ],
+      "correctIndex": 1,
+      "explanation": "The compulsory licensee must pay a reasonable royalty, typically set by the government or court.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q12",
+      "question": "Is compulsory licensing common?",
+      "options": [
+        "Yes, very common",
+        "No, it's rare and controversial",
+        "Yes, happens daily",
+        "No, it's illegal"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, compulsory licensing is rare and controversial, used only in serious situations.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q13",
+      "question": "What is the conflict in the life-saving drug case study?",
+      "options": [
+        "Price vs. quality",
+        "Patent rights vs. public health",
+        "Speed vs. safety",
+        "Domestic vs. international"
+      ],
+      "correctIndex": 1,
+      "explanation": "The conflict is between private patent rights and public health access to affordable medicines.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q14",
+      "question": "Can a company set any price for a patented drug?",
+      "options": [
+        "No, prices are regulated",
+        "Yes, during the patent monopoly",
+        "Only low prices",
+        "Only with approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, during the patent monopoly, the company can generally set prices (though this is controversial).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q15",
+      "question": "What happens after a compulsory license is issued?",
+      "options": [
+        "Patent is cancelled",
+        "Generic companies can produce the drug legally",
+        "Patent owner loses all rights",
+        "Drug becomes free"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic companies can legally produce and sell the drug, paying a royalty to the patent owner.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q16",
+      "question": "Why is compulsory licensing controversial?",
+      "options": [
+        "It's illegal",
+        "It balances innovation incentives with public access",
+        "It's too expensive",
+        "It's too slow"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's controversial because it balances the need for innovation incentives with public access to essential goods.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_7_q17",
+      "question": "Can compulsory licenses be issued for anti-competitive behavior?",
+      "options": [
+        "No, never",
+        "Yes, if a patent is used as part of illegal monopoly",
+        "Only for drugs",
+        "Only in emergencies"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, if a company uses its patent as part of illegal anti-competitive practices.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_7_q18",
+      "question": "What is the typical royalty rate for compulsory licenses?",
+      "options": [
+        "0%",
+        "Small percentage like 5%",
+        "50%",
+        "100%"
+      ],
+      "correctIndex": 1,
+      "explanation": "Typically a small percentage like 5% of sales, much lower than voluntary licenses.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_7_q19",
+      "question": "Can patent owners challenge compulsory licenses?",
+      "options": [
+        "No, they're final",
+        "Yes, they can challenge them in court",
+        "Only in some countries",
+        "Only after 5 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, patent owners can challenge compulsory licenses in court, though success varies.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q20",
+      "question": "What is the 'public health exception' in TRIPS?",
+      "options": [
+        "Free drugs",
+        "Allows compulsory licenses for public health emergencies",
+        "Bans drug patents",
+        "Requires low prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "TRIPS explicitly allows compulsory licenses for public health emergencies.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q21",
+      "question": "If a patent owner refuses to license at any price, what can happen?",
+      "options": [
+        "Nothing",
+        "Government may issue compulsory license",
+        "Patent is cancelled",
+        "Owner is fined"
+      ],
+      "correctIndex": 1,
+      "explanation": "If the owner refuses to license and it harms public interest, a compulsory license may be issued.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q22",
+      "question": "What is the goal of the patent system's obligations?",
+      "options": [
+        "To punish inventors",
+        "To balance private rights with public benefit",
+        "To eliminate patents",
+        "To increase prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "The goal is to balance private patent rights with public benefit and access.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_7_q23",
+      "question": "Can compulsory licenses be issued for national security?",
+      "options": [
+        "No, never",
+        "Yes, for national security or emergency",
+        "Only for drugs",
+        "Only in wartime"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, compulsory licenses can be issued for national security or emergency situations.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_7_q24",
+      "question": "What is the most powerful part of the patent bargain?",
+      "options": [
+        "The 20-year term",
+        "The point where public health can override private monopoly",
+        "The filing process",
+        "The claims"
+      ],
+      "correctIndex": 1,
+      "explanation": "The most powerful and controversial part is where public health can override private monopoly through compulsory licensing.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_7_q25",
+      "question": "Do all countries have compulsory licensing provisions?",
+      "options": [
+        "No, only developing countries",
+        "Yes, most countries under TRIPS",
+        "No, it's banned",
+        "Only the US"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, most countries have compulsory licensing provisions as part of TRIPS compliance.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

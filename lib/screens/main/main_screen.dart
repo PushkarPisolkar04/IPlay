@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/bottom_nav_bar.dart';
-import '../../widgets/offline_banner.dart';
 import '../../core/models/user_model.dart';
 import '../home/home_screen.dart';
 import '../learn/learn_screen.dart';
@@ -65,19 +64,17 @@ class _MainScreenState extends State<MainScreen> {
         LearnScreen(),
         PlayScreen(),
         UnifiedLeaderboardScreen(),
-        ChatListScreen(), // Messages
         ProfileScreen(),
       ];
     }
 
-    // STUDENT: Home, Learn, Play, Leaderboard, Messages, Profile
+    // STUDENT: Home, Learn, Play, Leaderboard, Profile
     if (_user!.role == 'student') {
       return const [
         HomeScreen(),
         LearnScreen(),
         PlayScreen(),
         UnifiedLeaderboardScreen(),
-        ChatListScreen(), // Messages
         ProfileScreen(),
       ];
     }
@@ -115,33 +112,50 @@ class _MainScreenState extends State<MainScreen> {
     if (_user != null && _user!.role != 'student') {
       // Show Principal Dashboard if user is a principal
       if (_user!.isPrincipal == true) {
-        return const PrincipalDashboardScreen();
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) return;
+            // Exit app instead of going back
+            return;
+          },
+          child: const PrincipalDashboardScreen(),
+        );
       }
       // Otherwise show regular Teacher Dashboard
-      return const TeacherDashboardScreen();
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+          // Exit app instead of going back
+          return;
+        },
+        child: const TeacherDashboardScreen(),
+      );
     }
 
     // For students, show the normal tab navigation
-    return Scaffold(
-      body: Column(
-        children: [
-          const OfflineBanner(),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              children: _screens,
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: _onTabTapped,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+        // Exit app instead of going back
+        return;
+      },
+      child: Scaffold(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children: _screens,
+        ),
+        bottomNavigationBar: BottomNavBar(
+          currentIndex: _currentIndex,
+          onTap: _onTabTapped,
+        ),
       ),
     );
   }

@@ -5,14 +5,12 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
+import '../../core/services/content_service.dart';
 import '../../models/classroom_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/top_bar_with_avatar.dart';
-import '../../widgets/stat_card.dart';
 import '../../widgets/streak_indicator.dart';
-import '../../widgets/xp_counter.dart';
 import '../../widgets/loading_skeleton.dart';
-import '../announcements/unified_announcements_screen.dart';
 import '../student/my_progress_screen.dart';
 import '../learn/learn_screen.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
@@ -27,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ContentService _contentService = ContentService();
   UserModel? _user;
   bool _isLoading = true;
   String _greeting = 'Good Morning';
@@ -145,6 +144,122 @@ class _HomeScreenState extends State<HomeScreen> {
     return _user!.displayName[0].toUpperCase();
   }
 
+  Future<int> _getUserRank(int userXP) async {
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return 1;
+      
+      // Get all students with higher XP
+      final higherXPSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'student')
+          .where('totalXP', isGreaterThan: userXP)
+          .get();
+      
+      // Rank is number of students with higher XP + 1
+      return higherXPSnapshot.docs.length + 1;
+    } catch (e) {
+      // print('Error getting user rank: $e');
+      return 1;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getRecommendedLevels() async {
+    try {
+      if (_user == null) return [];
+      
+      final recommendations = <Map<String, dynamic>>[];
+      final realms = await _contentService.getAllRealms();
+      
+      // Show first 2 realms that user hasn't completed
+      for (final realm in realms.take(2)) {
+        final realmProgress = _user!.progressSummary[realm.id];
+        if (realmProgress == null || !realmProgress.completed) {
+          recommendations.add({
+            'title': realm.name,
+            'subtitle': 'Start learning • ${realm.totalLevels} levels',
+            'levelId': realm.id,
+            'color': realm.color,
+          });
+        }
+      }
+      
+      return recommendations;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getRecentActivity() async {
+    try {
+      if (_user == null) return [];
+      
+      final activities = <Map<String, dynamic>>[];
+      
+      // Get recent badge unlocks
+      final badgeUnlocks = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('badge_unlocks')
+          .orderBy('unlockedAt', descending: true)
+          .limit(3)
+          .get();
+      
+      for (final doc in badgeUnlocks.docs) {
+        final data = doc.data();
+        final badgeId = data['badgeId'];
+        final unlockedAt = (data['unlockedAt'] as Timestamp).toDate();
+        final timeAgo = _getTimeAgo(unlockedAt);
+        
+        // Get badge name
+        final badgeDoc = await FirebaseFirestore.instance
+            .collection('badges')
+            .doc(badgeId)
+            .get();
+        
+        if (badgeDoc.exists) {
+          activities.add({
+            'title': 'Badge Unlocked!',
+            'subtitle': badgeDoc.data()?['name'] ?? 'New Badge',
+            'time': timeAgo,
+            'icon': Icons.emoji_events,
+            'color': 0xFFF59E0B,
+          });
+        }
+      }
+      
+      // If no activities, show a welcome message
+      if (activities.isEmpty) {
+        activities.add({
+          'title': 'Welcome!',
+          'subtitle': 'Start learning to see your activity here',
+          'time': 'Now',
+          'icon': Icons.celebration,
+          'color': 0xFF10B981,
+        });
+      }
+      
+      return activities;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  String _getTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+    
+    if (difference.inDays > 0) {
+      return '${difference.inDays}d ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -158,22 +273,22 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       body: SafeArea(
-        child: Column(
-          children: [
-            // Top bar with avatar (navigates to profile)
-            TopBarWithAvatar(
-              avatarUrl: _user?.avatarUrl,
-              initials: _getInitials(),
-              showOnlineBadge: true,
-              onAvatarTap: () {
-                Navigator.pushNamed(context, '/profile');
-              },
-            ),
-            
-            // Scrollable content with pull-to-refresh and real-time updates
-            Expanded(
-              child: _isLoading
-                  ? const SingleChildScrollView(
+          child: Column(
+            children: [
+              // Top bar with avatar (navigates to profile)
+              TopBarWithAvatar(
+                avatarUrl: _user?.avatarUrl,
+                initials: _getInitials(),
+                showOnlineBadge: true,
+                onAvatarTap: () {
+                  Navigator.pushNamed(context, '/profile');
+                },
+              ),
+              
+              // Scrollable content with pull-to-refresh and real-time updates
+              Expanded(
+                child: _isLoading
+                    ? const SingleChildScrollView(
                       padding: EdgeInsets.all(16),
                       child: Column(
                         children: [
@@ -191,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     )
-                  : StreamBuilder<DocumentSnapshot>(
+                    : StreamBuilder<DocumentSnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('users')
                           .doc(currentUser.uid)
@@ -219,33 +334,96 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 const SizedBox(height: 8),
                                 
-                                // Greeting with avatar and streak (real-time)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            '$_greeting!',
-                                            style: AppTextStyles.h1,
-                                          ),
-                                          Text(
-                                            streamUser?.displayName ?? 'Student',
-                                            style: AppTextStyles.h3.copyWith(
-                                              color: AppDesignSystem.primaryPink,
-                                            ),
-                                          ),
-                                        ],
+                                // Greeting with streak (real-time)
+                                Container(
+                                  padding: const EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        const Color(0xFF6366F1), // Indigo
+                                        const Color(0xFF8B5CF6), // Purple
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 8),
                                       ),
-                                    ),
-                                    StreakIndicator(
-                                      currentStreak: streamUser?.currentStreak ?? 0,
-                                      maxStreak: streamUser?.currentStreak ?? 0,
-                                      isActive: true,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '$_greeting!',
+                                              style: AppTextStyles.h2.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              streamUser?.displayName ?? 'Student',
+                                              style: AppTextStyles.h3.copyWith(
+                                                color: Colors.white.withValues(alpha: 0.95),
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(16),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(alpha: 0.1),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text('🔥', style: TextStyle(fontSize: 24)),
+                                            const SizedBox(width: 8),
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  '${streamUser?.currentStreak ?? 0}',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(0xFFF59E0B),
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Day Streak',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Color(0xFF6B7280),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 
                                 const SizedBox(height: AppSpacing.lg),
@@ -257,12 +435,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Container(
                                         padding: const EdgeInsets.all(AppSpacing.md),
                                         decoration: BoxDecoration(
-                                          color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                                          border: Border.all(
-                                            color: AppDesignSystem.primaryAmber.withValues(alpha: 0.3),
-                                            width: 1,
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              const Color(0xFFFBBF24),
+                                              const Color(0xFFF59E0B),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
                                           ),
+                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                         ),
                                         child: InkWell(
                                           onTap: () => Navigator.pushNamed(context, '/profile'),
@@ -271,17 +459,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               Icon(
                                                 Icons.stars,
-                                                color: AppDesignSystem.primaryAmber,
+                                                color: Colors.white,
                                                 size: 28,
                                               ),
                                               const SizedBox(height: 4),
-                                              XPCounter(
-                                                xp: streamUser?.totalXP ?? 0,
+                                              Text(
+                                                '${streamUser?.totalXP ?? 0}',
+                                                style: AppTextStyles.h2.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                               Text(
                                                 'Total XP',
                                                 style: AppTextStyles.caption.copyWith(
-                                                  color: AppDesignSystem.textSecondary,
+                                                  color: Colors.white.withValues(alpha: 0.9),
                                                 ),
                                               ),
                                             ],
@@ -291,28 +483,114 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     const SizedBox(width: AppSpacing.cardSpacing),
                                     Expanded(
-                                      child: StatCard(
-                                        title: 'Badges',
-                                        value: '${streamUser?.badges.length ?? 0}',
-                                        icon: Icons.emoji_events,
-                                        color: AppDesignSystem.primaryPink,
-                                        onTap: () => Navigator.pushNamed(context, '/badges'),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(AppSpacing.md),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              const Color(0xFFEC4899),
+                                              const Color(0xFFDB2777),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: const Color(0xFFEC4899).withValues(alpha: 0.3),
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
+                                        ),
+                                        child: InkWell(
+                                          onTap: () => Navigator.pushNamed(context, '/badges'),
+                                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                          child: Column(
+                                            children: [
+                                              Icon(
+                                                Icons.emoji_events,
+                                                color: Colors.white,
+                                                size: 28,
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                '${streamUser?.badges.length ?? 0}',
+                                                style: AppTextStyles.h2.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              Text(
+                                                'Badges',
+                                                style: AppTextStyles.caption.copyWith(
+                                                  color: Colors.white.withValues(alpha: 0.9),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: AppSpacing.cardSpacing),
                                     Expanded(
-                                      child: StatCard(
-                                        title: 'Rank',
-                                        value: '-',
-                                        icon: Icons.leaderboard,
-                                        color: AppDesignSystem.primaryIndigo,
-                                        subtitle: 'Coming soon',
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const UnifiedLeaderboardScreen(),
-                                          ),
-                                        ),
+                                      child: FutureBuilder<int>(
+                                        future: _getUserRank(streamUser?.totalXP ?? 0),
+                                        builder: (context, rankSnapshot) {
+                                          return Container(
+                                            padding: const EdgeInsets.all(AppSpacing.md),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: [
+                                                  const Color(0xFF6366F1),
+                                                  const Color(0xFF4F46E5),
+                                                ],
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                              ),
+                                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                                                  blurRadius: 12,
+                                                  offset: const Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: InkWell(
+                                              onTap: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const UnifiedLeaderboardScreen(),
+                                                ),
+                                              ),
+                                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.leaderboard,
+                                                    color: Colors.white,
+                                                    size: 28,
+                                                  ),
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    rankSnapshot.hasData && rankSnapshot.data! > 0 ? '#${rankSnapshot.data}' : '#1',
+                                                    style: AppTextStyles.h2.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'Rank',
+                                                    style: AppTextStyles.caption.copyWith(
+                                                      color: Colors.white.withValues(alpha: 0.9),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ],
@@ -323,11 +601,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Daily Challenge Card
                           Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(AppSpacing.md),
+                            padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              gradient: AppDesignSystem.gradientWarning,
-                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                              boxShadow: AppDesignSystem.shadowMD,
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xFFF59E0B),
+                                  const Color(0xFFEF4444),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -552,19 +843,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Featured card (Continue Learning) with gradient
                           Container(
                             width: double.infinity,
-                            padding: const EdgeInsets.all(AppSpacing.md),
+                            padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                                colors: [Color(0xFF10B981), Color(0xFF059669)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF10B981).withValues(alpha: 0.3),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
+                                  color: const Color(0xFF10B981).withValues(alpha: 0.4),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
                                 ),
                               ],
                             ),
@@ -641,65 +932,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.lg),
                           
-                          // Recommended for You Section
-                          Text(
-                            'Recommended for You',
-                            style: AppTextStyles.sectionHeader,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          
-                          CleanCard(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  leading: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Text('©️', style: TextStyle(fontSize: 24)),
-                                  ),
-                                  title: const Text('Copyright Basics'),
-                                  subtitle: const Text('Start with the fundamentals'),
-                                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const LearnScreen(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const Divider(height: 1),
-                                ListTile(
-                                  leading: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Text('™️', style: TextStyle(fontSize: 24)),
-                                  ),
-                                  title: const Text('Trademark Essentials'),
-                                  subtitle: const Text('Protect your brand'),
-                                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const LearnScreen(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          const SizedBox(height: AppSpacing.lg),
-                          
                           // Quick Actions Section
                           Text(
                             'Quick Actions',
@@ -710,11 +942,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           GridView.count(
                             crossAxisCount: 2,
-                            crossAxisSpacing: AppSpacing.cardSpacing,
-                            mainAxisSpacing: AppSpacing.cardSpacing,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 1.3,
+                            childAspectRatio: 1.5,
                             children: [
                               // Join Classroom
                               _buildActionCard(
@@ -726,19 +958,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.pushNamed(context, '/join-classroom');
                                 },
                               ),
-                              // View Announcements (opens dedicated screen)
+                              // Messages
                               _buildActionCard(
                                 context,
-                                icon: Icons.campaign_outlined,
-                                title: 'View\nAnnouncements',
-                                color: const Color(0xFFF59E0B),
+                                icon: Icons.chat_bubble_outline,
+                                title: 'Messages',
+                                color: const Color(0xFF3B82F6),
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const UnifiedAnnouncementsScreen(),
-                                    ),
-                                  );
+                                  Navigator.pushNamed(context, '/chat-list');
                                 },
                               ),
                               // My Badges
@@ -771,74 +998,116 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           const SizedBox(height: AppSpacing.lg),
                           
-                          // Recent Activity Feed (if in classroom)
-                          if (_classroomInfo != null) ...[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Recent Activity',
-                                  style: AppTextStyles.sectionHeader,
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    if (_classroomInfo != null) {
-                                      final classroom = ClassroomModel.fromMap(_classroomInfo!);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ClassroomDetailScreen(classroom: classroom),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Text(
-                                    'View All',
-                                    style: AppTextStyles.bodyMedium.copyWith(
-                                      color: AppDesignSystem.primaryIndigo,
-                                      fontWeight: FontWeight.w600,
+                          // Recommended for You Section (Dynamic - based on user progress)
+                          FutureBuilder<List<Map<String, dynamic>>>(
+                            future: _getRecommendedLevels(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                final recommendations = snapshot.data!.take(2).toList();
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Recommended for You',
+                                      style: AppTextStyles.sectionHeader,
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            
-                            CleanCard(
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: AppDesignSystem.success.withValues(alpha: 0.1),
-                                      child: Icon(
-                                        Icons.emoji_events,
-                                        color: AppDesignSystem.success,
-                                        size: 20,
+                                    const SizedBox(height: AppSpacing.sm),
+                                    CleanCard(
+                                      child: Column(
+                                        children: recommendations.asMap().entries.map((entry) {
+                                          final index = entry.key;
+                                          final item = entry.value;
+                                          return Column(
+                                            children: [
+                                              if (index > 0) const Divider(height: 1),
+                                              ListTile(
+                                                leading: Container(
+                                                  padding: const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    color: Color(item['color']).withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.play_circle_outline,
+                                                    color: Color(item['color']),
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                                title: Text(item['title']),
+                                                subtitle: Text(item['subtitle']),
+                                                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                                onTap: () {
+                                                  // Navigate to the specific realm
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    '/realm',
+                                                    arguments: {'realmId': item['levelId']},
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
-                                    title: const Text('New badge unlocked!'),
-                                    subtitle: const Text('First Steps - Complete your first level'),
-                                    trailing: const Text('2h ago', style: TextStyle(fontSize: 12)),
-                                  ),
-                                  const Divider(height: 1),
-                                  ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor: AppDesignSystem.info.withValues(alpha: 0.1),
-                                      child: Icon(
-                                        Icons.announcement,
-                                        color: AppDesignSystem.info,
-                                        size: 20,
+                                    const SizedBox(height: AppSpacing.lg),
+                                  ],
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                          
+                          // Recent Activity (Dynamic - based on user's actual progress)
+                          FutureBuilder<List<Map<String, dynamic>>>(
+                            future: _getRecentActivity(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                                final activities = snapshot.data!.take(3).toList();
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Recent Activity',
+                                      style: AppTextStyles.sectionHeader,
+                                    ),
+                                    const SizedBox(height: AppSpacing.sm),
+                                    CleanCard(
+                                      child: Column(
+                                        children: activities.asMap().entries.map((entry) {
+                                          final index = entry.key;
+                                          final activity = entry.value;
+                                          return Column(
+                                            children: [
+                                              if (index > 0) const Divider(height: 1),
+                                              ListTile(
+                                                leading: CircleAvatar(
+                                                  backgroundColor: Color(activity['color']).withValues(alpha: 0.1),
+                                                  child: Icon(
+                                                    activity['icon'],
+                                                    color: Color(activity['color']),
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                title: Text(activity['title']),
+                                                subtitle: Text(activity['subtitle']),
+                                                trailing: Text(
+                                                  activity['time'],
+                                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
-                                    title: const Text('New announcement'),
-                                    subtitle: const Text('Check the latest updates from your teacher'),
-                                    trailing: const Text('1d ago', style: TextStyle(fontSize: 12)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: AppSpacing.lg),
-                          ],
+                                    const SizedBox(height: AppSpacing.lg),
+                                  ],
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
                           
                           // My Stats section
                           Row(
@@ -871,10 +1140,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.all(14),
+                                  padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFFF59E0B),
+                                      width: 2,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withValues(alpha: 0.05),
@@ -893,15 +1166,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         child: const Icon(
                                         Icons.emoji_events,
-                                          size: 26,
+                                          size: 24,
                                           color: Color(0xFFF59E0B),
                                         ),
                                       ),
-                                      const SizedBox(height: 10),
+                                      const SizedBox(height: 6),
                                       Text(
                                         '${_user?.badges.length ?? 0}',
-                                        style: AppTextStyles.h2.copyWith(
+                                        style: AppTextStyles.h3.copyWith(
                                           color: const Color(0xFFF59E0B),
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(height: 2),
@@ -920,10 +1194,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(width: 10),
                               Expanded(
                                 child: Container(
-                                  padding: const EdgeInsets.all(14),
+                                  padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFF8B5CF6),
+                                      width: 2,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withValues(alpha: 0.05),
@@ -942,15 +1220,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         child: const Icon(
                                         Icons.workspace_premium,
-                                          size: 26,
+                                          size: 24,
                                           color: Color(0xFF8B5CF6),
                                         ),
                                       ),
-                                      const SizedBox(height: 10),
+                                      const SizedBox(height: 6),
                                       Text(
                                         '${_user?.progressSummary.values.where((r) => r.completed).length ?? 0}',
-                                        style: AppTextStyles.h2.copyWith(
+                                        style: AppTextStyles.h3.copyWith(
                                           color: const Color(0xFF8B5CF6),
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(height: 2),
@@ -1021,16 +1300,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color,
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -1038,7 +1322,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
@@ -1046,17 +1330,19 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(
                 icon,
                 color: color,
-                size: 32,
+                size: 26,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               title,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppDesignSystem.textPrimary,
-                    ),
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

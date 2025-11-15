@@ -1,0 +1,1963 @@
+{
+  "id": "ip_defender",
+  "name": "IP Defender",
+  "description": "Defend your intellectual property assets from infringement threats using strategic tower placement",
+  "summary": "Build towers to protect IP assets from waves of infringers. Use Copyright Shields, Patent Cannons, Trademark Barriers, and Trade Secret Vaults to defend against Counterfeiters, Pirates, Infringers, and Copycats.",
+  "iconPath": "assets/games/ip_defender.png",
+  "color": "0xFFE91E63",
+  "difficulty": "hard",
+  "gameType": "tower_defense",
+  "xpReward": 90,
+  "estimatedMinutes": 15,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-12T00:00:00Z",
+  "rewards": {
+    "completion": 90,
+    "perfectScore": 180,
+    "firstTime": 110,
+    "highScore": 220
+  },
+  "leaderboard": {
+    "enabled": true,
+    "scope": ["classroom", "school", "global"]
+  },
+  "towers": [
+    {
+      "id": "copyright_shield",
+      "name": "Copyright Shield",
+      "description": "Protects against copyright pirates with defensive barriers",
+      "cost": 100,
+      "damage": 15,
+      "range": 2.5,
+      "attackSpeed": 1.0,
+      "attackType": "single",
+      "projectileType": "shield_wave",
+      "spriteUrl": "assets/towers/copyright_shield.svg",
+      "projectileUrl": "assets/projectiles/shield_wave.svg",
+      "color": "0xFF2196F3",
+      "upgrades": [
+        {
+          "level": 2,
+          "cost": 80,
+          "damage": 25,
+          "range": 3.0,
+          "attackSpeed": 1.2
+        },
+        {
+          "level": 3,
+          "cost": 150,
+          "damage": 40,
+          "range": 3.5,
+          "attackSpeed": 1.5
+        }
+      ]
+    },
+    {
+      "id": "patent_cannon",
+      "name": "Patent Cannon",
+      "description": "Fires powerful patent projectiles at high damage",
+      "cost": 150,
+      "damage": 35,
+      "range": 3.0,
+      "attackSpeed": 0.7,
+      "attackType": "single",
+      "projectileType": "patent_bolt",
+      "spriteUrl": "assets/towers/patent_cannon.svg",
+      "projectileUrl": "assets/projectiles/patent_bolt.svg",
+      "color": "0xFF9C27B0",
+      "upgrades": [
+        {
+          "level": 2,
+          "cost": 120,
+          "damage": 55,
+          "range": 3.5,
+          "attackSpeed": 0.8
+        },
+        {
+          "level": 3,
+          "cost": 200,
+          "damage": 85,
+          "range": 4.0,
+          "attackSpeed": 1.0
+        }
+      ]
+    },
+    {
+      "id": "trademark_barrier",
+      "name": "Trademark Barrier",
+      "description": "Slows down enemies with trademark enforcement zones",
+      "cost": 120,
+      "damage": 10,
+      "range": 2.0,
+      "attackSpeed": 1.5,
+      "attackType": "area",
+      "projectileType": "trademark_field",
+      "specialEffect": "slow",
+      "slowAmount": 0.5,
+      "spriteUrl": "assets/towers/trademark_barrier.svg",
+      "projectileUrl": "assets/projectiles/trademark_field.svg",
+      "color": "0xFFFF9800",
+      "upgrades": [
+        {
+          "level": 2,
+          "cost": 100,
+          "damage": 15,
+          "range": 2.5,
+          "attackSpeed": 1.8,
+          "slowAmount": 0.6
+        },
+        {
+          "level": 3,
+          "cost": 180,
+          "damage": 25,
+          "range": 3.0,
+          "attackSpeed": 2.0,
+          "slowAmount": 0.7
+        }
+      ]
+    },
+    {
+      "id": "trade_secret_vault",
+      "name": "Trade Secret Vault",
+      "description": "Generates IP coins over time and provides area damage",
+      "cost": 200,
+      "damage": 20,
+      "range": 2.5,
+      "attackSpeed": 0.5,
+      "attackType": "area",
+      "projectileType": "secret_pulse",
+      "specialEffect": "income",
+      "incomePerSecond": 5,
+      "spriteUrl": "assets/towers/trade_secret_vault.svg",
+      "projectileUrl": "assets/projectiles/secret_pulse.svg",
+      "color": "0xFF4CAF50",
+      "upgrades": [
+        {
+          "level": 2,
+          "cost": 150,
+          "damage": 30,
+          "range": 3.0,
+          "attackSpeed": 0.6,
+          "incomePerSecond": 8
+        },
+        {
+          "level": 3,
+          "cost": 250,
+          "damage": 45,
+          "range": 3.5,
+          "attackSpeed": 0.8,
+          "incomePerSecond": 12
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "counterfeiter",
+      "name": "Counterfeiter",
+      "description": "Basic infringer with moderate health and speed",
+      "baseHealth": 100,
+      "baseSpeed": 1.0,
+      "reward": 25,
+      "spriteUrl": "assets/enemies/counterfeiter.svg",
+      "color": "0xFFF44336",
+      "size": 32
+    },
+    {
+      "id": "pirate",
+      "name": "Pirate",
+      "description": "Fast-moving copyright violator with low health",
+      "baseHealth": 60,
+      "baseSpeed": 1.8,
+      "reward": 30,
+      "spriteUrl": "assets/enemies/pirate.svg",
+      "color": "0xFF673AB7",
+      "size": 32
+    },
+    {
+      "id": "infringer",
+      "name": "Infringer",
+      "description": "Heavily armored patent violator with high health",
+      "baseHealth": 200,
+      "baseSpeed": 0.6,
+      "reward": 40,
+      "spriteUrl": "assets/enemies/infringer.svg",
+      "color": "0xFF795548",
+      "size": 40
+    },
+    {
+      "id": "copycat",
+      "name": "Copycat",
+      "description": "Sneaky design thief with medium stats",
+      "baseHealth": 120,
+      "baseSpeed": 1.2,
+      "reward": 35,
+      "spriteUrl": "assets/enemies/copycat.svg",
+      "color": "0xFFFF5722",
+      "size": 32
+    }
+  ],
+  "levels": [
+    
+      {
+        "levelNumber": 1,
+        "name": "Introduction to IP Defense",
+        "description": "Learn the basics of tower defense and IP protection",
+        "difficulty": "easy",
+        "startingCoins": 500,
+        "ipAssetHealth": 100,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 5,
+                "health": 80,
+                "speed": 0.9
+              }
+            ],
+            "spawnInterval": 2000,
+            "reward": 100
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 8,
+                "health": 80,
+                "speed": 0.9
+              }
+            ],
+            "spawnInterval": 1800,
+            "reward": 120
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 6,
+                "health": 100,
+                "speed": 1.0
+              },
+              {
+                "type": "pirate",
+                "count": 3,
+                "health": 50,
+                "speed": 1.6
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 150
+          }
+        ]
+      },
+      {
+        "levelNumber": 2,
+        "name": "Copyright Challenges",
+        "description": "Face faster pirates targeting your copyrighted works",
+        "difficulty": "easy",
+        "startingCoins": 550,
+        "ipAssetHealth": 100,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "pirate",
+                "count": 8,
+                "health": 60,
+                "speed": 1.8
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 120
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 5,
+                "health": 100,
+                "speed": 1.0
+              },
+              {
+                "type": "pirate",
+                "count": 5,
+                "health": 60,
+                "speed": 1.8
+              }
+            ],
+            "spawnInterval": 1600,
+            "reward": 140
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "pirate",
+                "count": 10,
+                "health": 70,
+                "speed": 1.9
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 160
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 8,
+                "health": 120,
+                "speed": 1.1
+              },
+              {
+                "type": "pirate",
+                "count": 6,
+                "health": 70,
+                "speed": 1.9
+              }
+            ],
+            "spawnInterval": 1300,
+            "reward": 180
+          }
+        ]
+      },
+      {
+        "levelNumber": 3,
+        "name": "Patent Protection",
+        "description": "Defend against heavily armored infringers",
+        "difficulty": "medium",
+        "startingCoins": 600,
+        "ipAssetHealth": 120,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 10,
+                "health": 100,
+                "speed": 1.0
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 140
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 3,
+                "health": 200,
+                "speed": 0.6
+              }
+            ],
+            "spawnInterval": 3000,
+            "reward": 160
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 8,
+                "health": 120,
+                "speed": 1.1
+              },
+              {
+                "type": "infringer",
+                "count": 2,
+                "health": 200,
+                "speed": 0.6
+              }
+            ],
+            "spawnInterval": 1800,
+            "reward": 180
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "pirate",
+                "count": 10,
+                "health": 80,
+                "speed": 2.0
+              },
+              {
+                "type": "infringer",
+                "count": 3,
+                "health": 220,
+                "speed": 0.7
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 200
+          }
+        ]
+      },
+      {
+        "levelNumber": 4,
+        "name": "Trademark Territory",
+        "description": "Use barriers to slow down mixed enemy waves",
+        "difficulty": "medium",
+        "startingCoins": 650,
+        "ipAssetHealth": 120,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 8,
+                "health": 120,
+                "speed": 1.2
+              }
+            ],
+            "spawnInterval": 1600,
+            "reward": 150
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 10,
+                "health": 130,
+                "speed": 1.1
+              },
+              {
+                "type": "copycat",
+                "count": 5,
+                "health": 120,
+                "speed": 1.2
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 170
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "pirate",
+                "count": 12,
+                "health": 90,
+                "speed": 2.0
+              },
+              {
+                "type": "copycat",
+                "count": 6,
+                "health": 130,
+                "speed": 1.3
+              }
+            ],
+            "spawnInterval": 1300,
+            "reward": 190
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 4,
+                "health": 240,
+                "speed": 0.7
+              },
+              {
+                "type": "copycat",
+                "count": 8,
+                "health": 130,
+                "speed": 1.3
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 210
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 15,
+                "health": 140,
+                "speed": 1.2
+              },
+              {
+                "type": "pirate",
+                "count": 10,
+                "health": 90,
+                "speed": 2.1
+              }
+            ],
+            "spawnInterval": 1200,
+            "reward": 230
+          }
+        ]
+      },
+      {
+        "levelNumber": 5,
+        "name": "Trade Secret Defense",
+        "description": "Generate income while defending against all enemy types",
+        "difficulty": "medium",
+        "startingCoins": 700,
+        "ipAssetHealth": 150,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 12,
+                "health": 140,
+                "speed": 1.2
+              },
+              {
+                "type": "pirate",
+                "count": 8,
+                "health": 90,
+                "speed": 2.0
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 180
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 10,
+                "health": 140,
+                "speed": 1.3
+              },
+              {
+                "type": "infringer",
+                "count": 3,
+                "health": 250,
+                "speed": 0.7
+              }
+            ],
+            "spawnInterval": 1500,
+            "reward": 200
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 15,
+                "health": 150,
+                "speed": 1.2
+              },
+              {
+                "type": "pirate",
+                "count": 12,
+                "health": 100,
+                "speed": 2.1
+              },
+              {
+                "type": "copycat",
+                "count": 8,
+                "health": 140,
+                "speed": 1.3
+              }
+            ],
+            "spawnInterval": 1200,
+            "reward": 220
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 5,
+                "health": 260,
+                "speed": 0.8
+              },
+              {
+                "type": "copycat",
+                "count": 10,
+                "health": 150,
+                "speed": 1.4
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 240
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 20,
+                "health": 160,
+                "speed": 1.3
+              },
+              {
+                "type": "pirate",
+                "count": 15,
+                "health": 100,
+                "speed": 2.2
+              },
+              {
+                "type": "infringer",
+                "count": 4,
+                "health": 270,
+                "speed": 0.8
+              }
+            ],
+            "spawnInterval": 1100,
+            "reward": 260
+          }
+        ]
+      },
+      {
+        "levelNumber": 6,
+        "name": "Mixed Infringement Wave",
+        "description": "Face coordinated attacks from all infringer types",
+        "difficulty": "hard",
+        "startingCoins": 750,
+        "ipAssetHealth": 150,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 15,
+                "health": 160,
+                "speed": 1.3
+              },
+              {
+                "type": "pirate",
+                "count": 12,
+                "health": 100,
+                "speed": 2.2
+              }
+            ],
+            "spawnInterval": 1300,
+            "reward": 200
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 12,
+                "health": 150,
+                "speed": 1.4
+              },
+              {
+                "type": "infringer",
+                "count": 4,
+                "health": 270,
+                "speed": 0.8
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 220
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 18,
+                "health": 170,
+                "speed": 1.3
+              },
+              {
+                "type": "pirate",
+                "count": 15,
+                "health": 110,
+                "speed": 2.3
+              },
+              {
+                "type": "copycat",
+                "count": 10,
+                "health": 160,
+                "speed": 1.4
+              }
+            ],
+            "spawnInterval": 1100,
+            "reward": 240
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 6,
+                "health": 280,
+                "speed": 0.9
+              },
+              {
+                "type": "copycat",
+                "count": 12,
+                "health": 160,
+                "speed": 1.5
+              }
+            ],
+            "spawnInterval": 1300,
+            "reward": 260
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 20,
+                "health": 180,
+                "speed": 1.4
+              },
+              {
+                "type": "pirate",
+                "count": 18,
+                "health": 110,
+                "speed": 2.4
+              },
+              {
+                "type": "infringer",
+                "count": 5,
+                "health": 290,
+                "speed": 0.9
+              },
+              {
+                "type": "copycat",
+                "count": 12,
+                "health": 170,
+                "speed": 1.5
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 280
+          },
+          {
+            "waveNumber": 6,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 8,
+                "health": 300,
+                "speed": 1.0
+              },
+              {
+                "type": "pirate",
+                "count": 20,
+                "health": 120,
+                "speed": 2.5
+              }
+            ],
+            "spawnInterval": 1200,
+            "reward": 300
+          }
+        ]
+      },
+      {
+        "levelNumber": 7,
+        "name": "Speed Infringement",
+        "description": "Rapid waves of fast-moving pirates and copycats",
+        "difficulty": "hard",
+        "startingCoins": 800,
+        "ipAssetHealth": 180,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "pirate",
+                "count": 20,
+                "health": 120,
+                "speed": 2.5
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 220
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 15,
+                "health": 170,
+                "speed": 1.6
+              },
+              {
+                "type": "pirate",
+                "count": 15,
+                "health": 120,
+                "speed": 2.5
+              }
+            ],
+            "spawnInterval": 1100,
+            "reward": 240
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 20,
+                "health": 190,
+                "speed": 1.5
+              },
+              {
+                "type": "pirate",
+                "count": 20,
+                "health": 130,
+                "speed": 2.6
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 260
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 18,
+                "health": 180,
+                "speed": 1.7
+              },
+              {
+                "type": "pirate",
+                "count": 22,
+                "health": 130,
+                "speed": 2.7
+              }
+            ],
+            "spawnInterval": 900,
+            "reward": 280
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 25,
+                "health": 200,
+                "speed": 1.6
+              },
+              {
+                "type": "pirate",
+                "count": 25,
+                "health": 140,
+                "speed": 2.8
+              },
+              {
+                "type": "copycat",
+                "count": 20,
+                "health": 190,
+                "speed": 1.8
+              }
+            ],
+            "spawnInterval": 800,
+            "reward": 300
+          },
+          {
+            "waveNumber": 6,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 6,
+                "health": 320,
+                "speed": 1.0
+              },
+              {
+                "type": "pirate",
+                "count": 30,
+                "health": 140,
+                "speed": 2.9
+              }
+            ],
+            "spawnInterval": 900,
+            "reward": 320
+          }
+        ]
+      },
+      {
+        "levelNumber": 8,
+        "name": "Armored Assault",
+        "description": "Heavy infringers with massive health pools",
+        "difficulty": "hard",
+        "startingCoins": 850,
+        "ipAssetHealth": 180,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 8,
+                "health": 320,
+                "speed": 1.0
+              }
+            ],
+            "spawnInterval": 2000,
+            "reward": 240
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 20,
+                "health": 200,
+                "speed": 1.5
+              },
+              {
+                "type": "infringer",
+                "count": 6,
+                "health": 340,
+                "speed": 1.0
+              }
+            ],
+            "spawnInterval": 1300,
+            "reward": 260
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 10,
+                "health": 350,
+                "speed": 1.1
+              }
+            ],
+            "spawnInterval": 1800,
+            "reward": 280
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 20,
+                "health": 200,
+                "speed": 1.8
+              },
+              {
+                "type": "infringer",
+                "count": 8,
+                "health": 360,
+                "speed": 1.1
+              }
+            ],
+            "spawnInterval": 1200,
+            "reward": 300
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 25,
+                "health": 210,
+                "speed": 1.6
+              },
+              {
+                "type": "pirate",
+                "count": 25,
+                "health": 150,
+                "speed": 2.8
+              },
+              {
+                "type": "infringer",
+                "count": 10,
+                "health": 370,
+                "speed": 1.2
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 320
+          },
+          {
+            "waveNumber": 6,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 12,
+                "health": 380,
+                "speed": 1.2
+              },
+              {
+                "type": "copycat",
+                "count": 15,
+                "health": 210,
+                "speed": 1.9
+              }
+            ],
+            "spawnInterval": 1400,
+            "reward": 340
+          },
+          {
+            "waveNumber": 7,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 15,
+                "health": 400,
+                "speed": 1.3
+              }
+            ],
+            "spawnInterval": 1600,
+            "reward": 360
+          }
+        ]
+      },
+      {
+        "levelNumber": 9,
+        "name": "Chaos Infringement",
+        "description": "Overwhelming waves from all directions",
+        "difficulty": "very_hard",
+        "startingCoins": 900,
+        "ipAssetHealth": 200,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 30,
+                "health": 220,
+                "speed": 1.7
+              },
+              {
+                "type": "pirate",
+                "count": 25,
+                "health": 150,
+                "speed": 3.0
+              }
+            ],
+            "spawnInterval": 900,
+            "reward": 280
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 25,
+                "health": 220,
+                "speed": 2.0
+              },
+              {
+                "type": "infringer",
+                "count": 10,
+                "health": 400,
+                "speed": 1.3
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 300
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 35,
+                "health": 230,
+                "speed": 1.8
+              },
+              {
+                "type": "pirate",
+                "count": 30,
+                "health": 160,
+                "speed": 3.1
+              },
+              {
+                "type": "copycat",
+                "count": 20,
+                "health": 230,
+                "speed": 2.0
+              }
+            ],
+            "spawnInterval": 800,
+            "reward": 320
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 12,
+                "health": 420,
+                "speed": 1.4
+              },
+              {
+                "type": "copycat",
+                "count": 25,
+                "health": 240,
+                "speed": 2.1
+              }
+            ],
+            "spawnInterval": 1100,
+            "reward": 340
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 40,
+                "health": 240,
+                "speed": 1.9
+              },
+              {
+                "type": "pirate",
+                "count": 35,
+                "health": 170,
+                "speed": 3.2
+              },
+              {
+                "type": "infringer",
+                "count": 10,
+                "health": 440,
+                "speed": 1.4
+              },
+              {
+                "type": "copycat",
+                "count": 25,
+                "health": 250,
+                "speed": 2.2
+              }
+            ],
+            "spawnInterval": 700,
+            "reward": 360
+          },
+          {
+            "waveNumber": 6,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 15,
+                "health": 460,
+                "speed": 1.5
+              },
+              {
+                "type": "pirate",
+                "count": 40,
+                "health": 180,
+                "speed": 3.3
+              }
+            ],
+            "spawnInterval": 900,
+            "reward": 380
+          },
+          {
+            "waveNumber": 7,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 50,
+                "health": 250,
+                "speed": 2.0
+              },
+              {
+                "type": "pirate",
+                "count": 40,
+                "health": 180,
+                "speed": 3.4
+              },
+              {
+                "type": "infringer",
+                "count": 12,
+                "health": 480,
+                "speed": 1.5
+              },
+              {
+                "type": "copycat",
+                "count": 30,
+                "health": 260,
+                "speed": 2.3
+              }
+            ],
+            "spawnInterval": 600,
+            "reward": 400
+          }
+        ]
+      },
+      {
+        "levelNumber": 10,
+        "name": "Ultimate IP Defense",
+        "description": "The final test - survive the ultimate infringement onslaught",
+        "difficulty": "very_hard",
+        "startingCoins": 1000,
+        "ipAssetHealth": 200,
+        "mapImageUrl": "assets/maps/game_map.svg",
+        "pathCoordinates": [
+          {
+            "x": 50,
+            "y": 0
+          },
+          {
+            "x": 50,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 80
+          },
+          {
+            "x": 300,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 200
+          },
+          {
+            "x": 100,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 320
+          },
+          {
+            "x": 280,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 440
+          },
+          {
+            "x": 120,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 560
+          },
+          {
+            "x": 250,
+            "y": 600
+          }
+        ],
+        "waves": [
+          {
+            "waveNumber": 1,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 40,
+                "health": 250,
+                "speed": 2.0
+              },
+              {
+                "type": "pirate",
+                "count": 35,
+                "health": 180,
+                "speed": 3.3
+              }
+            ],
+            "spawnInterval": 800,
+            "reward": 300
+          },
+          {
+            "waveNumber": 2,
+            "enemies": [
+              {
+                "type": "copycat",
+                "count": 30,
+                "health": 260,
+                "speed": 2.3
+              },
+              {
+                "type": "infringer",
+                "count": 12,
+                "health": 480,
+                "speed": 1.5
+              }
+            ],
+            "spawnInterval": 900,
+            "reward": 320
+          },
+          {
+            "waveNumber": 3,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 45,
+                "health": 260,
+                "speed": 2.1
+              },
+              {
+                "type": "pirate",
+                "count": 40,
+                "health": 190,
+                "speed": 3.4
+              },
+              {
+                "type": "copycat",
+                "count": 25,
+                "health": 270,
+                "speed": 2.4
+              }
+            ],
+            "spawnInterval": 700,
+            "reward": 340
+          },
+          {
+            "waveNumber": 4,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 15,
+                "health": 500,
+                "speed": 1.6
+              },
+              {
+                "type": "copycat",
+                "count": 30,
+                "health": 280,
+                "speed": 2.5
+              }
+            ],
+            "spawnInterval": 1000,
+            "reward": 360
+          },
+          {
+            "waveNumber": 5,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 50,
+                "health": 270,
+                "speed": 2.2
+              },
+              {
+                "type": "pirate",
+                "count": 45,
+                "health": 200,
+                "speed": 3.5
+              },
+              {
+                "type": "infringer",
+                "count": 12,
+                "health": 520,
+                "speed": 1.6
+              },
+              {
+                "type": "copycat",
+                "count": 30,
+                "health": 290,
+                "speed": 2.6
+              }
+            ],
+            "spawnInterval": 600,
+            "reward": 380
+          },
+          {
+            "waveNumber": 6,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 18,
+                "health": 540,
+                "speed": 1.7
+              },
+              {
+                "type": "pirate",
+                "count": 50,
+                "health": 210,
+                "speed": 3.6
+              }
+            ],
+            "spawnInterval": 800,
+            "reward": 400
+          },
+          {
+            "waveNumber": 7,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 60,
+                "health": 280,
+                "speed": 2.3
+              },
+              {
+                "type": "pirate",
+                "count": 50,
+                "health": 220,
+                "speed": 3.7
+              },
+              {
+                "type": "infringer",
+                "count": 15,
+                "health": 560,
+                "speed": 1.8
+              },
+              {
+                "type": "copycat",
+                "count": 35,
+                "health": 300,
+                "speed": 2.7
+              }
+            ],
+            "spawnInterval": 500,
+            "reward": 420
+          },
+          {
+            "waveNumber": 8,
+            "enemies": [
+              {
+                "type": "infringer",
+                "count": 20,
+                "health": 600,
+                "speed": 1.9
+              },
+              {
+                "type": "counterfeiter",
+                "count": 50,
+                "health": 300,
+                "speed": 2.4
+              },
+              {
+                "type": "pirate",
+                "count": 50,
+                "health": 230,
+                "speed": 3.8
+              }
+            ],
+            "spawnInterval": 700,
+            "reward": 440
+          },
+          {
+            "waveNumber": 9,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 70,
+                "health": 320,
+                "speed": 2.5
+              },
+              {
+                "type": "pirate",
+                "count": 60,
+                "health": 240,
+                "speed": 4.0
+              },
+              {
+                "type": "infringer",
+                "count": 18,
+                "health": 640,
+                "speed": 2.0
+              },
+              {
+                "type": "copycat",
+                "count": 40,
+                "health": 320,
+                "speed": 2.8
+              }
+            ],
+            "spawnInterval": 500,
+            "reward": 460
+          },
+          {
+            "waveNumber": 10,
+            "enemies": [
+              {
+                "type": "counterfeiter",
+                "count": 80,
+                "health": 350,
+                "speed": 2.6
+              },
+              {
+                "type": "pirate",
+                "count": 70,
+                "health": 250,
+                "speed": 4.2
+              },
+              {
+                "type": "infringer",
+                "count": 25,
+                "health": 700,
+                "speed": 2.1
+              },
+              {
+                "type": "copycat",
+                "count": 50,
+                "health": 350,
+                "speed": 3.0
+              }
+            ],
+            "spawnInterval": 400,
+            "reward": 500
+          }
+        ]
+      }
+    
+  ]
+}

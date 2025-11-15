@@ -1,0 +1,66 @@
+<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+  <!-- Infringer Enemy - Enhanced Heavy Tank -->
+  <defs>
+    <linearGradient id="infringerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#A1887F;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#795548;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5D4037;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="armorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8D6E63;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6D4C41;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90A4AE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#546E7A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Body (tank-like armored) -->
+  <rect x="12" y="18" width="16" height="16" rx="2" fill="url(#infringerGrad)" stroke="#3E2723" stroke-width="2.5"/>
+  
+  <!-- Head/Helmet (heavy armor) -->
+  <rect x="14" y="10" width="12" height="10" rx="2" fill="#6D4C41" stroke="#3E2723" stroke-width="2"/>
+  <rect x="16" y="12" width="8" height="2" fill="#424242"/>
+  
+  <!-- Visor (intimidating) -->
+  <rect x="16" y="14" width="8" height="3" rx="0.5" fill="#212121" opacity="0.8"/>
+  <line x1="18" y1="15.5" x2="19" y2="15.5" stroke="#FF5722" stroke-width="1"/>
+  <line x1="21" y1="15.5" x2="22" y2="15.5" stroke="#FF5722" stroke-width="1"/>
+  
+  <!-- Shield (left) - larger and more detailed -->
+  <path d="M 7 19 L 12 17 L 12 31 L 7 29 Z" fill="url(#shieldGrad)" stroke="#37474F" stroke-width="2"/>
+  <line x1="9" y1="21" x2="10" y2="21" stroke="#B0BEC5" stroke-width="0.8"/>
+  <line x1="9" y1="24" x2="10" y2="24" stroke="#B0BEC5" stroke-width="0.8"/>
+  <line x1="9" y1="27" x2="10" y2="27" stroke="#B0BEC5" stroke-width="0.8"/>
+  
+  <!-- Shield (right) - larger and more detailed -->
+  <path d="M 33 19 L 28 17 L 28 31 L 33 29 Z" fill="url(#shieldGrad)" stroke="#37474F" stroke-width="2"/>
+  <line x1="30" y1="21" x2="31" y2="21" stroke="#B0BEC5" stroke-width="0.8"/>
+  <line x1="30" y1="24" x2="31" y2="24" stroke="#B0BEC5" stroke-width="0.8"/>
+  <line x1="30" y1="27" x2="31" y2="27" stroke="#B0BEC5" stroke-width="0.8"/>
+  
+  <!-- Armor plates with rivets -->
+  <rect x="14" y="20" width="12" height="4" fill="url(#armorGrad)" stroke="#4E342E" stroke-width="1.5"/>
+  <circle cx="17" cy="22" r="0.8" fill="#424242"/>
+  <circle cx="20" cy="22" r="0.8" fill="#424242"/>
+  <circle cx="23" cy="22" r="0.8" fill="#424242"/>
+  
+  <rect x="14" y="25" width="12" height="4" fill="url(#armorGrad)" stroke="#4E342E" stroke-width="1.5"/>
+  <circle cx="17" cy="27" r="0.8" fill="#424242"/>
+  <circle cx="20" cy="27" r="0.8" fill="#424242"/>
+  <circle cx="23" cy="27" r="0.8" fill="#424242"/>
+  
+  <rect x="14" y="30" width="12" height="3" fill="url(#armorGrad)" stroke="#4E342E" stroke-width="1.5"/>
+  <circle cx="17" cy="31.5" r="0.8" fill="#424242"/>
+  <circle cx="20" cy="31.5" r="0.8" fill="#424242"/>
+  <circle cx="23" cy="31.5" r="0.8" fill="#424242"/>
+  
+  <!-- Patent violation warning symbol -->
+  <circle cx="20" cy="24" r="3.5" fill="#FF5252" opacity="0.7"/>
+  <line x1="18" y1="22" x2="22" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Heavy legs -->
+  <rect x="15" y="34" width="3" height="5" rx="0.5" fill="#6D4C41" stroke="#3E2723" stroke-width="1"/>
+  <rect x="22" y="34" width="3" height="5" rx="0.5" fill="#6D4C41" stroke="#3E2723" stroke-width="1"/>
+</svg>

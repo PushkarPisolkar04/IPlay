@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_6",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_6_q1",
+      "question": "What is 'Passing Off' in trademark law?",
+      "options": [
+        "Selling counterfeit goods",
+        "Using a similar unregistered mark to mislead consumers",
+        "Registering another person’s mark",
+        "Renewing a trademark after expiry"
+      ],
+      "correctIndex": 1,
+      "explanation": "Passing off protects unregistered marks by preventing others from misrepresenting their goods as those of another.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q2",
+      "question": "Passing Off protects which kind of trademarks?",
+      "options": [
+        "Only registered marks (®)",
+        "Only unregistered marks (™)",
+        "Expired trademarks",
+        "International marks only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Passing Off applies to unregistered marks, allowing brand owners to protect goodwill even without registration.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q3",
+      "question": "Which of the following is NOT part of the 'Classical Trinity' in Passing Off?",
+      "options": [
+        "Goodwill",
+        "Misrepresentation",
+        "Damage",
+        "Registration"
+      ],
+      "correctIndex": 3,
+      "explanation": "Registration is not required in Passing Off. The 'Classical Trinity' includes goodwill, misrepresentation, and damage.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q4",
+      "question": "Which case is often cited for defining the 'Classical Trinity' test?",
+      "options": [
+        "Amar Sweets vs. New Amar Sweets",
+        "Reckitt & Colman vs. Borden (Jif Lemon Case)",
+        "Starbux vs. Starbucks",
+        "Apple vs. Best Computers"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'Jif Lemon' case established the Classical Trinity test for proving Passing Off in common law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q5",
+      "question": "What does 'Goodwill' mean in the context of Passing Off?",
+      "options": [
+        "Customer loyalty and brand reputation",
+        "Company’s physical assets",
+        "Government certification",
+        "Trademark registration fees"
+      ],
+      "correctIndex": 0,
+      "explanation": "Goodwill is the reputation and customer trust built under a mark, which Passing Off seeks to protect.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q6",
+      "question": "In the case of 'Amar Sweets vs. New Amar Sweets', what was the main issue?",
+      "options": [
+        "Trademark registration",
+        "Misrepresentation leading to customer confusion",
+        "Patent infringement",
+        "Copyright violation"
+      ],
+      "correctIndex": 1,
+      "explanation": "The defendant’s similar name caused confusion among customers, amounting to Passing Off.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q7",
+      "question": "Which symbol usually represents an unregistered trademark?",
+      "options": [
+        "®",
+        "™",
+        "©",
+        "℗"
+      ],
+      "correctIndex": 1,
+      "explanation": "™ is used for unregistered trademarks that rely on Passing Off protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q8",
+      "question": "Which element of the Classical Trinity focuses on misleading representation?",
+      "options": [
+        "Goodwill",
+        "Misrepresentation",
+        "Damage",
+        "Registration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Misrepresentation occurs when a trader falsely suggests their goods are those of another, causing confusion.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q9",
+      "question": "What must a plaintiff prove first in a Passing Off case?",
+      "options": [
+        "Existence of goodwill in the mark",
+        "Proof of registration",
+        "International use of the mark",
+        "Government approval"
+      ],
+      "correctIndex": 0,
+      "explanation": "Without proving goodwill, the plaintiff cannot claim to have suffered damage from misrepresentation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_6_q10",
+      "question": "What is the main difference between trademark infringement and Passing Off?",
+      "options": [
+        "Infringement applies to registered marks, Passing Off to unregistered ones",
+        "Infringement is civil, Passing Off is criminal",
+        "Passing Off requires no proof of confusion",
+        "Infringement applies only to logos"
+      ],
+      "correctIndex": 0,
+      "explanation": "Infringement protects registered marks, while Passing Off protects unregistered marks through common law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_6_q11",
+      "question": "What kind of evidence supports 'Goodwill' in a Passing Off case?",
+      "options": [
+        "Sales figures, advertisements, and customer recognition",
+        "Trademark registration certificate",
+        "Patent ownership",
+        "Logo sketches"
+      ],
+      "correctIndex": 0,
+      "explanation": "Evidence of goodwill includes proof of market reputation, continuous use, and consumer association with the mark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q12",
+      "question": "What must be shown to prove 'Damage' in Passing Off?",
+      "options": [
+        "Loss of goodwill or diversion of customers",
+        "Failure to renew trademark",
+        "Poor product quality",
+        "Unauthorised logo color change"
+      ],
+      "correctIndex": 0,
+      "explanation": "Damage refers to loss of goodwill or economic harm caused by another’s misrepresentation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q13",
+      "question": "Which law concept is most similar to Passing Off?",
+      "options": [
+        "Unfair competition",
+        "Patent infringement",
+        "Design registration",
+        "Trade secret misappropriation"
+      ],
+      "correctIndex": 0,
+      "explanation": "Passing Off is a form of unfair competition aimed at preventing business deceit and consumer confusion.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q14",
+      "question": "Can Passing Off occur even if the marks look different?",
+      "options": [
+        "Yes, if overall impression causes confusion",
+        "No, visual similarity is mandatory",
+        "Only if both marks are unregistered",
+        "Only if logos are identical"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even without identical appearance, confusion due to similar trade names, packaging, or marketing can cause Passing Off.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q15",
+      "question": "What does the court primarily evaluate in Passing Off cases?",
+      "options": [
+        "Likelihood of consumer confusion due to misrepresentation",
+        "The number of years since registration",
+        "Ownership of domain names",
+        "Similarity of patent filings"
+      ],
+      "correctIndex": 0,
+      "explanation": "Courts focus on whether the misrepresentation is likely to deceive or confuse consumers.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q16",
+      "question": "Which element of the Classical Trinity can be proven using customer testimonies?",
+      "options": [
+        "Goodwill",
+        "Misrepresentation",
+        "Damage",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Customer testimonies may support goodwill, prove confusion (misrepresentation), and demonstrate damage.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q17",
+      "question": "Passing Off cases are usually filed under which type of law?",
+      "options": [
+        "Common law (tort)",
+        "Statutory law",
+        "Criminal law",
+        "International law"
+      ],
+      "correctIndex": 0,
+      "explanation": "Passing Off arises from common law principles of tort, not statutory registration systems.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q18",
+      "question": "Which party must prove all three elements of the Classical Trinity?",
+      "options": [
+        "Defendant",
+        "Plaintiff",
+        "Trademark Registry",
+        "Court"
+      ],
+      "correctIndex": 1,
+      "explanation": "The plaintiff bears the burden of proof to establish goodwill, misrepresentation, and damage.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q19",
+      "question": "If 'Royal Bakery' sues 'New Royal Bakery' without registration, which principle applies?",
+      "options": [
+        "Passing Off",
+        "Infringement",
+        "Copyright violation",
+        "Trade secret breach"
+      ],
+      "correctIndex": 0,
+      "explanation": "The unregistered 'Royal Bakery' relies on the tort of Passing Off to protect its business reputation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_6_q20",
+      "question": "Why might a business still succeed in Passing Off even without registration?",
+      "options": [
+        "Because customer goodwill provides legal protection",
+        "Because registration is unnecessary for strong brands",
+        "Because unregistered marks are more famous",
+        "Because registration fees are unpaid"
+      ],
+      "correctIndex": 0,
+      "explanation": "Passing Off protects businesses that have built significant goodwill even without formal registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_6_q21",
+      "question": "If a trader copies packaging style without copying the name, what may still occur?",
+      "options": [
+        "Passing Off through get-up similarity",
+        "No violation since name is different",
+        "Only copyright infringement",
+        "Statutory fine"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copying packaging or trade dress can amount to Passing Off if it misleads consumers about product origin.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_6_q22",
+      "question": "Why is Passing Off called a 'tort of deceit'?",
+      "options": [
+        "It involves deception of the public through misrepresentation",
+        "It is based on tax violations",
+        "It requires criminal prosecution",
+        "It deals with international treaties"
+      ],
+      "correctIndex": 0,
+      "explanation": "Passing Off arises from deceit—tricking consumers into believing one product is another’s.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_6_q23",
+      "question": "Can an unregistered mark owner stop a registered user through Passing Off?",
+      "options": [
+        "Yes, if goodwill and prior use are proven",
+        "No, registration always wins",
+        "Only if marks are identical",
+        "Only in foreign countries"
+      ],
+      "correctIndex": 0,
+      "explanation": "Prior user rights override registration if the unregistered mark has established goodwill and use.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_6_q24",
+      "question": "Which of the following best describes 'Misrepresentation' in Passing Off?",
+      "options": [
+        "Creating a false belief that your goods are another’s",
+        "Using a different product label",
+        "Selling low-quality goods",
+        "Registering under a new category"
+      ],
+      "correctIndex": 0,
+      "explanation": "Misrepresentation occurs when a trader falsely presents their goods as those of another, causing confusion.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_6_q25",
+      "question": "In 'Amar Sweets vs. New Amar Sweets', which element of the Classical Trinity was clearly proven?",
+      "options": [
+        "Goodwill and Misrepresentation",
+        "Registration and Ownership",
+        "Damage only",
+        "No elements were proven"
+      ],
+      "correctIndex": 0,
+      "explanation": "Amar Sweets showed goodwill and confusion caused by the defendant’s similar name, satisfying Passing Off requirements.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

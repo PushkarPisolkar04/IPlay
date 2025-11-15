@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "design_level_9",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "design_9_q1",
+      "question": "What is design thinking?",
+      "options": [
+        "Daydreaming",
+        "Problem-solving approach focused on user needs",
+        "Design philosophy",
+        "Design meditation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design thinking is a problem-solving approach that focuses on understanding user needs and creating innovative solutions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q2",
+      "question": "What is user-centered design?",
+      "options": [
+        "Selfish design",
+        "Design approach focusing on user needs and experience",
+        "Design for designers",
+        "Design for manufacturers"
+      ],
+      "correctIndex": 1,
+      "explanation": "User-centered design focuses on understanding and meeting the needs and preferences of end users.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q3",
+      "question": "What is design iteration?",
+      "options": [
+        "Counting designs",
+        "Refining design through repeated cycles",
+        "Design repetition",
+        "Design copying"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design iteration is the process of refining a design through repeated cycles of testing and improvement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q4",
+      "question": "What is design prototyping?",
+      "options": [
+        "Final product",
+        "Creating early models to test design concepts",
+        "Mass production",
+        "Design copying"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design prototyping involves creating early models or samples to test and refine design concepts.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q5",
+      "question": "What is design validation?",
+      "options": [
+        "Parking validation",
+        "Testing design meets requirements and user needs",
+        "Design approval",
+        "Design registration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design validation is testing whether a design meets requirements and satisfies user needs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q6",
+      "question": "What is design research?",
+      "options": [
+        "Library work",
+        "Investigating user needs and market trends",
+        "Internet browsing",
+        "Design history"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design research involves investigating user needs, behaviors, and market trends to inform design decisions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q7",
+      "question": "What is design empathy?",
+      "options": [
+        "Feeling sorry",
+        "Understanding user perspectives and experiences",
+        "Design sympathy",
+        "Design emotion"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design empathy is understanding and relating to user perspectives, needs, and experiences.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q8",
+      "question": "What is design ideation?",
+      "options": [
+        "Having ideas",
+        "Generating and exploring design concepts",
+        "Design implementation",
+        "Design finalization"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design ideation is the process of generating and exploring multiple design concepts and solutions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q9",
+      "question": "What is design testing?",
+      "options": [
+        "Exam",
+        "Evaluating design with users and stakeholders",
+        "Quality check",
+        "Price check"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design testing involves evaluating a design with users and stakeholders to gather feedback.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q10",
+      "question": "What is design feedback?",
+      "options": [
+        "Noise",
+        "Input from users and stakeholders on design",
+        "Design echo",
+        "Design sound"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design feedback is input and opinions from users and stakeholders about a design.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q11",
+      "question": "What is design collaboration?",
+      "options": [
+        "Working alone",
+        "Working together with team members on design",
+        "Design competition",
+        "Design conflict"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design collaboration is working together with team members and stakeholders throughout the design process.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q12",
+      "question": "What is design documentation?",
+      "options": [
+        "Writing essays",
+        "Recording design decisions and specifications",
+        "Design diary",
+        "Design blog"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design documentation involves recording design decisions, specifications, and rationale.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q13",
+      "question": "What is design system?",
+      "options": [
+        "Computer system",
+        "Collection of reusable design components and guidelines",
+        "Design method",
+        "Design software"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design system is a collection of reusable components, patterns, and guidelines for consistent design.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q14",
+      "question": "What is design consistency?",
+      "options": [
+        "Thickness",
+        "Maintaining uniform design elements across products",
+        "Design density",
+        "Design texture"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design consistency is maintaining uniform design elements and patterns across products and experiences.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q15",
+      "question": "What is design scalability?",
+      "options": [
+        "Weighing designs",
+        "Ability to adapt design across different sizes and contexts",
+        "Design measurement",
+        "Design weight"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design scalability is the ability to adapt a design across different sizes, platforms, and contexts.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q16",
+      "question": "What is design accessibility?",
+      "options": [
+        "Easy to find",
+        "Designing for users with diverse abilities",
+        "Design availability",
+        "Design location"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design accessibility means designing products that can be used by people with diverse abilities and needs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q17",
+      "question": "What is design sustainability?",
+      "options": [
+        "Long-lasting",
+        "Designing with environmental and social responsibility",
+        "Design durability",
+        "Design strength"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design sustainability involves creating designs with consideration for environmental and social impact.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q18",
+      "question": "What is design innovation?",
+      "options": [
+        "New designs",
+        "Creating novel solutions that add value",
+        "Design invention",
+        "Design creativity"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design innovation is creating novel solutions that add significant value for users and businesses.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q19",
+      "question": "What is design language?",
+      "options": [
+        "Speaking about design",
+        "Consistent visual and interaction patterns",
+        "Design vocabulary",
+        "Design grammar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design language is a set of consistent visual and interaction patterns that define a brand's design identity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q20",
+      "question": "What is design critique?",
+      "options": [
+        "Criticism",
+        "Constructive evaluation of design work",
+        "Design complaint",
+        "Design review"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design critique is constructive evaluation and discussion of design work to improve it.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q21",
+      "question": "What is design sprint?",
+      "options": [
+        "Running fast",
+        "Time-boxed process for solving design problems",
+        "Design race",
+        "Design competition"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design sprint is a time-boxed process (typically 5 days) for solving design problems through prototyping and testing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q22",
+      "question": "What is design workshop?",
+      "options": [
+        "Design factory",
+        "Collaborative session for design activities",
+        "Design store",
+        "Design class"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design workshop is a collaborative session where teams work together on design activities and problem-solving.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_9_q23",
+      "question": "What is design persona?",
+      "options": [
+        "Personality",
+        "Fictional character representing user type",
+        "Design character",
+        "Design avatar"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design persona is a fictional character that represents a specific user type or segment.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q24",
+      "question": "What is design journey map?",
+      "options": [
+        "Travel map",
+        "Visual representation of user experience over time",
+        "Design route",
+        "Design path"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design journey map is a visual representation of a user's experience with a product or service over time.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_9_q25",
+      "question": "What is design MVP?",
+      "options": [
+        "Most Valuable Player",
+        "Minimum Viable Product for testing",
+        "Maximum Value Product",
+        "Most Visible Product"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design MVP (Minimum Viable Product) is a version with just enough features to test with users and gather feedback.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

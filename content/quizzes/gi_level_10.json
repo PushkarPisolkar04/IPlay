@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_10",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_10_q1",
+      "question": "What is the main e-commerce challenge for GI?",
+      "options": [
+        "High shipping costs",
+        "Proliferation of fake products online",
+        "Slow delivery",
+        "High taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The main challenge is the proliferation of fake GI products on e-commerce platforms.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q2",
+      "question": "How is blockchain being used for GI?",
+      "options": [
+        "For payments only",
+        "For authentication and traceability of products",
+        "For advertising",
+        "For shipping"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blockchain is being used to authenticate GI products and provide traceability from origin to consumer.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q3",
+      "question": "Which GI has a blockchain pilot project?",
+      "options": [
+        "Basmati Rice",
+        "Darjeeling Tea",
+        "Alphonso Mango",
+        "Kanchipuram Silk"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea has a blockchain pilot project for authentication and traceability.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q4",
+      "question": "How does climate change affect GI?",
+      "options": [
+        "No effect",
+        "Can alter geographical boundaries and product characteristics",
+        "Only positive effects",
+        "Only affects prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Climate change can alter the geographical conditions that give GI products their unique characteristics.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q5",
+      "question": "Can services be registered as GI in the future?",
+      "options": [
+        "No, never",
+        "Possibly, it's being discussed internationally",
+        "Yes, already possible",
+        "Only in India"
+      ],
+      "correctIndex": 1,
+      "explanation": "Extension of GI to services is being discussed internationally, though not currently allowed in most countries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q6",
+      "question": "What is India's GI Vision 2030?",
+      "options": [
+        "To eliminate GI",
+        "To register more GIs and strengthen protection",
+        "To privatize GI",
+        "To restrict GI"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI Vision 2030 aims to register more GIs, strengthen protection, and enhance economic benefits.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q7",
+      "question": "How does blockchain help fight fake GI products?",
+      "options": [
+        "It doesn't",
+        "By creating immutable records of authenticity from origin to sale",
+        "By increasing prices",
+        "By restricting sales"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blockchain creates tamper-proof records that verify authenticity throughout the supply chain.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q8",
+      "question": "What is the Darjeeling Tea blockchain revolution?",
+      "options": [
+        "A price increase",
+        "Use of blockchain for authentication and traceability",
+        "A new tea variety",
+        "A marketing campaign"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Darjeeling Tea blockchain project uses technology to authenticate and trace tea from garden to consumer.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q9",
+      "question": "Why are e-commerce platforms a challenge for GI?",
+      "options": [
+        "They're too expensive",
+        "Difficult to monitor and control fake products",
+        "They don't sell GI products",
+        "They're too slow"
+      ],
+      "correctIndex": 1,
+      "explanation": "E-commerce platforms make it difficult to monitor and control the sale of fake GI products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q10",
+      "question": "How can QR codes help GI products?",
+      "options": [
+        "They can't",
+        "By linking to blockchain records for instant authentication",
+        "By increasing prices",
+        "By restricting access"
+      ],
+      "correctIndex": 1,
+      "explanation": "QR codes can link to blockchain records, allowing consumers to instantly verify product authenticity.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q11",
+      "question": "What climate change impact concerns Darjeeling Tea?",
+      "options": [
+        "No concerns",
+        "Changing temperature and rainfall patterns affecting tea quality",
+        "Only positive impacts",
+        "Only affects quantity"
+      ],
+      "correctIndex": 1,
+      "explanation": "Climate change is altering temperature and rainfall patterns, potentially affecting Darjeeling Tea's unique characteristics.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q12",
+      "question": "What is a potential future GI category?",
+      "options": [
+        "Software",
+        "Services (like traditional massage or cuisine)",
+        "Patents",
+        "Trademarks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Services like traditional massage techniques or regional cuisine styles could potentially become GI categories.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q13",
+      "question": "How many GIs does India aim to register by 2030?",
+      "options": [
+        "500",
+        "1000+",
+        "100",
+        "No target"
+      ],
+      "correctIndex": 1,
+      "explanation": "India's GI Vision 2030 aims to register over 1000 geographical indications.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q14",
+      "question": "What technology helps trace GI products?",
+      "options": [
+        "Only paper records",
+        "Blockchain, QR codes, and RFID tags",
+        "Only photographs",
+        "Only verbal confirmation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Technologies like blockchain, QR codes, and RFID tags help trace and authenticate GI products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q15",
+      "question": "What is the benefit of blockchain for consumers?",
+      "options": [
+        "Lower prices",
+        "Ability to verify authenticity instantly",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blockchain allows consumers to instantly verify the authenticity and origin of GI products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q16",
+      "question": "How does climate change affect GI boundaries?",
+      "options": [
+        "No effect",
+        "May require redefinition as suitable growing areas shift",
+        "Only expands them",
+        "Only shrinks them"
+      ],
+      "correctIndex": 1,
+      "explanation": "Climate change may shift suitable growing areas, potentially requiring redefinition of GI boundaries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q17",
+      "question": "What is the role of AI in GI protection?",
+      "options": [
+        "No role",
+        "Detecting fake products online and monitoring infringement",
+        "Only for pricing",
+        "Only for marketing"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI can help detect fake GI products online and monitor for infringement across e-commerce platforms.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q18",
+      "question": "What challenge do online marketplaces pose?",
+      "options": [
+        "No challenge",
+        "Difficulty in verifying seller authenticity and product genuineness",
+        "Only shipping issues",
+        "Only payment issues"
+      ],
+      "correctIndex": 1,
+      "explanation": "Online marketplaces make it difficult to verify if sellers are authorized users and products are genuine.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q19",
+      "question": "How can blockchain benefit producers?",
+      "options": [
+        "It can't",
+        "By preventing counterfeiting and building consumer trust",
+        "By increasing costs only",
+        "By restricting sales"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blockchain helps producers by preventing counterfeiting and building consumer trust in authenticity.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q20",
+      "question": "What is the future of GI enforcement?",
+      "options": [
+        "Manual only",
+        "Technology-driven with AI, blockchain, and digital monitoring",
+        "No enforcement",
+        "Only court-based"
+      ],
+      "correctIndex": 1,
+      "explanation": "Future GI enforcement will likely be technology-driven using AI, blockchain, and digital monitoring tools.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q21",
+      "question": "Why is digital authentication important?",
+      "options": [
+        "It's not important",
+        "Growing online sales require instant verification methods",
+        "Only for large companies",
+        "Only for exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "With growing online sales, consumers need instant methods to verify GI product authenticity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q22",
+      "question": "What is the Darjeeling blockchain pilot's goal?",
+      "options": [
+        "To increase prices",
+        "To create end-to-end traceability and fight counterfeiting",
+        "To restrict production",
+        "To eliminate tea gardens"
+      ],
+      "correctIndex": 1,
+      "explanation": "The pilot aims to create complete traceability from tea garden to consumer and fight counterfeiting.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q23",
+      "question": "How can consumers benefit from GI technology?",
+      "options": [
+        "Lower prices only",
+        "Confidence in authenticity and transparency about origin",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "Technology gives consumers confidence in authenticity and transparency about product origin and journey.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_10_q24",
+      "question": "What is the biggest future challenge for GI?",
+      "options": [
+        "No challenges",
+        "Balancing tradition with technology and adapting to climate change",
+        "Only pricing",
+        "Only marketing"
+      ],
+      "correctIndex": 1,
+      "explanation": "The biggest challenge is balancing traditional practices with modern technology while adapting to climate change.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_10_q25",
+      "question": "What does GI Vision 2030 emphasize?",
+      "options": [
+        "Eliminating GI",
+        "Registration, protection, and economic empowerment through GI",
+        "Privatizing GI",
+        "Restricting GI"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI Vision 2030 emphasizes expanding registration, strengthening protection, and enhancing economic benefits for producers.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

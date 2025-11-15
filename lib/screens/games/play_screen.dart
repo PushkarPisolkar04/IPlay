@@ -169,7 +169,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'IP Quiz Master',
                     description: 'Test your IPR knowledge in rapid-fire quiz',
-                    icon: '🧠',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFF8B5CF6),
                     difficulty: 'Medium',
                     xpReward: '10-100 XP',
@@ -189,7 +189,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'Match the IPR',
                     description: 'Memory card game matching IPR concepts',
-                    icon: '🎯',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFF10B981),
                     difficulty: 'Easy',
                     xpReward: '60-100 XP',
@@ -219,7 +219,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'Spot the Original',
                     description: 'Identify genuine IP from counterfeits',
-                    icon: '🔍',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFFF59E0B),
                     difficulty: 'Hard',
                     xpReward: '15-75 XP',
@@ -233,7 +233,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'IP Defender',
                     description: 'Defend your IP rights from infringement',
-                    icon: '🛡️',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFFEF4444),
                     difficulty: 'Medium',
                     xpReward: 'Up to 50 XP',
@@ -247,7 +247,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'GI Mapper',
                     description: 'Drag GI products to correct locations on map',
-                    icon: '🗺️',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFF3B82F6),
                     difficulty: 'Medium',
                     xpReward: '10-80 XP',
@@ -261,7 +261,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'Patent Detective',
                     description: 'Solve patent investigation cases',
-                    icon: '🕵️',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFF6366F1),
                     difficulty: 'Hard',
                     xpReward: '20-60 XP',
@@ -275,7 +275,7 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'Innovation Lab',
                     description: 'Draw & simulate your own invention',
-                    icon: '🔬',
+                    iconPath: 'assets/logos/logo.png',
                     color: const Color(0xFFEC4899),
                     difficulty: 'Creative',
                     xpReward: '100 XP',
@@ -292,7 +292,7 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget _buildGameCard({
     required String title,
     required String description,
-    required String icon,
+    required String iconPath,
     required Color color,
     required String difficulty,
     required String xpReward,
@@ -302,40 +302,52 @@ class _PlayScreenState extends State<PlayScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        gradient: LinearGradient(
+          colors: [
+            color.withValues(alpha: 0.15),
+            color.withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: color.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           onTap: isImplemented ? onTap : null,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             child: Row(
               children: [
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 56,
+                  height: 56,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    color: color.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: Text(
-                      icon,
-                      style: const TextStyle(fontSize: 28),
+                    child: Image.asset(
+                      iconPath,
+                      width: 36,
+                      height: 36,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.games,
+                          size: 36,
+                          color: color,
+                        );
+                      },
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,46 +367,54 @@ class _PlayScreenState extends State<PlayScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,
-                                vertical: 4,
+                                vertical: 3,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.orange[50],
-                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.orange[100],
+                                borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
                                 'Soon',
                                 style: TextStyle(
                                   fontSize: 10,
-                                  color: Colors.orange[700],
+                                  color: Colors.orange[800],
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       Text(
                         description,
                         style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
+                          fontSize: 12,
+                          color: Colors.grey[700],
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 8),
-                      Row(
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
                         children: [
                           _buildInfoChip(difficulty, Icons.bar_chart, color),
-                          const SizedBox(width: 8),
                           _buildInfoChip(xpReward, Icons.stars, color),
-                          const SizedBox(width: 8),
                           _buildInfoChip(timeEstimate, Icons.access_time, color),
                         ],
                       ),
                     ],
                   ),
                 ),
+                if (isImplemented) ...[
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: color,
+                  ),
+                ],
               ],
             ),
           ),
@@ -405,16 +425,16 @@ class _PlayScreenState extends State<PlayScreen> {
 
   Widget _buildInfoChip(String text, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(6),
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: color),
-          const SizedBox(width: 4),
+          Icon(icon, size: 11, color: color),
+          const SizedBox(width: 3),
           Text(
             text,
             style: TextStyle(

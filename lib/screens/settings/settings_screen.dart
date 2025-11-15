@@ -919,10 +919,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       // print('Error during logout: $e');
       
-      if (!mounted) return;
-      
       // Close loading dialog
-      Navigator.of(context).pop();
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+      
+      if (!mounted) return;
 
       // Show error with retry option
       ScaffoldMessenger.of(context).showSnackBar(

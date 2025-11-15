@@ -1,0 +1,38 @@
+{
+  "id": "copyright_level_10",
+  "realmId": "realm_copyright",
+  "levelNumber": 10,
+  "name": "Hot News: AI, NFTs, and Streaming Rights",
+  "description": "The final boss: Can AI own a copyright? What do you *really* own with an NFT? We tackle today's biggest questions.",
+  "summary": "This advanced level explores the unresolved copyright questions of our time. We'll look at the legal battles over AI training data, what NFTs mean for digital ownership, and how artists get paid in the streaming era.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=Sjqayly7RX4",
+  "videoDuration": 608,
+  
+  "content": "## Hot News: The New Copyright Battles\n\nCopyright law is always trying to catch up with technology. The principles you've learned are now being tested by AI, blockchain, and streaming. This is 'hot news' because the law is not settled and big court cases are happening right now.\n\n### 1. Artificial Intelligence (AI)\n\nThis is the biggest question in copyright today. It's a two-part problem:\n\n* **The Input Problem:** AI models like Midjourney or ChatGPT are 'trained' on billions of images and texts from the internet. Most of this data is copyrighted. Did the AI companies *infringe* on all that work by 'copying' it for training? Artists and authors (like The New York Times) are suing, claiming this is a massive copyright violation. The AI companies claim this is 'Fair Use'/'Fair Dealing' for a new, transformative purpose. This is the central legal battle.\n\n* **The Output Problem:** Can an AI's creation be copyrighted? The US Copyright Office has ruled that a work must be created by a *human* to have copyright. So, an image created 100% by AI (e.g., 'a photo of an astronaut riding a horse on Mars') cannot be copyrighted and is in the public domain. But what about a work that is 50% AI and 50% human editing? This is still a 'grey area'.\n\n### 2. NFTs (Non-Fungible Tokens)\n\nThis is a common confusion. What do you buy when you 'buy' an NFT?\n\n* **What you buy:** A digital 'receipt' on the blockchain that *points to* a piece of media (like a JPEG). You get the right to *say* you own that specific token, and the right to *sell* that token. \n* **What you DON'T buy:** The **copyright**. \n\nUnless the contract *explicitly* says 'all copyright is transferred to you', the original artist still owns all the economic rights. They can still sell prints of the art, license it for movies, etc. The NFT owner only owns the 'token', not the underlying copyright. \n\n### 3. Streaming Rights (How Artists Get Paid)\n\nIn the old days, you *bought* a copy (a CD or a download). This was a 'reproduction' and a 'distribution', and the artist was paid a royalty for each sale.\n\nStreaming (like on Spotify or Apple Music) is different. It's legally considered a **'public performance'**. \n\nThe problem? The royalty rates for a 'performance' are *dramatically* lower than for a 'sale'. An artist might need thousands of 'streams' to earn the same money they used to make from *one* album sale. This is why many musicians are in a heated debate with streaming platforms about how royalties are calculated, arguing the system is unfair and needs to be reformed.",
+  
+  "keyPoints": [
+    "AI is testing copyright: is 'training' on copyrighted data Fair Dealing?",
+    "Works created 100% by AI cannot be copyrighted because they lack human authorship.",
+    "Buying an NFT is buying a 'digital receipt', not the underlying copyright of the artwork.",
+    "The original artist of an NFT still holds the economic rights (to copy, adapt, sell prints) unless they are explicitly sold.",
+    "Music streaming is legally a 'public performance', which pays artists a much lower royalty rate than traditional 'sales' (like CDs or downloads)."
+  ],
+  
+  "learningObjectives": [
+    "Explain the 'input problem' and 'output problem' of AI and copyright.",
+    "Define what an NFT owner 'owns' versus what the original artist 'retains'.",
+    "Explain why the 'streaming' model (public performance) is financially different for artists than the 'sales' model (reproduction)."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 350,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:20:00Z"
+}

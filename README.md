@@ -8,6 +8,8 @@
 
 **Current Status**: 55% Complete (59/108 tasks) | Core Infrastructure: 100% Ready ✅
 
+**Latest Update (Nov 14, 2025)**: 🎉 Architecture simplified! All content now local JSON. Firebase only for user data. See [PROJECT_GUIDE.md](PROJECT_GUIDE.md) for complete details.
+
 ---
 
 ## 📖 Overview
@@ -20,6 +22,18 @@ IPlay is a comprehensive educational platform designed to teach students about I
 - **Daily Challenges**: Fresh content every day
 
 **Target Audience**: Students (grades 8-12) across India
+
+### Architecture
+
+**Content:** All educational content (levels, quizzes, games) stored as local JSON files in `content/` folder
+**Firebase:** Used ONLY for user authentication, progress tracking, and classroom management
+**Assets:** All images bundled locally in `assets/` folder
+
+**Benefits:**
+- ✅ Free forever (Firebase Spark plan)
+- ✅ Fast loading (no network requests for content)
+- ✅ Offline support (content always available)
+- ✅ Simple updates (content via app releases)
 
 ---
 
@@ -83,10 +97,10 @@ IPlay is a comprehensive educational platform designed to teach students about I
 
 ### Backend
 - **Firebase Authentication** - Email + Google Sign-In
-- **Cloud Firestore** - NoSQL database (15 collections)
-- **Cloud Functions** - Serverless backend (9 functions)
-- **Firebase Storage** - File storage (avatars, certificates, attachments)
-- **Firebase Hosting** - Static content hosting
+- **Cloud Firestore** - User data, progress, classrooms (14 collections)
+- **Local JSON** - All educational content (levels, quizzes, games)
+- **Local Assets** - All images bundled with app
+- **In-App Logic** - All business logic runs in-app (no Cloud Functions)
 
 ### Key Packages
 ```yaml
@@ -169,10 +183,11 @@ flutter pub get
    - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
    - Enable Authentication (Email/Password + Google)
    - Create Firestore database (follow `firestore.rules` for security)
-   - Enable Firebase Storage
    - Download `google-services.json` to `android/app/`
    - Run `flutterfire configure` to generate `firebase_options.dart`
    - Update `android/local.properties` with your local Android SDK path
+   
+   **Note:** Firebase Storage is NOT needed - all content is local!
 
 4. **Install Cloud Functions dependencies** (optional)
 ```bash
@@ -202,85 +217,81 @@ await populator.verifyBadges();
 
 ## 🔥 Firebase Deployment
 
-### Deploy everything
+### Deploy Firestore rules and indexes
 ```bash
-firebase deploy
-```
-
-### Deploy specific components
-```bash
-firebase deploy --only functions
 firebase deploy --only firestore:rules
 firebase deploy --only firestore:indexes
-firebase deploy --only storage
 ```
 
-### View logs
-```bash
-firebase functions:log
-firebase functions:log --only dailyLeaderboardUpdate
-```
+**Note:** No Cloud Functions or Storage to deploy. All logic runs in-app.
 
 ---
 
 ## 📊 Database Schema
 
-### Collections (15 total)
+### Firebase Collections (14 total - User Data Only)
 
-| Collection | Documents | Purpose |
-|------------|-----------|---------|
-| `/users` | User profiles | Authentication & progress |
+| Collection | Purpose | Example |
+|------------|---------|---------|
+| `/users` | User profiles, XP, badges | Authentication & progress tracking |
 | `/schools` | School entities | Principal management |
 | `/classrooms` | Classroom groups | Teacher-student hierarchy |
 | `/announcements` | Class announcements | Teacher communication |
-| `/progress` | Learning progress | Top-level with composite IDs |
-| `/badges` | Badge definitions | 35 badges (seeded) |
+| `/progress` | Learning progress | Level completion tracking |
 | `/join_requests` | Classroom requests | Approval workflow |
 | `/assignments` | Teacher assignments | Homework system |
 | `/assignment_submissions` | Student work | Submission + grading |
 | `/certificates` | Achievements | PDF certificates |
-| `/daily_challenges` | Daily quizzes | 5Q challenges |
 | `/daily_challenge_attempts` | Challenge results | One per user/day |
 | `/reports` | Content moderation | Report system |
 | `/feedback` | User feedback | Feature requests |
 | `/leaderboard_cache` | Rankings | Daily aggregated |
+| `/badges` | Badge unlocks | User badge tracking |
+
+### Local JSON Content (NOT in Firebase)
+
+All educational content stored locally:
+- `content/levels/` - 60 level files
+- `content/quizzes/` - 60 quiz files
+- `content/games/` - 7 game configurations
+- `content/realms_v1.0.0.json` - Realm definitions
+- `content/badges.json` - Badge definitions
+- `content/app_config_v1.0.0.json` - App configuration
 
 ---
 
-## ☁️ Cloud Functions
+## 💻 In-App Logic (No Cloud Functions)
 
-### Scheduled Functions
-- **`dailyLeaderboardUpdate`** - 2:00 AM IST
-  - Aggregates all leaderboards (national/state/school/classroom)
-  - Top 100 rankings
-  - Solo vs classroom learners
+**All business logic runs in-app to stay on Firebase Spark (free) plan:**
 
-- **`dailyChallengeGeneration`** - 12:01 AM IST
+### Daily Operations (In-App)
+- **Daily Leaderboard Update** - Runs in-app when users view leaderboards
+  - Aggregates rankings (national/state/school/classroom)
+  - Top 100 rankings cached in Firestore
+  - Updates on-demand
+
+- **Daily Challenge Generation** - Runs in-app at midnight
   - Creates daily 5-question challenge
   - 50 XP reward
-  - Random from question bank
+  - Random selection from question bank
 
-- **`weeklyCleanup`** - Sunday 3:00 AM IST
-  - Deletes old join requests (30+ days)
-  - Removes expired announcements
+- **Certificate Generation** - Runs in-app on realm completion
+  - PDF generation with QR code
+  - Saved locally on device
+  - Metadata stored in Firestore
 
-### Triggered Functions
-- **`generateCertificate`** - On realm completion
-  - PDF generation with QRCode
-  - Upload to Storage
-  - Unique certificate numbers
+### User Operations (In-App)
+- **Badge Unlocking** - Real-time in-app logic
+- **XP Calculations** - Instant in-app calculations
+- **Streak Tracking** - Daily check in-app
+- **Progress Sync** - Background sync when online
 
-- **`onUserDeleted`** - On user deletion
-  - Cleanup all user data
-  - Remove from classrooms
-
-- **`onClassroomDeleted`** - On classroom deletion
-  - Update student records
-  - Delete related data
-
-### Callable Functions
-- **`transferSchoolOwnership`** - Principal transfer
-- **`banUser`** - Admin-only user ban
+**Why No Cloud Functions:**
+- ✅ Stay on free tier forever
+- ✅ Faster response (no network latency)
+- ✅ Better offline support
+- ✅ Simpler architecture
+- ✅ No server costs
 
 ---
 
@@ -352,32 +363,39 @@ Expert: 200 XP  (Advanced challenges)
 - Principals manage their schools
 - Cloud Functions have admin access
 
-### Storage Rules
-- Profile images: 5 MB limit, images only
-- Attachments: 10 MB limit
-- Certificates: Functions write-only
-
 ### Authentication
 - Email verification required
 - Password reset enabled
 - Google Sign-In configured
 - No password storage in app
 
+### Content Security
+- All educational content bundled locally (no CMS)
+- No Firebase Storage needed (free tier friendly)
+- Assets version-controlled in Git
+
 ---
 
 ## 📈 Free Tier Sustainability
 
-### Firebase Limits (Free Tier)
+### Firebase Limits (Spark Plan - FREE)
 ✅ **Firestore**: 50K reads/day, 20K writes/day, 1 GB storage
-✅ **Functions**: 125K invocations/month, 400K GB-seconds
-✅ **Storage**: 5 GB total, 1 GB downloads/day
 ✅ **Authentication**: Unlimited
+✅ **No Functions**: All logic in-app (no invocation costs)
+✅ **No Storage**: All content local (no storage/bandwidth costs)
 
 ### Estimated Usage (100 students)
-- Reads: ~5K/day (well within limit)
-- Writes: ~2K/day (10% of limit)
-- Function invocations: ~90/month scheduled + ~500/month user actions
-- **Conclusion**: Free tier sufficient for 500+ students
+- Reads: ~5K/day (10% of limit) - Only user data, not content
+- Writes: ~2K/day (10% of limit) - Progress tracking only
+- Storage: ~50 MB (5% of limit) - User data only
+- **Conclusion**: Free tier sufficient for 1000+ students
+
+### Why This Architecture is Cost-Effective
+- ❌ No Cloud Functions costs (all logic in-app)
+- ❌ No Firebase Storage costs (content is local)
+- ❌ No bandwidth charges (assets bundled)
+- ❌ No server costs (no backend)
+- ✅ Stay on Spark (free) plan forever
 
 ---
 
@@ -421,7 +439,10 @@ Expert: 200 XP  (Advanced challenges)
 
 ## 📝 Documentation
 
-Comprehensive docs in `/docs/` folder:
+**Main Guide:**
+- `PROJECT_GUIDE.md` - **Complete project documentation** (architecture, content, Firebase, games, assets, deployment)
+
+Additional docs in `/docs/` folder:
 - `01_EXECUTIVE_SUMMARY.md` - Project overview
 - `02_DATABASE_SCHEMA.md` - Complete schema
 - `03_USER_FLOWS.md` - 25+ user flows
@@ -429,8 +450,6 @@ Comprehensive docs in `/docs/` folder:
 - `05_GAMIFICATION_SYSTEM.md` - XP, badges, certificates
 - `06_SECURITY_FUNCTIONS.md` - Rules and functions
 - `07_IMPLEMENTATION_GUIDE.md` - Development roadmap
-
-Additional files:
 - `IMPLEMENTATION_PROGRESS.md` - Detailed task tracker
 - `DEPLOYMENT_GUIDE.md` - Deployment instructions
 - `LEARNING_CONTENT_STRUCTURE.md` - Content guidelines

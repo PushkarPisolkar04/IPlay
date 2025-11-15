@@ -1,0 +1,832 @@
+{
+  "id": "quiz_master",
+  "name": "Quiz Master",
+  "description": "Test your IPR knowledge across all realms with random questions",
+  "summary": "A comprehensive quiz game covering all aspects of Intellectual Property Rights. Questions are randomly selected from a large pool to keep the game fresh and challenging.",
+  "iconPath": "assets/games/quiz_master.png",
+  "color": "0xFF6366F1",
+  "difficulty": "mixed",
+  "gameType": "quiz",
+  "xpReward": 75,
+  "estimatedMinutes": 10,
+  "questionsPerGame": 10,
+  "passingScore": 70,
+  "timeLimit": 600,
+  "randomSelection": true,
+  "allowRetry": true,
+  "showHintsAfterWrongAnswer": true,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T16:00:00Z",
+  "questionPool": [
+    {
+      "id": "qm_001",
+      "question": "What does IPR stand for?",
+      "options": [
+        "International Property Rights",
+        "Intellectual Property Rights",
+        "Indian Patent Registry",
+        "Industrial Protection Rules"
+      ],
+      "correctIndex": 1,
+      "explanation": "IPR stands for Intellectual Property Rights, which includes copyrights, trademarks, patents, and other forms of IP.",
+      "difficulty": "easy",
+      "realm": "general",
+      "points": 10,
+      "hint": "Think about protecting creations of the mind"
+    },
+    {
+      "id": "qm_002",
+      "question": "How long does copyright last in India for literary works?",
+      "options": [
+        "50 years after author's death",
+        "60 years after author's death",
+        "70 years after author's death",
+        "100 years after author's death"
+      ],
+      "correctIndex": 1,
+      "explanation": "In India, copyright lasts for 60 years after the author's death for most literary, dramatic, musical, and artistic works.",
+      "difficulty": "medium",
+      "realm": "copyright",
+      "points": 15,
+      "hint": "It's more than 50 but less than 70 years"
+    },
+    {
+      "id": "qm_003",
+      "question": "What symbol indicates a registered trademark?",
+      "options": [
+        "©",
+        "™",
+        "®",
+        "℗"
+      ],
+      "correctIndex": 2,
+      "explanation": "® indicates a registered trademark. ™ is for unregistered trademarks, © for copyright, and ℗ for sound recordings.",
+      "difficulty": "easy",
+      "realm": "trademark",
+      "points": 10,
+      "hint": "It's a letter inside a circle"
+    },
+    {
+      "id": "qm_004",
+      "question": "How long is a patent valid in India from the filing date?",
+      "options": [
+        "10 years",
+        "15 years",
+        "20 years",
+        "25 years"
+      ],
+      "correctIndex": 2,
+      "explanation": "Patents in India are valid for 20 years from the filing date, provided annual renewal fees are paid.",
+      "difficulty": "medium",
+      "realm": "patent",
+      "points": 15,
+      "hint": "It's the same duration as international patent standards"
+    },
+    {
+      "id": "qm_005",
+      "question": "Which Act governs copyright in India?",
+      "options": [
+        "Copyright Act, 1957",
+        "Copyright Act, 1999",
+        "Patents Act, 1970",
+        "Trade Marks Act, 1999"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Copyright Act, 1957 (amended in 2012) governs copyright protection in India.",
+      "difficulty": "medium",
+      "realm": "copyright",
+      "points": 15,
+      "hint": "It was enacted in the 1950s"
+    },
+    {
+      "id": "qm_006",
+      "question": "What does GI stand for in IPR?",
+      "options": [
+        "General Information",
+        "Geographical Indication",
+        "Government Initiative",
+        "Global Identifier"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI stands for Geographical Indication, which identifies products from a specific region with unique qualities.",
+      "difficulty": "easy",
+      "realm": "gi",
+      "points": 10,
+      "hint": "It relates to location and origin"
+    },
+    {
+      "id": "qm_007",
+      "question": "Which was the first Indian product to receive a GI tag?",
+      "options": [
+        "Basmati Rice",
+        "Darjeeling Tea",
+        "Kanchipuram Silk",
+        "Alphonso Mango"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea was the first Indian product to receive GI tag in 2003-2004.",
+      "difficulty": "hard",
+      "realm": "gi",
+      "points": 20,
+      "hint": "It's a famous beverage from the hills"
+    },
+    {
+      "id": "qm_008",
+      "question": "What is a trade secret?",
+      "options": [
+        "A registered trademark",
+        "Confidential business information",
+        "A type of patent",
+        "Public domain information"
+      ],
+      "correctIndex": 1,
+      "explanation": "A trade secret is confidential business information that provides competitive advantage, like Coca-Cola's recipe or KFC's blend of herbs and spices.",
+      "difficulty": "medium",
+      "realm": "trade_secrets",
+      "points": 15,
+      "hint": "Think about secret formulas and recipes"
+    },
+    {
+      "id": "qm_009",
+      "question": "Industrial design protects what aspect of a product?",
+      "options": [
+        "Functional features",
+        "Manufacturing process",
+        "Aesthetic appearance",
+        "Material composition"
+      ],
+      "correctIndex": 2,
+      "explanation": "Industrial design protects the aesthetic or ornamental appearance of a product, not its functional features.",
+      "difficulty": "medium",
+      "realm": "design",
+      "points": 15,
+      "hint": "It's about how something looks, not how it works"
+    },
+    {
+      "id": "qm_010",
+      "question": "Can you patent a mathematical formula in India?",
+      "options": [
+        "Yes, always",
+        "No, never",
+        "Only if it's complex",
+        "Only if it's used in software"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mathematical formulas and algorithms cannot be patented in India as they are considered abstract ideas under Section 3 of the Patents Act.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "Abstract ideas are not patentable"
+    },
+    {
+      "id": "qm_011",
+      "question": "What is 'fair use' or 'fair dealing' in copyright?",
+      "options": [
+        "Using copyrighted work without permission",
+        "Limited use for education, criticism, or news",
+        "Copying anything from the internet",
+        "Using work after paying a fee"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fair dealing allows limited use of copyrighted material for purposes like education, criticism, news reporting, or research without permission.",
+      "difficulty": "hard",
+      "realm": "copyright",
+      "points": 20,
+      "hint": "It's an exception for educational and critical purposes"
+    },
+    {
+      "id": "qm_012",
+      "question": "How many classes are there in Nice Classification for trademarks?",
+      "options": [
+        "34",
+        "45",
+        "50",
+        "100"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nice Classification has 45 classes - 34 for goods and 11 for services.",
+      "difficulty": "hard",
+      "realm": "trademark",
+      "points": 20,
+      "hint": "It's less than 50 but more than 40"
+    },
+    {
+      "id": "qm_013",
+      "question": "Which organization manages international IP treaties?",
+      "options": [
+        "UN",
+        "WIPO",
+        "WTO",
+        "UNESCO"
+      ],
+      "correctIndex": 1,
+      "explanation": "WIPO (World Intellectual Property Organization) manages international IP treaties including the Madrid System and PCT.",
+      "difficulty": "hard",
+      "realm": "general",
+      "points": 20,
+      "hint": "It's a specialized UN agency focused on IP"
+    },
+    {
+      "id": "qm_014",
+      "question": "What type of work is protected by copyright?",
+      "options": [
+        "Only published books",
+        "Literary, artistic, musical, and dramatic works",
+        "Only registered works",
+        "Only commercial works"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright protects original literary, artistic, musical, and dramatic works, as well as cinematograph films and sound recordings.",
+      "difficulty": "easy",
+      "realm": "copyright",
+      "points": 10,
+      "hint": "It covers multiple creative categories"
+    },
+    {
+      "id": "qm_015",
+      "question": "Which of these CANNOT be trademarked?",
+      "options": [
+        "A unique logo",
+        "A catchy slogan",
+        "A generic word like 'Computer'",
+        "A distinctive sound"
+      ],
+      "correctIndex": 2,
+      "explanation": "Generic or descriptive terms cannot be trademarked as they don't distinguish one product from another.",
+      "difficulty": "medium",
+      "realm": "trademark",
+      "points": 15,
+      "hint": "Think about what makes something distinctive"
+    },
+    {
+      "id": "qm_016",
+      "question": "What are the three criteria for patentability?",
+      "options": [
+        "New, useful, and expensive",
+        "Novel, non-obvious, and useful",
+        "Unique, profitable, and registered",
+        "Original, creative, and commercial"
+      ],
+      "correctIndex": 1,
+      "explanation": "For a patent, an invention must be novel (new), non-obvious (inventive step), and useful (industrial application).",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "Think about newness, inventiveness, and utility"
+    },
+    {
+      "id": "qm_017",
+      "question": "How long is design registration valid in India?",
+      "options": [
+        "5 years",
+        "10 years initially, extendable to 15 years",
+        "20 years",
+        "Lifetime"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration in India is valid for 10 years from the date of registration and can be extended for another 5 years.",
+      "difficulty": "medium",
+      "realm": "design",
+      "points": 15,
+      "hint": "It's renewable once"
+    },
+    {
+      "id": "qm_018",
+      "question": "Which Indian state has the most GI-tagged products?",
+      "options": [
+        "Maharashtra",
+        "Karnataka",
+        "Tamil Nadu",
+        "Kerala"
+      ],
+      "correctIndex": 1,
+      "explanation": "Karnataka has the highest number of GI-tagged products in India, including Mysore silk, Coorg coffee, and many handicrafts.",
+      "difficulty": "hard",
+      "realm": "gi",
+      "points": 20,
+      "hint": "It's a southern state known for silk and coffee"
+    },
+    {
+      "id": "qm_019",
+      "question": "What is the main advantage of trade secrets over patents?",
+      "options": [
+        "They are easier to enforce",
+        "They don't expire if kept confidential",
+        "They provide stronger legal protection",
+        "They are cheaper to register"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trade secrets don't expire as long as they remain confidential, unlike patents which expire after 20 years.",
+      "difficulty": "medium",
+      "realm": "trade_secrets",
+      "points": 15,
+      "hint": "Think about duration of protection"
+    },
+    {
+      "id": "qm_020",
+      "question": "What is copyright infringement?",
+      "options": [
+        "Reading a copyrighted book",
+        "Unauthorized copying or use of protected work",
+        "Criticizing a copyrighted work",
+        "Buying a pirated DVD"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright infringement is the unauthorized use, reproduction, or distribution of copyrighted material without permission.",
+      "difficulty": "easy",
+      "realm": "copyright",
+      "points": 10,
+      "hint": "It involves using someone's work without permission"
+    },
+    {
+      "id": "qm_021",
+      "question": "Which symbol is used for unregistered trademarks?",
+      "options": [
+        "©",
+        "™",
+        "®",
+        "℗"
+      ],
+      "correctIndex": 1,
+      "explanation": "™ (trademark symbol) is used for unregistered trademarks, while ® is used only for registered trademarks.",
+      "difficulty": "easy",
+      "realm": "trademark",
+      "points": 10,
+      "hint": "It's the letters T and M"
+    },
+    {
+      "id": "qm_022",
+      "question": "What is a provisional patent application?",
+      "options": [
+        "A temporary patent that expires in 1 year",
+        "A way to establish filing date while developing invention",
+        "A patent for provisional products",
+        "A patent that doesn't require fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "A provisional patent application establishes an early filing date and gives 12 months to file a complete specification.",
+      "difficulty": "medium",
+      "realm": "patent",
+      "points": 15,
+      "hint": "It's about securing a filing date early"
+    },
+    {
+      "id": "qm_023",
+      "question": "Which of these is an example of a GI product?",
+      "options": [
+        "iPhone",
+        "Basmati Rice",
+        "Coca-Cola",
+        "Windows OS"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati Rice is a GI product from specific regions of India and Pakistan, known for its unique aroma and characteristics.",
+      "difficulty": "easy",
+      "realm": "gi",
+      "points": 10,
+      "hint": "It's a food product from a specific region"
+    },
+    {
+      "id": "qm_024",
+      "question": "What must be done to maintain a trade secret?",
+      "options": [
+        "Register it with the government",
+        "Publish it in a journal",
+        "Keep it confidential with security measures",
+        "Patent it first"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trade secrets must be kept confidential through security measures like NDAs, restricted access, and employee training.",
+      "difficulty": "medium",
+      "realm": "trade_secrets",
+      "points": 15,
+      "hint": "The key is in the name - it must remain secret"
+    },
+    {
+      "id": "qm_025",
+      "question": "What is the difference between design and patent?",
+      "options": [
+        "Design protects appearance, patent protects function",
+        "Design is cheaper than patent",
+        "Design lasts longer than patent",
+        "There is no difference"
+      ],
+      "correctIndex": 0,
+      "explanation": "Design registration protects the aesthetic appearance of a product, while patents protect functional inventions.",
+      "difficulty": "medium",
+      "realm": "design",
+      "points": 15,
+      "hint": "One is about looks, the other about how it works"
+    },
+    {
+      "id": "qm_026",
+      "question": "Can you copyright an idea?",
+      "options": [
+        "Yes, all ideas are copyrightable",
+        "No, only the expression of ideas",
+        "Yes, if it's written down",
+        "Only if it's registered"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright protects the expression of ideas, not the ideas themselves. You can't copyright a concept, only its tangible form.",
+      "difficulty": "hard",
+      "realm": "copyright",
+      "points": 20,
+      "hint": "Think about the difference between an idea and its execution"
+    },
+    {
+      "id": "qm_027",
+      "question": "What is trademark dilution?",
+      "options": [
+        "Making a trademark weaker by adding water",
+        "Weakening a famous mark's distinctiveness",
+        "Reducing trademark fees",
+        "Simplifying a trademark design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademark dilution occurs when a famous mark's distinctiveness is weakened by unauthorized use, even without confusion.",
+      "difficulty": "hard",
+      "realm": "trademark",
+      "points": 20,
+      "hint": "It's about weakening a famous brand's uniqueness"
+    },
+    {
+      "id": "qm_028",
+      "question": "What is prior art in patent law?",
+      "options": [
+        "Ancient artwork",
+        "Existing knowledge before patent filing",
+        "The first patent ever filed",
+        "Art created before 1900"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art refers to all information publicly available before a patent application, used to determine if an invention is novel.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "It's about what was already known before"
+    },
+    {
+      "id": "qm_029",
+      "question": "Which Act governs GI registration in India?",
+      "options": [
+        "GI Act, 1999",
+        "Trade Marks Act, 1999",
+        "Geographical Indications of Goods Act, 1999",
+        "Patents Act, 1970"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Geographical Indications of Goods (Registration and Protection) Act, 1999 governs GI registration in India.",
+      "difficulty": "medium",
+      "realm": "gi",
+      "points": 15,
+      "hint": "It was enacted in 1999"
+    },
+    {
+      "id": "qm_030",
+      "question": "What is the penalty for copyright infringement in India?",
+      "options": [
+        "Only a warning",
+        "Imprisonment up to 3 years and/or fine up to ₹2 lakhs",
+        "Just a small fine",
+        "No penalty"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright infringement can result in imprisonment of 6 months to 3 years and/or fine of ₹50,000 to ₹2 lakhs.",
+      "difficulty": "hard",
+      "realm": "copyright",
+      "points": 20,
+      "hint": "It includes both imprisonment and monetary penalty"
+    },
+    {
+      "id": "qm_031",
+      "question": "What is a collective trademark?",
+      "options": [
+        "A trademark owned by multiple companies",
+        "A mark used by members of an association",
+        "A trademark for collections",
+        "Multiple trademarks combined"
+      ],
+      "correctIndex": 1,
+      "explanation": "A collective trademark is used by members of an association to indicate membership or origin, like 'CPA' for certified accountants.",
+      "difficulty": "hard",
+      "realm": "trademark",
+      "points": 20,
+      "hint": "It's used by a group or association"
+    },
+    {
+      "id": "qm_032",
+      "question": "What is a utility model?",
+      "options": [
+        "A model of a utility vehicle",
+        "A minor patent for incremental innovations",
+        "A design for utilities",
+        "A patent for software"
+      ],
+      "correctIndex": 1,
+      "explanation": "A utility model (or petty patent) protects minor innovations with simpler requirements and shorter duration than regular patents.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "It's like a smaller, simpler patent"
+    },
+    {
+      "id": "qm_033",
+      "question": "Which of these is protected by design registration?",
+      "options": [
+        "The shape of a Coca-Cola bottle",
+        "The formula of Coca-Cola",
+        "The name Coca-Cola",
+        "The advertisement of Coca-Cola"
+      ],
+      "correctIndex": 0,
+      "explanation": "The distinctive shape of the Coca-Cola bottle is protected by design registration as it's an aesthetic feature.",
+      "difficulty": "medium",
+      "realm": "design",
+      "points": 15,
+      "hint": "It's about the physical appearance"
+    },
+    {
+      "id": "qm_034",
+      "question": "What is biopiracy?",
+      "options": [
+        "Pirating biological software",
+        "Unauthorized use of biological resources and traditional knowledge",
+        "Illegal fishing",
+        "Copying biology textbooks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Biopiracy is the unauthorized commercial use of biological resources and traditional knowledge without fair compensation.",
+      "difficulty": "medium",
+      "realm": "general",
+      "points": 15,
+      "hint": "It involves exploiting traditional knowledge"
+    },
+    {
+      "id": "qm_035",
+      "question": "What is the duration of trademark registration in India?",
+      "options": [
+        "5 years",
+        "10 years, renewable indefinitely",
+        "20 years",
+        "Lifetime"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademark registration in India is valid for 10 years and can be renewed indefinitely for successive 10-year periods.",
+      "difficulty": "medium",
+      "realm": "trademark",
+      "points": 15,
+      "hint": "It's renewable forever in 10-year periods"
+    },
+    {
+      "id": "qm_036",
+      "question": "What is compulsory licensing in patents?",
+      "options": [
+        "Forcing everyone to get a license",
+        "Government allowing others to use a patent without owner's consent",
+        "Mandatory patent registration",
+        "Required licensing for all inventions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Compulsory licensing allows the government to permit others to use a patented invention without the patent holder's consent, typically for public interest.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "It's used when public interest outweighs private rights"
+    },
+    {
+      "id": "qm_037",
+      "question": "Which of these is an example of traditional knowledge?",
+      "options": [
+        "Computer programming",
+        "Ayurvedic medicine formulations",
+        "Modern chemistry",
+        "Artificial intelligence"
+      ],
+      "correctIndex": 1,
+      "explanation": "Traditional knowledge includes indigenous practices like Ayurvedic medicine, passed down through generations.",
+      "difficulty": "easy",
+      "realm": "general",
+      "points": 10,
+      "hint": "It's ancient wisdom passed through generations"
+    },
+    {
+      "id": "qm_038",
+      "question": "What is moral rights in copyright?",
+      "options": [
+        "Rights to earn money from work",
+        "Right to attribution and integrity of work",
+        "Rights to moral stories only",
+        "Rights given by religious texts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights include the right to be identified as the author and the right to object to derogatory treatment of the work.",
+      "difficulty": "hard",
+      "realm": "copyright",
+      "points": 20,
+      "hint": "It's about recognition and protecting the work's integrity"
+    },
+    {
+      "id": "qm_039",
+      "question": "What is a certification mark?",
+      "options": [
+        "A mark certifying quality or origin",
+        "A certificate for trademarks",
+        "A mark on certificates",
+        "A trademark certification"
+      ],
+      "correctIndex": 0,
+      "explanation": "A certification mark certifies that goods or services meet certain standards, like 'ISI' mark or 'Woolmark'.",
+      "difficulty": "medium",
+      "realm": "trademark",
+      "points": 15,
+      "hint": "It guarantees certain standards are met"
+    },
+    {
+      "id": "qm_040",
+      "question": "What is the Paris Convention?",
+      "options": [
+        "A fashion convention in Paris",
+        "An international treaty for IP protection",
+        "A French copyright law",
+        "A patent agreement for Europe only"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Paris Convention (1883) is one of the first international treaties for protecting industrial property across member countries.",
+      "difficulty": "hard",
+      "realm": "general",
+      "points": 20,
+      "hint": "It's a historic international IP treaty"
+    },
+    {
+      "id": "qm_041",
+      "question": "What is patent pooling?",
+      "options": [
+        "Swimming pool for patent holders",
+        "Agreement where multiple patent holders license patents together",
+        "Collecting patents in one place",
+        "Sharing patent fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patent pooling is an agreement between patent holders to license their patents to each other or third parties as a package.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "Multiple patent owners work together"
+    },
+    {
+      "id": "qm_042",
+      "question": "Which GI product is known as 'Black Gold of India'?",
+      "options": [
+        "Darjeeling Tea",
+        "Kanchipuram Silk",
+        "Nagpur Orange",
+        "None of these"
+      ],
+      "correctIndex": 0,
+      "explanation": "Darjeeling Tea is often called the 'Champagne of Teas' or 'Black Gold of India' due to its premium quality and value.",
+      "difficulty": "medium",
+      "realm": "gi",
+      "points": 15,
+      "hint": "It's a premium beverage from the hills"
+    },
+    {
+      "id": "qm_043",
+      "question": "What is the main risk of not protecting trade secrets?",
+      "options": [
+        "Government fines",
+        "Loss of competitive advantage if disclosed",
+        "Automatic patent grant to competitors",
+        "Trademark infringement"
+      ],
+      "correctIndex": 1,
+      "explanation": "Once a trade secret is disclosed, it loses protection and competitive advantage, unlike patents which remain protected even if disclosed.",
+      "difficulty": "medium",
+      "realm": "trade_secrets",
+      "points": 15,
+      "hint": "Once it's out, it's gone forever"
+    },
+    {
+      "id": "qm_044",
+      "question": "What is industrial design piracy?",
+      "options": [
+        "Stealing designs from factories",
+        "Unauthorized copying of registered designs",
+        "Pirating industrial software",
+        "Copying factory layouts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Industrial design piracy is the unauthorized copying or imitation of registered designs, common in fashion and product industries.",
+      "difficulty": "medium",
+      "realm": "design",
+      "points": 15,
+      "hint": "It's about copying protected appearances"
+    },
+    {
+      "id": "qm_045",
+      "question": "What is public domain in copyright?",
+      "options": [
+        "Government-owned property",
+        "Works not protected by copyright, free to use",
+        "Public parks and spaces",
+        "Websites ending in .gov"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public domain refers to creative works not protected by copyright, either because protection expired or never existed.",
+      "difficulty": "medium",
+      "realm": "copyright",
+      "points": 15,
+      "hint": "These works are free for everyone to use"
+    },
+    {
+      "id": "qm_046",
+      "question": "What is trademark squatting?",
+      "options": [
+        "Sitting on trademark applications",
+        "Registering others' trademarks in bad faith",
+        "Occupying trademark offices",
+        "Using trademarks without permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademark squatting is registering someone else's trademark (often famous brands) in bad faith to profit from it later.",
+      "difficulty": "hard",
+      "realm": "trademark",
+      "points": 20,
+      "hint": "It's about grabbing trademarks before the real owner"
+    },
+    {
+      "id": "qm_047",
+      "question": "What is the PCT (Patent Cooperation Treaty)?",
+      "options": [
+        "A patent for computers and technology",
+        "A system for filing international patent applications",
+        "Patent Classification Treaty",
+        "A European patent system"
+      ],
+      "correctIndex": 1,
+      "explanation": "PCT allows filing a single international patent application that can be used to seek protection in multiple countries.",
+      "difficulty": "hard",
+      "realm": "patent",
+      "points": 20,
+      "hint": "It simplifies filing patents in multiple countries"
+    },
+    {
+      "id": "qm_048",
+      "question": "Which Indian handicraft has GI protection?",
+      "options": [
+        "Channapatna Toys",
+        "IKEA furniture",
+        "Chinese pottery",
+        "Generic wooden toys"
+      ],
+      "correctIndex": 0,
+      "explanation": "Channapatna Toys from Karnataka have GI protection, known for their traditional wooden craft and lacquer work.",
+      "difficulty": "medium",
+      "realm": "gi",
+      "points": 15,
+      "hint": "It's a traditional wooden craft from Karnataka"
+    },
+    {
+      "id": "qm_049",
+      "question": "What is a non-disclosure agreement (NDA)?",
+      "options": [
+        "A patent application form",
+        "A contract to keep information confidential",
+        "A trademark registration",
+        "A copyright license"
+      ],
+      "correctIndex": 1,
+      "explanation": "An NDA is a legal contract that requires parties to keep certain information confidential, crucial for protecting trade secrets.",
+      "difficulty": "easy",
+      "realm": "trade_secrets",
+      "points": 10,
+      "hint": "It's about keeping secrets secret"
+    },
+    {
+      "id": "qm_050",
+      "question": "What is the Berne Convention?",
+      "options": [
+        "A Swiss banking agreement",
+        "An international copyright treaty",
+        "A European design convention",
+        "A trademark agreement"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Berne Convention (1886) is an international agreement governing copyright, ensuring automatic protection across member countries.",
+      "difficulty": "hard",
+      "realm": "copyright",
+      "points": 20,
+      "hint": "It's a major international copyright agreement"
+    }
+  ],
+  "rewards": {
+    "completion": 75,
+    "perfectScore": 150,
+    "firstTime": 100,
+    "highScore": 200
+  },
+  "leaderboard": {
+    "enabled": true,
+    "scope": ["classroom", "school", "global"]
+  }
+}

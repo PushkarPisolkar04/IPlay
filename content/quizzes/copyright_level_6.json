@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_6",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+  
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  
+  "questions": [
+    {
+      "id": "copyright_6_q1",
+      "question": "What is 'Fair Dealing' in the context of Indian copyright law?",
+      "options": [
+        "A complete exemption from copyright law",
+        "A limited right to use copyrighted work for certain purposes without permission",
+        "A payment-based license agreement",
+        "A special right for publishers only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fair Dealing allows limited use of copyrighted works for specific purposes like research, criticism, and review without seeking permission.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q2",
+      "question": "Which Section of the Indian Copyright Act defines 'Fair Dealing'?",
+      "options": [
+        "Section 14",
+        "Section 52",
+        "Section 63",
+        "Section 19"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 52 of the Copyright Act, 1957 lists exceptions to infringement, including Fair Dealing provisions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q3",
+      "question": "Which of the following is NOT a purpose allowed under Fair Dealing in India?",
+      "options": [
+        "Private research or study",
+        "Criticism or review",
+        "Commercial resale",
+        "Reporting current events"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fair Dealing does not cover commercial exploitation or resale; it’s limited to educational and critical uses.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q4",
+      "question": "Using short quotes from a book in your research paper is considered:",
+      "options": [
+        "Infringement",
+        "Fair Dealing",
+        "Piracy",
+        "Reproduction"
+      ],
+      "correctIndex": 1,
+      "explanation": "Short quotations for research or academic purposes qualify as Fair Dealing if the use is reasonable.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q5",
+      "question": "Which factor helps determine if a use is 'fair'?",
+      "options": [
+        "Whether the user likes the original work",
+        "The amount and substantiality of the portion used",
+        "The age of the creator",
+        "Whether the work was created digitally"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fairness depends on how much of the work is used and whether it affects the original’s market value.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q6",
+      "question": "A student photocopies one chapter of a textbook for exam preparation. Is this allowed?",
+      "options": [
+        "Yes, under Fair Dealing for research or study",
+        "No, it’s infringement",
+        "Only if the student pays the author",
+        "Only if approved by the publisher"
+      ],
+      "correctIndex": 0,
+      "explanation": "Limited copying for personal study or research is covered under Fair Dealing (Section 52).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q7",
+      "question": "Which of the following best describes 'Fair Dealing for criticism'?",
+      "options": [
+        "Using a small clip of a movie to review it online",
+        "Uploading the whole movie for review",
+        "Copying others’ reviews",
+        "Editing a movie without permission"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using short clips or excerpts to critique or comment on a work is permitted under Fair Dealing for criticism or review.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q8",
+      "question": "The 'fairness test' includes which key consideration?",
+      "options": [
+        "Whether the user is a student",
+        "Whether the use harms the market for the original work",
+        "The number of people who saw it",
+        "Whether the creator is famous"
+      ],
+      "correctIndex": 1,
+      "explanation": "A major factor in Fair Dealing is whether the use negatively impacts the market or value of the original work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q9",
+      "question": "Reproducing an entire textbook and distributing it online for free is:",
+      "options": [
+        "Fair Dealing",
+        "A moral right",
+        "Infringement",
+        "A research use"
+      ],
+      "correctIndex": 2,
+      "explanation": "Reproducing or distributing an entire work publicly goes beyond Fair Dealing and counts as infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q10",
+      "question": "Using parts of a movie to review or comment on it in a YouTube video is:",
+      "options": [
+        "Allowed under Fair Dealing for criticism",
+        "Always prohibited",
+        "Only allowed with payment",
+        "Considered piracy"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fair Dealing allows limited use of copyrighted material for criticism, commentary, and review.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q11",
+      "question": "Which case best illustrates Fair Dealing for students in India?",
+      "options": [
+        "Student vs. Textbook case",
+        "Amar Nath Sehgal case",
+        "J.K. Rowling case",
+        "Coder vs. Photographer case"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'Student vs. Textbook' case highlights how educational use can be covered under Fair Dealing in India.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q12",
+      "question": "What is the key purpose of Fair Dealing provisions?",
+      "options": [
+        "To restrict access to copyrighted works",
+        "To balance creators’ rights and public access",
+        "To eliminate copyright protection",
+        "To promote commercial licensing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fair Dealing provisions strike a balance between protecting creators and enabling reasonable public use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q13",
+      "question": "Which of these uses would likely NOT be considered fair?",
+      "options": [
+        "Copying small portions for research",
+        "Using material in a parody",
+        "Uploading a full textbook on a website",
+        "Quoting a line for review"
+      ],
+      "correctIndex": 2,
+      "explanation": "Uploading or reproducing entire copyrighted works without permission exceeds Fair Dealing limits.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q14",
+      "question": "Does Fair Dealing apply to digital content like videos or memes?",
+      "options": [
+        "Yes, if used fairly for purposes like criticism or review",
+        "No, only to printed materials",
+        "Only if the creator approves",
+        "Never for online content"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fair Dealing also applies to digital works as long as the use is limited and for permitted purposes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q15",
+      "question": "Which factor does NOT determine whether use is fair?",
+      "options": [
+        "Purpose of the use",
+        "Amount of the work used",
+        "Market effect of the use",
+        "Creator’s nationality"
+      ],
+      "correctIndex": 3,
+      "explanation": "Fairness depends on purpose, amount, and market harm — not on who the creator is or where they’re from.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q16",
+      "question": "If a teacher copies short notes for classroom use, it is:",
+      "options": [
+        "Fair Dealing for educational use",
+        "Infringement",
+        "Only allowed with a license",
+        "A public performance"
+      ],
+      "correctIndex": 0,
+      "explanation": "Educational use by teachers for classroom purposes qualifies under Fair Dealing exceptions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q17",
+      "question": "Which purpose is covered under Section 52’s Fair Dealing clause?",
+      "options": [
+        "Research and private study",
+        "Advertising",
+        "Selling copies of work",
+        "Streaming full movies online"
+      ],
+      "correctIndex": 0,
+      "explanation": "Section 52 allows Fair Dealing for research, private study, criticism, and review.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_6_q18",
+      "question": "In the 'Movie Reviewer' case, why was Fair Dealing applied?",
+      "options": [
+        "Because the reviewer used short clips for commentary",
+        "Because the reviewer owned the film",
+        "Because the review was profitable",
+        "Because the movie was old"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using short clips for commentary and review falls within Fair Dealing for criticism under Section 52.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q19",
+      "question": "Can Fair Dealing protect a person who uses a large portion of a work without affecting its market?",
+      "options": [
+        "Sometimes, if the use is justified for research or review",
+        "Never, large use is always infringement",
+        "Only if used privately",
+        "Only if registered"
+      ],
+      "correctIndex": 0,
+      "explanation": "Amount alone isn’t decisive; if no market harm exists and purpose is fair (e.g., research), it may still qualify.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q20",
+      "question": "Does Fair Dealing allow using copyrighted work in parody?",
+      "options": [
+        "Yes, if done in good faith and without market harm",
+        "No, parody is always infringement",
+        "Only with author’s written consent",
+        "Only in books"
+      ],
+      "correctIndex": 0,
+      "explanation": "Parody and satire can fall under Fair Dealing when done fairly and not for commercial harm.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q21",
+      "question": "What is one common misunderstanding about Fair Dealing?",
+      "options": [
+        "It allows using small parts for fair purposes",
+        "It allows free use of all copyrighted materials",
+        "It balances access and protection",
+        "It’s defined under Section 52"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fair Dealing does not mean you can freely use any material; it’s limited to specific fair uses.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q22",
+      "question": "When assessing 'fairness,' what matters most?",
+      "options": [
+        "The purpose, amount used, and market effect",
+        "Whether it’s a famous work",
+        "The user’s identity",
+        "The number of citations"
+      ],
+      "correctIndex": 0,
+      "explanation": "Courts consider purpose, portion, and market harm — the key factors in determining Fair Dealing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q23",
+      "question": "Can Fair Dealing apply to student presentations using copyrighted images?",
+      "options": [
+        "Yes, if used for academic or non-commercial purposes",
+        "No, never for images",
+        "Only if watermarked",
+        "Only if the creator is cited"
+      ],
+      "correctIndex": 0,
+      "explanation": "Educational presentations that use limited material for academic purposes fall within Fair Dealing exceptions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q24",
+      "question": "If Fair Dealing is misused for profit, it becomes:",
+      "options": [
+        "Still fair",
+        "Infringement",
+        "A moral right",
+        "A public license"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using Fair Dealing exceptions for commercial gain removes the protection and counts as infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_6_q25",
+      "question": "Why is Fair Dealing important for students?",
+      "options": [
+        "It helps them use study materials legally for learning",
+        "It allows unlimited sharing of copyrighted books",
+        "It removes copyright rules for schools",
+        "It provides ownership of works"
+      ],
+      "correctIndex": 0,
+      "explanation": "Fair Dealing enables students to access and use educational content legally for learning and research.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+PLACEHOLDER IMAGES NEEDED FOR SPOT THE ORIGINAL GAME
+=====================================================
+
+This file lists all 100 product images (25 sets × 4 variations) that need to be created.
+Each image should be 400x400 pixels, PNG format, with white or transparent background.
+
+BEVERAGES (16 images)
+---------------------
+1. Bisleri Water Bottle
+   - bisleri_original.png
+   - bisleri_fake1.png (Logo font different, cap color lighter, label off-center)
+   - bisleri_fake2.png (Spelling "Bisreli", missing ™, bottle shape different)
+   - bisleri_fake3.png (Spelling "Bislary", different font, missing batch number)
+
+2. Coca-Cola Bottle
+   - cocacola_original.png
+   - cocacola_fake1.png (Logo script different, red shade variation, bottle contour wrong)
+   - cocacola_fake2.png (Spelling "Coca-Kola", missing ™, label quality poor)
+   - cocacola_fake3.png (Font kerning wrong, cap different, missing batch code)
+
+3. Pepsi Bottle
+   - pepsi_original.png
+   - pepsi_fake1.png (Globe logo colors off, blue shade different, cap wrong)
+   - pepsi_fake2.png (Spelling "Pesi", logo proportions wrong, missing batch code)
+   - pepsi_fake3.png (Font different, label alignment off, bottle shape different)
+
+FOOD PRODUCTS (44 images)
+--------------------------
+4. Amul Butter
+   - amul_original.png
+   - amul_fake1.png (Girl's face distorted, color duller, font thinner)
+   - amul_fake2.png (Spelling "Anul", missing certification, yellow shade different)
+   - amul_fake3.png (Polka dots wrong, text alignment off, missing expiry)
+
+5. Parle-G Biscuits
+   - parleg_original.png
+   - parleg_fake1.png (Baby's face proportions wrong, border thinner, spacing irregular)
+   - parleg_fake2.png (Spelling "Parle-6", different baby, missing nutrition info)
+   - parleg_fake3.png (Baby's expression different, color too high, dimensions off)
+
+6. Britannia Good Day
+   - britannia_original.png
+   - britannia_fake1.png (Logo shifted, red less vibrant, cookie image poor)
+   - britannia_fake2.png (Spelling "Britania", font different, missing weight)
+   - britannia_fake3.png (Cookie distorted, seal different, barcode missing)
+
+7. Colgate Toothpaste
+   - colgate_original.png
+   - colgate_fake1.png (Red less vibrant, font spacing irregular, cap threading different)
+   - colgate_fake2.png (Oval distorted, missing fluoride info, tube sealing poor)
+   - colgate_fake3.png (Spelling "Colgete", red shade different, missing batch)
+
+8. Maggi Noodles
+   - maggi_original.png
+   - maggi_fake1.png (Yellow duller, logo shifted, font weight different)
+   - maggi_fake2.png (Spelling "Maggy", missing Nestle logo, dimensions wrong)
+   - maggi_fake3.png (Red band different, missing FSSAI, nutrition incomplete)
+
+9. Tata Salt
+   - tatasalt_original.png
+   - tatasalt_fake1.png (Blue shade different, logo proportions wrong, seal poor)
+   - tatasalt_fake2.png (Spelling "Tata Solt", missing iodine info, font different)
+   - tatasalt_fake3.png (Logo placement wrong, blue too light, missing date)
+
+10. Dabur Honey
+    - dabur_original.png
+    - dabur_fake1.png (Logo less vibrant, bottle shape different, label alignment off)
+    - dabur_fake2.png (Spelling "Dabor", missing purity seal, cap different)
+    - dabur_fake3.png (Font kerning wrong, missing batch, honey color different)
+
+11. Cadbury Dairy Milk
+    - cadbury_original.png
+    - cadbury_fake1.png (Purple shade different, logo script irregular, wrapper inferior)
+    - cadbury_fake2.png (Glass image distorted, font inconsistent, missing weight)
+    - cadbury_fake3.png (Spelling "Dairy Nilk", purple too bright, missing veg symbol)
+
+12. Haldiram's Snacks
+    - haldiram_original.png
+    - haldiram_fake1.png (Logo less vibrant, seal poor, font spacing irregular)
+    - haldiram_fake2.png (Spelling "Haldirams" no apostrophe, yellow different, missing FSSAI)
+    - haldiram_fake3.png (Logo shifted, dimensions wrong, missing date)
+
+FASHION (28 images)
+-------------------
+13. Nike Shoes
+    - nike_original.png
+    - nike_fake1.png (Swoosh proportions wrong, stitching poor, sole different)
+    - nike_fake2.png (Brand "Hike", logo reversed, material inferior)
+    - nike_fake3.png (Swoosh placement wrong, box poor, missing code)
+
+14. Adidas Sneakers
+    - adidas_original.png
+    - adidas_fake1.png (Three stripes uneven, logo font different, heel tab poor)
+    - adidas_fake2.png (Brand "Abibas", four stripes, missing size tag)
+    - adidas_fake3.png (Stripes width inconsistent, trefoil distorted, box blurry)
+
+15. Levi's Jeans
+    - levis_original.png
+    - levis_fake1.png (Red tab faded, stitching wrong, button unclear)
+    - levis_fake2.png (Spelling "Levis" no apostrophe, denim inferior, missing label)
+    - levis_fake3.png (Red tab placement wrong, arcuate irregular, leather fake)
+
+16. Puma T-Shirt
+    - puma_original.png
+    - puma_fake1.png (Cat logo proportions wrong, fabric thinner, tag blurry)
+    - puma_fake2.png (Brand "Puna", cat facing wrong, missing size label)
+    - puma_fake3.png (Logo off-center, stitching poor, color fading uneven)
+
+17. Reebok Shoes
+    - reebok_original.png
+    - reebok_fake1.png (Delta proportions wrong, stitching poor, sole different)
+    - reebok_fake2.png (Spelling "Reebook", logo placement wrong, missing code)
+    - reebok_fake3.png (Delta distorted, material inferior, box blurry)
+
+18. Raymond Fabric
+    - raymond_original.png
+    - raymond_fake1.png (Embroidery poor, texture different, tag blurry)
+    - raymond_fake2.png (Spelling "Raymund", missing hologram, color off)
+    - raymond_fake3.png (Logo placement wrong, fabric lighter, missing care label)
+
+19. Woodland Shoes
+    - woodland_original.png
+    - woodland_fake1.png (Embossing shallow, leather inferior, sole different)
+    - woodland_fake2.png (Spelling "Woodlands", stitching poor, missing size)
+    - woodland_fake3.png (Logo placement wrong, box poor, missing code)
+
+ELECTRONICS (24 images)
+------------------------
+20. Apple iPhone
+    - iphone_original.png
+    - iphone_fake1.png (Apple logo off-center, screen inferior, port alignment wrong)
+    - iphone_fake2.png (Spelling "iFone", camera layout different, missing markings)
+    - iphone_fake3.png (Button placement different, logo shallow, IMEI invalid)
+
+21. Samsung Galaxy
+    - samsung_original.png
+    - samsung_fake1.png (Logo font different, bezel thicker, camera placement off)
+    - samsung_fake2.png (Spelling "Samsang", missing hologram, box inferior)
+    - samsung_fake3.png (Button feel different, software cloned, missing warranty)
+
+22. Sony Headphones
+    - sony_original.png
+    - sony_fake1.png (Logo embossing shallow, padding poor, cable different)
+    - sony_fake2.png (Brand "Somy", missing model number, packaging poor)
+    - sony_fake3.png (Font different, sound inferior, missing serial)
+
+23. HP Laptop
+    - hp_original.png
+    - hp_fake1.png (Logo embossing shallow, build inferior, port alignment wrong)
+    - hp_fake2.png (Logo font different, missing serial sticker, keyboard irregular)
+    - hp_fake3.png (Screen bezel thicker, hinge poor, missing warranty seal)
+
+24. Dell Monitor
+    - dell_original.png
+    - dell_fake1.png (Logo slant wrong, bezel poor, stand different)
+    - dell_fake2.png (Font different, missing model number, cable inferior)
+    - dell_fake3.png (Spelling "Doll", logo color off, missing markings)
+
+25. Canon Camera
+    - canon_original.png
+    - canon_fake1.png (Logo font different, lens mount poor, button placement off)
+    - canon_fake2.png (Spelling "Ganon", missing serial, build inferior)
+    - canon_fake3.png (Red stripe different, grip texture wrong, missing warranty)
+
+TOTAL: 100 images (25 products × 4 variations each)
+
+NOTE: These are placeholder references. Actual images should be created as:
+- Simple illustrated versions for educational purposes
+- 400x400 pixels, PNG format
+- Clear visual differences as described
+- Compliant with fair use for educational purposes

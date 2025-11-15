@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_5",
+  "realmId": "realm_patent",
+  "levelNumber": 5,
+  "name": "The 'Claims' (The Heart of the Patent)",
+  "description": "The description is for the public, but the 'claims' are for the lawyers. Learn to read the most important part.",
+  "summary": "This level explains the 'claims'—the numbered sentences at the end of a patent. You'll learn why claims are the *legal boundary* of your invention, defining exactly what you do and don't own.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=RrN7IxvAJto",
+  "videoDuration": 591,
+  
+  "content": "## The 'Claims' (The Heart of the Patent)\n\nA patent document has two main parts. The **'Specification'** (the description and drawings) teaches the public how to *make* the invention. \n\nBut the most important part, the legal heart of the patent, is the section at the end called the **'Claims'**. \n\nThe claims are a set of numbered sentences (e.g., '1. A device comprising...', '2. The device of claim 1, further comprising...') that define the *exact legal boundary* of the invention. \n\n### Think of it like a Property Deed \n\n* The **Specification** (description) is like a real estate brochure. It tells you all about the house, the beautiful garden, the lovely neighborhood. It gives you the full context.\n* The **Claims** are like the **property deed map**. It's the boring legal description that says 'The property line starts at this tree, runs 100 meters north, and 50 meters west...' \n\nWhen it comes to a legal fight, the brochure doesn't matter. The only thing that matters is the **legal boundary line** on the deed. The claims are that line. They tell the world *exactly* what you own. \n\n### Independent vs. Dependent Claims\n\n- **Claim 1 (The Independent Claim):** This is the broadest claim. It defines the core invention in its most basic form. For example: 'Claim 1: A writing instrument, comprising a handle and a graphite marking tip.'\n\n- **Claim 2 (The Dependent Claim):** This *narrows down* the claim before it. It 'depends' on the first claim and adds more detail. For example: 'Claim 2: The writing instrument of Claim 1, further comprising an eraser attached to the handle.'\n\n### Why does this matter? \n\nInfringement (which we'll cover next) is *only* determined by the claims. To infringe a patent, someone has to make, use, or sell something that includes *every single element* listed in **Claim 1**. \n\nIf your Claim 1 is 'a stool with 3 legs', someone who makes a stool with *4 legs* might not infringe. This is why patent lawyers spend months writing claims that are *broad* enough to catch competitors, but *narrow* enough to be 'novel' and 'inventive'. It's the hardest part of patent law.",
+  
+  "keyPoints": [
+    "The 'claims' are the numbered sentences at the end of a patent that define the legal boundary of the invention.",
+    "The claims are the *only* part that determines infringement. They are the 'property line' of the invention.",
+    "**Independent Claims** (like Claim 1) are broad and define the essential invention.",
+    "**Dependent Claims** (like Claim 2) are narrower and add more features to the claims before them.",
+    "Writing good claims is a difficult legal art: a balance between being too broad and too narrow."
+  ],
+  
+  "learningObjectives": [
+    "Identify the 'claims' as the most important legal part of a patent.",
+    "Use the 'property deed' analogy to explain the function of claims versus the description.",
+    "Differentiate between an 'Independent Claim' and a 'Dependent Claim'.",
+    "Explain that infringement is determined *only* by reading and comparing the claims to a product."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:55:00Z"
+}

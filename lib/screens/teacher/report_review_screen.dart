@@ -57,7 +57,9 @@ class _ReportReviewScreenState extends State<ReportReviewScreen>
       }
     } catch (e) {
       // print('Error loading user info: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

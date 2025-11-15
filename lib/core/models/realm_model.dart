@@ -3,7 +3,7 @@ class RealmModel {
   final String id;
   final String name;
   final String description;
-  final String iconEmoji;
+  final String iconPath; // Asset path for icon image
   final int color; // Color value
   final int totalLevels;
   final int totalXP;
@@ -14,7 +14,7 @@ class RealmModel {
     required this.id,
     required this.name,
     required this.description,
-    required this.iconEmoji,
+    required this.iconPath,
     required this.color,
     required this.totalLevels,
     required this.totalXP,
@@ -23,18 +23,31 @@ class RealmModel {
   });
 
   factory RealmModel.fromMap(Map<String, dynamic> map) {
+    // Parse color - handle both String hex and int
+    int colorValue = 0xFFFF6B35;
+    if (map['color'] != null) {
+      if (map['color'] is String) {
+        colorValue = int.parse((map['color'] as String).replaceFirst('0x', ''), radix: 16);
+      } else if (map['color'] is int) {
+        colorValue = map['color'];
+      }
+    }
+    
     return RealmModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      iconEmoji: map['iconEmoji'] ?? '📚',
-      color: map['color'] ?? 0xFFFF6B35,
+      iconPath: map['iconPath'] ?? 'assets/logos/default_logo.png',
+      color: colorValue,
       totalLevels: map['totalLevels'] ?? 0,
       totalXP: map['totalXP'] ?? 0,
       levelIds: List<String>.from(map['levelIds'] ?? []),
       estimatedMinutes: map['estimatedMinutes'] ?? 0,
     );
   }
+
+  // Alias for fromMap
+  factory RealmModel.fromJson(Map<String, dynamic> json) => RealmModel.fromMap(json);
 
   Map<String, dynamic> toMap() {
     return {
@@ -43,7 +56,7 @@ class RealmModel {
       'name': name,
       'title': name, // For compatibility with RealmDetailScreen
       'description': description,
-      'iconEmoji': iconEmoji,
+      'iconPath': iconPath,
       'color': color,
       'totalLevels': totalLevels,
       'totalXP': totalXP,
@@ -96,6 +109,9 @@ class LevelModel {
       estimatedMinutes: map['estimatedMinutes'] ?? 0,
     );
   }
+
+  // Alias for fromMap
+  factory LevelModel.fromJson(Map<String, dynamic> json) => LevelModel.fromMap(json);
 
   Map<String, dynamic> toMap() {
     return {

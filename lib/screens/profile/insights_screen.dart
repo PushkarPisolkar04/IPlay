@@ -75,7 +75,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
     List<QueryDocumentSnapshot> progressDocs,
     Map<String, dynamic>? userData,
   ) {
-    final realms = _contentService.getAllRealms();
+    final realms = _contentService.getAllRealmsSync();
     Map<String, int> timeSpentPerRealm = {};
     Map<String, double> accuracyPerRealm = {};
     Map<String, int> xpPerRealm = {};
@@ -318,7 +318,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   Widget _buildOverviewSection() {
     final totalXP = _insightsData['totalXP'] ?? 0;
     final overallAccuracy = _insightsData['overallAccuracy'] ?? 0.0;
-    final realms = _contentService.getAllRealms();
+    final realms = _contentService.getAllRealmsSync();
     final xpPerRealm = _insightsData['xpPerRealm'] as Map<String, int>? ?? {};
     final realmsStarted = xpPerRealm.values.where((xp) => xp > 0).length;
     
@@ -526,7 +526,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
   
   Widget _buildTimeSpentSection() {
-    final realms = _contentService.getAllRealms();
+    final realms = _contentService.getAllRealmsSync();
     final timeSpentPerRealm = _insightsData['timeSpentPerRealm'] as Map<String, int>? ?? {};
     
     // Filter realms with time spent
@@ -594,10 +594,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
-                          child: Text(
-                            realm.iconEmoji,
-                            style: const TextStyle(fontSize: 20),
-                          ),
+                          child: Image.asset(realm.iconPath, width: 20, height: 20, errorBuilder: (context, error, stackTrace) { return const Icon(Icons.school, size: 20); }),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -637,7 +634,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
   }
   
   Widget _buildAccuracySection() {
-    final realms = _contentService.getAllRealms();
+    final realms = _contentService.getAllRealmsSync();
     final accuracyPerRealm = _insightsData['accuracyPerRealm'] as Map<String, double>? ?? {};
     
     // Filter realms with accuracy data
@@ -704,10 +701,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
-                          child: Text(
-                            realm.iconEmoji,
-                            style: const TextStyle(fontSize: 20),
-                          ),
+                          child: Image.asset(realm.iconPath, width: 20, height: 20, errorBuilder: (context, error, stackTrace) { return const Icon(Icons.school, size: 20); }),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -1170,3 +1164,4 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 }
+

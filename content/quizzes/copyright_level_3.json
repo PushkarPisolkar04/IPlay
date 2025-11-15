@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_3",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T18:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_3_q1",
+      "question": "What are 'economic rights' in copyright law?",
+      "options": [
+        "Rights to control moral use of work",
+        "Rights that allow creators to earn money from their work",
+        "Rights to prevent criticism of work",
+        "Rights to government support"
+      ],
+      "correctIndex": 1,
+      "explanation": "Economic rights allow creators to financially benefit from their creations through reproduction, distribution, and adaptation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q2",
+      "question": "Which of the following is NOT an economic right?",
+      "options": [
+        "Right to reproduce",
+        "Right to distribute copies",
+        "Right to receive credit as author",
+        "Right to make adaptations"
+      ],
+      "correctIndex": 2,
+      "explanation": "Receiving credit is part of moral rights, not economic rights.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q3",
+      "question": "The 'bundle of rights' in copyright refers to:",
+      "options": [
+        "Multiple types of intellectual property",
+        "A collection of individual exclusive rights granted to the creator",
+        "Moral duties owed by the author",
+        "Government licenses for creators"
+      ],
+      "correctIndex": 1,
+      "explanation": "The bundle of rights includes reproduction, distribution, adaptation, performance, and display rights.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q4",
+      "question": "Which of the following actions involves the 'Right to Reproduce'?",
+      "options": [
+        "Translating a book",
+        "Printing and selling extra copies of a book",
+        "Performing a play in public",
+        "Displaying a painting in a gallery"
+      ],
+      "correctIndex": 1,
+      "explanation": "Reproduction includes making copies of a copyrighted work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q5",
+      "question": "The 'Right to Distribute' allows the creator to:",
+      "options": [
+        "Control how copies of their work are sold or shared",
+        "Prevent others from mentioning the work",
+        "Change the format of the work",
+        "Translate the work"
+      ],
+      "correctIndex": 0,
+      "explanation": "Distribution rights govern how copies of a work are made available to the public.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q6",
+      "question": "The 'Right to Create Derivatives' means the creator can:",
+      "options": [
+        "Allow adaptations or modifications of the original work",
+        "Ban the sale of their work",
+        "Destroy copies of their work",
+        "Force others to co-author"
+      ],
+      "correctIndex": 0,
+      "explanation": "Derivative works include translations, remakes, or modified versions of an original creation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q7",
+      "question": "Which right is exercised when a movie is adapted from a book?",
+      "options": [
+        "Right to distribute",
+        "Right to perform",
+        "Right to make derivative works",
+        "Right to copy"
+      ],
+      "correctIndex": 2,
+      "explanation": "Adapting a book into a movie uses the derivative work right.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q8",
+      "question": "Performing a song in a concert hall involves which right?",
+      "options": [
+        "Right to reproduce",
+        "Right to publicly perform",
+        "Right to distribute",
+        "Right to display"
+      ],
+      "correctIndex": 1,
+      "explanation": "Performing a song before an audience uses the right of public performance.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q9",
+      "question": "Displaying a painting in an art gallery involves the exercise of:",
+      "options": [
+        "Right to perform",
+        "Right to display",
+        "Right to adapt",
+        "Right to distribute"
+      ],
+      "correctIndex": 1,
+      "explanation": "The right to publicly display allows creators to show their work to the public.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q10",
+      "question": "Who primarily benefits from economic rights?",
+      "options": [
+        "Government",
+        "Society at large",
+        "The creator or copyright owner",
+        "Publishers only"
+      ],
+      "correctIndex": 2,
+      "explanation": "Economic rights belong to the creator or copyright holder, enabling them to profit from their work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q11",
+      "question": "Which of these is an example of exercising economic rights?",
+      "options": [
+        "Acknowledging the author in a book",
+        "Selling copies of a novel",
+        "Criticizing a film in a review",
+        "Donating a manuscript to a library"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selling copies is a use of the distribution right.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q12",
+      "question": "Under Indian law, who holds economic rights after the creator’s death?",
+      "options": [
+        "No one",
+        "The government",
+        "Legal heirs or assignees",
+        "The publisher only"
+      ],
+      "correctIndex": 2,
+      "explanation": "Economic rights pass to heirs or those assigned in the creator’s will.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q13",
+      "question": "What does 'exclusive right' mean?",
+      "options": [
+        "Anyone can freely use it",
+        "Only the owner can authorize or prohibit use",
+        "It applies to moral works only",
+        "It cannot be transferred"
+      ],
+      "correctIndex": 1,
+      "explanation": "Exclusive rights mean only the owner can permit or deny use by others.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q14",
+      "question": "When a radio station plays a song publicly, whose right is being used?",
+      "options": [
+        "Right to distribute",
+        "Right to publicly perform",
+        "Right to reproduce",
+        "Right to display"
+      ],
+      "correctIndex": 1,
+      "explanation": "Broadcasting music invokes the public performance right.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q15",
+      "question": "Economic rights are generally valid for how long after the creator’s death (for literary works)?",
+      "options": [
+        "25 years",
+        "50 years",
+        "60 years",
+        "100 years"
+      ],
+      "correctIndex": 2,
+      "explanation": "In India, economic rights last for 60 years from the beginning of the year following the creator’s death.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q16",
+      "question": "Which right did J.K. Rowling exercise by licensing Harry Potter merchandise?",
+      "options": [
+        "Right to distribute",
+        "Right to make derivative works",
+        "Right to publicly perform",
+        "Right to reproduce"
+      ],
+      "correctIndex": 1,
+      "explanation": "Merchandise like toys and films are derivative works based on her original literary creation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q17",
+      "question": "Which right is infringed if someone copies and sells CDs of a film without permission?",
+      "options": [
+        "Right to reproduce and distribute",
+        "Right to adapt",
+        "Right to publicly perform",
+        "Right to display"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copying and selling unauthorized CDs violates reproduction and distribution rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q18",
+      "question": "Creating an audiobook version of a novel requires which right?",
+      "options": [
+        "Right to publicly perform",
+        "Right to make a derivative work",
+        "Right to reproduce",
+        "Right to display"
+      ],
+      "correctIndex": 1,
+      "explanation": "An audiobook is a derivative adaptation of the original literary work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q19",
+      "question": "Allowing a film to be streamed online exercises which right?",
+      "options": [
+        "Right to communicate to the public",
+        "Right to distribute",
+        "Right to reproduce",
+        "Right to adapt"
+      ],
+      "correctIndex": 0,
+      "explanation": "Online streaming uses the right to communicate a work to the public.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q20",
+      "question": "A live stage performance of a copyrighted play uses which right?",
+      "options": [
+        "Right to reproduce",
+        "Right to publicly perform",
+        "Right to distribute",
+        "Right to adapt"
+      ],
+      "correctIndex": 1,
+      "explanation": "Publicly performing a play exercises the right of performance.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q21",
+      "question": "If an artist’s work is exhibited in a public museum, which right applies?",
+      "options": [
+        "Right to display",
+        "Right to perform",
+        "Right to distribute",
+        "Right to reproduce"
+      ],
+      "correctIndex": 0,
+      "explanation": "Public exhibition involves the right to display the work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q22",
+      "question": "In the J.K. Rowling case, which right helped her earn revenue from films?",
+      "options": [
+        "Right to make derivative works",
+        "Right to distribute",
+        "Right to perform",
+        "Right to display"
+      ],
+      "correctIndex": 0,
+      "explanation": "By licensing the Harry Potter films, she used the derivative right.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q23",
+      "question": "Which of the following allows the creator to control how their work is commercially used?",
+      "options": [
+        "Economic rights",
+        "Moral rights",
+        "Neighboring rights",
+        "Civil rights"
+      ],
+      "correctIndex": 0,
+      "explanation": "Economic rights are commercial in nature and protect financial exploitation of works.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_3_q24",
+      "question": "Creating a remix of a song without permission violates which right?",
+      "options": [
+        "Right to adapt or create derivative works",
+        "Right to publicly perform",
+        "Right to distribute",
+        "Right to display"
+      ],
+      "correctIndex": 0,
+      "explanation": "A remix alters the original work, violating the adaptation right if done without consent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_3_q25",
+      "question": "Which of the following summarizes economic rights best?",
+      "options": [
+        "They let creators control and profit from uses of their work",
+        "They only give moral recognition",
+        "They belong to everyone",
+        "They apply only to government works"
+      ],
+      "correctIndex": 0,
+      "explanation": "Economic rights are the foundation of the creative economy, ensuring creators are rewarded for their work.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+# GI Mapper Product Images - Placeholder Guide
+
+This directory contains placeholder images for 40 Indian Geographical Indication (GI) products.
+All images should be in PNG format with dimensions of 300x300 pixels for optimal display.
+
+## Required Images (40 total):
+
+### Beverages (6)
+1. darjeeling_tea.png - Tea leaves/cup from Darjeeling hills
+2. assam_tea.png - Strong black tea from Assam
+3. nilgiri_tea.png - Tea from Blue Mountains
+4. coorg_coffee.png - Coffee beans/cup from Coorg
+5. wayanad_coffee.png - Robusta coffee from Wayanad
+6. goa_feni.png - Traditional Goan liquor bottle
+
+### Food Products (12)
+7. basmati_rice.png - Long grain aromatic rice
+8. alphonso_mango.png - Golden yellow mango
+9. nagpur_orange.png - Juicy orange from Nagpur
+10. tirupati_laddu.png - Sacred sweet from Tirupati
+11. bikaneri_bhujia.png - Crispy spicy snack
+12. hyderabadi_haleem.png - Meat and lentil stew
+13. banganapalle_mango.png - Large yellow mango
+14. mahabaleshwar_strawberry.png - Red strawberries
+15. palani_panchamirtham.png - Sacred sweet
+16. agra_petha.png - Translucent sweet
+17. manipur_black_rice.png - Black rice grains
+18. meghalaya_orange.png - Sweet oranges
+
+### Textiles (11)
+19. kanchipuram_silk.png - Traditional silk saree
+20. mysore_silk.png - Royal silk fabric
+21. kashmir_pashmina.png - Pashmina shawl
+22. pochampally_ikat.png - Tie-dye fabric
+23. kullu_shawl.png - Colorful woolen shawl
+24. lucknowi_chikankari.png - White embroidery work
+25. banaras_brocades.png - Gold thread silk
+26. bhavani_jamakkalam.png - Striped floor mat
+27. solapur_chaddar.png - Checkered cotton bedsheet
+28. odisha_ikat.png - Tie-dye textile
+29. chhattisgarh_kosa_silk.png - Golden tussar silk
+
+### Handicrafts (7)
+30. channapatna_toys.png - Colorful wooden toys
+31. kolhapuri_chappal.png - Leather footwear
+32. aranmula_kannadi.png - Metal mirror
+33. jodhpur_handicraft.png - Wooden furniture/craft
+34. thanjavur_veena.png - Traditional musical instrument
+35. jaipur_blue_pottery.png - Blue glazed pottery
+36. madhubani_painting.png - Folk art painting
+
+### Spices (4)
+37. malabar_pepper.png - Black pepper
+38. sikkim_cardamom.png - Large cardamom
+39. mizo_chilli.png - Hot red chilli
+40. uttarakhand_tejpat.png - Bay leaves
+
+## Image Guidelines:
+- Format: PNG with transparent or white background
+- Size: 300x300 pixels (square)
+- Style: Clean, professional product photography or illustrations
+- Quality: High resolution, clear and recognizable
+- Consistency: Similar style across all images
+
+## Temporary Placeholder:
+Until actual images are sourced, the app will use a default placeholder icon.
+Images can be sourced from:
+- Free stock photo sites (Unsplash, Pexels)
+- Government GI registry websites
+- Creative Commons licensed images
+- Custom illustrations
+
+## Note:
+All images must be properly licensed for use in the application.
+Prefer images that clearly represent the product and its unique characteristics.

@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_4",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_4_q1",
+      "question": "Which section of the Indian Copyright Act provides for Moral Rights?",
+      "options": [
+        "Section 14",
+        "Section 52",
+        "Section 57",
+        "Section 65"
+      ],
+      "correctIndex": 2,
+      "explanation": "Section 57 of the Indian Copyright Act grants authors moral rights — the right of paternity and the right of integrity.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q2",
+      "question": "What are moral rights primarily concerned with?",
+      "options": [
+        "The author's economic gain",
+        "Protecting the author’s personal connection with their work",
+        "Transfer of ownership",
+        "Reproduction of the work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights safeguard the author's personal and reputational bond with their work, not financial benefits.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q3",
+      "question": "The right to be credited as the author of a work is known as what?",
+      "options": [
+        "Right of Attribution or Paternity",
+        "Right of Reproduction",
+        "Right of Integrity",
+        "Right of Distribution"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Right of Paternity, also known as the Right of Attribution, ensures the author is credited for their work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q4",
+      "question": "What does the Right of Integrity allow an author to do?",
+      "options": [
+        "Prevent unauthorized distortion or mutilation of their work",
+        "Transfer ownership of their work",
+        "Reproduce copies of their work",
+        "Sell their work commercially"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Right of Integrity gives an author the ability to object to any distortion, mutilation, or modification that harms their honor or reputation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q5",
+      "question": "Do moral rights remain with the author after selling the work?",
+      "options": [
+        "Yes, always",
+        "No, they transfer with ownership",
+        "Only for literary works",
+        "Only if stated in contract"
+      ],
+      "correctIndex": 0,
+      "explanation": "Moral rights stay with the author even after selling or assigning economic rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q6",
+      "question": "Which landmark Indian case emphasized the importance of moral rights?",
+      "options": [
+        "R.G. Anand v. Delux Films",
+        "Amar Nath Sehgal v. Union of India",
+        "Gramophone Co. v. Super Cassettes",
+        "Eastern Book Co. v. D.B. Modak"
+      ],
+      "correctIndex": 1,
+      "explanation": "In Amar Nath Sehgal v. Union of India, the Delhi High Court upheld the artist’s moral rights when his mural was damaged and removed.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q7",
+      "question": "What was the key issue in Amar Nath Sehgal v. Union of India?",
+      "options": [
+        "Unauthorized reproduction",
+        "Distortion and destruction of an artwork",
+        "Non-payment of royalties",
+        "Misuse of trade mark"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case dealt with the destruction of a mural, violating the author’s Right of Integrity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q8",
+      "question": "Can moral rights be waived by contract under Indian law?",
+      "options": [
+        "No, they cannot be waived",
+        "Yes, they can always be waived",
+        "Only with court approval",
+        "Only in publishing contracts"
+      ],
+      "correctIndex": 0,
+      "explanation": "Moral rights are inalienable personal rights; they cannot be waived or assigned away.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_4_q9",
+      "question": "What is the duration of moral rights in India?",
+      "options": [
+        "Lifetime of the author",
+        "Lifetime + 60 years",
+        "Lifetime + 100 years",
+        "Perpetual"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights in India subsist for the author’s lifetime plus 60 years after death, similar to economic rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q10",
+      "question": "If an artist’s painting is altered without permission, which right is violated?",
+      "options": [
+        "Right of Paternity",
+        "Right of Integrity",
+        "Right of Distribution",
+        "Right of Adaptation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Altering or distorting a work without consent violates the Right of Integrity.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q11",
+      "question": "Which of these is NOT a moral right?",
+      "options": [
+        "Right to be identified as the author",
+        "Right to object to mutilation of work",
+        "Right to distribute copies",
+        "Right to prevent distortion"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Right to distribute copies is an economic right, not a moral right.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q12",
+      "question": "What principle underlies moral rights?",
+      "options": [
+        "Economic benefit",
+        "Personal and reputational link between author and work",
+        "Government protection policy",
+        "Ownership transfer rights"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights are based on the deep personal and reputational connection between the author and their creation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q13",
+      "question": "Can a deceased author’s heirs enforce moral rights?",
+      "options": [
+        "No, rights expire upon death",
+        "Yes, heirs can enforce them for 60 years after death",
+        "Only with court approval",
+        "Only for published works"
+      ],
+      "correctIndex": 1,
+      "explanation": "Heirs of a deceased author can enforce moral rights for 60 years following the author’s death.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q14",
+      "question": "If a publisher omits the author’s name from the book cover, which right is violated?",
+      "options": [
+        "Right of Integrity",
+        "Right of Paternity",
+        "Right to Reproduce",
+        "Right to Distribute"
+      ],
+      "correctIndex": 1,
+      "explanation": "Omitting the author’s name violates the Right of Paternity, which ensures proper credit.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q15",
+      "question": "Moral rights focus primarily on:",
+      "options": [
+        "Commercial profit",
+        "Legal ownership",
+        "Author’s honor and reputation",
+        "Market exclusivity"
+      ],
+      "correctIndex": 2,
+      "explanation": "Moral rights protect the author’s honor and reputation linked to their work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q16",
+      "question": "The destruction of Amar Nath Sehgal’s mural violated which right?",
+      "options": [
+        "Right of Paternity",
+        "Right of Integrity",
+        "Right to Reproduce",
+        "Right of Adaptation"
+      ],
+      "correctIndex": 1,
+      "explanation": "The mural’s destruction without consent violated Sehgal’s Right of Integrity.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q17",
+      "question": "Which of these statements about moral rights is TRUE?",
+      "options": [
+        "They can be sold along with economic rights",
+        "They are independent of copyright ownership",
+        "They expire after publication",
+        "They are limited to books only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights exist independently of economic ownership — even if copyright is assigned, moral rights stay with the author.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q18",
+      "question": "Can a moral right be enforced against the government?",
+      "options": [
+        "No, government is immune",
+        "Yes, as seen in Amar Nath Sehgal v. Union of India",
+        "Only for artistic works",
+        "Only in criminal cases"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Amar Nath Sehgal case demonstrated that moral rights can be enforced even against the government.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_4_q19",
+      "question": "If a film credits the wrong person as the author, which right is violated?",
+      "options": [
+        "Right of Attribution",
+        "Right of Reproduction",
+        "Right of Distribution",
+        "Right of Integrity"
+      ],
+      "correctIndex": 0,
+      "explanation": "Incorrect crediting breaches the author’s Right of Attribution (Paternity).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q20",
+      "question": "Moral rights are recognized internationally under which convention?",
+      "options": [
+        "Berne Convention",
+        "Paris Convention",
+        "Geneva Act",
+        "Rome Convention"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Berne Convention (Article 6bis) recognizes authors’ moral rights globally.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_4_q21",
+      "question": "Which type of rights cannot be transferred to another person?",
+      "options": [
+        "Economic rights",
+        "Moral rights",
+        "Neighboring rights",
+        "Licensing rights"
+      ],
+      "correctIndex": 1,
+      "explanation": "Moral rights are personal and cannot be transferred or assigned to others.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q22",
+      "question": "Which of the following best illustrates a violation of moral rights?",
+      "options": [
+        "Copying a book without permission",
+        "Selling copies without royalty payment",
+        "Editing a poem in a way that changes its meaning",
+        "Translating a book with license"
+      ],
+      "correctIndex": 2,
+      "explanation": "Editing or modifying a poem in a harmful way infringes the author’s Right of Integrity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_4_q23",
+      "question": "Why are moral rights called ‘special rights’?",
+      "options": [
+        "Because they are only for famous authors",
+        "Because they protect the author’s personality and reputation",
+        "Because they give extra royalties",
+        "Because they last forever"
+      ],
+      "correctIndex": 1,
+      "explanation": "They are termed ‘special rights’ since they safeguard the personal bond between the creator and their creation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q24",
+      "question": "What happens if someone displays an artwork without naming the artist?",
+      "options": [
+        "No violation occurs",
+        "It violates the Right of Attribution",
+        "It violates the Right of Integrity",
+        "It violates economic rights only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Failing to credit the artist breaches the Right of Attribution.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_4_q25",
+      "question": "What was the court’s message in Amar Nath Sehgal’s case?",
+      "options": [
+        "Economic rights are more important than moral rights",
+        "Moral rights protect artistic dignity and must be respected",
+        "Government owns all murals",
+        "Only moral rights of writers are recognized"
+      ],
+      "correctIndex": 1,
+      "explanation": "The court affirmed that an artist’s moral rights, particularly integrity and honor, must be protected regardless of ownership.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

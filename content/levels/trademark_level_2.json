@@ -1,0 +1,40 @@
+{
+  "id": "trademark_level_2",
+  "realmId": "realm_trademark",
+  "levelNumber": 2,
+  "name": "The Spectrum of Distinctiveness (Strong vs. Weak)",
+  "description": "Not all trademarks are created equal. Learn the #1 factor that determines a mark's strength.",
+  "summary": "This is the most important rule in trademarks. You'll learn the 'Spectrum of Distinctiveness' and understand why 'Kodak' is a legally strong mark while 'Best Shoes' is impossibly weak.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=0VvG32HHATc",
+  "videoDuration": 756,
+  
+  "content": "## The Spectrum of Distinctiveness\n\nThe most important concept in trademark law is the 'Spectrum of Distinctiveness'. A trademark's legal power—its 'strength'—depends on where it falls on this spectrum.\n\nThis spectrum is divided into 5 categories, from strongest to weakest.\n\n### 1. Fanciful Marks (Strongest)\nThese are *invented words* that have no meaning other than as a brand. Because they are so unique, they get the strongest legal protection.\n- **Examples:** 'Kodak' (for cameras), 'Xerox' (for copiers), 'Exxon' (for oil). \n- **Pro:** Easiest to register and protect.\n- **Con:** Requires heavy advertising to build meaning.\n\n### 2. Arbitrary Marks (Very Strong)\nThese are *real words* from the dictionary, but they have **no logical connection** to the product they sell. \n- **Examples:** 'Apple' (for computers), 'Amazon' (for online shopping), 'Shell' (for gasoline). \n- **Pro:** Very strong legal protection. \n- **Con:** 'Apple' has nothing to do with computers, so its meaning had to be built.\n\n### 3. Suggestive Marks (Strong)\nThese are words that *hint* at a quality or feature of the product, but they require imagination or a 'mental leap' to understand the connection.\n- **Examples:** 'Netflix' (suggests 'flicks' on the 'net'), 'Microsoft' (suggests 'software' for 'microcomputers'), 'Airbus' (suggests a bus for the air).\n- **Pro:** A marketing favorite! They are distinctive enough to be protected but also help tell the customer what the product does.\n\n### 4. Descriptive Marks (Weak)\nThese marks *directly describe* the product, its features, its quality, or its geographic location. \n- **Examples:** 'Cold and Creamy' (for ice cream), 'Best Buy' (for electronics), 'DelhiSweetShop' (for a shop in Delhi).\n- **Rule:** Descriptive marks are considered *weak* and **cannot be registered**... *unless* they achieve **'Secondary Meaning'**. This means through years of use and advertising, the public starts to associate that phrase *with a single brand* (e.g., 'Best Buy' is now a brand, not just a description).\n\n### 5. Generic Marks (No Protection)\nThese are the common, everyday names for the product itself. They can *never* be registered as trademarks.\n- **Examples:** 'Shoe' (for selling shoes), 'App' (for a mobile app), 'Water' (for selling bottled water).\n- **Rule:** If you try to trademark 'Shoe', you fail. No one company can own the word that all its competitors need to use to describe their product.\n\n--- \n\n### 💡 Level 2 Case Study: 'Apple' vs. 'Best Computers'\n\n- 'Apple' is an **Arbitrary** mark. It's a real word, but has no connection to computers. It is a very **strong** mark. \n- 'Best Computers' is a **Descriptive** mark. It just describes the (supposed) quality of the product. It is a very **weak** mark and would be refused registration unless it gained massive 'Secondary Meaning'. \n- 'Computer' is a **Generic** mark. It cannot be registered for selling computers. Ever.",
+  
+  "keyPoints": [
+    "A trademark's strength is based on its 'distinctiveness'.",
+    "'Fanciful' (invented words like Kodak) and 'Arbitrary' (unrelated words like Apple) are the strongest.",
+    "'Suggestive' marks (like Netflix) hint at the product and are also strong.",
+    "'Descriptive' marks (like 'Best Buy') are weak and can only be registered if they prove 'Secondary Meaning'.",
+    "'Generic' marks (the common name, like 'Shoe') can never be protected."
+  ],
+  
+  "learningObjectives": [
+    "List the 5 categories on the Spectrum of Distinctiveness.",
+    "Define and provide an example of a Fanciful mark.",
+    "Define and provide an example of an Arbitrary mark.",
+    "Explain the difference between a Suggestive mark and a Descriptive mark.",
+    "Define 'Secondary Meaning' and why it's crucial for Descriptive marks."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:40:00Z"
+}

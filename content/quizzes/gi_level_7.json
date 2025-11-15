@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_7",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_7_q1",
+      "question": "Which TRIPS article covers GI protection?",
+      "options": [
+        "Article 15",
+        "Article 22 and 23",
+        "Article 30",
+        "Article 40"
+      ],
+      "correctIndex": 1,
+      "explanation": "TRIPS Articles 22 and 23 provide the framework for international GI protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q2",
+      "question": "What does TRIPS stand for?",
+      "options": [
+        "Trade Rights in Products and Services",
+        "Trade-Related Aspects of Intellectual Property Rights",
+        "Traditional Rights in Production Systems",
+        "Technical Registration of IP Products"
+      ],
+      "correctIndex": 1,
+      "explanation": "TRIPS stands for Trade-Related Aspects of Intellectual Property Rights.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q3",
+      "question": "Which agreement exists between India and EU for GI?",
+      "options": [
+        "Trade agreement only",
+        "India-EU bilateral agreement for mutual GI recognition",
+        "Export agreement",
+        "Tax treaty"
+      ],
+      "correctIndex": 1,
+      "explanation": "India and EU have a bilateral agreement for mutual recognition and protection of GIs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q4",
+      "question": "What is the Lisbon System?",
+      "options": [
+        "A tax system",
+        "An international system for registration of appellations of origin",
+        "A trade agreement",
+        "A quality standard"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Lisbon System provides international registration and protection for appellations of origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q5",
+      "question": "What is 'genericization' in GI context?",
+      "options": [
+        "Making products cheaper",
+        "When a GI name becomes a common term for the product type",
+        "Increasing production",
+        "Changing the recipe"
+      ],
+      "correctIndex": 1,
+      "explanation": "Genericization occurs when a GI name becomes a common term (e.g., 'cheddar' for cheese type).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q6",
+      "question": "What challenge do prior trademarks pose to GI?",
+      "options": [
+        "They increase costs",
+        "They can block GI registration if registered before the GI",
+        "They reduce quality",
+        "They restrict exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior trademarks registered before a GI can create conflicts and potentially block GI registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q7",
+      "question": "What was the Mysore Sandal vs. French trademark case about?",
+      "options": [
+        "Price dispute",
+        "Conflict between Indian GI and a French trademark",
+        "Export restrictions",
+        "Quality issues"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case involved a conflict between India's Mysore Sandal GI and a pre-existing French trademark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q8",
+      "question": "How does TRIPS Article 22 protect GIs?",
+      "options": [
+        "It sets prices",
+        "It prevents misleading use and unfair competition",
+        "It restricts production",
+        "It collects taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article 22 requires members to prevent misleading use of GIs and unfair competition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q9",
+      "question": "What additional protection does TRIPS Article 23 provide?",
+      "options": [
+        "Protection for all products",
+        "Enhanced protection specifically for wines and spirits",
+        "Protection for services",
+        "Protection for trademarks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Article 23 provides enhanced protection specifically for geographical indications for wines and spirits.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q10",
+      "question": "Why is international GI protection challenging?",
+      "options": [
+        "It's too expensive",
+        "Different countries have different laws and recognition systems",
+        "It's not needed",
+        "It's too simple"
+      ],
+      "correctIndex": 1,
+      "explanation": "International protection is challenging due to varying laws, recognition systems, and legal frameworks across countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q11",
+      "question": "What is the benefit of India-EU bilateral agreement?",
+      "options": [
+        "Lower taxes",
+        "Mutual recognition and protection of each other's GIs",
+        "Free trade",
+        "Reduced production costs"
+      ],
+      "correctIndex": 1,
+      "explanation": "The agreement provides mutual recognition and protection of Indian and European GIs in each other's markets.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q12",
+      "question": "Can a GI be protected in a country where it has become generic?",
+      "options": [
+        "Yes, always",
+        "No, genericization prevents GI protection",
+        "Only with special permission",
+        "Only if expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Once a term becomes generic in a country, it typically cannot be protected as a GI there.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q13",
+      "question": "What is an example of a genericized GI?",
+      "options": [
+        "Darjeeling Tea",
+        "Cheddar (originally from Cheddar, England)",
+        "Champagne",
+        "Basmati Rice"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Cheddar' has become generic in many countries, referring to a cheese type rather than origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q14",
+      "question": "How can Indian GIs be protected internationally?",
+      "options": [
+        "Automatically",
+        "Through bilateral agreements, TRIPS compliance, and registration in foreign countries",
+        "They cannot be protected",
+        "Only through exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "International protection requires bilateral agreements, TRIPS compliance, and registration in target countries.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q15",
+      "question": "What was the issue in the Mysore Sandal case?",
+      "options": [
+        "Quality dispute",
+        "A French company had registered 'Mysore Sandal' as a trademark before India's GI",
+        "Price fixing",
+        "Export ban"
+      ],
+      "correctIndex": 1,
+      "explanation": "A French company had registered 'Mysore Sandal' as a trademark before India could protect it as a GI.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q16",
+      "question": "What is the Lisbon Agreement for?",
+      "options": [
+        "Trade tariffs",
+        "International registration and protection of appellations of origin",
+        "Tax treaties",
+        "Export quotas"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Lisbon Agreement provides a system for international registration and protection of appellations of origin.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q17",
+      "question": "Is India a member of the Lisbon System?",
+      "options": [
+        "Yes",
+        "No, but it's considering joining",
+        "Yes, since 1999",
+        "It's banned from joining"
+      ],
+      "correctIndex": 1,
+      "explanation": "India is not currently a member of the Lisbon System but has been considering joining.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q18",
+      "question": "What happens when a GI conflicts with a prior trademark?",
+      "options": [
+        "GI always wins",
+        "Trademark usually has priority if registered first",
+        "Both are cancelled",
+        "Government decides randomly"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generally, a trademark registered before a GI claim has priority rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q19",
+      "question": "Why is Champagne well-protected internationally?",
+      "options": [
+        "It's expensive",
+        "Strong enforcement and TRIPS Article 23 enhanced protection for wines",
+        "It's popular",
+        "French law only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Champagne benefits from strong enforcement and TRIPS Article 23's enhanced protection for wines and spirits.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q20",
+      "question": "What is the main challenge of genericization?",
+      "options": [
+        "Higher costs",
+        "Loss of exclusive rights to use the geographical name",
+        "Reduced quality",
+        "Export restrictions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Genericization results in loss of exclusive rights as the name becomes a common term for the product type.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q21",
+      "question": "How does TRIPS help Indian GIs?",
+      "options": [
+        "It provides automatic global protection",
+        "It sets minimum standards that WTO members must follow",
+        "It eliminates all conflicts",
+        "It provides free registration"
+      ],
+      "correctIndex": 1,
+      "explanation": "TRIPS sets minimum protection standards that all WTO member countries must implement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q22",
+      "question": "What must India do to protect its GIs in the EU?",
+      "options": [
+        "Nothing, automatic protection",
+        "Register them under EU's GI system",
+        "Pay annual fees only",
+        "Export products only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Indian GIs must be registered under the EU's GI protection system for protection in EU markets.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q23",
+      "question": "What is an 'appellation of origin'?",
+      "options": [
+        "A trademark",
+        "A GI where quality is exclusively due to geographical environment",
+        "A patent",
+        "A copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "An appellation of origin is a special type of GI where quality/characteristics are exclusively due to geographical environment.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_7_q24",
+      "question": "Why do bilateral agreements matter for GI?",
+      "options": [
+        "They reduce taxes",
+        "They provide mutual recognition and enforcement mechanisms",
+        "They increase production",
+        "They set prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bilateral agreements provide mutual recognition and create enforcement mechanisms in partner countries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_7_q25",
+      "question": "What lesson does the Mysore Sandal case teach?",
+      "options": [
+        "GIs are not important",
+        "Early registration and international protection are crucial",
+        "Trademarks don't matter",
+        "Quality is not important"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case highlights the importance of early GI registration and securing international protection.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

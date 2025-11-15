@@ -1,0 +1,39 @@
+{
+  "id": "trademark_level_8",
+  "realmId": "realm_trademark",
+  "levelNumber": 8,
+  "name": "Non-Traditional Marks (Sound, Color, Shape)",
+  "description": "A trademark isn't just a word. It can be a sound, a color, or even a smell. Explore 'non-traditional' marks.",
+  "summary": "Move beyond logos. This level explores the fascinating world of non-traditional trademarks, including how companies have successfully trademarked sounds (Intel), colors (Cadbury), and product shapes (Coca-Cola).",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=YtglRDbTNd4",
+  "videoDuration": 591,
+  
+  "content": "## Non-Traditional Marks (Beyond Words & Logos)\n\nIn the first level, we said a trademark is *any sign* that can be a 'source identifier'. While this is usually a word or logo, modern brands have pushed the law to protect some very unusual assets.\n\n### 1. Sound Marks\n\nA sound mark is a short, distinctive jingle or sound that the public instantly associates with a brand. \n\n* **How to get one:** You must prove that when consumers hear the sound, they immediately think of your brand. It must be distinctive and not just a generic noise.\n* **Famous Examples:**\n    * The **Intel 'bong'** (the famous 'da-da-da-dum' sound). \n    * The **ICICI Bank** jingle.\n    * The **Yahoo!** yodel.\n    * The 'lion's roar' for **MGM** movie studios.\n\n### 2. Color Marks\n\nThis is one of the hardest marks to get. You are trying to claim a *monopoly* on a single color for a specific product. \n\n* **The Rule:** You can *never* trademark a color that is 'functional' (e.g., 'safety orange' for a construction vest). To get a color mark, you must prove that the public, through years of advertising, has come to associate that *specific shade* with *your brand* alone. This is an extreme level of 'Secondary Meaning'.\n* **Famous Examples:**\n    * **Cadbury's Purple** (Pantone 2685C) for chocolate. \n    * **Tiffany Blue** (Pantone 1837) for jewelry boxes.\n    * **Owens-Corning's Pink** for fiberglass insulation.\n\n### 3. Shape Marks (Trade Dress)\n\nThis is the 3D shape of a product or its packaging. It is often called 'Trade Dress'.\n\n* **The Rule:** As we learned in Level 3, the shape **cannot be functional**. A new bottle shape that is 'easier to grip' is a functional invention for a patent, not a trademark. The shape must be arbitrary or distinctive *as a brand identifier*.\n* **Famous Examples:**\n    * The **Coca-Cola bottle**. The iconic contour shape has no functional purpose; it is purely a brand identifier. \n    * The **Toblerone** triangular chocolate bar shape.\n    * The **L'eggs** pantyhose 'egg' container.\n\n### 4. Smell Marks (The Rarest)\n\nThis is the most difficult mark to get, as it's hard to define and prove. The smell cannot be the *product* itself (like perfume). It has to be an arbitrary scent added *to* a product.\n* **Famous Example:** The 'scent of plumeria blossoms' trademarked for sewing thread.",
+  
+  "keyPoints": [
+    "Trademarks can be 'non-traditional' signs like sounds, colors, and shapes.",
+    "Sound marks, like the Intel 'bong' or MGM 'lion's roar', are registrable if they are distinctive source identifiers.",
+    "Color marks are very hard to register and require proving 'Secondary Meaning' (e.g., Cadbury purple).",
+    "Shape marks (or 'Trade Dress') protect a product's non-functional shape, like the Coca-Cola bottle.",
+    "Smell marks are the rarest but can be registered if they are arbitrary (like a scent on thread)."
+  ],
+  
+  "learningObjectives": [
+    "Define 'non-traditional trademark'.",
+    "Provide a registered example of a sound mark and a color mark.",
+    "Explain why it is very difficult to register a color mark.",
+    "Define 'Trade Dress' and differentiate a non-functional (trademarkable) shape from a functional (patentable) one."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:10:00Z"
+}

@@ -115,7 +115,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
 
     try {
       final query = await FirebaseFirestore.instance
@@ -129,18 +131,22 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('School not found')),
         );
-        setState(() => _isLoading = false);
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
         return;
       }
 
       final schoolDoc = query.docs.first;
       final schoolData = schoolDoc.data();
       
-      setState(() {
-        _selectedSchoolId = schoolDoc.id;
-        _selectedSchoolName = schoolData['name'];
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _selectedSchoolId = schoolDoc.id;
+          _selectedSchoolName = schoolData['name'];
+          _isLoading = false;
+        });
+      }
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -154,7 +160,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
       );
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -169,7 +177,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
 
     try {
       final user = FirebaseAuth.instance.currentUser;
@@ -319,7 +329,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         ),
       );
       
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

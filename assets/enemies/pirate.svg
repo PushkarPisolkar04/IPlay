@@ -1,0 +1,49 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pirate Enemy - Fast Copyright Violator -->
+  <defs>
+    <linearGradient id="pirateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9575CD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5E35B1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hatGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#512DA8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#311B92;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Body -->
+  <ellipse cx="16" cy="20" rx="7" ry="9" fill="url(#pirateGrad)" stroke="#311B92" stroke-width="1.5"/>
+  
+  <!-- Head -->
+  <circle cx="16" cy="10" r="5.5" fill="#FFCCBC" stroke="#BF360C" stroke-width="1"/>
+  
+  <!-- Pirate hat -->
+  <path d="M 10 8 L 16 4 L 22 8 L 20 10 L 12 10 Z" fill="url(#hatGrad)" stroke="#1A237E" stroke-width="1"/>
+  <circle cx="16" cy="7" r="1.5" fill="#FFD54F"/>
+  
+  <!-- Eye patch -->
+  <ellipse cx="14" cy="10" rx="2.5" ry="2" fill="#212121"/>
+  <line x1="12" y1="9" x2="18" y2="9" stroke="#212121" stroke-width="1"/>
+  
+  <!-- Good eye -->
+  <circle cx="18" cy="10" r="1.2" fill="#212121"/>
+  
+  <!-- Beard -->
+  <path d="M 13 13 Q 16 15 19 13" fill="none" stroke="#424242" stroke-width="1.5" stroke-linecap="round"/>
+  
+  <!-- Arms with stolen goods -->
+  <line x1="11" y1="18" x2="6" y2="20" stroke="#FFCCBC" stroke-width="2" stroke-linecap="round"/>
+  <line x1="21" y1="18" x2="26" y2="20" stroke="#FFCCBC" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Stolen copyright scroll -->
+  <rect x="22" y="18" width="6" height="8" rx="1" fill="#FFF9C4" stroke="#F57F17" stroke-width="1"/>
+  <text x="23.5" y="24" font-family="Arial, sans-serif" font-size="5" fill="#E65100">©</text>
+  
+  <!-- Legs (running pose) -->
+  <line x1="14" y1="28" x2="12" y2="31" stroke="#7E57C2" stroke-width="2" stroke-linecap="round"/>
+  <line x1="18" y1="28" x2="20" y2="31" stroke="#7E57C2" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Speed lines -->
+  <line x1="4" y1="16" x2="8" y2="16" stroke="#9575CD" stroke-width="1" opacity="0.5"/>
+  <line x1="3" y1="20" x2="7" y2="20" stroke="#9575CD" stroke-width="1" opacity="0.5"/>
+</svg>

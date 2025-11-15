@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_2",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_2_q1",
+      "question": "Which Act governs GI protection in India?",
+      "options": [
+        "Copyright Act, 1957",
+        "GI Act, 1999",
+        "Trade Marks Act, 1999",
+        "Patent Act, 1970"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Geographical Indications of Goods (Registration and Protection) Act, 1999 governs GI in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q2",
+      "question": "Where is the GI Registry located in India?",
+      "options": [
+        "New Delhi",
+        "Mumbai",
+        "Chennai",
+        "Kolkata"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Geographical Indications Registry is located in Chennai, Tamil Nadu.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q3",
+      "question": "Which international agreement made India create the GI Act?",
+      "options": [
+        "Paris Convention",
+        "TRIPS Agreement",
+        "Berne Convention",
+        "Madrid Protocol"
+      ],
+      "correctIndex": 1,
+      "explanation": "India enacted the GI Act, 1999 to comply with the TRIPS Agreement obligations.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q4",
+      "question": "Who can apply for GI registration in India?",
+      "options": [
+        "Any individual",
+        "Any company",
+        "Associations of producers or authorized organizations",
+        "Only government departments"
+      ],
+      "correctIndex": 2,
+      "explanation": "Only associations of producers, organizations, or authorities representing producers can apply for GI.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q5",
+      "question": "What is the term of GI registration in India?",
+      "options": [
+        "5 years",
+        "10 years, renewable",
+        "20 years",
+        "Perpetual (no expiry)"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI registration is valid for 10 years and can be renewed indefinitely.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q6",
+      "question": "What type of penalties exist for GI violations in India?",
+      "options": [
+        "Only civil penalties",
+        "Only warnings",
+        "Both civil and criminal penalties",
+        "No penalties"
+      ],
+      "correctIndex": 2,
+      "explanation": "The GI Act provides for both civil remedies (injunctions, damages) and criminal penalties.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q7",
+      "question": "Which was the first GI registered in India?",
+      "options": [
+        "Basmati Rice",
+        "Darjeeling Tea",
+        "Alphonso Mango",
+        "Kanchipuram Silk"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea was the first Geographical Indication registered in India in 2003.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q8",
+      "question": "Can an individual farmer apply for GI registration?",
+      "options": [
+        "Yes, any farmer can apply",
+        "No, only associations or organizations can apply",
+        "Only large farmers can apply",
+        "Only government can apply"
+      ],
+      "correctIndex": 1,
+      "explanation": "Individual farmers cannot apply; only associations, organizations, or authorities can apply for GI.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q9",
+      "question": "What does TRIPS stand for?",
+      "options": [
+        "Trade Rights in Products and Services",
+        "Trade-Related Aspects of Intellectual Property Rights",
+        "Traditional Rights in Production Systems",
+        "Technical Registration of IP Products"
+      ],
+      "correctIndex": 1,
+      "explanation": "TRIPS stands for Trade-Related Aspects of Intellectual Property Rights.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q10",
+      "question": "What is the role of the GI Registry?",
+      "options": [
+        "To manufacture GI products",
+        "To examine and register GI applications",
+        "To sell GI products",
+        "To export GI products"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GI Registry examines applications and maintains the register of Geographical Indications.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q11",
+      "question": "What happens after GI registration expires?",
+      "options": [
+        "The GI is lost forever",
+        "It can be renewed for another 10 years",
+        "It becomes public domain",
+        "It transfers to government"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI registration can be renewed indefinitely for successive 10-year periods.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q12",
+      "question": "Which section of the GI Act deals with registration?",
+      "options": [
+        "Section 1",
+        "Section 9",
+        "Section 11",
+        "Section 25"
+      ],
+      "correctIndex": 2,
+      "explanation": "Section 11 of the GI Act deals with the application for registration of geographical indications.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q13",
+      "question": "What is the minimum imprisonment for GI infringement in India?",
+      "options": [
+        "3 months",
+        "6 months",
+        "1 year",
+        "2 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GI Act provides for imprisonment of not less than 6 months for infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q14",
+      "question": "Can a GI registration be cancelled?",
+      "options": [
+        "No, never",
+        "Yes, if it was wrongly registered or conditions are not met",
+        "Only by government order",
+        "Only after 50 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI registration can be cancelled if it was wrongly registered or if conditions are not maintained.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q15",
+      "question": "What must be included in a GI application?",
+      "options": [
+        "Only the product name",
+        "Product name, geographical area, qualities, and proof of origin",
+        "Only the producer names",
+        "Only the price"
+      ],
+      "correctIndex": 1,
+      "explanation": "A GI application must include the product name, geographical area, unique qualities, and proof of origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q16",
+      "question": "Who enforces GI rights in India?",
+      "options": [
+        "Only police",
+        "Registered proprietors and authorized users can take legal action",
+        "Only government",
+        "Only courts"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registered proprietors and authorized users can take civil and criminal action against infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q17",
+      "question": "What is the purpose of the GI Act, 1999?",
+      "options": [
+        "To promote exports only",
+        "To provide legal protection to geographical indications in India",
+        "To increase taxes",
+        "To restrict production"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GI Act provides legal protection and registration framework for geographical indications in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q18",
+      "question": "Can a GI be assigned or transmitted?",
+      "options": [
+        "Yes, like a trademark",
+        "No, GI cannot be assigned or transmitted",
+        "Only to government",
+        "Only within the same region"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unlike trademarks, GI cannot be assigned, transmitted, or licensed as it's a collective right.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q19",
+      "question": "What year was the GI Act enacted in India?",
+      "options": [
+        "1995",
+        "1999",
+        "2000",
+        "2003"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Geographical Indications of Goods Act was enacted in 1999.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q20",
+      "question": "What is the role of 'authorized users' in GI?",
+      "options": [
+        "They can sell the GI to others",
+        "They are producers authorized to use the GI tag",
+        "They inspect quality",
+        "They collect fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized users are producers from the region who are authorized to use the registered GI tag.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q21",
+      "question": "Which body administers the GI Registry?",
+      "options": [
+        "Ministry of Agriculture",
+        "Controller General of Patents, Designs and Trade Marks",
+        "Ministry of Commerce",
+        "Supreme Court"
+      ],
+      "correctIndex": 1,
+      "explanation": "The GI Registry is administered by the Controller General of Patents, Designs and Trade Marks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q22",
+      "question": "What is the maximum fine for GI infringement?",
+      "options": [
+        "₹50,000",
+        "₹1 lakh",
+        "₹2 lakhs",
+        "No maximum limit"
+      ],
+      "correctIndex": 2,
+      "explanation": "The GI Act provides for a fine which may extend to ₹2 lakhs for infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q23",
+      "question": "When did Darjeeling Tea get GI registration?",
+      "options": [
+        "1999",
+        "2000",
+        "2003",
+        "2005"
+      ],
+      "correctIndex": 2,
+      "explanation": "Darjeeling Tea was registered as a GI in 2003, becoming India's first registered GI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_2_q24",
+      "question": "What must producers prove to use a GI tag?",
+      "options": [
+        "They have the highest sales",
+        "They are from the designated geographical area and meet quality standards",
+        "They pay the highest fees",
+        "They export the most"
+      ],
+      "correctIndex": 1,
+      "explanation": "Producers must be from the designated area and meet the specified quality standards to use the GI tag.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_2_q25",
+      "question": "Can a GI be registered for a product from multiple regions?",
+      "options": [
+        "No, only one specific region",
+        "Yes, if the product has similar qualities from multiple defined regions",
+        "Only if the regions are adjacent",
+        "Only with government approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "A GI can cover multiple regions if the product has similar qualities linked to those geographical areas.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

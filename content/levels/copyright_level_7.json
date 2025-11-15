@@ -1,0 +1,39 @@
+{
+  "id": "copyright_level_7",
+  "realmId": "realm_copyright",
+  "levelNumber": 7,
+  "name": "Infringement vs. Plagiarism (Legal vs. Academic)",
+  "description": "Using work without permission isn't the same as using it without credit. Learn the vital difference.",
+  "summary": "This level tackles a common point of confusion. You'll learn the difference between Copyright Infringement (a legal violation) and Plagiarism (an academic/ethical violation).",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=ctzGHLE6axo",
+  "videoDuration": 312,
+  
+  "content": "## Infringement vs. Plagiarism (Legal vs. Academic)\n\nThis is one of the most important concepts for a student. People often use 'plagiarism' and 'infringement' to mean the same thing, but they are very different. \n\nOne is a **legal** crime, the other is an **ethical** one.\n\n### What is Copyright Infringement?\n\nThis is a **LEGAL** violation. \n\nInfringement happens when you use someone's copyrighted work *without their permission* in one of the ways reserved for them (copying, distributing, adapting, etc.) AND your use is *not* covered by an exception like 'Fair Dealing'.\n\n* **The Problem:** Using without **permission**.\n* **The Consequence:** A lawsuit, fines, and legal action.\n* **The Key Idea:** It's about *market harm* and *control*.\n\n### What is Plagiarism?\n\nThis is an **ETHICAL / ACADEMIC** violation.\n\nPlagiarism is the act of taking someone else's *idea* or *words* and passing them off as your own. It's an act of academic dishonesty, like cheating or lying.\n\n* **The Problem:** Using without **credit (attribution)**.\n* **The Consequence:** Failing a class, getting suspended, or damaging your reputation.\n* **The Key Idea:** It's about *honesty* and *credit*.\n\n--- \n\n### 💡 Level 7 Case Study: The Four Scenarios\n\nThis is the best way to understand the difference. \n\n* **Scenario 1: Infringement + Plagiarism (The Worst!)**\n    You copy a chapter from a new bestselling book, paste it into your blog, and claim you wrote it. \n    * It's **infringement** because you copied/distributed it without permission.\n    * It's **plagiarism** because you claimed it was your work.\n\n* **Scenario 2: Infringement, but NOT Plagiarism**\n    You upload a full copy of the latest Marvel movie to your YouTube channel. You include the title 'Avengers 5 - Full Movie (All Credit to Marvel)'.\n    * It's **infringement** because you have no permission to distribute the entire film.\n    * It's **NOT plagiarism** because you are not claiming you *made* it. You gave credit. But giving credit *does not* stop it from being illegal.\n\n* **Scenario 3: Plagiarism, but NOT Infringement**\n    You are writing an essay about *Romeo and Juliet*. You find a 20-year-old academic article from a journal, copy a paragraph, and paste it into your essay without a citation, passing it off as your own analysis.\n    * It's **plagiarism** because you are stealing someone else's ideas and words.\n    * It's (probably) **NOT infringement** because your use is for 'research' and is covered by Fair Dealing. You aren't harming the *market* for the journal article. But your *school* will still fail you for it! \n\n* **Scenario 4: NEITHER Infringement nor Plagiarism (The Goal!)**\n    You write an essay, including a quote from the same article. You put the quote in quotation marks and add a footnote: '(Dr. Sharma, 2004)'.\n    * It's **NOT infringement** (Fair Dealing).\n    * It's **NOT plagiarism** (You gave proper credit).",
+  
+  "keyPoints": [
+    "Copyright Infringement is a LEGAL violation based on using work without PERMISSION.",
+    "Plagiarism is an ETHICAL violation based on using work without CREDIT (attribution).",
+    "You can commit infringement *without* plagiarizing (e.g., uploading a full movie with credit).",
+    "You can plagiarize *without* committing infringement (e.g., stealing an idea for a school paper).",
+    "Giving credit (attribution) does NOT stop an act from being copyright infringement."
+  ],
+  
+  "learningObjectives": [
+    "Define Copyright Infringement as a legal concept.",
+    "Define Plagiarism as an academic/ethical concept.",
+    "Explain the key difference between 'permission' (for copyright) and 'credit' (for plagiarism).",
+    "Analyze a scenario and identify if it is infringement, plagiarism, both, or neither."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:50:00Z"
+}

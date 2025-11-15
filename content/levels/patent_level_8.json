@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_8",
+  "realmId": "realm_patent",
+  "levelNumber": 8,
+  "name": "Patent Trolls & Standard Essential Patents (SEPs)",
+  "description": "Meet the 'Trolls' who don't make anything. And learn why your phone is a patent warzone (SEPs).",
+  "summary": "This level covers two of the most complex modern patent topics: 'Patent Trolls' (Non-Practicing Entities) and 'Standard Essential Patents' (SEPs) that cover technology like 5G and Wi-Fi.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=s9f-z0Sg-Fw",
+  "videoDuration": 418,
+  
+  "content": "## Modern Patent Warfare: Trolls and Standards\n\nPatent law has evolved into a high-stakes business strategy. Two of the biggest battlegrounds are 'Patent Trolls' and 'Standard Essential Patents' (SEPs).\n\n### 1. Patent Trolls (Non-Practicing Entities)\n\nA 'Patent Troll', more formally known as a **Non-Practicing Entity (NPE)**, is a company (or person) that owns patents but **does not make or sell any products**. \n\n* **The Business Model:** \n    1.  They don't invent anything. They just *buy* patents, often broad, old, or vague patents from bankrupt companies. \n    2.  They wait for *actual* innovative companies (from startups to tech giants) to develop successful products.\n    3.  They then *sue* these companies, claiming the new product infringes on their old, vaguely-worded patent.\n\n* **Why is this a 'troll' tactic?** They know that a patent lawsuit costs millions. So, they offer to 'settle' for a smaller amount, like $500,000. For the startup, it's cheaper to pay the 'troll toll' than to fight in court, even if they would probably win. This is widely seen as a form of legal extortion that drains money from real innovators.\n\n### 2. Standard Essential Patents (SEPs)\n\nThis is where the biggest, most expensive patent wars are fought. \n\n* **What is a Standard?** A 'standard' is a piece of technology everyone has agreed to use. **Wi-Fi**, **5G**, **USB-C**, and **MP3** are all technical standards. They exist so that a phone from *any* company can connect to a router from *any other* company. \n\n* **What is an SEP?** A **Standard Essential Patent** is a patent that you *must* infringe to comply with the standard. For example, a company like Nokia might own a patent on 'a method for transmitting 5G data'. You *cannot* make a 5G phone without using their invention. \n\n* **The 'Hold-Up' Problem:** This creates a huge problem. Nokia could 'hold up' the entire industry and say, 'No one can make 5G phones unless they pay us $1,000 per phone!' This would kill the standard.\n\n* **The Solution: 'FRAND' Licensing**\nTo prevent this, Standard-Setting Organizations (SSOs) have a rule. If you want your invention to be part of the 5G standard, you *must* agree, in advance, to license your patent to *everyone* (including your worst competitors) on **FRAND** terms:\n\n* **F**air\n* **R**easonable\n* **A**nd **N**on-**D**iscriminatory\n\nThis is the source of today's tech 'Patent Wars'. Apple, Samsung, Nokia, Ericsson, and Qualcomm are not suing over *if* they have to pay. They are suing over what a **'fair and reasonable'** royalty rate actually is. Is it 1% of the phone's price, or 0.1% of the chip's price?",
+  
+  "keyPoints": [
+    "A 'Patent Troll' (or NPE) is a company that *owns* patents but *makes no products*.",
+    "Their business model is to sue real innovators for infringement and then 'settle' out of court.",
+    "A 'Standard Essential Patent' (SEP) is a patent you *must* use to comply with a standard (like 5G or Wi-Fi).",
+    "This creates a 'hold-up' problem, where one company could block an entire industry.",
+    "The solution is **FRAND**: owners of SEPs must license them on 'Fair, Reasonable, and Non-Discriminatory' terms."
+  ],
+  
+  "learningObjectives": [
+    "Define 'Patent Troll' (NPE) and explain their business model.",
+    "Define 'Standard Essential Patent' (SEP) and provide an example (e.g., 5G).",
+    "Explain the 'hold-up' problem that SEPs create.",
+    "Define the 'FRAND' licensing commitment and what each letter stands for."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 350,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:10:00Z"
+}

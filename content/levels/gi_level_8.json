@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_8",
+  "realmId": "realm_gi",
+  "levelNumber": 8,
+  "name": "GI vs. Trademark: Coexistence & Conflicts",
+  "description": "Can a GI and trademark coexist? Learn about the complex relationship between these two IP rights.",
+  "summary": "Understand when GIs and trademarks can coexist, when they conflict, and how Indian law resolves these disputes.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 300,
+  
+  "content": "## GI vs. Trademark: Coexistence & Conflicts\n\nBoth GIs and trademarks identify products, but they work differently. Sometimes they coexist peacefully, sometimes they clash. This level explores this complex relationship.\n\n### Key Differences Recap\n\n| **Aspect** | **Trademark** | **GI** |\n|------------|---------------|--------|\n| **Identifies** | A company/brand | A place/region |\n| **Ownership** | One company | All producers in region |\n| **Transferable** | Yes (can be sold) | No (tied to place) |\n| **Duration** | 10 years, renewable | 10 years, renewable |\n| **Example** | 'Tata' (company) | 'Darjeeling' (place) |\n\n### When Can They Coexist?\n\n#### Scenario 1: Different Products\n\nA trademark and GI can coexist if they're for different products.\n\n**Example:**\n- **'Mysore'** as a GI for Mysore Silk (textile)\n- **'Mysore Sandal'** as a trademark for soap (different product)\n\nNo conflict because consumers won't be confused.\n\n#### Scenario 2: Trademark + GI on Same Product\n\nA company can use BOTH its trademark AND a GI on the same product if:\n- The company is an authorized user of the GI\n- Both marks are clearly displayed\n\n**Example:**\n- **'Tata Tea'** (trademark) + **'Darjeeling Tea'** (GI)\n- Tata Tea can sell Darjeeling tea under its brand name as long as the tea genuinely comes from Darjeeling and meets the standards\n\n### When Do They Conflict?\n\n#### Conflict 1: Trademark Registered Before GI\n\n**The Rule (Section 25 of GI Act):**\nIf a trademark was registered in good faith before the GI application date, the trademark owner can continue using it.\n\n**Example:**\n- Company X registered 'Darjeeling Delight' as a trademark in 2000\n- 'Darjeeling Tea' was registered as a GI in 2003\n- Company X can continue using 'Darjeeling Delight' even if their tea isn't from Darjeeling (grandfathered rights)\n\n**Important:** This only applies if the trademark was registered in **good faith** (not to deceive).\n\n#### Conflict 2: Trademark Application After GI Registration\n\n**The Rule:**\nOnce a GI is registered, you **cannot** register a trademark that:\n- Is identical or similar to the GI\n- Would mislead consumers about the geographical origin\n\n**Example:**\n- After 'Basmati' was registered as a GI (2008), no one can register 'Basmati King' or 'Super Basmati' as a trademark for rice\n\n#### Conflict 3: Generic Terms\n\nIf a GI name becomes 'generic' (loses its geographical association), it can be used by anyone.\n\n**Example:**\n- 'Cheddar' (originally from Cheddar, England) is now generic\n- Anyone can make 'Cheddar cheese' anywhere\n\n**India's Protection:** Indian law tries to prevent this by requiring continuous use and quality control.\n\n### Famous Conflicts\n\n#### Case 1: Scotch Whisky vs. Indian Whisky\n\n* **The GI:** 'Scotch Whisky' is a protected GI (only whisky made in Scotland)\n* **The Conflict:** Some Indian whisky brands used terms like 'Scotch-style' or had Scottish imagery\n* **The Resolution:** Under India-EU agreement, Indian companies must stop using 'Scotch' or Scottish imagery for non-Scottish whisky\n\n#### Case 2: Feta Cheese\n\n* **The GI:** 'Feta' is a protected GI in the EU (only cheese from Greece)\n* **The Conflict:** Many countries (including India) produce 'Feta-style' cheese\n* **The Status:** Under India-EU agreement, Indian producers cannot call their cheese 'Feta' in EU markets, but can in India\n\n### Practical Guidelines\n\n**For Trademark Owners:**\n1. Check if your proposed trademark conflicts with existing GIs\n2. If using a geographical name, ensure it's not a registered GI\n3. If you have a pre-existing trademark, document your good faith use\n\n**For GI Producers:**\n1. Monitor trademark applications that might conflict with your GI\n2. File oppositions against conflicting trademarks\n3. Educate consumers about the difference between brands and GIs\n\n--- \n\n### 💡 Level 8 Case Study: Napa Valley vs. Napa Auto Parts\n\n* **The GI:** 'Napa Valley' (California wine region)\n* **The Trademark:** 'NAPA' (National Automotive Parts Association - auto parts)\n* **The Conflict:** Wine producers argued that 'NAPA' trademark on auto parts dilutes the 'Napa Valley' GI\n* **The Resolution:** Courts ruled NO CONFLICT because:\n  - Different products (wine vs. auto parts)\n  - No consumer confusion\n  - Trademark was registered before GI\n* **The Lesson:** GIs and trademarks can coexist if they're for different products and don't cause confusion. The key test is always: \"Will consumers be misled about the geographical origin?\"",
+  
+  "keyPoints": [
+    "Trademarks and GIs can coexist if they're for different products or don't cause confusion.",
+    "A company can use both its trademark and a GI on the same product if it's an authorized user.",
+    "Trademarks registered in good faith before a GI registration can continue to be used.",
+    "After GI registration, no conflicting trademarks can be registered.",
+    "The key test is whether consumers will be misled about geographical origin.",
+    "India-EU agreement requires mutual respect for each other's GIs and trademarks."
+  ],
+  
+  "learningObjectives": [
+    "Explain when trademarks and GIs can coexist.",
+    "Describe the 'prior registration' rule under Section 25 of the GI Act.",
+    "Identify situations where trademarks and GIs conflict.",
+    "Analyze the Napa Valley case study."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T21:10:00Z"
+}

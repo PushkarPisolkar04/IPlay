@@ -1,0 +1,40 @@
+﻿{
+  "id": "design_level_1",
+  "realmId": "realm_design",
+  "levelNumber": 1,
+  "name": "What is a Design? (The 'Look & Feel')",
+  "description": "Welcome to the Realm of Aesthetics! Learn what makes the iPhone's shape and a car's curves legally protected.",
+  "summary": "Discover what industrial designs are, how they protect the visual appearance of products, and why companies invest millions in design protection.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 240,
+  
+  "content": "## What is a Design? (The 'Look & Feel')\n\nWelcome to the Industrial Design Realm! This is all about protecting the **visual appearance** of products - their shape, pattern, ornamentation, and overall aesthetic appeal.\n\n### The Definition\n\nUnder the **Designs Act, 2000** (India), a **design** means:\n\n> \"Features of shape, configuration, pattern, ornamentation or composition of lines or colors applied to any article whether in two dimensional or three dimensional (or both) forms, by any industrial process or means, which in the finished article appeal to and are judged solely by the eye.\"\n\n**In Simple Terms:** A design is the **look and feel** of a product - what makes it visually appealing and distinctive.\n\n### What Design Protects\n\n**Design protects:**\n- **Shape:** The 3D form of a product (e.g., Coca-Cola bottle shape)\n- **Configuration:** The arrangement of elements (e.g., car dashboard layout)\n- **Pattern:** Repeating decorative elements (e.g., textile patterns)\n- **Ornamentation:** Decorative features (e.g., engravings on jewelry)\n- **Color Combination:** Specific color schemes (e.g., product packaging colors)\n\n**Key Point:** Design protects **appearance**, not **function**.\n\n### Famous Examples\n\n#### 1. iPhone Design\n**What's Protected:**\n- Rounded rectangular shape\n- Flat glass front\n- Rounded edges\n- Button placement\n- Overall minimalist aesthetic\n\n**Not Protected:** The touchscreen technology (that's a patent)\n\n#### 2. Coca-Cola Bottle\n**What's Protected:**\n- Distinctive contour shape\n- Ribbed texture\n- Proportions\n\n**Not Protected:** The bottle's function of holding liquid\n\n#### 3. Eames Lounge Chair\n**What's Protected:**\n- Curved plywood shell design\n- Cushion configuration\n- Overall aesthetic\n\n**Not Protected:** The chair's function of providing seating\n\n#### 4. Royal Enfield Bullet (India)\n**What's Protected:**\n- Classic teardrop fuel tank shape\n- Chrome detailing\n- Overall vintage aesthetic\n\n### Why Design Matters\n\n**1. Commercial Value:**\n- Good design sells products\n- Consumers pay premium for attractive designs\n- Design creates brand identity\n\n**Example:** Apple products command premium prices partly due to their iconic design\n\n**2. Competitive Advantage:**\n- Distinctive design differentiates from competitors\n- Prevents copying\n- Builds brand loyalty\n\n**3. Investment Protection:**\n- Companies spend millions on design development\n- Design registration protects this investment\n- Prevents free-riding by competitors\n\n### Design vs. Other IP Rights\n\n**Design vs. Patent:**\n- **Design:** Protects appearance (how it looks)\n- **Patent:** Protects function (how it works)\n- **Example:** iPhone's shape (design) vs. touchscreen technology (patent)\n\n**Design vs. Trademark:**\n- **Design:** Protects product appearance\n- **Trademark:** Protects brand identity\n- **Example:** Coca-Cola bottle shape (design) vs. 'Coca-Cola' name (trademark)\n\n**Design vs. Copyright:**\n- **Design:** For mass-produced industrial products\n- **Copyright:** For artistic works\n- **Example:** Chair design (design) vs. painting (copyright)\n\n### The 'Eye Appeal' Test\n\nFor something to be a design, it must:\n\n**1. Appeal to the Eye:**\n- Must be visually distinctive\n- Must have aesthetic appeal\n- Judged by visual appearance alone\n\n**2. Be Applied to an Article:**\n- Must be applied to a physical product\n- Can't be abstract (must be embodied in a product)\n\n**3. Be Produced by Industrial Process:**\n- Must be capable of mass production\n- Not one-off artistic creations\n\n**Example:** A unique chair design that can be manufactured in a factory qualifies. A one-off sculpture doesn't.\n\n### What Design Does NOT Protect\n\n**1. Functional Features:**\n- If a feature is purely functional, it's not a design\n- Example: The grip pattern on a screwdriver (functional, not aesthetic)\n\n**2. Methods or Principles:**\n- Design protects appearance, not how something works\n- Example: A new manufacturing method is not a design\n\n**3. Mere Mechanical Devices:**\n- If it's purely mechanical with no aesthetic appeal\n- Example: Internal gears of a watch (not visible, purely functional)\n\n### Design in India\n\n**The Designs Act, 2000:**\n- Governs design protection in India\n- Administered by the Office of the Controller General of Patents, Designs and Trade Marks\n- Design Registry located in Kolkata\n\n**Indian Design Examples:**\n- **Tata Nano:** Distinctive compact car design\n- **Fabindia Textiles:** Traditional Indian patterns\n- **Titan Watches:** Unique watch face designs\n- **Godrej Furniture:** Contemporary Indian furniture designs\n\n--- \n\n### 💡 Level 1 Case Study: The Coca-Cola Contour Bottle\n\n* **The Design:** The iconic contour bottle shape created in 1915\n* **The Challenge:** Coca-Cola wanted a bottle so distinctive that:\n  - You could recognize it in the dark by touch\n  - You could recognize it broken on the ground\n  - It would be different from any other bottle\n* **The Protection:** \n  - Registered as a design in multiple countries\n  - Also protected as a trademark (shape mark)\n  - One of the most recognized designs in the world\n* **The Value:** The bottle design is worth billions and is a key part of Coca-Cola's brand identity\n* **The Lesson:** Great design creates lasting value. The Coca-Cola bottle has been protected for over 100 years and remains iconic. This shows how design protection can create enduring commercial value.",
+  
+  "keyPoints": [
+    "A design protects the visual appearance of a product - its shape, pattern, ornamentation, and color.",
+    "Design protects 'look and feel', not function (that's for patents).",
+    "Famous examples: iPhone shape, Coca-Cola bottle, Eames chair, Royal Enfield Bullet.",
+    "Design must appeal to the eye, be applied to an article, and be capable of industrial production.",
+    "In India, designs are governed by the Designs Act, 2000.",
+    "Design creates commercial value, competitive advantage, and protects investment."
+  ],
+  
+  "learningObjectives": [
+    "Define what an industrial design is under Indian law.",
+    "Explain the 'eye appeal' test for design protection.",
+    "Differentiate design from patent, trademark, and copyright.",
+    "Provide three famous examples of protected designs."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T00:00:00Z"
+}

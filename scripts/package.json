@@ -1,0 +1,21 @@
+{
+  "name": "iplay-cms-scripts",
+  "version": "1.0.0",
+  "description": "CMS initialization and management scripts for IPlay app",
+  "scripts": {
+    "init": "node init_cms_collections.js",
+    "set-admin": "node set_admin.js",
+    "deploy:rules": "firebase deploy --only firestore:rules"
+  },
+  "keywords": [
+    "cms",
+    "firebase",
+    "iplay"
+  ],
+  "author": "IPlay Team",
+  "license": "MIT",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  },
+  "devDependencies": {}
+}

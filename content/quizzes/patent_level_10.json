@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_10",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_10_q1",
+      "question": "Can an AI be named as an inventor on a patent?",
+      "options": [
+        "Yes, in all countries",
+        "No, most countries require a natural person (human)",
+        "Yes, only in the US",
+        "Yes, only in Europe"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, most major patent offices have ruled that an inventor must be a natural person (human).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q2",
+      "question": "What is the 'DABUS' case about?",
+      "options": [
+        "A drug patent",
+        "Whether an AI can be listed as an inventor",
+        "A design patent",
+        "A trademark"
+      ],
+      "correctIndex": 1,
+      "explanation": "The DABUS case tested whether an AI named 'DABUS' could be listed as the sole inventor on patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q3",
+      "question": "What was the global verdict in the DABUS case?",
+      "options": [
+        "AI can be inventors",
+        "AI cannot be inventors - must be human",
+        "Mixed results",
+        "Case is pending"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nearly every major patent office ruled that AI cannot be inventors - inventors must be human.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q4",
+      "question": "Can you patent a naturally-occurring human gene?",
+      "options": [
+        "Yes, always",
+        "No, it's a product of nature (discovery)",
+        "Yes, only in the US",
+        "Yes, if you find it first"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, you cannot patent naturally-occurring genes - they are products of nature, not inventions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q5",
+      "question": "What was the 'Myriad' case about?",
+      "options": [
+        "AI inventions",
+        "Patenting human genes (BRCA1 and BRCA2)",
+        "Drug prices",
+        "Design patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Myriad case was about whether you can patent human genes like BRCA1 and BRCA2 (breast cancer genes).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q6",
+      "question": "What did the US Supreme Court rule in the Myriad case?",
+      "options": [
+        "Genes can be patented",
+        "Natural genes cannot be patented",
+        "Only some genes can be patented",
+        "Case was dismissed"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Supreme Court ruled unanimously that naturally-occurring genes cannot be patented.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q7",
+      "question": "What is cDNA?",
+      "options": [
+        "A natural gene",
+        "Complementary DNA - a synthetic version of a gene",
+        "A drug",
+        "A disease"
+      ],
+      "correctIndex": 1,
+      "explanation": "cDNA (complementary DNA) is a synthetic, lab-created version of a gene.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q8",
+      "question": "Can you patent cDNA (synthetic genes)?",
+      "options": [
+        "No, never",
+        "Yes, because it's man-made and doesn't exist in nature",
+        "Only in the US",
+        "Only for research"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, cDNA can be patented because it's a man-made invention that doesn't exist in nature.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q9",
+      "question": "What is 'evergreening' in pharmaceuticals?",
+      "options": [
+        "Making drugs green",
+        "Patenting minor changes to extend monopoly",
+        "Environmental protection",
+        "Drug recycling"
+      ],
+      "correctIndex": 1,
+      "explanation": "Evergreening is patenting minor changes (like dosage or form) to extend the drug monopoly.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q10",
+      "question": "What is an example of evergreening?",
+      "options": [
+        "Inventing a new drug",
+        "Changing a pill to a capsule to get a new patent",
+        "Reducing price",
+        "Donating drugs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Changing a pill to a capsule or changing dosage to get a new patent is evergreening.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q11",
+      "question": "Why is evergreening controversial?",
+      "options": [
+        "It's illegal",
+        "It may block generics and keep drug prices high",
+        "It's too expensive",
+        "It's too slow"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's controversial because it may block generic drugs and keep prices high for minor changes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q12",
+      "question": "Is evergreening always illegitimate?",
+      "options": [
+        "Yes, it's a scam",
+        "No, sometimes the changes are real improvements",
+        "Yes, it's illegal",
+        "No, it's always legitimate"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's debated - sometimes the changes (like extended-release) are real improvements.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_10_q13",
+      "question": "If an AI creates a cure for cancer with no human inventor, what happens?",
+      "options": [
+        "AI gets the patent",
+        "It may go to public domain - law has no clear answer",
+        "Government gets it",
+        "Company gets it"
+      ],
+      "correctIndex": 1,
+      "explanation": "The law has no clear answer - it may go straight to public domain if there's no human inventor.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_10_q14",
+      "question": "Why can't you patent a natural gene?",
+      "options": [
+        "It's too expensive",
+        "It's a discovery of nature, not an invention",
+        "It's too complex",
+        "It's unethical"
+      ],
+      "correctIndex": 1,
+      "explanation": "A natural gene is a discovery of what already exists in nature, not a human invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q15",
+      "question": "What was Myriad Genetics' monopoly on?",
+      "options": [
+        "A drug",
+        "Testing for BRCA1 and BRCA2 genes (breast cancer)",
+        "A device",
+        "A method"
+      ],
+      "correctIndex": 1,
+      "explanation": "Myriad had a 20-year monopoly on all testing for BRCA1 and BRCA2 genes linked to breast cancer.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q16",
+      "question": "What was the impact of the Myriad decision?",
+      "options": [
+        "No impact",
+        "Major victory for public health - can't patent human body parts",
+        "Negative for patients",
+        "Only affected one company"
+      ],
+      "correctIndex": 1,
+      "explanation": "It was a major victory for public health - you can't patent parts of the human body.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q17",
+      "question": "What is the difference between a natural gene and cDNA?",
+      "options": [
+        "No difference",
+        "Natural genes exist in nature, cDNA is synthetic and lab-created",
+        "cDNA is natural",
+        "Natural genes are synthetic"
+      ],
+      "correctIndex": 1,
+      "explanation": "Natural genes exist in nature; cDNA is synthetic and created in a lab.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q18",
+      "question": "Can pharmaceutical companies patent an extended-release version of an old drug?",
+      "options": [
+        "No, never",
+        "Yes, if it's a real inventive improvement",
+        "Only in the US",
+        "Only for 5 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, if the extended-release version involves real inventive improvement, it can be patented.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_10_q19",
+      "question": "What is the debate around evergreening?",
+      "options": [
+        "No debate",
+        "Whether it's legitimate innovation or a scam to block generics",
+        "Only about price",
+        "Only about safety"
+      ],
+      "correctIndex": 1,
+      "explanation": "The debate is whether evergreening represents legitimate innovation or is a scam to block generic competition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q20",
+      "question": "Who created the AI 'DABUS'?",
+      "options": [
+        "A university",
+        "Stephen Thaler",
+        "A government lab",
+        "Apple"
+      ],
+      "correctIndex": 1,
+      "explanation": "Stephen Thaler created the AI 'DABUS' and tried to list it as the sole inventor on patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q21",
+      "question": "What is the current legal status of AI as inventors?",
+      "options": [
+        "Fully accepted",
+        "Rejected by most countries - inventors must be human",
+        "Accepted in Europe only",
+        "Accepted in US only"
+      ],
+      "correctIndex": 1,
+      "explanation": "AI as inventors has been rejected by most major patent offices - inventors must be human.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_10_q22",
+      "question": "Why is the AI inventor question important?",
+      "options": [
+        "It's not important",
+        "As AI creates more inventions, we need to decide who owns them",
+        "Only for robots",
+        "Only for games"
+      ],
+      "correctIndex": 1,
+      "explanation": "As AI creates more inventions, we need legal clarity on ownership and whether they can be patented.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_10_q23",
+      "question": "What is the principle from the Myriad case?",
+      "options": [
+        "All genes can be patented",
+        "You can't patent parts of the human body, but can patent synthetic versions",
+        "No biological patents",
+        "All DNA is patentable"
+      ],
+      "correctIndex": 1,
+      "explanation": "You can't patent natural parts of the human body, but you can patent synthetic, man-made biological inventions.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_10_q24",
+      "question": "What is the ethical frontier in patent law?",
+      "options": [
+        "There are no ethical issues",
+        "AI inventors, gene patents, and drug pricing/evergreening",
+        "Only pricing",
+        "Only AI"
+      ],
+      "correctIndex": 1,
+      "explanation": "The ethical frontiers include AI inventors, gene patenting, and pharmaceutical evergreening/pricing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_10_q25",
+      "question": "Is the law keeping up with AI and biotech advances?",
+      "options": [
+        "Yes, perfectly",
+        "No, the law is struggling to adapt to new technologies",
+        "Yes, in all countries",
+        "Law doesn't need to change"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, patent law is struggling to adapt to rapid advances in AI and biotechnology.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

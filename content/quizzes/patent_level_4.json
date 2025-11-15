@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_4",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_4_q1",
+      "question": "What system do most countries use for patents?",
+      "options": [
+        "First-to-invent",
+        "First-to-file",
+        "First-to-sell",
+        "First-to-disclose"
+      ],
+      "correctIndex": 1,
+      "explanation": "Almost every country uses a 'First-to-File' system.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q2",
+      "question": "What is the most important date in patent law?",
+      "options": [
+        "Date of invention",
+        "Priority date (filing date)",
+        "Date of grant",
+        "Date of sale"
+      ],
+      "correctIndex": 1,
+      "explanation": "The priority date (filing date) is the most important date - it determines who gets the patent.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q3",
+      "question": "If you invent first but file second, who gets the patent?",
+      "options": [
+        "You, because you invented first",
+        "The person who filed first",
+        "Both of you",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "In a first-to-file system, the person who files first gets the patent, regardless of who invented first.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q4",
+      "question": "What is a Provisional Application?",
+      "options": [
+        "The final patent",
+        "A fast, simple placeholder to secure priority date",
+        "A rejected application",
+        "An international application"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Provisional Application is a fast, simple placeholder that secures your priority date for 12 months.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q5",
+      "question": "How long does a Provisional Application secure your priority date?",
+      "options": [
+        "6 months",
+        "12 months",
+        "18 months",
+        "24 months"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Provisional Application secures your priority date for 12 months.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q6",
+      "question": "What happens if you don't file a Complete application within 12 months of your Provisional?",
+      "options": [
+        "Automatic approval",
+        "The provisional expires and you lose priority",
+        "You get an extension",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "If you don't file a Complete application within 12 months, the provisional expires and you lose your priority date.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q7",
+      "question": "What status do you get after filing a Provisional Application?",
+      "options": [
+        "Patent granted",
+        "Patent Pending",
+        "Patent approved",
+        "Patent registered"
+      ],
+      "correctIndex": 1,
+      "explanation": "After filing a Provisional Application, you get 'Patent Pending' status.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q8",
+      "question": "What is a Complete (Non-Provisional) Application?",
+      "options": [
+        "A simple placeholder",
+        "The full, formal patent application that is examined",
+        "A rejected application",
+        "A provisional application"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Complete Application is the full, formal legal document that is examined by the patent office.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q9",
+      "question": "Is a Provisional Application examined by the patent office?",
+      "options": [
+        "Yes, immediately",
+        "No, it's just a placeholder",
+        "Yes, after 12 months",
+        "Only if requested"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, a Provisional Application is not formally examined - it's just a placeholder to secure your date.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q10",
+      "question": "Why would you file a Provisional Application?",
+      "options": [
+        "It's cheaper and faster",
+        "To test the invention and find funding while protected",
+        "To avoid examination",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "All of the above - it's cheaper, faster, and gives you 12 months to test and prepare while protected.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q11",
+      "question": "What must a Complete Application contain?",
+      "options": [
+        "Just a description",
+        "Full disclosure and legal 'Claims'",
+        "Just drawings",
+        "Just the inventor's name"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Complete Application must contain full disclosure of the invention and specific legal 'Claims'.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q12",
+      "question": "Which application becomes the actual patent if approved?",
+      "options": [
+        "Provisional",
+        "Complete (Non-Provisional)",
+        "Either one",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Complete (Non-Provisional) Application is what becomes the actual patent if approved.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q13",
+      "question": "What is the typical two-step process inventors use?",
+      "options": [
+        "File Complete then Provisional",
+        "File Provisional fast, then Complete within 12 months",
+        "File two Provisionals",
+        "File two Complete applications"
+      ],
+      "correctIndex": 1,
+      "explanation": "Most inventors file a Provisional fast to get the priority date, then file Complete within 12 months.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q14",
+      "question": "Can you file a Complete Application without filing a Provisional first?",
+      "options": [
+        "No, Provisional is required",
+        "Yes, you can file Complete directly",
+        "Only in some countries",
+        "Only for simple inventions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can file a Complete Application directly without a Provisional - it's optional.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q15",
+      "question": "What is another name for 'priority date'?",
+      "options": [
+        "Grant date",
+        "Filing date",
+        "Invention date",
+        "Publication date"
+      ],
+      "correctIndex": 1,
+      "explanation": "Priority date is also called the filing date - when you first file your application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q16",
+      "question": "If your competitor files one day before you, who wins?",
+      "options": [
+        "You, if you invented first",
+        "Your competitor, because they filed first",
+        "Both get patents",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "Your competitor wins because they filed first - that's the first-to-file rule.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q17",
+      "question": "What is the main benefit of a Provisional Application?",
+      "options": [
+        "It's free",
+        "It gives you 12 months to prepare while securing your date",
+        "It grants the patent immediately",
+        "It lasts forever"
+      ],
+      "correctIndex": 1,
+      "explanation": "The main benefit is getting 12 months to test and prepare your full application while your priority date is secured.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q18",
+      "question": "Is a Provisional Application a formal legal document?",
+      "options": [
+        "Yes, very formal",
+        "No, it's informal and simple",
+        "Only in the US",
+        "Only if notarized"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, a Provisional Application is informal and simple - just a basic description of your invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q19",
+      "question": "Who usually drafts a Complete Application?",
+      "options": [
+        "The inventor alone",
+        "A patent attorney",
+        "The patent office",
+        "Anyone"
+      ],
+      "correctIndex": 1,
+      "explanation": "Complete Applications are usually drafted by patent attorneys because they're complex legal documents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q20",
+      "question": "What does 'Patent Pending' mean?",
+      "options": [
+        "Patent granted",
+        "Patent application filed but not yet granted",
+        "Patent rejected",
+        "Patent expired"
+      ],
+      "correctIndex": 1,
+      "explanation": "'Patent Pending' means a patent application has been filed but not yet granted.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q21",
+      "question": "Can you extend the 12-month deadline for filing a Complete Application?",
+      "options": [
+        "Yes, indefinitely",
+        "Generally no, it's a strict deadline",
+        "Yes, for 6 more months",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generally no, the 12-month deadline is strict and cannot be extended.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q22",
+      "question": "What happens during the 12-month provisional period?",
+      "options": [
+        "Patent is granted",
+        "You can test, refine, and prepare the full application",
+        "Nothing",
+        "Patent expires"
+      ],
+      "correctIndex": 1,
+      "explanation": "During the 12 months, you can test your invention, find funding, and prepare the full application.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q23",
+      "question": "Does the US use a first-to-file system?",
+      "options": [
+        "No, first-to-invent",
+        "Yes, since 2013",
+        "No, it's unique",
+        "Only for some patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, the US switched to first-to-file in 2013, joining most of the world.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_4_q24",
+      "question": "What is the race in patent law?",
+      "options": [
+        "To invent first",
+        "To file first",
+        "To sell first",
+        "To disclose first"
+      ],
+      "correctIndex": 1,
+      "explanation": "The race is to file first - that's what determines who gets the patent.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_4_q25",
+      "question": "Can you have multiple Provisional Applications for the same invention?",
+      "options": [
+        "No, only one",
+        "Yes, you can file improvements as additional provisionals",
+        "Only in the US",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can file additional provisional applications for improvements to your invention.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

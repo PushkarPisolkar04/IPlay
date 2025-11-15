@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_5",
+  "realmId": "realm_gi",
+  "levelNumber": 5,
+  "name": "GI Registration Process in India",
+  "description": "Learn the step-by-step process to register a GI in India - from application to certificate.",
+  "summary": "Understand how to apply for GI registration in India, including the application process, examination, opposition, and registration stages.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 420,
+  
+  "content": "## GI Registration Process in India\n\nNow that you understand what GIs are and why they matter, let's learn how to actually register a GI in India.\n\n### Who Can Apply?\n\nUnlike trademarks (where individuals or companies apply), GI applications must be filed by:\n\n1. **Association of Persons** - A group of producers/manufacturers\n2. **Producers' Organization** - Cooperatives, federations\n3. **Government Organizations** - Bodies established by law (e.g., Tea Board, Coir Board)\n\n**Important:** Individual producers cannot apply alone. It must be a collective application.\n\n### The 6-Step Registration Process\n\n#### Step 1: Preliminary Search\n- Check the GI Register at https://ipindia.gov.in/gi-search.htm\n- Ensure the name isn't already registered\n- Verify that your product meets GI criteria\n\n#### Step 2: Prepare Application (Form GI-1)\n\nThe application must include:\n- **Name of the GI** (e.g., 'Darjeeling Tea')\n- **Description of goods** (detailed specifications)\n- **Geographical area** (precise boundaries with map)\n- **Proof of origin** (historical evidence, documents)\n- **Uniqueness** (what makes it special to that region)\n- **Quality standards** (specifications, testing methods)\n- **Inspection body** (who will monitor quality)\n\n**Fee:** ₹5,000 for associations/organizations\n\n#### Step 3: Filing\n- Submit application to GI Registry, Chennai\n- Can be filed online through IP India portal\n- Receive application number and filing date\n\n#### Step 4: Examination (3-6 months)\n\nThe GI Examiner reviews:\n- Whether the product qualifies as a GI\n- If the geographical area is clearly defined\n- If the application meets all legal requirements\n\n**Possible Outcomes:**\n- **Accepted:** Moves to publication\n- **Objection Raised:** Applicant must respond within 2 months\n\n#### Step 5: Publication in GI Journal (3 months opposition period)\n\n- If accepted, the application is published in the **GI Journal**\n- Anyone can file an **opposition** within 3 months\n- Common grounds for opposition:\n  - The product doesn't originate from that region\n  - The geographical area is incorrectly defined\n  - The applicant doesn't represent the producers\n\n**If Opposition Filed:**\n- Applicant gets 2 months to file counter-statement\n- Evidence stage (both parties submit evidence)\n- Hearing before the Registrar\n- Decision issued\n\n#### Step 6: Registration & Certificate\n\n- If no opposition (or opposition is defeated), GI is registered\n- **Certificate of Registration** is issued\n- Valid for **10 years** from date of registration\n- Can be renewed indefinitely for 10-year periods\n\n**Renewal Fee:** ₹5,000\n\n### Timeline\n\n**Without Opposition:** 12-18 months\n**With Opposition:** 2-3 years\n\n### The GI Logo\n\nOnce registered, authorized users can display the **GI logo** on their products:\n\n🗺️ **[Product Name]**\n**GEOGRAPHICAL INDICATION**\n\nThis logo helps consumers identify genuine products.\n\n--- \n\n### 💡 Level 5 Case Study: Tirupati Laddu Registration\n\n* **The Product:** Tirupati Laddu (prasadam from Tirumala Tirupati Devasthanams temple)\n* **The Applicant:** Tirumala Tirupati Devasthanams (TTD)\n* **The Challenge:** TTD had to prove:\n  - The laddu's unique recipe and preparation method\n  - The specific geographical origin (Tirupati)\n  - The traditional significance and reputation\n  - Quality control measures\n* **The Registration:** Granted in 2009 (GI No. 145)\n* **The Impact:** \n  - Only laddus made by TTD in Tirupati can be called 'Tirupati Laddu'\n  - Prevents fake laddus from using the sacred name\n  - Protects the religious and cultural significance\n  - TTD makes over 3 lakh laddus daily with GI protection",
+  
+  "keyPoints": [
+    "GI applications must be filed by associations, not individuals.",
+    "The application (Form GI-1) requires detailed proof of origin, uniqueness, and quality standards.",
+    "The registration process involves: Application → Examination → Publication → Opposition Period → Registration.",
+    "The GI Registry is in Chennai and operates under IP India.",
+    "Registration is valid for 10 years and can be renewed indefinitely.",
+    "The entire process takes 12-18 months without opposition, 2-3 years with opposition."
+  ],
+  
+  "learningObjectives": [
+    "List who can apply for GI registration in India.",
+    "Describe the 6 steps of the GI registration process.",
+    "Explain what information must be included in a GI application.",
+    "State the duration of GI protection and renewal process."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 200,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:40:00Z"
+}

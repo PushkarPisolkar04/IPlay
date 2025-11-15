@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_10",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+  
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_10_q1",
+      "question": "What is the 'AI input problem' in copyright?",
+      "options": [
+        "Whether AI can use copyrighted material for training",
+        "Whether humans can use AI-generated art",
+        "Whether AI has emotions",
+        "How to code an AI system"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'input problem' questions if AI training on copyrighted material without permission is infringement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q2",
+      "question": "What is the 'AI output problem' in copyright?",
+      "options": [
+        "Who owns the rights to works created by AI",
+        "How AI generates lyrics",
+        "How AI identifies artists",
+        "When AI fails to create content"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'output problem' addresses who holds authorship when AI generates new creative content.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q3",
+      "question": "Currently, who can be recognized as an author under Indian copyright law?",
+      "options": [
+        "A human being only",
+        "AI systems and robots",
+        "Software developers only",
+        "Organizations only"
+      ],
+      "correctIndex": 0,
+      "explanation": "Indian copyright law recognizes only humans or legal persons as authors, not AI systems.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q4",
+      "question": "What does NFT stand for?",
+      "options": [
+        "Non-Fungible Token",
+        "New File Transfer",
+        "Network File Type",
+        "Non-Fixed Transfer"
+      ],
+      "correctIndex": 0,
+      "explanation": "NFT stands for Non-Fungible Token — a unique digital asset recorded on a blockchain.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q5",
+      "question": "Buying an NFT usually means:",
+      "options": [
+        "Owning the token, not the copyright of the artwork",
+        "Owning full copyright to the digital artwork",
+        "Owning the physical version of the work",
+        "Getting exclusive reproduction rights"
+      ],
+      "correctIndex": 0,
+      "explanation": "Purchasing an NFT gives ownership of the token itself, not the underlying copyright.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q6",
+      "question": "In the context of streaming, what does 'public performance' mean?",
+      "options": [
+        "Making a work available to the public through broadcasting or online platforms",
+        "Playing a song at home",
+        "Recording a new cover version",
+        "Downloading a movie legally"
+      ],
+      "correctIndex": 0,
+      "explanation": "Streaming qualifies as public performance because it transmits copyrighted work to the public.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q7",
+      "question": "What major legal question does AI-generated art raise?",
+      "options": [
+        "Can AI-generated works be copyrighted?",
+        "Can AI paint faster than humans?",
+        "Can AI replace musicians?",
+        "Can AI upload content to YouTube?"
+      ],
+      "correctIndex": 0,
+      "explanation": "AI art challenges the definition of authorship and originality under copyright law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q8",
+      "question": "Which global lawsuit focuses on AI using copyrighted data for training?",
+      "options": [
+        "Getty Images vs. Stability AI",
+        "Sony vs. Napster",
+        "Google vs. Oracle",
+        "Apple vs. Samsung"
+      ],
+      "correctIndex": 0,
+      "explanation": "Getty Images sued Stability AI for training image models on its copyrighted photos without consent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q9",
+      "question": "Which section of Indian Copyright Act might apply to AI-generated works?",
+      "options": [
+        "Section 2(d) - definition of 'author'",
+        "Section 57 - moral rights",
+        "Section 31 - compulsory licensing",
+        "Section 14 - economic rights"
+      ],
+      "correctIndex": 0,
+      "explanation": "Section 2(d) defines who can be an author, which is critical in deciding AI authorship eligibility.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_10_q10",
+      "question": "What does 'streaming royalties' refer to?",
+      "options": [
+        "Payments artists receive when their works are played online",
+        "Payments for live concerts",
+        "Government subsidies for musicians",
+        "Music piracy fines"
+      ],
+      "correctIndex": 0,
+      "explanation": "Streaming royalties are payments made to rights holders whenever their content is streamed online.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q11",
+      "question": "What key copyright challenge do NFTs create?",
+      "options": [
+        "Distinguishing between ownership of a token and ownership of copyright",
+        "How to mint an NFT",
+        "Who stores the blockchain",
+        "How to pay gas fees"
+      ],
+      "correctIndex": 0,
+      "explanation": "NFTs blur the line between owning a digital asset and owning its copyright, often causing confusion.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q12",
+      "question": "In streaming platforms, who generally holds the copyright to the music?",
+      "options": [
+        "Record labels and music publishers",
+        "Streaming service providers",
+        "The listener",
+        "Internet service providers"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copyright remains with the creators or rights holders, while streaming platforms only obtain licenses.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q13",
+      "question": "AI-generated content with no human input is:",
+      "options": [
+        "Not protected by copyright",
+        "Automatically copyrighted",
+        "Protected only in India",
+        "Registered under AI Act"
+      ],
+      "correctIndex": 0,
+      "explanation": "Most copyright systems do not protect purely machine-generated works without human creativity.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_10_q14",
+      "question": "Which technology underlies NFTs?",
+      "options": [
+        "Blockchain",
+        "Artificial Intelligence",
+        "Cloud Computing",
+        "Quantum Networks"
+      ],
+      "correctIndex": 0,
+      "explanation": "NFTs are built on blockchain, ensuring immutability and verifiable ownership.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q15",
+      "question": "What does 'tokenizing art' mean?",
+      "options": [
+        "Converting a digital artwork into a blockchain-based NFT",
+        "Uploading art to social media",
+        "Printing art as merchandise",
+        "Protecting art via watermark"
+      ],
+      "correctIndex": 0,
+      "explanation": "Tokenizing art refers to minting it as an NFT, creating a verifiable digital asset on blockchain.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q16",
+      "question": "Why is AI training data controversial?",
+      "options": [
+        "It often includes copyrighted works without permission",
+        "It uses too much internet bandwidth",
+        "It creates low-quality images",
+        "It needs physical storage space"
+      ],
+      "correctIndex": 0,
+      "explanation": "AI models frequently train on copyrighted datasets, raising legal concerns over unauthorized use.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q17",
+      "question": "Which organization handles music licensing for streaming in India?",
+      "options": [
+        "IPRS (Indian Performing Rights Society)",
+        "AIIMS",
+        "NASSCOM",
+        "CBFC"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Indian Performing Rights Society manages royalties for songwriters and composers on streaming platforms.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q18",
+      "question": "If AI uses a copyrighted song to generate a remix, this could be:",
+      "options": [
+        "An infringement unless licensed",
+        "Fair dealing automatically",
+        "Public domain material",
+        "Permitted under NFT law"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using copyrighted input to create AI music may infringe unless the data is licensed or qualifies as fair use.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_10_q19",
+      "question": "What is a key argument in favor of allowing AI training on copyrighted works?",
+      "options": [
+        "It promotes innovation and transformative use",
+        "It saves internet storage",
+        "It avoids piracy",
+        "It increases government control"
+      ],
+      "correctIndex": 0,
+      "explanation": "Supporters argue AI training is transformative and essential for innovation, similar to fair use.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q20",
+      "question": "What do streaming services typically pay for?",
+      "options": [
+        "Licensing rights to stream music legally",
+        "Buying ownership of music catalogs",
+        "Exclusive copyrights",
+        "Artist merchandise rights"
+      ],
+      "correctIndex": 0,
+      "explanation": "Streaming platforms pay for licenses, not ownership, allowing them to transmit works to the public.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q21",
+      "question": "What is the biggest concern for artists in the streaming era?",
+      "options": [
+        "Low per-stream payouts",
+        "Too many advertisements",
+        "Too much exposure",
+        "No internet access"
+      ],
+      "correctIndex": 0,
+      "explanation": "Artists often earn very little per stream, leading to debates over fair compensation in the digital age.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_10_q22",
+      "question": "Which global act governs online takedown for copyright violations?",
+      "options": [
+        "DMCA (Digital Millennium Copyright Act)",
+        "GDPR",
+        "CISPA",
+        "PIPA"
+      ],
+      "correctIndex": 0,
+      "explanation": "The DMCA sets the framework for online platforms to remove infringing content upon notice.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_10_q23",
+      "question": "How might blockchain help copyright enforcement?",
+      "options": [
+        "By proving ownership and tracking usage",
+        "By removing authorship records",
+        "By hiding copyright details",
+        "By automating plagiarism"
+      ],
+      "correctIndex": 0,
+      "explanation": "Blockchain can provide transparent, tamper-proof ownership records, aiding copyright tracking and proof.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_10_q24",
+      "question": "What is one proposed reform for future copyright law regarding AI?",
+      "options": [
+        "Introducing 'AI-assisted authorship' recognition",
+        "Removing human authorship completely",
+        "Banning AI-generated works",
+        "Creating AI-only databases"
+      ],
+      "correctIndex": 0,
+      "explanation": "Many propose a new category like 'AI-assisted authorship' to balance human creativity and machine contribution.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_10_q25",
+      "question": "What does the future of copyright likely focus on?",
+      "options": [
+        "Balancing technology innovation with creator protection",
+        "Abolishing copyright laws",
+        "Focusing only on physical works",
+        "Eliminating royalties"
+      ],
+      "correctIndex": 0,
+      "explanation": "Future copyright law will aim to balance AI and digital innovation with fair protection for human creators.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

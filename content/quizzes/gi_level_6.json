@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_6",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_6_q1",
+      "question": "Who are 'Authorized Users' in GI?",
+      "options": [
+        "Anyone who pays a fee",
+        "Producers from the designated region who meet quality standards",
+        "Only exporters",
+        "Only large companies"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized Users are producers from the designated geographical area who meet the specified quality standards.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q2",
+      "question": "What is the role of the Registered Proprietor?",
+      "options": [
+        "To manufacture all products",
+        "To represent producers and protect the GI",
+        "To sell products",
+        "To collect taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Registered Proprietor represents the collective interests of producers and protects the GI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q3",
+      "question": "Which body inspects Darjeeling Tea quality?",
+      "options": [
+        "Food Safety Authority",
+        "Tea Board of India",
+        "Ministry of Agriculture",
+        "Local police"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Tea Board of India is the inspection body responsible for Darjeeling Tea quality control.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q4",
+      "question": "Which body inspects spices like Coorg Cardamom?",
+      "options": [
+        "Tea Board",
+        "Spices Board of India",
+        "FSSAI",
+        "Ministry of Commerce"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Spices Board of India is responsible for quality inspection of GI-protected spices.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q5",
+      "question": "What happens if a producer doesn't meet quality standards?",
+      "options": [
+        "Nothing",
+        "They lose authorization to use the GI tag",
+        "They get a warning only",
+        "They pay a fine and continue"
+      ],
+      "correctIndex": 1,
+      "explanation": "Producers who don't meet quality standards can lose their authorization to use the GI tag.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q6",
+      "question": "What is the penalty for unauthorized use of a GI tag?",
+      "options": [
+        "Only a warning",
+        "Imprisonment (minimum 6 months) and fine (up to ₹2 lakhs)",
+        "Small fine only",
+        "No penalty"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unauthorized use can result in imprisonment of at least 6 months and a fine up to ₹2 lakhs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q7",
+      "question": "How do Inspection Bodies maintain quality?",
+      "options": [
+        "By increasing prices",
+        "Through regular inspections, testing, and certification",
+        "By restricting production",
+        "By collecting fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inspection Bodies conduct regular inspections, testing, and certification to maintain quality standards.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q8",
+      "question": "Can anyone from the designated region use the GI tag?",
+      "options": [
+        "Yes, automatically",
+        "Only if they are registered as Authorized Users and meet standards",
+        "Only large producers",
+        "Only exporters"
+      ],
+      "correctIndex": 1,
+      "explanation": "Producers must be registered as Authorized Users and meet quality standards to use the GI tag.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q9",
+      "question": "What was the fake Darjeeling Tea crackdown about?",
+      "options": [
+        "Price fixing",
+        "Action against sellers using 'Darjeeling' label for non-Darjeeling tea",
+        "Export restrictions",
+        "Tax evasion"
+      ],
+      "correctIndex": 1,
+      "explanation": "The crackdown targeted sellers falsely labeling non-Darjeeling tea as 'Darjeeling Tea'.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q10",
+      "question": "Who can become an Authorized User?",
+      "options": [
+        "Anyone who pays",
+        "Producers from the designated area who apply and meet criteria",
+        "Only large companies",
+        "Only government entities"
+      ],
+      "correctIndex": 1,
+      "explanation": "Producers from the designated geographical area who apply and meet the criteria can become Authorized Users.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q11",
+      "question": "What quality standards must Darjeeling Tea meet?",
+      "options": [
+        "Only price standards",
+        "Specific processing methods, altitude, and quality parameters",
+        "Only packaging standards",
+        "Only color standards"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea must meet specific standards for processing methods, altitude of cultivation, and quality parameters.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q12",
+      "question": "What is the purpose of quality control in GI?",
+      "options": [
+        "To increase prices",
+        "To maintain reputation and ensure authenticity",
+        "To restrict production",
+        "To collect fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quality control maintains the reputation of the GI and ensures consumers get authentic products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q13",
+      "question": "Can the Registered Proprietor manufacture the GI product?",
+      "options": [
+        "Yes, exclusively",
+        "No, they only represent and protect the GI",
+        "Only if they pay extra",
+        "Only for export"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Registered Proprietor represents producers but doesn't have exclusive manufacturing rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q14",
+      "question": "What happens in a fake Darjeeling Tea case?",
+      "options": [
+        "Nothing",
+        "Legal action including seizure, fines, and imprisonment",
+        "Only a warning",
+        "Small fine only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Fake GI products can result in seizure, fines, and imprisonment under the GI Act.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q15",
+      "question": "How often are quality inspections conducted?",
+      "options": [
+        "Never",
+        "Regularly, as per the inspection body's schedule",
+        "Only once at registration",
+        "Only when complaints are filed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inspection bodies conduct regular quality inspections as per their established schedules.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q16",
+      "question": "What is the role of certification in GI?",
+      "options": [
+        "To increase prices",
+        "To verify that products meet GI standards",
+        "To restrict sales",
+        "To collect taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Certification verifies that products meet the specified GI quality standards and geographical requirements.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q17",
+      "question": "Can Authorized User status be revoked?",
+      "options": [
+        "No, never",
+        "Yes, if quality standards are not maintained",
+        "Only by court order",
+        "Only after 10 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized User status can be revoked if producers fail to maintain quality standards.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q18",
+      "question": "What must producers do to maintain GI authorization?",
+      "options": [
+        "Pay annual fees only",
+        "Consistently meet quality standards and follow traditional methods",
+        "Increase production",
+        "Export products"
+      ],
+      "correctIndex": 1,
+      "explanation": "Producers must consistently meet quality standards and follow traditional methods to maintain authorization.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q19",
+      "question": "Who bears the cost of quality inspections?",
+      "options": [
+        "Government only",
+        "Typically shared between producers and inspection bodies",
+        "Consumers",
+        "Exporters only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Inspection costs are typically shared between producers (through fees) and inspection bodies.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q20",
+      "question": "What is the benefit of the Authorized User system?",
+      "options": [
+        "It restricts competition",
+        "It ensures only genuine producers use the GI tag",
+        "It increases prices",
+        "It reduces production"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Authorized User system ensures only genuine producers from the region can use the GI tag.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q21",
+      "question": "What evidence must Authorized Users maintain?",
+      "options": [
+        "Only sales records",
+        "Production records, quality certificates, and geographical proof",
+        "Only tax documents",
+        "Only export documents"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized Users must maintain production records, quality certificates, and proof of geographical origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q22",
+      "question": "How does quality control benefit consumers?",
+      "options": [
+        "Lower prices",
+        "Assurance of authentic, quality products",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "Quality control ensures consumers receive authentic products that meet the specified quality standards.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q23",
+      "question": "What is the Tea Board's role in Darjeeling Tea?",
+      "options": [
+        "To manufacture tea",
+        "To inspect, certify, and ensure quality standards",
+        "To sell tea",
+        "To export tea"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Tea Board inspects, certifies, and ensures Darjeeling Tea meets quality standards.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_6_q24",
+      "question": "Can a producer from outside the designated area become an Authorized User?",
+      "options": [
+        "Yes, if they pay extra",
+        "No, they must be from the designated geographical area",
+        "Yes, if they meet quality standards",
+        "Only with government permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only producers from the designated geographical area can become Authorized Users.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_6_q25",
+      "question": "What was the impact of the fake Darjeeling Tea crackdown?",
+      "options": [
+        "Increased fake products",
+        "Better protection for authentic Darjeeling Tea producers",
+        "Reduced tea production",
+        "Higher taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The crackdown improved protection for authentic producers and consumer confidence in genuine Darjeeling Tea.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

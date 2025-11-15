@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_3",
+  "realmId": "realm_patent",
+  "levelNumber": 3,
+  "name": "What CANNOT be Patented",
+  "description": "Not all inventions are patentable. Learn the 'exceptions to patentability' that are recognized globally.",
+  "summary": "This level covers the categories of things you *cannot* patent. This includes abstract ideas, laws of nature, mathematical formulas, and methods of medical treatment.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=F3ThoTILcZY",
+  "videoDuration": 380,
+  
+  "content": "## What CANNOT be Patented (Global Exceptions)\n\nEven if an idea is 'new', 'inventive', and 'useful', there are certain categories of discoveries that almost all countries agree **cannot be patented**. \n\nThese are often seen as the fundamental tools of human knowledge, which must remain free for everyone to use.\n\n### 1. Abstract Ideas, Laws of Nature, and Natural Phenomena\nThis is the biggest category. You cannot 'own' a fundamental truth about the universe.\n\n* **Laws of Nature:** You cannot patent 'gravity'. You cannot patent **E=mc²**.  These are *discoveries*, not *inventions*.\n* **Natural Phenomena:** You cannot patent a new butterfly you discover in the Amazon. You cannot patent a mineral found in the earth. \n* **Abstract Ideas:** You cannot patent a mental process, a set of rules for a game, or a business method *as an idea*. For example, you can't patent the *idea* of 'holding an auction' or 'teaching a class online'.\n\n**The Rule:** You *can*, however, patent a practical **application** of these things. \n- You can't patent E=mc², but you *can* patent a novel nuclear reactor that *uses* that principle in a new way.\n- You can't patent the *idea* of an online auction, but you *can* patent a specific piece of *software* or a *server architecture* that makes that auction possible in a new, inventive way. \n\n### 2. Mathematical Formulas and Algorithms (as ideas)\nJust like abstract ideas, a pure algorithm (like a sorting algorithm) or a mathematical formula is considered a 'mental act' and cannot be patented by itself. You can patent a physical device (like a computer) that *uses* the algorithm in an inventive way, but not the algorithm in the abstract.\n\n### 3. Methods of Medical Treatment\nMost countries (especially outside the US) do **not** allow patents on **methods for treating humans**. This is for ethical reasons: a doctor's first priority should be to save a life, not to check if their surgical *technique* is patented by someone. \n\n* **What CAN be patented:** You *can* patent the *tools* or *drugs* used in the treatment. For example:\n    * **CANNOT Patent:** 'A method of performing heart surgery'.\n    * **CAN Patent:** A new, inventive 'scalpel' (the tool) or a new 'heart medication' (the drug).\n\n### 4. Literary, Dramatic, or Artistic Works\nThese are explicitly excluded from patent law because they are protected by **Copyright**. You patent inventions; you copyright art.\n\n### 5. Inventions Contrary to Public Order or Morality\nAll patent systems have a 'morality' clause. This is used to refuse patents on inventions that are considered universally unethical, such as a new, more efficient landmine or a device for torture.",
+  
+  "keyPoints": [
+    "You cannot patent a 'discovery'; you can only patent an 'invention'.",
+    "Global exceptions include: 'abstract ideas', 'laws of nature', and 'mathematical formulas'.",
+    "You *can* patent a practical *application* of a law of nature (e.g., a machine), but not the law itself.",
+    "Most countries do not allow patents on 'methods of medical treatment' (like a new surgical technique) for ethical reasons.",
+    "Artistic works are not patentable because they are protected by Copyright."
+  ],
+  
+  "learningObjectives": [
+    "Differentiate between a 'discovery' (not patentable) and an 'invention' (patentable).",
+    "List the three main categories of non-patentable subject matter (abstract ideas, laws of nature, natural phenomena).",
+    "Explain the 'medical treatment' exception.",
+    "Explain why a mathematical formula or an artistic work cannot be patented."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:45:00Z"
+}

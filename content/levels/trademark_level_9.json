@@ -1,0 +1,40 @@
+{
+  "id": "trademark_level_9",
+  "realmId": "realm_trademark",
+  "levelNumber": 9,
+  "name": "Brand Wars & Cybersquatting",
+  "description": "The battlefield moves online. Learn how trademarks are fought over in domain names and search results.",
+  "summary": "This level covers modern trademark battles, including 'cybersquatting' (bad faith domain registration) and 'keyword advertising' (using a competitor's trademark in Google Ads).",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=5RzXprxLtec",
+  "videoDuration": 106,
+  
+  "content": "## Brand Wars & Cybersquatting\n\nAs soon as the internet became commercial, trademark battles moved online. The two biggest battlegrounds are domain names and search engine keywords.\n\n### 1. Cybersquatting (Domain Name Hijacking)\n\n**Cybersquatting** is the 'bad faith' registration and use of a domain name that is identical or confusingly similar to an existing trademark.\n\n* **The Scam:** A 'cybersquatter' sees that a new brand ('Acme Widgets') is becoming famous but forgot to buy 'acmewidgets.com'. The squatter buys the domain. When Acme Widgets finally tries to buy their own domain, the squatter offers to sell it to them for thousands of dollars.\n* **The Legal Harm:** This is a classic 'bad faith' act. The squatter has no legitimate interest in the name; they are simply holding it hostage to extort money from the trademark owner. \n\n### Domain Dispute Resolution in India\n\n**For .IN domains (Indian domains):**\nThe **.IN Registry** has its own dispute resolution policy called **INDRP (IN Domain Name Dispute Resolution Policy)**. Indian trademark owners can file complaints with the .IN Registry Arbitration and Conciliation Centre to get cybersquatted .in domains transferred.\n\n**For international domains (.com, .net, .org):**\nIndian companies use the **UDRP (Uniform Domain-Name Dispute-Resolution Policy)**, which is the global standard managed by ICANN. A trademark owner can file a UDRP complaint, and if they can prove three things, they can get the domain transferred to them quickly and cheaply (without a full court battle):\n    1. The domain is identical/confusingly similar to their trademark.\n    2. The squatter has *no legitimate rights* or interest in the name.\n    3. The domain was registered and is being used in *bad faith*.\n\nMany Indian companies (like Tata, Infosys, Reliance) have successfully used UDRP to recover their domain names from cybersquatters.\n\n### 2. Keyword Advertising (Google Ads Wars)\n\nThis is a more subtle but equally fierce battleground.\n\n* **The Scenario:** You own 'MyPizzaShop'. Your competitor, 'BestPizza', logs into Google Ads and *bids on your trademarked name*. So, when a user searches 'MyPizzaShop', the *first result* is an ad for 'BestPizza'.\n* **Is this legal?** This is a 'grey area' worldwide. \n* **The General Ruling (in India & EU):** Courts have generally ruled that this is **legal**, *as long as* the ad itself is not confusing. \n    * **Permitted:** An ad that says, 'Looking for MyPizzaShop? Try BestPizza instead!' This is considered *comparative advertising*. The consumer is not confused; they are being offered an alternative.\n    * **Infringement:** An ad that says, 'MyPizzaShop - Great Deals Here', but the link *goes to BestPizza.com*. This is clear infringement because it uses the trademark to *deceive* the consumer and 'bait-and-switch' them.\n\nThis shows that trademark law is constantly adapting to new technologies where brands compete for consumer attention.",
+  
+  "keyPoints": [
+    "Cybersquatting is the 'bad faith' registration of a domain name to profit from another's trademark.",
+    "For .IN domains, Indian companies use INDRP (IN Domain Name Dispute Resolution Policy).",
+    "For international domains (.com, .net), Indian companies use UDRP to recover cybersquatted domains.",
+    "To win a UDRP/INDRP, the trademark owner must prove 'bad faith' and 'no legitimate interest' from the squatter.",
+    "Bidding on a competitor's trademark as a 'keyword' in Google Ads is generally allowed, as long as the ad itself isn't confusing.",
+    "An ad that *impersonates* the competitor (a 'bait-and-switch') is infringement, while an ad that *compares* is usually not."
+  ],
+  
+  "learningObjectives": [
+    "Define 'Cybersquatting' and 'bad faith registration'.",
+    "Differentiate between INDRP (for .IN domains) and UDRP (for international domains).",
+    "List the three things a trademark owner must prove to win a domain dispute.",
+    "Differentiate between permissible (comparative) and infringing (deceptive) keyword advertising."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:15:00Z"
+}

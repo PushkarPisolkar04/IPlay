@@ -1,0 +1,118 @@
+<svg width="400" height="600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600">
+  <!-- Tower Map: Light Grass + Warm Yellow Path -->
+  <defs>
+    <!-- Light grass background -->
+    <linearGradient id="grassBG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#81C784"/>
+      <stop offset="100%" stop-color="#66BB6A"/>
+    </linearGradient>
+
+    <!-- Path: warm yellow–orange -->
+    <linearGradient id="pathGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFB74D"/>
+      <stop offset="100%" stop-color="#FFA726"/>
+    </linearGradient>
+
+    <!-- Tree foliage -->
+    <linearGradient id="treeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2E7D32"/>
+      <stop offset="100%" stop-color="#1B5E20"/>
+    </linearGradient>
+
+    <!-- Bushes -->
+    <linearGradient id="bushGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#33691E"/>
+      <stop offset="100%" stop-color="#1B5E20"/>
+    </linearGradient>
+
+    <!-- Stones -->
+    <linearGradient id="stoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0E0E0"/>
+      <stop offset="50%" stop-color="#9E9E9E"/>
+      <stop offset="100%" stop-color="#616161"/>
+    </linearGradient>
+
+    <!-- Water -->
+    <radialGradient id="waterGrad" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#90E0F3" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#42A5F5" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#1976D2" stop-opacity="0.6"/>
+    </radialGradient>
+
+    <!-- Tower -->
+    <radialGradient id="baseGrad" cx="50%" cy="50%" r="70%">
+      <stop offset="0%" stop-color="#64B5F6"/>
+      <stop offset="100%" stop-color="#1565C0"/>
+    </radialGradient>
+
+    <!-- Filters -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.4"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="600" fill="url(#grassBG)"/>
+
+  <!-- Path -->
+  <path d="M 50 0 L 50 80 L 300 80 L 300 200 L 100 200 L 100 320 L 280 320 L 280 440 L 120 440 L 120 560 L 250 560 L 250 600"
+        stroke="#5D4037" stroke-width="70" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.25"/>
+  <path d="M 50 0 L 50 80 L 300 80 L 300 200 L 100 200 L 100 320 L 280 320 L 280 440 L 120 440 L 120 560 L 250 560 L 250 600"
+        stroke="url(#pathGrad)" stroke-width="62" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)"/>
+  <path d="M 50 0 L 50 80 L 300 80 L 300 200 L 100 200 L 100 320 L 280 320 L 280 440 L 120 440 L 120 560 L 250 560 L 250 600"
+        stroke="#FFF3E0" stroke-width="2" opacity="0.3" fill="none" stroke-dasharray="10,8"/>
+
+  <!-- Trees -->
+  <g id="tree" filter="url(#shadow)">
+    <rect x="-4" y="5" width="8" height="20" rx="2" fill="#6D4C41"/>
+    <circle cx="0" cy="0" r="22" fill="url(#treeGrad)"/>
+    <circle cx="-10" cy="-8" r="15" fill="#2E7D32" opacity="0.9"/>
+    <circle cx="10" cy="-8" r="15" fill="#2E7D32" opacity="0.9"/>
+    <circle cx="0" cy="-12" r="11" fill="#388E3C" opacity="0.8"/>
+  </g>
+
+  <use href="#tree" x="340" y="125"/>
+  <use href="#tree" x="80" y="125"/>
+  <use href="#tree" x="140" y="245"/>
+  <use href="#tree" x="320" y="345"/>
+  <use href="#tree" x="80" y="465"/>
+
+  <!-- Bushes -->
+  <ellipse cx="340" cy="290" rx="20" ry="12" fill="url(#bushGrad)" filter="url(#shadow)" opacity="0.85"/>
+  <ellipse cx="140" cy="410" rx="22" ry="13" fill="url(#bushGrad)" filter="url(#shadow)" opacity="0.85"/>
+
+  <!-- Stones -->
+  <g fill="url(#stoneGrad)" filter="url(#shadow)">
+    <ellipse cx="200" cy="142" rx="20" ry="14"/>
+    <ellipse cx="180" cy="262" rx="18" ry="13"/>
+    <ellipse cx="200" cy="382" rx="18" ry="13"/>
+    <ellipse cx="180" cy="502" rx="18" ry="13"/>
+  </g>
+
+  <!-- Water -->
+  <ellipse cx="320" cy="520" rx="40" ry="25" fill="url(#waterGrad)" filter="url(#shadow)"/>
+  <ellipse cx="320" cy="520" rx="28" ry="16" fill="none" stroke="#E1F5FE" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Tower Base -->
+  <g transform="translate(250, 570)">
+    <ellipse cx="0" cy="8" rx="45" ry="10" fill="#0D47A1" opacity="0.3"/>
+    <circle cx="0" cy="0" r="40" fill="url(#baseGrad)" stroke="#0D47A1" stroke-width="4" filter="url(#glow)"/>
+    <circle cx="0" cy="0" r="33" fill="none" stroke="#BBDEFB" stroke-width="2" opacity="0.6"/>
+    <text x="0" y="8" font-family="Verdana, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle" stroke="#0D47A1" stroke-width="1.5">IP</text>
+  </g>
+
+  <!-- START Flag -->
+  <g transform="translate(50, 0)">
+    <rect x="-2" y="10" width="4" height="35" fill="#6D4C41" filter="url(#shadow)"/>
+    <circle cx="0" cy="10" r="3" fill="#FFD54F"/>
+    <path d="M 2 15 L 35 22 L 2 29 Z" fill="#F44336" stroke="#C62828" stroke-width="2" filter="url(#shadow)"/>
+    <text x="10" y="24" font-family="Arial, sans-serif" font-size="7" fill="white" font-weight="bold">START</text>
+  </g>
+</svg>

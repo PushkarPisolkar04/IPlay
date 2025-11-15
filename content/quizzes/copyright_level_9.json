@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_9",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+  
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_9_q1",
+      "question": "What is 'music sampling' in copyright terms?",
+      "options": [
+        "Using a short portion of another's sound recording in a new song",
+        "Copying lyrics word for word",
+        "Using the same song title",
+        "Recording a live concert without permission"
+      ],
+      "correctIndex": 0,
+      "explanation": "Music sampling means reusing a portion of another artist’s sound recording in a new song, often leading to copyright disputes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q2",
+      "question": "Which two copyrights are involved in a song?",
+      "options": [
+        "Composition and Sound Recording",
+        "Lyrics and Title",
+        "Performance and Distribution",
+        "Producer and Label Rights"
+      ],
+      "correctIndex": 0,
+      "explanation": "A song has two separate copyrights — one in the musical composition (melody, lyrics) and another in the sound recording.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q3",
+      "question": "The case 'Vanilla Ice vs. Queen & David Bowie' was about which song?",
+      "options": [
+        "Ice Ice Baby",
+        "Under Pressure",
+        "Thriller",
+        "Shape of You"
+      ],
+      "correctIndex": 0,
+      "explanation": "'Ice Ice Baby' by Vanilla Ice sampled 'Under Pressure' by Queen & David Bowie without permission, leading to a copyright dispute.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q4",
+      "question": "What was the main issue in the 'Blurred Lines vs. Marvin Gaye' case?",
+      "options": [
+        "Copying the 'feel' and style of a song",
+        "Directly sampling audio",
+        "Stealing lyrics",
+        "Using the same music video concept"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Blurred Lines case centered on whether copying the 'feel' or 'vibe' of Marvin Gaye’s song constituted infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q5",
+      "question": "What does 'de minimis' mean in copyright law?",
+      "options": [
+        "Too trivial or minor to be considered infringement",
+        "Work made by a minor",
+        "Maximum allowed use without permission",
+        "Derivative work with small changes"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'de minimis' principle means the copied portion is so small or insignificant that it doesn’t amount to infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q6",
+      "question": "Which artist was accused of copying Marvin Gaye’s song 'Got to Give It Up'?",
+      "options": [
+        "Pharrell Williams and Robin Thicke",
+        "Vanilla Ice",
+        "Kanye West",
+        "Ed Sheeran"
+      ],
+      "correctIndex": 0,
+      "explanation": "Pharrell Williams and Robin Thicke were sued for 'Blurred Lines', alleged to have copied 'Got to Give It Up' by Marvin Gaye.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q7",
+      "question": "Why is music sampling often legally risky?",
+      "options": [
+        "Because both composition and recording rights may need clearance",
+        "Because the music sounds similar",
+        "Because it's not fair dealing",
+        "Because it requires government approval"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sampling requires permission from both composition and sound recording owners; missing either can lead to infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q8",
+      "question": "What is a 'sample clearance'?",
+      "options": [
+        "A license obtained to legally use a music sample",
+        "A test for song originality",
+        "A legal fine for copying music",
+        "An artist collaboration agreement"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sample clearance is the permission granted by copyright owners to use parts of their music in another track.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q9",
+      "question": "Which of the following cases introduced the concept of 'sound-alike' infringement?",
+      "options": [
+        "Blurred Lines vs. Marvin Gaye",
+        "Vanilla Ice vs. Queen",
+        "Napster vs. A&M Records",
+        "RIAA vs. Metallica"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'Blurred Lines' case expanded the scope of infringement to include copying a song's 'feel' or 'sound-alike' quality.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_9_q10",
+      "question": "Under copyright law, can a very short musical phrase be protected?",
+      "options": [
+        "Yes, if it’s distinctive and original",
+        "No, short phrases are always free to use",
+        "Only if registered",
+        "Only if sung by the original artist"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even short musical phrases can be protected if they’re sufficiently original and recognizable.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_9_q11",
+      "question": "What was the outcome of the 'Blurred Lines' lawsuit?",
+      "options": [
+        "Thicke and Williams were found liable and paid damages",
+        "The case was dismissed",
+        "Marvin Gaye’s family lost the case",
+        "It was ruled as fair use"
+      ],
+      "correctIndex": 0,
+      "explanation": "The court found 'Blurred Lines' infringed Marvin Gaye’s song, awarding over $5 million to Gaye’s estate.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_9_q12",
+      "question": "In India, what determines if sampling is 'substantial enough' to be infringement?",
+      "options": [
+        "Qualitative importance, not just quantity",
+        "Duration of the clip used",
+        "Market share of the artist",
+        "Whether the public noticed"
+      ],
+      "correctIndex": 0,
+      "explanation": "Courts look at the qualitative importance of the copied part, not just how long it is.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q13",
+      "question": "The 'de minimis' rule may NOT apply when:",
+      "options": [
+        "The copied part is the most recognizable hook",
+        "Only one second of audio is used",
+        "Permission is sought and granted",
+        "The artist gives credit"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even a small copied portion can infringe if it’s the most identifiable or important part of the work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q14",
+      "question": "Which of the following best describes the purpose of the 'de minimis' rule?",
+      "options": [
+        "To avoid punishing trivial uses that cause no harm",
+        "To ban all sampling",
+        "To make registration compulsory",
+        "To enforce stricter penalties"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'de minimis' rule prevents overreach by exempting negligible copying that doesn’t harm the copyright owner.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q15",
+      "question": "Can a remix be considered an infringement?",
+      "options": [
+        "Yes, if original samples are used without permission",
+        "No, remixes are always legal",
+        "Only if lyrics are changed",
+        "Only if performed live"
+      ],
+      "correctIndex": 0,
+      "explanation": "Remixes using original sound recordings or melodies without permission can infringe copyright.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q16",
+      "question": "What is the legal test often used to determine infringement in music cases?",
+      "options": [
+        "Substantial similarity test",
+        "Market harm test",
+        "Economic benefit test",
+        "Authorship test"
+      ],
+      "correctIndex": 0,
+      "explanation": "Courts apply the 'substantial similarity' test to check if an average listener would recognize copied elements.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q17",
+      "question": "What is one key difference between 'sampling' and 'covering' a song?",
+      "options": [
+        "Sampling uses the original recording, covering recreates it",
+        "Covers always require permission",
+        "Sampling is legal, covering is not",
+        "Covers copy lyrics without music"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sampling uses parts of an existing recording, while covering means recording your own version of a composition.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q18",
+      "question": "If an artist samples a 2-second drum beat, what should they do to stay safe legally?",
+      "options": [
+        "Get sample clearance from copyright owners",
+        "Use it without mention",
+        "Claim fair dealing",
+        "Modify tempo slightly"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even short samples can require clearance. Modifying or shortening doesn’t automatically make it legal.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q19",
+      "question": "Which of these best defines 'sampling wars'?",
+      "options": [
+        "A series of lawsuits over the legality of music sampling",
+        "A music competition",
+        "A DJ remix challenge",
+        "A record label dispute"
+      ],
+      "correctIndex": 0,
+      "explanation": "'Sampling wars' refers to the numerous legal battles between artists over the unauthorized use of samples.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q20",
+      "question": "Which famous Indian case dealt with unlicensed use of background tracks?",
+      "options": [
+        "Gramophone Co. of India vs. Super Cassettes",
+        "Vanilla Ice vs. Queen",
+        "RIAA vs. Napster",
+        "Sony Music vs. TikTok"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Gramophone Co. of India vs. Super Cassettes case highlighted unlicensed reuse of music recordings in India.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_9_q21",
+      "question": "If a sample is licensed, what must the new artist usually do?",
+      "options": [
+        "Pay a fee and give credit",
+        "Only pay a fee",
+        "Only give credit",
+        "Do nothing further"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sample licenses often require both payment and proper credit to the original creators.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q22",
+      "question": "What happens if an artist ignores a DMCA takedown notice?",
+      "options": [
+        "The platform may remove or block their content",
+        "Nothing, it’s optional",
+        "They gain automatic rights",
+        "They get royalty payments"
+      ],
+      "correctIndex": 0,
+      "explanation": "Ignoring a DMCA notice can lead to removal or account strikes by the platform.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q23",
+      "question": "What is one defense artists often use in sampling cases?",
+      "options": [
+        "De minimis use",
+        "Reverse infringement",
+        "Market competition",
+        "Work-for-hire clause"
+      ],
+      "correctIndex": 0,
+      "explanation": "Artists often argue that the sampled portion was too trivial ('de minimis') to count as infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_9_q24",
+      "question": "What is the best way for artists to avoid sampling disputes?",
+      "options": [
+        "Obtain proper permissions and documentation",
+        "Change pitch or tempo slightly",
+        "Use foreign music",
+        "Credit the artist in album notes"
+      ],
+      "correctIndex": 0,
+      "explanation": "Legal clearance and documentation are the safest methods to avoid copyright disputes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_9_q25",
+      "question": "Why are sampling cases significant in copyright education?",
+      "options": [
+        "They demonstrate real-world applications of copyright principles",
+        "They involve famous musicians only",
+        "They always lead to new music genres",
+        "They show copyright doesn’t apply to sound"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sampling cases illustrate how copyright law balances creativity with ownership rights in practical, high-profile ways.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

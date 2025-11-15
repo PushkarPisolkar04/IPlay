@@ -1,0 +1,1135 @@
+{
+  "id": "gi_mapper",
+  "name": "GI Mapper",
+  "description": "Match Geographical Indication products to their regions of origin",
+  "summary": "Test your knowledge of famous GI products by matching them with their authentic regions. Learn about India's rich heritage of regional specialties.",
+  "iconPath": "assets/games/gi_mapper.png",
+  "color": "0xFFFFC107",
+  "difficulty": "medium",
+  "gameType": "matching",
+  "xpReward": 60,
+  "estimatedMinutes": 8,
+  "pairsPerGame": 8,
+  "timeLimit": 300,
+  "randomSelection": true,
+  "allowRetry": true,
+  "showHintsAfterWrongAnswer": true,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-12T00:00:00Z",
+  "giProducts": [
+    {
+      "id": "gi_001",
+      "name": "Darjeeling Tea",
+      "state": "West Bengal",
+      "stateCode": "WB",
+      "coordinates": {
+        "lat": 27.036,
+        "lng": 88.2627
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/darjeeling_tea.png",
+      "description": "World-famous tea from Darjeeling hills, known for its muscatel flavor and aroma",
+      "registrationYear": 2003,
+      "uniqueCharacteristics": [
+        "Muscatel flavor",
+        "High altitude cultivation",
+        "Golden liquor"
+      ],
+      "hint": "Famous hill station tea, often called 'Champagne of Teas'",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_002",
+      "name": "Basmati Rice",
+      "state": "Punjab",
+      "stateCode": "PB",
+      "coordinates": {
+        "lat": 30.7333,
+        "lng": 76.7794
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/basmati_rice.png",
+      "description": "Aromatic long-grain rice with distinctive fragrance and taste",
+      "registrationYear": 2008,
+      "uniqueCharacteristics": [
+        "Long grain",
+        "Aromatic",
+        "Fluffy texture when cooked"
+      ],
+      "hint": "Aromatic long-grain rice from northern India",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_003",
+      "name": "Kanchipuram Silk",
+      "state": "Tamil Nadu",
+      "stateCode": "TN",
+      "coordinates": {
+        "lat": 12.8342,
+        "lng": 79.7036
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/kanchipuram_silk.png",
+      "description": "Traditional silk sarees with rich colors and intricate designs",
+      "registrationYear": 2005,
+      "uniqueCharacteristics": [
+        "Pure mulberry silk",
+        "Contrasting borders",
+        "Temple motifs"
+      ],
+      "hint": "Traditional silk sarees from temple city",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_004",
+      "name": "Alphonso Mango",
+      "state": "Maharashtra",
+      "stateCode": "MH",
+      "coordinates": {
+        "lat": 16.705,
+        "lng": 73.8119
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/alphonso_mango.png",
+      "description": "Premium mango variety known as the 'King of Mangoes'",
+      "registrationYear": 2018,
+      "uniqueCharacteristics": [
+        "Golden yellow color",
+        "Sweet taste",
+        "Rich aroma"
+      ],
+      "hint": "King of mangoes from Konkan region",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_005",
+      "name": "Mysore Silk",
+      "state": "Karnataka",
+      "stateCode": "KA",
+      "coordinates": {
+        "lat": 12.2958,
+        "lng": 76.6394
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/mysore_silk.png",
+      "description": "Royal silk from the palace city, known for its fine texture",
+      "registrationYear": 2005,
+      "uniqueCharacteristics": [
+        "Fine texture",
+        "Rich colors",
+        "Traditional designs"
+      ],
+      "hint": "Royal silk from palace city",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_006",
+      "name": "Channapatna Toys",
+      "state": "Karnataka",
+      "stateCode": "KA",
+      "coordinates": {
+        "lat": 12.6517,
+        "lng": 77.2067
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/channapatna_toys.png",
+      "description": "Traditional wooden toys with lacquer work",
+      "registrationYear": 2006,
+      "uniqueCharacteristics": [
+        "Wooden craft",
+        "Lacquer coating",
+        "Bright colors"
+      ],
+      "hint": "Colorful wooden toys from Karnataka",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_007",
+      "name": "Nagpur Orange",
+      "state": "Maharashtra",
+      "stateCode": "MH",
+      "coordinates": {
+        "lat": 21.1458,
+        "lng": 79.0882
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/nagpur_orange.png",
+      "description": "Juicy oranges with distinctive sweet-sour taste",
+      "registrationYear": 2014,
+      "uniqueCharacteristics": [
+        "Juicy pulp",
+        "Sweet-sour taste",
+        "Rich in vitamin C"
+      ],
+      "hint": "Famous citrus fruit from central India",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_008",
+      "name": "Kashmir Pashmina",
+      "state": "Jammu and Kashmir",
+      "stateCode": "JK",
+      "coordinates": {
+        "lat": 34.0837,
+        "lng": 74.7973
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/kashmir_pashmina.png",
+      "description": "Luxurious wool from Himalayan goats",
+      "registrationYear": 2008,
+      "uniqueCharacteristics": [
+        "Ultra-fine fiber",
+        "Soft texture",
+        "Warm"
+      ],
+      "hint": "Luxurious wool shawls from the Himalayas",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_009",
+      "name": "Bikaneri Bhujia",
+      "state": "Rajasthan",
+      "stateCode": "RJ",
+      "coordinates": {
+        "lat": 28.0229,
+        "lng": 73.3119
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/bikaneri_bhujia.png",
+      "description": "Crispy spicy snack made from moth dal",
+      "registrationYear": 2010,
+      "uniqueCharacteristics": [
+        "Crispy texture",
+        "Spicy flavor",
+        "Made from moth dal"
+      ],
+      "hint": "Famous spicy snack from desert city",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_010",
+      "name": "Tirupati Laddu",
+      "state": "Andhra Pradesh",
+      "stateCode": "AP",
+      "coordinates": {
+        "lat": 13.6288,
+        "lng": 79.4192
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/tirupati_laddu.png",
+      "description": "Sacred sweet offered at Tirumala Venkateswara Temple",
+      "registrationYear": 2009,
+      "uniqueCharacteristics": [
+        "Made with pure ghee",
+        "Cardamom flavor",
+        "Temple prasadam"
+      ],
+      "hint": "Sacred sweet from famous temple town",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_011",
+      "name": "Coorg Coffee",
+      "state": "Karnataka",
+      "stateCode": "KA",
+      "coordinates": {
+        "lat": 12.3375,
+        "lng": 75.8069
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/coorg_coffee.png",
+      "description": "Aromatic coffee from the hills of Coorg",
+      "registrationYear": 2019,
+      "uniqueCharacteristics": [
+        "Rich aroma",
+        "Grown in shade",
+        "Arabica variety"
+      ],
+      "hint": "Aromatic coffee from Karnataka hills",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_012",
+      "name": "Pochampally Ikat",
+      "state": "Telangana",
+      "stateCode": "TG",
+      "coordinates": {
+        "lat": 17.385,
+        "lng": 78.4867
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/pochampally_ikat.png",
+      "description": "Traditional tie-dye textile with geometric patterns",
+      "registrationYear": 2004,
+      "uniqueCharacteristics": [
+        "Tie-dye technique",
+        "Geometric patterns",
+        "Vibrant colors"
+      ],
+      "hint": "Traditional tie-dye fabric from Telangana",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_013",
+      "name": "Kullu Shawl",
+      "state": "Himachal Pradesh",
+      "stateCode": "HP",
+      "coordinates": {
+        "lat": 31.9578,
+        "lng": 77.1101
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/kullu_shawl.png",
+      "description": "Handwoven woolen shawls with traditional patterns",
+      "registrationYear": 2005,
+      "uniqueCharacteristics": [
+        "Handwoven",
+        "Geometric patterns",
+        "Warm wool"
+      ],
+      "hint": "Colorful woolen shawls from Himalayan valley",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_014",
+      "name": "Hyderabadi Haleem",
+      "state": "Telangana",
+      "stateCode": "TG",
+      "coordinates": {
+        "lat": 17.385,
+        "lng": 78.4867
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/hyderabadi_haleem.png",
+      "description": "Traditional meat and lentil stew",
+      "registrationYear": 2010,
+      "uniqueCharacteristics": [
+        "Slow-cooked",
+        "Rich spices",
+        "Ramadan special"
+      ],
+      "hint": "Famous meat stew from city of Nizams",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_015",
+      "name": "Malabar Pepper",
+      "state": "Kerala",
+      "stateCode": "KL",
+      "coordinates": {
+        "lat": 11.2588,
+        "lng": 75.7804
+      },
+      "category": "spice",
+      "imageUrl": "assets/gi/malabar_pepper.png",
+      "description": "Premium black pepper from Malabar coast",
+      "registrationYear": 2008,
+      "uniqueCharacteristics": [
+        "Strong aroma",
+        "Pungent taste",
+        "High oil content"
+      ],
+      "hint": "Black gold from Kerala coast",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_016",
+      "name": "Banganapalle Mango",
+      "state": "Andhra Pradesh",
+      "stateCode": "AP",
+      "coordinates": {
+        "lat": 15.3173,
+        "lng": 78.2265
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/banganapalle_mango.png",
+      "description": "Large yellow mangoes with thin skin",
+      "registrationYear": 2017,
+      "uniqueCharacteristics": [
+        "Large size",
+        "Thin skin",
+        "Sweet pulp"
+      ],
+      "hint": "Large yellow mangoes from Andhra Pradesh",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_017",
+      "name": "Kolhapuri Chappal",
+      "state": "Maharashtra",
+      "stateCode": "MH",
+      "coordinates": {
+        "lat": 16.705,
+        "lng": 74.2433
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/kolhapuri_chappal.png",
+      "description": "Traditional handcrafted leather footwear",
+      "registrationYear": 2019,
+      "uniqueCharacteristics": [
+        "Handcrafted leather",
+        "Traditional design",
+        "Durable"
+      ],
+      "hint": "Traditional leather footwear from Maharashtra",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_018",
+      "name": "Madhubani Painting",
+      "state": "Bihar",
+      "stateCode": "BR",
+      "coordinates": {
+        "lat": 26.3489,
+        "lng": 86.0789
+      },
+      "category": "art",
+      "imageUrl": "assets/gi/madhubani_painting.png",
+      "description": "Traditional folk art with intricate patterns",
+      "registrationYear": 2007,
+      "uniqueCharacteristics": [
+        "Natural colors",
+        "Geometric patterns",
+        "Mythological themes"
+      ],
+      "hint": "Traditional folk art from Bihar",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_019",
+      "name": "Assam Tea",
+      "state": "Assam",
+      "stateCode": "AS",
+      "coordinates": {
+        "lat": 26.2006,
+        "lng": 92.9376
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/assam_tea.png",
+      "description": "Strong black tea with malty flavor",
+      "registrationYear": 2005,
+      "uniqueCharacteristics": [
+        "Malty flavor",
+        "Bright color",
+        "Strong taste"
+      ],
+      "hint": "Strong black tea from northeastern state",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_020",
+      "name": "Lucknowi Chikankari",
+      "state": "Uttar Pradesh",
+      "stateCode": "UP",
+      "coordinates": {
+        "lat": 26.8467,
+        "lng": 80.9462
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/lucknowi_chikankari.png",
+      "description": "Traditional embroidery work on fabric",
+      "registrationYear": 2008,
+      "uniqueCharacteristics": [
+        "Delicate embroidery",
+        "White thread work",
+        "Floral patterns"
+      ],
+      "hint": "Traditional embroidery from city of Nawabs",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_021",
+      "name": "Nilgiri Tea",
+      "state": "Tamil Nadu",
+      "stateCode": "TN",
+      "coordinates": {
+        "lat": 11.4102,
+        "lng": 76.695
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/nilgiri_tea.png",
+      "description": "Fragrant tea from Blue Mountains",
+      "registrationYear": 2007,
+      "uniqueCharacteristics": [
+        "Fragrant",
+        "Bright liquor",
+        "Smooth taste"
+      ],
+      "hint": "Tea from Blue Mountains of South India",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_022",
+      "name": "Aranmula Kannadi",
+      "state": "Kerala",
+      "stateCode": "KL",
+      "coordinates": {
+        "lat": 9.3333,
+        "lng": 76.6833
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/aranmula_kannadi.png",
+      "description": "Traditional metal mirror made from special alloy",
+      "registrationYear": 2004,
+      "uniqueCharacteristics": [
+        "Metal mirror",
+        "No glass",
+        "Handcrafted"
+      ],
+      "hint": "Unique metal mirror from Kerala",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_023",
+      "name": "Banaras Brocades",
+      "state": "Uttar Pradesh",
+      "stateCode": "UP",
+      "coordinates": {
+        "lat": 25.3176,
+        "lng": 82.9739
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/banaras_brocades.png",
+      "description": "Luxurious silk fabric with gold and silver threads",
+      "registrationYear": 2009,
+      "uniqueCharacteristics": [
+        "Gold thread work",
+        "Intricate designs",
+        "Silk fabric"
+      ],
+      "hint": "Luxurious silk with gold work from holy city",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_024",
+      "name": "Mahabaleshwar Strawberry",
+      "state": "Maharashtra",
+      "stateCode": "MH",
+      "coordinates": {
+        "lat": 17.9244,
+        "lng": 73.6577
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/mahabaleshwar_strawberry.png",
+      "description": "Sweet and juicy strawberries from hill station",
+      "registrationYear": 2016,
+      "uniqueCharacteristics": [
+        "Sweet taste",
+        "Bright red color",
+        "Juicy"
+      ],
+      "hint": "Famous strawberries from Maharashtra hill station",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_025",
+      "name": "Wayanad Robusta Coffee",
+      "state": "Kerala",
+      "stateCode": "KL",
+      "coordinates": {
+        "lat": 11.6854,
+        "lng": 76.132
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/wayanad_coffee.png",
+      "description": "Strong coffee from Western Ghats",
+      "registrationYear": 2019,
+      "uniqueCharacteristics": [
+        "Strong flavor",
+        "High caffeine",
+        "Robusta variety"
+      ],
+      "hint": "Strong coffee from Kerala hills",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_026",
+      "name": "Bhavani Jamakkalam",
+      "state": "Tamil Nadu",
+      "stateCode": "TN",
+      "coordinates": {
+        "lat": 11.4449,
+        "lng": 77.6799
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/bhavani_jamakkalam.png",
+      "description": "Traditional floor mat with colorful stripes",
+      "registrationYear": 2010,
+      "uniqueCharacteristics": [
+        "Colorful stripes",
+        "Cotton material",
+        "Durable"
+      ],
+      "hint": "Traditional striped floor mat from Tamil Nadu",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_027",
+      "name": "Jodhpur Handicraft",
+      "state": "Rajasthan",
+      "stateCode": "RJ",
+      "coordinates": {
+        "lat": 26.2389,
+        "lng": 73.0243
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/jodhpur_handicraft.png",
+      "description": "Traditional wooden furniture and handicrafts",
+      "registrationYear": 2015,
+      "uniqueCharacteristics": [
+        "Wooden craft",
+        "Intricate carving",
+        "Traditional designs"
+      ],
+      "hint": "Traditional wooden crafts from Blue City",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_028",
+      "name": "Palani Panchamirtham",
+      "state": "Tamil Nadu",
+      "stateCode": "TN",
+      "coordinates": {
+        "lat": 10.45,
+        "lng": 77.5167
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/palani_panchamirtham.png",
+      "description": "Sacred sweet made with five ingredients",
+      "registrationYear": 2019,
+      "uniqueCharacteristics": [
+        "Five ingredients",
+        "Temple prasadam",
+        "Unique taste"
+      ],
+      "hint": "Sacred sweet from Tamil Nadu temple",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_029",
+      "name": "Solapur Chaddar",
+      "state": "Maharashtra",
+      "stateCode": "MH",
+      "coordinates": {
+        "lat": 17.6599,
+        "lng": 75.9064
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/solapur_chaddar.png",
+      "description": "Traditional cotton bedsheet with checkered pattern",
+      "registrationYear": 2010,
+      "uniqueCharacteristics": [
+        "Cotton material",
+        "Checkered pattern",
+        "Durable"
+      ],
+      "hint": "Traditional cotton bedsheet from Maharashtra",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_030",
+      "name": "Sikkim Large Cardamom",
+      "state": "Sikkim",
+      "stateCode": "SK",
+      "coordinates": {
+        "lat": 27.533,
+        "lng": 88.5122
+      },
+      "category": "spice",
+      "imageUrl": "assets/gi/sikkim_cardamom.png",
+      "description": "Large cardamom with strong aroma",
+      "registrationYear": 2008,
+      "uniqueCharacteristics": [
+        "Large size",
+        "Strong aroma",
+        "Medicinal properties"
+      ],
+      "hint": "Large spice from Himalayan state",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_031",
+      "name": "Thanjavur Veena",
+      "state": "Tamil Nadu",
+      "stateCode": "TN",
+      "coordinates": {
+        "lat": 10.787,
+        "lng": 79.1378
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/thanjavur_veena.png",
+      "description": "Traditional musical instrument with rich sound",
+      "registrationYear": 2019,
+      "uniqueCharacteristics": [
+        "Handcrafted",
+        "Rich sound",
+        "Traditional design"
+      ],
+      "hint": "Traditional musical instrument from Tamil Nadu",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_032",
+      "name": "Mizo Chilli",
+      "state": "Mizoram",
+      "stateCode": "MZ",
+      "coordinates": {
+        "lat": 23.1645,
+        "lng": 92.9376
+      },
+      "category": "spice",
+      "imageUrl": "assets/gi/mizo_chilli.png",
+      "description": "Extremely hot chilli variety",
+      "registrationYear": 2015,
+      "uniqueCharacteristics": [
+        "Very hot",
+        "Small size",
+        "Unique flavor"
+      ],
+      "hint": "Very hot chilli from northeastern state",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_033",
+      "name": "Agra Petha",
+      "state": "Uttar Pradesh",
+      "stateCode": "UP",
+      "coordinates": {
+        "lat": 27.1767,
+        "lng": 78.0081
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/agra_petha.png",
+      "description": "Traditional sweet made from ash gourd",
+      "registrationYear": 2012,
+      "uniqueCharacteristics": [
+        "Translucent",
+        "Sweet taste",
+        "Made from ash gourd"
+      ],
+      "hint": "Famous sweet from city of Taj Mahal",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_034",
+      "name": "Odisha Ikat",
+      "state": "Odisha",
+      "stateCode": "OR",
+      "coordinates": {
+        "lat": 20.9517,
+        "lng": 85.0985
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/odisha_ikat.png",
+      "description": "Traditional tie-dye textile with intricate patterns",
+      "registrationYear": 2007,
+      "uniqueCharacteristics": [
+        "Tie-dye technique",
+        "Intricate patterns",
+        "Vibrant colors"
+      ],
+      "hint": "Traditional tie-dye fabric from eastern state",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_035",
+      "name": "Goa Feni",
+      "state": "Goa",
+      "stateCode": "GA",
+      "coordinates": {
+        "lat": 15.2993,
+        "lng": 74.124
+      },
+      "category": "beverage",
+      "imageUrl": "assets/gi/goa_feni.png",
+      "description": "Traditional liquor made from cashew or coconut",
+      "registrationYear": 2009,
+      "uniqueCharacteristics": [
+        "Made from cashew/coconut",
+        "Strong aroma",
+        "Traditional distillation"
+      ],
+      "hint": "Traditional liquor from coastal state",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_036",
+      "name": "Manipur Black Rice",
+      "state": "Manipur",
+      "stateCode": "MN",
+      "coordinates": {
+        "lat": 24.6637,
+        "lng": 93.9063
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/manipur_black_rice.png",
+      "description": "Nutritious black rice variety",
+      "registrationYear": 2020,
+      "uniqueCharacteristics": [
+        "Black color",
+        "High nutrition",
+        "Aromatic"
+      ],
+      "hint": "Nutritious black rice from northeastern state",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_037",
+      "name": "Jaipur Blue Pottery",
+      "state": "Rajasthan",
+      "stateCode": "RJ",
+      "coordinates": {
+        "lat": 26.9124,
+        "lng": 75.7873
+      },
+      "category": "handicraft",
+      "imageUrl": "assets/gi/jaipur_blue_pottery.png",
+      "description": "Traditional pottery with blue glaze",
+      "registrationYear": 2015,
+      "uniqueCharacteristics": [
+        "Blue glaze",
+        "Floral patterns",
+        "No clay used"
+      ],
+      "hint": "Traditional blue pottery from Pink City",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_038",
+      "name": "Uttarakhand Tejpat",
+      "state": "Uttarakhand",
+      "stateCode": "UT",
+      "coordinates": {
+        "lat": 30.0668,
+        "lng": 79.0193
+      },
+      "category": "spice",
+      "imageUrl": "assets/gi/uttarakhand_tejpat.png",
+      "description": "Aromatic bay leaf from Himalayan region",
+      "registrationYear": 2018,
+      "uniqueCharacteristics": [
+        "Strong aroma",
+        "Medicinal properties",
+        "Himalayan origin"
+      ],
+      "hint": "Aromatic bay leaf from Himalayan state",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_039",
+      "name": "Chhattisgarh Kosa Silk",
+      "state": "Chhattisgarh",
+      "stateCode": "CT",
+      "coordinates": {
+        "lat": 21.2787,
+        "lng": 81.8661
+      },
+      "category": "textile",
+      "imageUrl": "assets/gi/chhattisgarh_kosa_silk.png",
+      "description": "Tussar silk with natural golden color",
+      "registrationYear": 2013,
+      "uniqueCharacteristics": [
+        "Golden color",
+        "Tussar silk",
+        "Natural sheen"
+      ],
+      "hint": "Golden silk from central Indian state",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "gi_040",
+      "name": "Meghalaya Orange",
+      "state": "Meghalaya",
+      "stateCode": "ML",
+      "coordinates": {
+        "lat": 25.467,
+        "lng": 91.3662
+      },
+      "category": "food",
+      "imageUrl": "assets/gi/meghalaya_orange.png",
+      "description": "Sweet oranges from hills of Meghalaya",
+      "registrationYear": 2015,
+      "uniqueCharacteristics": [
+        "Sweet taste",
+        "Juicy",
+        "Thin skin"
+      ],
+      "hint": "Sweet oranges from abode of clouds",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ],
+  "mapData": {
+    "states": [
+      {
+        "code": "AN",
+        "name": "Andaman and Nicobar Islands",
+        "color": "#80CBC4",
+        "region": "Islands"
+      },
+      {
+        "code": "AP",
+        "name": "Andhra Pradesh",
+        "color": "#FF6B6B",
+        "region": "South"
+      },
+      {
+        "code": "AR",
+        "name": "Arunachal Pradesh",
+        "color": "#4ECDC4",
+        "region": "Northeast"
+      },
+      {
+        "code": "AS",
+        "name": "Assam",
+        "color": "#45B7D1",
+        "region": "Northeast"
+      },
+      {
+        "code": "BR",
+        "name": "Bihar",
+        "color": "#FFA07A",
+        "region": "East"
+      },
+      {
+        "code": "CH",
+        "name": "Chandigarh",
+        "color": "#FFE082",
+        "region": "North"
+      },
+      {
+        "code": "CT",
+        "name": "Chhattisgarh",
+        "color": "#98D8C8",
+        "region": "Central"
+      },
+      {
+        "code": "DD",
+        "name": "Daman and Diu",
+        "color": "#FFD54F",
+        "region": "West"
+      },
+      {
+        "code": "DL",
+        "name": "Delhi",
+        "color": "#EF9A9A",
+        "region": "North"
+      },
+      {
+        "code": "DN",
+        "name": "Dadra and Nagar Haveli",
+        "color": "#FFF59D",
+        "region": "West"
+      },
+      {
+        "code": "GA",
+        "name": "Goa",
+        "color": "#F7DC6F",
+        "region": "West"
+      },
+      {
+        "code": "GJ",
+        "name": "Gujarat",
+        "color": "#BB8FCE",
+        "region": "West"
+      },
+      {
+        "code": "HP",
+        "name": "Himachal Pradesh",
+        "color": "#76D7C4",
+        "region": "North"
+      },
+      {
+        "code": "HR",
+        "name": "Haryana",
+        "color": "#85C1E2",
+        "region": "North"
+      },
+      {
+        "code": "JH",
+        "name": "Jharkhand",
+        "color": "#F8B88B",
+        "region": "East"
+      },
+      {
+        "code": "JK",
+        "name": "Jammu and Kashmir",
+        "color": "#AED6F1",
+        "region": "North"
+      },
+      {
+        "code": "KA",
+        "name": "Karnataka",
+        "color": "#FAD7A0",
+        "region": "South"
+      },
+      {
+        "code": "KL",
+        "name": "Kerala",
+        "color": "#ABEBC6",
+        "region": "South"
+      },
+      {
+        "code": "LD",
+        "name": "Lakshadweep",
+        "color": "#81C784",
+        "region": "Islands"
+      },
+      {
+        "code": "MH",
+        "name": "Maharashtra",
+        "color": "#D7BDE2",
+        "region": "West"
+      },
+      {
+        "code": "ML",
+        "name": "Meghalaya",
+        "color": "#A3E4D7",
+        "region": "Northeast"
+      },
+      {
+        "code": "MN",
+        "name": "Manipur",
+        "color": "#A9DFBF",
+        "region": "Northeast"
+      },
+      {
+        "code": "MP",
+        "name": "Madhya Pradesh",
+        "color": "#F5B7B1",
+        "region": "Central"
+      },
+      {
+        "code": "MZ",
+        "name": "Mizoram",
+        "color": "#7FB3D5",
+        "region": "Northeast"
+      },
+      {
+        "code": "NL",
+        "name": "Nagaland",
+        "color": "#C39BD3",
+        "region": "Northeast"
+      },
+      {
+        "code": "OR",
+        "name": "Odisha",
+        "color": "#F9E79F",
+        "region": "East"
+      },
+      {
+        "code": "PB",
+        "name": "Punjab",
+        "color": "#FAD02E",
+        "region": "North"
+      },
+      {
+        "code": "PY",
+        "name": "Puducherry",
+        "color": "#F48FB1",
+        "region": "South"
+      },
+      {
+        "code": "RJ",
+        "name": "Rajasthan",
+        "color": "#EC7063",
+        "region": "North"
+      },
+      {
+        "code": "SK",
+        "name": "Sikkim",
+        "color": "#85C1E2",
+        "region": "Northeast"
+      },
+      {
+        "code": "TG",
+        "name": "Telangana",
+        "color": "#CE93D8",
+        "region": "South"
+      },
+      {
+        "code": "TN",
+        "name": "Tamil Nadu",
+        "color": "#F8BBD0",
+        "region": "South"
+      },
+      {
+        "code": "TR",
+        "name": "Tripura",
+        "color": "#90CAF9",
+        "region": "Northeast"
+      },
+      {
+        "code": "UP",
+        "name": "Uttar Pradesh",
+        "color": "#FFCC80",
+        "region": "North"
+      },
+      {
+        "code": "UT",
+        "name": "Uttarakhand",
+        "color": "#80DEEA",
+        "region": "North"
+      },
+      {
+        "code": "WB",
+        "name": "West Bengal",
+        "color": "#A5D6A7",
+        "region": "East"
+      }
+    ]
+  },
+  "rewards": {
+    "completion": 60,
+    "perfectScore": 120,
+    "firstTime": 80,
+    "highScore": 150
+  },
+  "leaderboard": {
+    "enabled": true,
+    "scope": [
+      "classroom",
+      "school",
+      "global"
+    ]
+  }
+}

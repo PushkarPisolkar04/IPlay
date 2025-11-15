@@ -1,0 +1,45 @@
+<svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Counterfeiter Enemy - Enhanced -->
+  <defs>
+    <linearGradient id="counterfeitGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF5350;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F44336;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C62828;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Body -->
+  <ellipse cx="16" cy="20" rx="7" ry="9" fill="url(#counterfeitGrad)" stroke="#B71C1C" stroke-width="1.5"/>
+  
+  <!-- Head -->
+  <circle cx="16" cy="10" r="5.5" fill="#FFAB91" stroke="#BF360C" stroke-width="1"/>
+  
+  <!-- Hat (shady character) -->
+  <ellipse cx="16" cy="6" rx="6" ry="2" fill="#424242" stroke="#212121" stroke-width="1"/>
+  <rect x="11" y="6" width="10" height="3" fill="#424242" stroke="#212121" stroke-width="1"/>
+  
+  <!-- Eyes (shifty/suspicious) -->
+  <ellipse cx="14" cy="10" rx="1.5" ry="1.8" fill="white"/>
+  <ellipse cx="18" cy="10" rx="1.5" ry="1.8" fill="white"/>
+  <circle cx="14.5" cy="10.5" r="1" fill="#212121"/>
+  <circle cx="17.5" cy="10.5" r="1" fill="#212121"/>
+  
+  <!-- Suspicious expression -->
+  <path d="M 13 13 Q 16 14 19 13" fill="none" stroke="#BF360C" stroke-width="0.8"/>
+  
+  <!-- Arms -->
+  <line x1="11" y1="18" x2="7" y2="20" stroke="#FFAB91" stroke-width="2" stroke-linecap="round"/>
+  <line x1="21" y1="18" x2="24" y2="20" stroke="#FFAB91" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Bag of fake goods -->
+  <ellipse cx="24" cy="22" rx="4" ry="5" fill="#8D6E63" stroke="#4E342E" stroke-width="1"/>
+  <path d="M 22 18 Q 24 17 26 18" fill="none" stroke="#4E342E" stroke-width="1.5"/>
+  <text x="21.5" y="24" font-family="Arial, sans-serif" font-size="5" fill="#FFD54F" font-weight="bold">$</text>
+  
+  <!-- Fake label on bag -->
+  <rect x="22" y="25" width="4" height="2" rx="0.5" fill="#FFEB3B" stroke="#F57F17" stroke-width="0.5"/>
+  
+  <!-- Legs -->
+  <line x1="14" y1="28" x2="14" y2="31" stroke="#E53935" stroke-width="2" stroke-linecap="round"/>
+  <line x1="18" y1="28" x2="18" y2="31" stroke="#E53935" stroke-width="2" stroke-linecap="round"/>
+</svg>

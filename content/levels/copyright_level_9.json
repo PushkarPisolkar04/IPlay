@@ -1,0 +1,39 @@
+{
+  "id": "copyright_level_9",
+  "realmId": "realm_copyright",
+  "levelNumber": 9,
+  "name": "Big Case Study: The Music 'Sampling' Wars",
+  "description": "Is 'sampling' a song a tribute or theft? A deep dive into high-profile music copyright battles.",
+  "summary": "This level analyzes famous music sampling cases (like Vanilla Ice vs. Queen) to understand how copyright law is applied to music, and the 'de minimis' (too small to matter) argument.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=Im5mbNEyeww",
+  "videoDuration": 400,
+  
+  "content": "## Big Case Study: The Music 'Sampling' Wars\n\n'Sampling' is the art of taking a portion (a 'sample') of one sound recording and reusing it in a new song. It's the foundation of hip-hop and pop music. But is it legal? \n\nIt's one of the most complex areas of copyright, because it infringes on **two separate copyrights** at the same time:\n\n1.  **The Musical Work:** The underlying song (melody, lyrics) owned by the songwriter/publisher.\n2.  **The Sound Recording:** The specific *recording* of that song (the 'master') owned by the record label.\n\nTo legally sample a song, you must get a license (permission) from *both* owners. \n\n--- \n\n### 💡 Level 9 Case Study 1: Vanilla Ice vs. Queen & David Bowie (1990)\n\nThis is the classic, clear-cut case of infringement.\n\n* **The Song:** Vanilla Ice's 'Ice Ice Baby'.\n* **The Sample:** The iconic bassline from Queen & David Bowie's 'Under Pressure'.\n* **The Problem:** Vanilla Ice did not get a license. He just took it. When caught, his defense was that he added an extra, tiny note to the bassline, so it was 'different'. \n* **The Outcome:** This defense failed completely. The sample was identical in the mind of any listener. The case was settled out of court for a very large, undisclosed sum. Vanilla Ice had to pay royalties and give co-writer credit to Queen and David Bowie. \n* **The Lesson:** This case set the standard for the music industry. You *must* get permission to use a recognizable sample (this is called 'clearing' the sample).\n\n--- \n\n### 💡 Level 9 Case Study 2: 'Blurred Lines' vs. Marvin Gaye (2015)\n\nThis case is much more controversial and confusing.\n\n* **The Song:** Robin Thicke's 'Blurred Lines'.\n* **The Problem:** Thicke did *not* sample the 'master' recording of Marvin Gaye's 'Got to Give It Up'. Instead, he was accused of copying the 'vibe', 'style', or 'feel' of the song.\n* **The Legal Question:** Can you infringe on a 'vibe'? Usually, the answer is no (you can't copyright a style). But the Gaye family argued that the *core musical composition* (the sheet music, the combination of notes, the rhythm) was copied.\n* **The Outcome:** In a shock verdict, a jury found Robin Thicke liable for infringing the *musical composition* (the songwriter's right). He and Pharrell Williams were ordered to pay millions.\n* **The Lesson:** This case is highly debated. It blurred the line (no pun intended) between being *inspired* by a song and *infringing* on it. \n\n### What about a *tiny* sample? The 'De Minimis' Rule\n\nWhat if a sample is so short (less than a second) that it's not even recognizable? \n\nThis is called **'de minimis'**—a Latin term meaning 'the law does not care about trivial things'. \n\nFor years, some artists argued that a 'de minimis' sample was not infringement. However, in the US (which heavily influences global music), a court case (Bridgeport Music) famously ruled against this, stating: **'Get a license or do not sample.'**\n\nToday, the safest rule for all creators is that there is no 'safe' amount to sample without permission.",
+  
+  "keyPoints": [
+    "'Sampling' is reusing a piece of an existing sound recording in a new song.",
+    "Sampling requires getting permission for *two* copyrights: the song (composition) and the recording (master).",
+    "The Vanilla Ice ('Ice Ice Baby') case proved that using a clear, recognizable sample without a license is infringement.",
+    "The 'Blurred Lines' case controversially found infringement based on copying the 'vibe' and song structure, not the recording itself.",
+    "The 'de minimis' (too small to matter) defense is legally unsafe for music sampling."
+  ],
+  
+  "learningObjectives": [
+    "Define 'sampling' and identify the two copyrights it infringes upon.",
+    "Analyze the 'Ice Ice Baby' case as an example of direct sound recording infringement.",
+    "Analyze the 'BlurredLines' case as an example of musical composition infringement.",
+    "Explain the 'de minimis' rule and why it's a risky defense."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:10:00Z"
+}

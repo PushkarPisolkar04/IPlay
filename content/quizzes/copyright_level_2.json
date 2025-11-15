@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_2",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:30:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_2_q1",
+      "question": "Which of the following is NOT a category of work protected under copyright?",
+      "options": [
+        "Literary work",
+        "Musical work",
+        "Industrial design",
+        "Artistic work"
+      ],
+      "correctIndex": 2,
+      "explanation": "Industrial designs are protected under the Designs Act, not the Copyright Act.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q2",
+      "question": "A poem written by a student is protected as what type of work?",
+      "options": [
+        "Artistic work",
+        "Literary work",
+        "Dramatic work",
+        "Musical work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Poems are considered literary works under copyright law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q3",
+      "question": "Which of the following would be classified as a musical work?",
+      "options": [
+        "A recorded song",
+        "Sheet music notation",
+        "A movie soundtrack recording",
+        "A painting inspired by music"
+      ],
+      "correctIndex": 1,
+      "explanation": "Musical works refer to the composition itself, not the sound recording.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q4",
+      "question": "Under Indian law, cinematograph films include which of the following?",
+      "options": [
+        "Only films shot on cameras",
+        "Video recordings, advertisements, and movies",
+        "Only television serials",
+        "Only animated films"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cinematograph films include any visual recording like movies, videos, or ads.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q5",
+      "question": "Which of the following is an example of an artistic work?",
+      "options": [
+        "A novel",
+        "A computer program",
+        "A sculpture",
+        "A musical score"
+      ],
+      "correctIndex": 2,
+      "explanation": "Sculptures, drawings, and paintings are examples of artistic works.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q6",
+      "question": "A film’s background score is protected as what type of work?",
+      "options": [
+        "Sound recording",
+        "Musical work",
+        "Artistic work",
+        "Literary work"
+      ],
+      "correctIndex": 1,
+      "explanation": "The background score is a musical work separate from the sound recording of the film.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q7",
+      "question": "What kind of work is a computer program under Indian copyright law?",
+      "options": [
+        "Artistic work",
+        "Dramatic work",
+        "Literary work",
+        "Cinematographic film"
+      ],
+      "correctIndex": 2,
+      "explanation": "Computer programs are classified as literary works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q8",
+      "question": "Which of the following best defines a dramatic work?",
+      "options": [
+        "A play or choreography script meant for performance",
+        "A painting displayed in a museum",
+        "A poem read aloud",
+        "A musical composition"
+      ],
+      "correctIndex": 0,
+      "explanation": "Dramatic works include plays, choreography, and scripts designed for performance.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q9",
+      "question": "Which of the following is an example of a sound recording?",
+      "options": [
+        "A CD containing recorded songs",
+        "Lyrics written on paper",
+        "Sheet music of a song",
+        "A dance choreography"
+      ],
+      "correctIndex": 0,
+      "explanation": "A CD or any medium with recorded sound qualifies as a sound recording.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q10",
+      "question": "Which of these Indian examples qualifies as an artistic work?",
+      "options": [
+        "Logo of the State Bank of India",
+        "Film 'Dangal'",
+        "Song 'Vande Mataram'",
+        "Software 'Bharat Operating System'"
+      ],
+      "correctIndex": 0,
+      "explanation": "The SBI logo is an artistic work under Indian copyright law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q11",
+      "question": "Which of the following combinations is correct?",
+      "options": [
+        "Film – Artistic work",
+        "Poem – Literary work",
+        "Music recording – Dramatic work",
+        "Software – Musical work"
+      ],
+      "correctIndex": 1,
+      "explanation": "A poem is a literary work as per copyright classification.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q12",
+      "question": "What distinguishes a sound recording from a musical work?",
+      "options": [
+        "A sound recording is the recorded performance, not the composition itself",
+        "They are the same",
+        "A musical work must be recorded to exist",
+        "Sound recordings are unprotected"
+      ],
+      "correctIndex": 0,
+      "explanation": "Sound recordings are tangible forms of recorded sound; musical works are the written or composed notes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q13",
+      "question": "Which of the following can be both literary and dramatic in nature?",
+      "options": [
+        "A written play script",
+        "A logo design",
+        "A film poster",
+        "A software program"
+      ],
+      "correctIndex": 0,
+      "explanation": "A play script is literary when written and dramatic when performed.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q14",
+      "question": "What is protected in a cinematograph film?",
+      "options": [
+        "Only the visual part",
+        "The visual and sound recording together as one work",
+        "Only the screenplay",
+        "Only dialogues"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cinematograph films protect the combined audio-visual experience.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q15",
+      "question": "Which type of work would a painting fall under?",
+      "options": [
+        "Artistic work",
+        "Dramatic work",
+        "Musical work",
+        "Literary work"
+      ],
+      "correctIndex": 0,
+      "explanation": "Paintings are classic examples of artistic works.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q16",
+      "question": "Which of these qualifies as a literary work in the digital world?",
+      "options": [
+        "Website source code",
+        "Logo animation",
+        "Audio narration",
+        "Film trailer"
+      ],
+      "correctIndex": 0,
+      "explanation": "Source code and digital text are literary works in electronic form.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q17",
+      "question": "The choreography of a dance performance is protected as:",
+      "options": [
+        "Musical work",
+        "Dramatic work",
+        "Cinematograph film",
+        "Sound recording"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dance choreography and scripts fall under dramatic works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q18",
+      "question": "A movie poster designed by an artist would be protected as:",
+      "options": [
+        "Cinematograph film",
+        "Artistic work",
+        "Literary work",
+        "Sound recording"
+      ],
+      "correctIndex": 1,
+      "explanation": "Posters and visual illustrations are artistic works.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q19",
+      "question": "An audio recording of an interview is classified as:",
+      "options": [
+        "Musical work",
+        "Sound recording",
+        "Literary work",
+        "Artistic work"
+      ],
+      "correctIndex": 1,
+      "explanation": "An audio recording of any spoken or musical content is a sound recording.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q20",
+      "question": "A short film created on a smartphone is protected under:",
+      "options": [
+        "Dramatic work",
+        "Cinematograph film",
+        "Artistic work",
+        "Literary work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Any visual moving recording is a cinematograph film under copyright.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q21",
+      "question": "Lyrics of a Bollywood song are an example of:",
+      "options": [
+        "Musical work",
+        "Sound recording",
+        "Literary work",
+        "Cinematograph film"
+      ],
+      "correctIndex": 2,
+      "explanation": "Lyrics are written text and fall under literary works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q22",
+      "question": "A hand-drawn comic strip is protected as:",
+      "options": [
+        "Literary work only",
+        "Artistic and literary work",
+        "Sound recording",
+        "None of these"
+      ],
+      "correctIndex": 1,
+      "explanation": "Comics have both text and art components — both protected categories.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q23",
+      "question": "Which of these is NOT a dramatic work?",
+      "options": [
+        "A stage play",
+        "A choreography script",
+        "A song recording",
+        "A screenplay"
+      ],
+      "correctIndex": 2,
+      "explanation": "A song recording is a sound recording, not a dramatic work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_2_q24",
+      "question": "Which of these examples shows overlap of multiple work types?",
+      "options": [
+        "A film with dialogues, music, and visuals",
+        "A poem written in a book",
+        "A painting on canvas",
+        "An audio speech"
+      ],
+      "correctIndex": 0,
+      "explanation": "A film combines literary, musical, and artistic elements — all protected together.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_2_q25",
+      "question": "Why is software treated as a literary work?",
+      "options": [
+        "Because it involves written code similar to text",
+        "Because it produces visuals",
+        "Because it has musical patterns",
+        "Because it is used in media"
+      ],
+      "correctIndex": 0,
+      "explanation": "Software is written code and is treated like a literary text.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

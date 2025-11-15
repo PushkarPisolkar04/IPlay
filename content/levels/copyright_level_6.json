@@ -1,0 +1,39 @@
+{
+  "id": "copyright_level_6",
+  "realmId": "realm_copyright",
+  "levelNumber": 6,
+  "name": "Fair Dealing (The Student's Right to Use)",
+  "description": "Can you use copyrighted work *without* permission? Yes! Learn the essential 'Fair Dealing' exception.",
+  "summary": "This is one of the most important levels for students. Learn about 'Fair Dealing' in India (Section 52), which allows you to use copyrighted works for research, criticism, and review without permission.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=W_F7AuOLXxo",
+  "videoDuration": 218,
+  
+  "content": "## Fair Dealing (The Student's Right to Use)\n\nSo far, we've only talked about what you *can't* do. But what about for school? Do you have to get permission for every quote in your essay? \n\nNo! This is where the most important exception for students comes in: **Fair Dealing**. \n\n'Fair Dealing' (under Section 52 of the Indian Copyright Act) is a legal defence that allows you to use copyrighted material *without* the owner's permission for a set of specific, limited purposes. \n\n### The Key Purposes for Students\n\nWhile the law lists several, the most important ones for you are:\n\n1.  **Private or personal use, including Research**\n2.  **Criticism or Review** (of that work or any other work)\n3.  **Reporting of current events**\n\n### It's Not a Free-for-All: The 'Fairness' Test\n\nJust because your *purpose* is 'research', your use must also be 'fair'. The law doesn't define 'fair', but courts generally look at two big factors:\n\n1.  **The Amount Used:** Did you use a small, reasonable portion (like a few quotes from a book) or did you use the *entire* work (like photocopying the whole book)? Using the whole thing is almost never 'fair'.\n2.  **The Effect on the Market:** Did your use act as a *substitute* for the original? Did you harm the creator's ability to make money? If you photocopy a textbook, the publisher loses a sale. That is *not* fair dealing. \n\n--- \n\n### 💡 Level 6 Case Study: Student vs. Textbook\n\n* **Case A (FAIR DEALING):** 'Aisha' is writing a 20-page research paper on a new novel. She includes four short passages from the novel (totaling 300 words) to support her arguments, and she cites the author and book. \n    * **Verdict:** This is **clearly Fair Dealing**. Her purpose is 'research' and 'criticism'. The amount is small, and she is *not* harming the market for the book (in fact, she's encouraging people to read it).\n\n* **Case B (NOT FAIR DEALING):** 'Karan' doesn't want to buy the same novel for his class. His friend has a copy, so he takes it to a shop and makes a full photocopy of the entire 300-page book.\n    * **Verdict:** This is **NOT Fair Dealing**. It is copyright infringement. Even if his purpose is 'education', his action (copying the *entire* work) directly harms the author's and publisher's market. He is substituting a purchase with a copy.\n\n### 💡 Level 6 Case Study: The Movie Reviewer\n\n* **Case A (FAIR DEALING):** A YouTuber posts a 10-minute *review* of a new movie. They use 45 seconds of short clips to *criticize* the acting or *praise* the cinematography.\n    * **Verdict:** This is **Fair Dealing**. The purpose is 'criticism or review'.\n\n* **Case B (NOT FAIR DEALING):** A YouTuber posts a 10-minute video titled 'Top 10 Best Scenes from the New Movie'. The video just shows the 10 scenes back-to-back with no commentary.\n    * **Verdict:** This is **NOT Fair Dealing**. It's not a review; it's a compilation that substitutes for watching the movie. It harms the market.",
+  
+  "keyPoints": [
+    "Fair Dealing is a key legal *exception* that lets you use copyrighted work without permission.",
+    "The most important purposes for students are 'research' and 'criticism or review'.",
+    "Your use must be 'fair'—you can't just copy the whole thing.",
+    "A key test is whether your use 'harms the market' or acts as a substitute for the original work.",
+    "Photocopying an entire textbook to avoid buying it is NOT fair dealing."
+  ],
+  
+  "learningObjectives": [
+    "Define 'Fair Dealing' as per Section 52 of the Copyright Act.",
+    "List the key purposes allowed under Fair Dealing (research, criticism).",
+    "Explain the 'test' for fairness, focusing on the amount used and market harm.",
+    "Analyze a scenario (like photocopying a book) and determine if it's fair dealing."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:40:00Z"
+}

@@ -1,0 +1,39 @@
+{
+  "id": "trademark_level_3",
+  "realmId": "realm_trademark",
+  "levelNumber": 3,
+  "name": "What CANNOT be a Trademark? (Absolute Refusals)",
+  "description": "Just being unique isn't enough. Learn about the 'absolute grounds for refusal' that block registration.",
+  "summary": "This level covers the types of marks that are legally barred from registration in India (under Section 9). This includes marks that are offensive, deceptive, or purely functional.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=XH2mNJr9Sqs",
+  "videoDuration": 404,
+  
+  "content": "## What CANNOT be a Trademark? (Absolute Refusals)\n\nIn Level 2, we learned that 'Generic' and 'Descriptive' marks are refused because they aren't *distinctive*. \n\nBut even a highly distinctive mark can be refused registration if it violates a set of rules called **'Absolute Grounds for Refusal'**. These are marks that society has an interest in *preventing* from being monopolized.\n\nKey grounds for refusal in India (under Section 9) include:\n\n1.  **Deceptive Marks:** Marks that lie to the consumer. For example, trying to register the mark 'PureWool' for a shirt made of 100% polyester. The mark is deceptive and would be refused.\n\n2.  **Scandalous or Obscene Marks:** Marks that are considered offensive to a large portion of the public. This is a very subjective category that changes with social values.\n\n3.  **Marks that Hurt Religious Sentiments:** A mark that uses a sacred religious symbol or name in a disrespectful or commercial way that would hurt the sentiments of a religious group will be refused.\n\n4.  **Official Emblems and Names:** You cannot register a mark that contains an emblem or name of an official authority, like the **Ashoka Chakra**, the **Indian National Flag**, or the emblem of the **World Health Organization (WHO)**.\n\n5.  **Purely Functional Shapes:** This is a key concept. A trademark *cannot* protect a product's shape if that shape is **purely functional**. If the shape is what makes the product *work*, it must be protected by a Patent, not a trademark. \n\n--- \n\n### 💡 Level 3 Case Study: The LEGO Brick (The 'Functionality' Doctrine)\n\n* **The Mark:** The 'LEGO' *word* is a perfectly strong, fanciful trademark. \n* **The Fight:** For decades, LEGO also had a trademark on the *shape* of their bricks—the 8-stud rectangular block. \n* **The Problem:** Competitors argued that this shape was **functional**. The studs and hollow bottom are the *invention* that makes the bricks lock together. It's not just 'decoration'; it's how the product *works*.\n* **The Outcome:** The courts ultimately agreed. The trademark on the *shape* was cancelled because the shape was functional. \n* **The Lesson:** This allowed other companies (like Mega Bloks) to create bricks that are *compatible* with LEGO. They can't use the 'LEGO' name, but they *can* use the functional shape, which is now in the public domain. This is the critical line between Patent law (protects function) and Trademark law (protects source identity).",
+  
+  "keyPoints": [
+    "Even a distinctive mark can be refused if it violates 'absolute grounds'.",
+    "You cannot register deceptive marks (that lie to the public).",
+    "Marks that are obscene, scandalous, or hurt religious sentiments are refused.",
+    "National flags, the Ashoka Chakra, and other official emblems cannot be trademarked.",
+    "A product shape that is purely *functional* cannot be trademarked (it must be patented)."
+  ],
+  
+  "learningObjectives": [
+    "List three 'absolute grounds' for trademark refusal under Indian law.",
+    "Explain why a national flag cannot be a trademark.",
+    "Define the 'doctrine of functionality' (a functional shape cannot be a trademark).",
+    "Analyze the LEGO brick case to understand the difference between a functional shape and a brand identifier."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:45:00Z"
+}

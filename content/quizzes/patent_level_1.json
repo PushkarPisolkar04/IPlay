@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "patent_level_1",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "patent_1_q1",
+      "question": "What does a patent protect?",
+      "options": [
+        "Brand names",
+        "Artistic works",
+        "Functional inventions",
+        "Trade secrets"
+      ],
+      "correctIndex": 2,
+      "explanation": "Patents protect functional inventions - how things work.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q2",
+      "question": "What is the 'patent bargain'?",
+      "options": [
+        "Full disclosure in exchange for temporary monopoly",
+        "Paying fees for protection",
+        "Keeping secrets for lifetime protection",
+        "Sharing profits with government"
+      ],
+      "correctIndex": 0,
+      "explanation": "The patent bargain is full disclosure of the invention in exchange for a temporary monopoly.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q3",
+      "question": "What is the standard international patent term?",
+      "options": [
+        "10 years",
+        "Life + 60 years",
+        "20 years from filing date",
+        "Perpetual"
+      ],
+      "correctIndex": 2,
+      "explanation": "Under the TRIPS Agreement, the standard patent term is 20 years from the filing date.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q4",
+      "question": "Can a patent be renewed after 20 years?",
+      "options": [
+        "Yes, indefinitely",
+        "Yes, for another 20 years",
+        "No, it is not renewable",
+        "Only in special cases"
+      ],
+      "correctIndex": 2,
+      "explanation": "Patents are not renewable. After 20 years, the invention enters the public domain.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q5",
+      "question": "What does 'territorial' mean for patents?",
+      "options": [
+        "Patents work worldwide automatically",
+        "Patents only work in the country where granted",
+        "Patents work in neighboring countries",
+        "Patents work in all TRIPS countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patents are territorial - they only work in the country where they are granted.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q6",
+      "question": "What must an inventor do as part of the patent bargain?",
+      "options": [
+        "Keep the invention secret",
+        "Reveal the invention in complete detail",
+        "Share profits with the government",
+        "Manufacture the product immediately"
+      ],
+      "correctIndex": 1,
+      "explanation": "The inventor must reveal the invention in complete detail so anyone skilled in the art can recreate it.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q7",
+      "question": "What happens after a patent expires?",
+      "options": [
+        "It can be renewed",
+        "It becomes a trade secret",
+        "The invention enters the public domain",
+        "Only the inventor can use it"
+      ],
+      "correctIndex": 2,
+      "explanation": "After expiration, the invention enters the public domain and anyone can use it freely.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q8",
+      "question": "Which international agreement standardized the 20-year patent term?",
+      "options": [
+        "Paris Convention",
+        "Berne Convention",
+        "TRIPS Agreement",
+        "Madrid Protocol"
+      ],
+      "correctIndex": 2,
+      "explanation": "The TRIPS Agreement standardized the 20-year patent term internationally.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q9",
+      "question": "What exclusive rights does a patent give?",
+      "options": [
+        "Right to make, use, sell, or import the invention",
+        "Right to keep it secret",
+        "Right to trademark it",
+        "Right to copyright it"
+      ],
+      "correctIndex": 0,
+      "explanation": "A patent gives exclusive rights to make, use, sell, or import the invention.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q10",
+      "question": "Can an Italian patent be enforced in Japan?",
+      "options": [
+        "Yes, automatically",
+        "Yes, with permission",
+        "No, patents are territorial",
+        "Only for 5 years"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, patents are territorial. An Italian patent only works in Italy.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q11",
+      "question": "Why does the patent system require full disclosure?",
+      "options": [
+        "To collect taxes",
+        "So others can learn and build better inventions",
+        "To embarrass inventors",
+        "To make copying easier"
+      ],
+      "correctIndex": 1,
+      "explanation": "Full disclosure ensures knowledge is shared so others can learn and innovate further.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q12",
+      "question": "What is the purpose of the patent system?",
+      "options": [
+        "To restrict innovation",
+        "To encourage innovation through incentives and knowledge sharing",
+        "To increase government revenue",
+        "To protect trade secrets"
+      ],
+      "correctIndex": 1,
+      "explanation": "The patent system encourages innovation by providing incentives and ensuring knowledge sharing.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q13",
+      "question": "When does the 20-year patent term start?",
+      "options": [
+        "From the date of invention",
+        "From the date of first filing",
+        "From the date of grant",
+        "From the date of first sale"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 20-year term starts from the date you first file your patent application.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q14",
+      "question": "What does 'public domain' mean?",
+      "options": [
+        "Government-owned inventions",
+        "Inventions anyone can use freely",
+        "Secret inventions",
+        "Expensive inventions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public domain means inventions that anyone can use, make, and sell freely without permission.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q15",
+      "question": "Who grants patents?",
+      "options": [
+        "Private companies",
+        "International organizations",
+        "National governments",
+        "Universities"
+      ],
+      "correctIndex": 2,
+      "explanation": "Patents are granted by national governments through their patent offices.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q16",
+      "question": "What is the inventor's side of the patent bargain?",
+      "options": [
+        "Paying high fees",
+        "Full and honest disclosure of the invention",
+        "Manufacturing the product",
+        "Licensing to competitors"
+      ],
+      "correctIndex": 1,
+      "explanation": "The inventor must provide full and honest disclosure of how the invention works.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q17",
+      "question": "What is the public's side of the patent bargain?",
+      "options": [
+        "Paying royalties",
+        "Granting a temporary monopoly",
+        "Keeping secrets",
+        "Manufacturing the product"
+      ],
+      "correctIndex": 1,
+      "explanation": "The public grants the inventor a temporary monopoly in exchange for disclosure.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q18",
+      "question": "Can you get a patent without disclosing how it works?",
+      "options": [
+        "Yes, if you pay extra",
+        "Yes, for trade secrets",
+        "No, full disclosure is required",
+        "Only in some countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, full disclosure is a fundamental requirement of the patent bargain.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q19",
+      "question": "What happens to a patent after it expires?",
+      "options": [
+        "It transfers to the government",
+        "Competitors can use the invention freely",
+        "It becomes a trade secret",
+        "Only the inventor's family can use it"
+      ],
+      "correctIndex": 1,
+      "explanation": "After expiration, anyone can use, make, and sell the invention without permission.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q20",
+      "question": "How does the patent system encourage innovation?",
+      "options": [
+        "By keeping inventions secret",
+        "By providing financial incentive and knowledge sharing",
+        "By restricting competition",
+        "By increasing prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "It provides financial incentive (monopoly) and ensures knowledge sharing (disclosure).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q21",
+      "question": "What must be disclosed in a patent application?",
+      "options": [
+        "Only the basic idea",
+        "Complete details so anyone skilled in the art can recreate it",
+        "Just the benefits",
+        "Only the commercial value"
+      ],
+      "correctIndex": 1,
+      "explanation": "The disclosure must be complete enough for anyone skilled in the art to recreate the invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q22",
+      "question": "Is a patent a permanent right?",
+      "options": [
+        "Yes, it lasts forever",
+        "No, it expires after 20 years",
+        "Yes, if renewed",
+        "Only for the inventor's lifetime"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, patents are temporary rights that expire after 20 years and cannot be renewed.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_1_q23",
+      "question": "What is the main difference between a patent and a trade secret?",
+      "options": [
+        "Patents require disclosure, trade secrets require secrecy",
+        "Patents are cheaper",
+        "Trade secrets last 20 years",
+        "Patents are easier to get"
+      ],
+      "correctIndex": 0,
+      "explanation": "Patents require full disclosure in exchange for temporary monopoly; trade secrets require secrecy.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q24",
+      "question": "Can you have a worldwide patent with one application?",
+      "options": [
+        "Yes, through TRIPS",
+        "Yes, through PCT",
+        "No, patents are territorial and require separate applications",
+        "Only for EU countries"
+      ],
+      "correctIndex": 2,
+      "explanation": "No, patents are territorial. You need separate applications in each country (though PCT helps streamline the process).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_1_q25",
+      "question": "What is the benefit of the patent system to society?",
+      "options": [
+        "It keeps inventions secret",
+        "It shares knowledge while incentivizing innovation",
+        "It increases government revenue",
+        "It restricts competition"
+      ],
+      "correctIndex": 1,
+      "explanation": "The patent system benefits society by sharing knowledge while providing incentives for innovation.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

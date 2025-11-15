@@ -1,0 +1,53 @@
+# Trademark Logo Images Needed
+
+This directory should contain logo images for the Trademark Match game.
+All images should be bundled locally to avoid Firebase Storage costs.
+
+## Required Images (30 total):
+
+### International Brands:
+1. mcdonalds.png - McDonald's Golden Arches
+2. nike.png - Nike Swoosh
+3. apple.png - Apple Bitten Apple
+4. adidas.png - Adidas Three Stripes
+5. redbull.png - Red Bull logo
+6. audi.png - Audi Four Rings
+7. starbucks.png - Starbucks Mermaid
+8. puma.png - Puma Jumping Cat
+9. ford.png - Ford Blue Oval
+10. nike2.png - Nike Checkmark (alternate)
+11. nbc.png - NBC Peacock
+12. shell.png - Shell logo
+13. target.png - Target Symbol
+14. paramount.png - Paramount Mountain Peak
+15. lacoste.png - Lacoste Crocodile
+16. cocacola.png - Coca-Cola Script
+17. mercedes.png - Mercedes Star
+18. pepsi.png - Pepsi Globe
+19. amazon.png - Amazon Smile
+20. bmw.png - BMW Roundel
+21. samsung.png - Samsung logo
+
+### Indian Brands:
+22. tata.png - Tata logo
+23. amul.png - Amul Girl
+24. reliance.png - Reliance logo
+25. britannia.png - Britannia logo
+26. dabur.png - Dabur logo
+27. mahindra.png - Mahindra logo
+28. infosys.png - Infosys logo
+29. parle.png - Parle-G logo
+30. airtel.png - Airtel logo
+
+## Image Specifications:
+- Format: PNG with transparent background preferred
+- Size: 200x200px to 400x400px recommended
+- File size: Keep under 50KB per image for performance
+- Quality: High resolution, clear logos
+- Rights: Use only royalty-free or properly licensed images
+
+## Notes:
+- The game includes error handling for missing images
+- Fallback text will display if images are not found
+- All assets must be bundled locally (no external URLs)
+- This keeps the app on Firebase Spark (free) plan

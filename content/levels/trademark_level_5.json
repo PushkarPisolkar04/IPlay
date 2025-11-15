@@ -1,0 +1,39 @@
+{
+  "id": "trademark_level_5",
+  "realmId": "realm_trademark",
+  "levelNumber": 5,
+  "name": "Infringement (Likelihood of Confusion)",
+  "description": "What is trademark infringement? It's all about one test: 'Likelihood of Confusion'.",
+  "summary": "Learn the 'likelihood of confusion' test that courts use to determine trademark infringement. Discover the factors like mark similarity, goods similarity, and intention.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=2ERVPh1g9Tw",
+  "videoDuration": 316,
+  
+  "content": "## Infringement: The 'Likelihood of Confusion' Test\n\nTrademark infringement is the unauthorized use of a mark (or a similar mark) on or in connection with goods/services in a way that is **likely to cause confusion** as to the source, sponsorship, or affiliation of the goods/services.\n\nIt's not about *actual* confusion (though that helps prove it). The court just has to be convinced that an 'average consumer' is *likely* to be confused.\n\n### The Factors of Confusion\n\nTo decide this, courts in India and around the world look at several key factors. No single factor is decisive; they are all weighed together.\n\n1.  **Mark Similarity:** How similar do the marks look (visual), sound (phonetic), and mean (connotation)? 'Starbux' *sounds* just like 'Starbucks'. This is high similarity.\n\n2.  **Goods/Services Similarity:** Are the products related? Are they sold in the same channels? 'Starbucks' coffee and 'Starbux' coffee are identical. This is high similarity.\n\n3.  **Strength of the Mark:** 'Fanciful' and 'Arbitrary' marks (like 'Kodak' or 'Apple') are very strong and get broad protection. 'Descriptive' marks are weak and get narrow protection.\n\n4.  **The Defendant's Intent:** Did the new company *knowingly* choose a similar name to ride on the coattails of the famous brand? This 'bad faith' weighs heavily against them.\n\n5.  **Evidence of Actual Confusion:** Has any customer *actually* gone to 'Starbux' thinking it was 'Starbucks'? This is powerful, 'smoking gun' evidence, but it is *not* required to win the case.\n\n6.  **The Class of Consumers:** Are the consumers sophisticated (e.g., expert doctors buying medical equipment) or casual (e.g., someone buying soap)? A casual consumer is considered more easily confused.\n\n--- \n\n### 💡 Level 5 Case Study: 'Dove' vs. 'Dove'\n\nThis is a classic real-world example of coexistence. \n\n* **Mark 1:** 'Dove' (owned by Unilever) for soap, deodorant, and personal care.\n* **Mark 2:** 'Dove' (owned by Mars) for chocolates and ice cream.\n\n* **The Verdict:** There is **NO infringement** and **NO confusion**. Why? \n* **Dissimilar Goods:** The key factor is that the products are completely different. Consumers are smart enough to know that a soap company and a chocolate company are not the same, even if they share a name.\n* **Long Coexistence:** They have existed in the market for decades, and consumers have learned to distinguish them. \n\n### 💡 Level 5 Case Study: 'Starbux' vs. 'Starbucks'\n\n* **Mark 1:** 'Starbucks' for coffee.\n* **Mark 2:** A new local shop named 'Starbux' selling coffee.\n* **The Verdict:** This is **CLEAR infringement**. \n* **High Similarity:** The marks are phonetically identical ('bux' vs 'bucks').\n* **Identical Goods:** Both sell coffee. \n* **High Likelihood of Confusion:** The average consumer would absolutely be confused, thinking 'Starbux' is a branch, a typo, or an affiliate of 'Starbucks'.",
+  
+  "keyPoints": [
+    "Trademark infringement is determined by the 'Likelihood of Confusion' test.",
+    "The test isn't whether consumers *were* confused, but whether they are *likely* to be.",
+    "Key factors include similarity of the marks, similarity of the goods, and the defendant's intent.",
+    "Strong, Fanciful/Arbitrary marks (like 'Kodak') get much stronger protection than weak ones.",
+    "Two identical marks (like 'Dove') can legally coexist if their products are completely unrelated and don't cause confusion."
+  ],
+  
+  "learningObjectives": [
+    "Define trademark infringement and the 'Likelihood of Confusion' test.",
+    "List the 3 most important factors used to determine confusion (mark similarity, goods similarity, intent).",
+    "Analyze the 'Dove' (soap/chocolate) case to understand 'coexistence'.",
+    "Analyze a simple case ('Starbux') to identify clear infringement."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:55:00Z"
+}

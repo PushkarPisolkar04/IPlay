@@ -102,29 +102,27 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
     });
 
     try {
-      // First try to load from JSON content
-      final jsonContent = await _contentService.getLevelContent(widget.levelId);
+      print('🔍 Loading level: ${widget.levelId}');
       
-      if (jsonContent != null) {
-        // Use JSON content if available
-        await _loadFromJson(jsonContent);
+      // Load level using the updated service that merges quiz data
+      final level = await _contentService.getLevelById(widget.levelId);
+      
+      if (level != null) {
+        print('✅ Level loaded, initializing UI');
+        await _loadFromModel(level);
       } else {
-        // Fall back to existing data model
-        final level = _contentService.getLevelById(widget.levelId);
-        if (level != null) {
-          await _loadFromModel(level);
-        } else {
-          setState(() {
-            _errorMessage = 'Level content not found';
-            _isLoading = false;
-          });
-          return;
-        }
+        print('❌ Level is null');
+        setState(() {
+          _errorMessage = 'Level content not found';
+          _isLoading = false;
+        });
+        return;
       }
-    } catch (e) {
-      // print('Error loading level: $e');
+    } catch (e, stackTrace) {
+      print('❌ Error loading level: $e');
+      print('Stack trace: $stackTrace');
       setState(() {
-        _errorMessage = 'Failed to load level content';
+        _errorMessage = 'Failed to load level content: $e';
         _isLoading = false;
       });
     }
@@ -511,7 +509,35 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
 
                   const SizedBox(height: AppSpacing.md),
 
-                  // Key Points
+                  // Content (Markdown) - MOVED UP
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppSpacing.sm),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: MarkdownBody(
+                      data: _level!.content,
+                      styleSheet: MarkdownStyleSheet(
+                        h1: AppTextStyles.h1,
+                        h2: AppTextStyles.h2,
+                        h3: AppTextStyles.h3,
+                        p: AppTextStyles.bodyMedium,
+                        listBullet: AppTextStyles.bodyMedium,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSpacing.lg),
+
+                  // Key Points - MOVED TO END
                   if (_level!.keyPoints.isNotEmpty) ...[
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -560,36 +586,8 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: AppSpacing.md),
+                    const SizedBox(height: AppSpacing.lg),
                   ],
-
-                  // Content (Markdown)
-                  Container(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppSpacing.sm),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: MarkdownBody(
-                      data: _level!.content,
-                      styleSheet: MarkdownStyleSheet(
-                        h1: AppTextStyles.h1,
-                        h2: AppTextStyles.h2,
-                        h3: AppTextStyles.h3,
-                        p: AppTextStyles.bodyMedium,
-                        listBullet: AppTextStyles.bodyMedium,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: AppSpacing.xl),
 
                   // Take Quiz Button
                   SizedBox(

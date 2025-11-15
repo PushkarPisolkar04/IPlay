@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_5",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_5_q1",
+      "question": "What are the 'claims' in a patent?",
+      "options": [
+        "The description",
+        "Numbered sentences defining the legal boundary of the invention",
+        "The drawings",
+        "The inventor's name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims are numbered sentences that define the exact legal boundary of what you own.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q2",
+      "question": "Which part of a patent determines infringement?",
+      "options": [
+        "The description",
+        "The claims",
+        "The drawings",
+        "The title"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only the claims determine infringement - they are the legal boundary.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q3",
+      "question": "What is the 'Specification' in a patent?",
+      "options": [
+        "The claims",
+        "The description and drawings that teach how to make the invention",
+        "The fees",
+        "The inventor's biography"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Specification is the description and drawings that teach the public how to make the invention.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q4",
+      "question": "What analogy is used to explain claims?",
+      "options": [
+        "A recipe",
+        "A property deed map showing boundary lines",
+        "A blueprint",
+        "A contract"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims are like a property deed map - they show the exact legal boundary lines of what you own.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q5",
+      "question": "What is an Independent Claim?",
+      "options": [
+        "A claim that depends on another",
+        "The broadest claim defining the core invention",
+        "A narrow claim",
+        "A rejected claim"
+      ],
+      "correctIndex": 1,
+      "explanation": "An Independent Claim (like Claim 1) is the broadest claim that defines the core invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q6",
+      "question": "What is a Dependent Claim?",
+      "options": [
+        "The first claim",
+        "A claim that narrows down and adds features to a previous claim",
+        "An independent claim",
+        "A rejected claim"
+      ],
+      "correctIndex": 1,
+      "explanation": "A Dependent Claim narrows down a previous claim by adding more specific features.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q7",
+      "question": "If Claim 1 says 'a stool with 3 legs', does a 4-legged stool infringe?",
+      "options": [
+        "Yes, always",
+        "Possibly not, because it's missing the '3 legs' element",
+        "Yes, definitely",
+        "Only if it's similar"
+      ],
+      "correctIndex": 1,
+      "explanation": "Possibly not - infringement requires every element of the claim, and this has 4 legs not 3.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_5_q8",
+      "question": "Why is writing good claims difficult?",
+      "options": [
+        "They must be in legal language",
+        "They must balance being broad enough to catch competitors but narrow enough to be novel",
+        "They must be short",
+        "They must be expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims must balance breadth (to catch competitors) with narrowness (to be novel and inventive).",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_5_q9",
+      "question": "What is the purpose of the description in a patent?",
+      "options": [
+        "To determine infringement",
+        "To teach the public how to make the invention",
+        "To define legal boundaries",
+        "To list competitors"
+      ],
+      "correctIndex": 1,
+      "explanation": "The description teaches the public how to make the invention - it's the 'disclosure' part of the bargain.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q10",
+      "question": "What is the purpose of the claims in a patent?",
+      "options": [
+        "To teach how to make it",
+        "To define the exact legal boundary of what is protected",
+        "To show drawings",
+        "To list prior art"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims define the exact legal boundary of what is protected and what would infringe.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q11",
+      "question": "In a legal fight, which matters more - description or claims?",
+      "options": [
+        "Description",
+        "Claims - they are the legal boundary",
+        "Both equally",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims matter most - they are the legal boundary that determines infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q12",
+      "question": "How are claims typically numbered?",
+      "options": [
+        "Randomly",
+        "Sequentially (1, 2, 3...)",
+        "By importance",
+        "By date"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims are numbered sequentially (Claim 1, Claim 2, Claim 3, etc.).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q13",
+      "question": "What does 'Claim 2: The device of Claim 1, further comprising...' mean?",
+      "options": [
+        "Claim 2 is independent",
+        "Claim 2 depends on and narrows Claim 1",
+        "Claim 2 replaces Claim 1",
+        "Claim 2 is rejected"
+      ],
+      "correctIndex": 1,
+      "explanation": "This shows Claim 2 is dependent on Claim 1 and adds additional features to narrow it.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q14",
+      "question": "Can you have multiple Independent Claims in one patent?",
+      "options": [
+        "No, only one",
+        "Yes, you can have multiple independent claims",
+        "Only in the US",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, a patent can have multiple independent claims covering different aspects of the invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q15",
+      "question": "What is the 'heart' of a patent?",
+      "options": [
+        "The description",
+        "The claims",
+        "The drawings",
+        "The abstract"
+      ],
+      "correctIndex": 1,
+      "explanation": "The claims are the 'heart' of a patent - the most important legal part.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q16",
+      "question": "Who typically writes patent claims?",
+      "options": [
+        "The inventor",
+        "Patent attorneys or agents",
+        "The patent office",
+        "Anyone"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patent attorneys or agents typically write claims because it requires specialized legal skill.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_5_q17",
+      "question": "What happens if your claims are too broad?",
+      "options": [
+        "You get more protection",
+        "They may be rejected for lacking novelty or inventive step",
+        "Nothing",
+        "You pay more"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims that are too broad may be rejected for lacking novelty or inventive step.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_5_q18",
+      "question": "What happens if your claims are too narrow?",
+      "options": [
+        "They're rejected",
+        "Competitors can easily design around them",
+        "You get more protection",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims that are too narrow are easy for competitors to design around, reducing protection.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_5_q19",
+      "question": "Can the description help interpret the claims?",
+      "options": [
+        "No, never",
+        "Yes, it provides context for understanding the claims",
+        "Only in court",
+        "Only if ambiguous"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, the description provides context and can help interpret what the claims mean.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q20",
+      "question": "What is the relationship between Independent and Dependent Claims?",
+      "options": [
+        "They're unrelated",
+        "Dependent claims narrow and build upon independent claims",
+        "They're the same",
+        "Independent claims are narrower"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dependent claims narrow and build upon independent claims by adding more specific features.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q21",
+      "question": "If a product infringes Claim 2 (dependent), does it also infringe Claim 1?",
+      "options": [
+        "No",
+        "Yes, because Claim 2 includes all elements of Claim 1",
+        "Maybe",
+        "Only sometimes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, if it infringes a dependent claim, it must also infringe the independent claim it depends on.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_5_q22",
+      "question": "What is the format of a typical claim?",
+      "options": [
+        "A paragraph",
+        "A single sentence with specific legal structure",
+        "Multiple paragraphs",
+        "A list"
+      ],
+      "correctIndex": 1,
+      "explanation": "Claims are typically single sentences with specific legal structure and formatting.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q23",
+      "question": "Why are claims compared to property deed maps?",
+      "options": [
+        "They're both legal documents",
+        "They both define exact boundaries of what you own",
+        "They're both expensive",
+        "They're both complex"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both define exact legal boundaries - deed maps for land, claims for inventions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q24",
+      "question": "Can you change claims after the patent is granted?",
+      "options": [
+        "Yes, anytime",
+        "Generally no, they're fixed once granted",
+        "Only with court approval",
+        "Only in the first year"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generally no, claims are fixed once the patent is granted (though some limited procedures exist).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_5_q25",
+      "question": "What is the most important skill in patent law?",
+      "options": [
+        "Drawing",
+        "Writing claims that balance breadth and validity",
+        "Inventing",
+        "Marketing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Writing claims that balance breadth (protection) with validity (novelty/inventiveness) is the hardest skill.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

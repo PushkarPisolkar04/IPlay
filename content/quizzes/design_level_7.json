@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "design_level_7",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "design_7_q1",
+      "question": "What is design infringement?",
+      "options": [
+        "Legal use",
+        "Unauthorized copying of registered design",
+        "Licensing",
+        "Assignment"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design infringement is unauthorized copying or imitation of a registered design.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q2",
+      "question": "What is the first step in infringement action?",
+      "options": [
+        "File lawsuit",
+        "Send cease and desist letter",
+        "Call police",
+        "Do nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "The first step is typically sending a cease and desist letter to the infringer.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q3",
+      "question": "What is design litigation?",
+      "options": [
+        "Negotiation",
+        "Legal proceedings for design disputes",
+        "Mediation",
+        "Arbitration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design litigation involves legal proceedings in court for design-related disputes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q4",
+      "question": "Can you get injunction for design infringement?",
+      "options": [
+        "No, never",
+        "Yes, to stop further infringement",
+        "Only after trial",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Courts can grant injunctions to stop ongoing or threatened design infringement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q5",
+      "question": "What are damages in design infringement?",
+      "options": [
+        "Physical harm",
+        "Monetary compensation for losses",
+        "Criminal penalty",
+        "Warning"
+      ],
+      "correctIndex": 1,
+      "explanation": "Damages are monetary compensation awarded for losses suffered due to infringement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q6",
+      "question": "What is account of profits?",
+      "options": [
+        "Accounting service",
+        "Remedy requiring infringer to pay profits made",
+        "Tax filing",
+        "Budget planning"
+      ],
+      "correctIndex": 1,
+      "explanation": "Account of profits requires the infringer to pay the profits they made from the infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q7",
+      "question": "What is delivery up?",
+      "options": [
+        "Postal service",
+        "Order to hand over infringing goods",
+        "Food delivery",
+        "Package delivery"
+      ],
+      "correctIndex": 1,
+      "explanation": "Delivery up is a court order requiring the infringer to hand over infringing goods.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q8",
+      "question": "Can you claim both damages and account of profits?",
+      "options": [
+        "Yes, both",
+        "No, must choose one",
+        "Only damages",
+        "Only profits"
+      ],
+      "correctIndex": 1,
+      "explanation": "You must choose between damages or account of profits; you cannot claim both.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q9",
+      "question": "What is design validity challenge?",
+      "options": [
+        "Checking quality",
+        "Challenging whether design should have been registered",
+        "Checking price",
+        "Checking size"
+      ],
+      "correctIndex": 1,
+      "explanation": "A validity challenge questions whether a design should have been registered in the first place.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q10",
+      "question": "What is prior art defense?",
+      "options": [
+        "Art history",
+        "Defense showing design was not novel",
+        "Art collection",
+        "Art exhibition"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prior art defense shows the design was not novel because it existed before registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q11",
+      "question": "What is independent creation defense?",
+      "options": [
+        "Creating alone",
+        "Defense that design was created independently",
+        "Creating art",
+        "Creating products"
+      ],
+      "correctIndex": 1,
+      "explanation": "Independent creation defense argues the design was created independently without copying.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q12",
+      "question": "What is design settlement?",
+      "options": [
+        "Living arrangement",
+        "Resolving dispute outside court",
+        "Payment plan",
+        "Discount"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design settlement is resolving an infringement dispute outside of court through agreement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q13",
+      "question": "What is design mediation?",
+      "options": [
+        "Meditation practice",
+        "Alternative dispute resolution with mediator",
+        "Court trial",
+        "Arbitration"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design mediation is alternative dispute resolution where a neutral mediator helps parties reach agreement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q14",
+      "question": "What is design arbitration?",
+      "options": [
+        "Random selection",
+        "Private dispute resolution by arbitrator",
+        "Court trial",
+        "Mediation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design arbitration is private dispute resolution where an arbitrator makes a binding decision.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q15",
+      "question": "What is Anton Piller order?",
+      "options": [
+        "Food order",
+        "Search and seizure order for evidence",
+        "Purchase order",
+        "Work order"
+      ],
+      "correctIndex": 1,
+      "explanation": "Anton Piller order allows search and seizure of evidence without prior warning to prevent destruction.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q16",
+      "question": "What is Mareva injunction?",
+      "options": [
+        "Medical injection",
+        "Order freezing assets to prevent dissipation",
+        "Construction order",
+        "Manufacturing order"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mareva injunction freezes the defendant's assets to prevent them from being moved or hidden.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q17",
+      "question": "What is design expert witness?",
+      "options": [
+        "Famous designer",
+        "Expert providing technical testimony in court",
+        "Design teacher",
+        "Design critic"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design expert witness provides technical testimony and opinions in design litigation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q18",
+      "question": "What is design evidence?",
+      "options": [
+        "Proof of purchase",
+        "Materials proving design ownership and infringement",
+        "Quality certificate",
+        "Price list"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design evidence includes materials proving design ownership, validity, and infringement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q19",
+      "question": "What is design discovery?",
+      "options": [
+        "Finding new designs",
+        "Legal process of obtaining evidence from opponent",
+        "Market research",
+        "Product launch"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design discovery is the legal process of obtaining evidence and information from the opposing party.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q20",
+      "question": "What is design cross-examination?",
+      "options": [
+        "Examining products",
+        "Questioning opposing party's witnesses",
+        "Quality check",
+        "Price comparison"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design cross-examination is questioning the opposing party's witnesses during trial.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q21",
+      "question": "What is design appeal?",
+      "options": [
+        "Attractive design",
+        "Challenging court decision in higher court",
+        "Marketing campaign",
+        "Product launch"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design appeal is the process of challenging a court's decision in a higher court.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_7_q22",
+      "question": "What is design precedent?",
+      "options": [
+        "First design",
+        "Previous court decision used as authority",
+        "Design priority",
+        "Design novelty"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design precedent is a previous court decision that serves as authority for similar cases.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q23",
+      "question": "What is design burden of proof?",
+      "options": [
+        "Heavy design",
+        "Obligation to prove claims in court",
+        "Design weight",
+        "Design cost"
+      ],
+      "correctIndex": 1,
+      "explanation": "Burden of proof is the obligation to prove one's claims in design litigation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q24",
+      "question": "What is design statute of limitations?",
+      "options": [
+        "Design size limit",
+        "Time limit for filing infringement suit",
+        "Design quantity limit",
+        "Design price limit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Statute of limitations is the time limit within which an infringement suit must be filed.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_7_q25",
+      "question": "What is design judgment?",
+      "options": [
+        "Opinion about design",
+        "Court's final decision in design case",
+        "Design review",
+        "Design rating"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design judgment is the court's final decision in a design litigation case.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_7",
+  "realmId": "realm_gi",
+  "levelNumber": 7,
+  "name": "International GI Protection & TRIPS",
+  "description": "How are Indian GIs protected abroad? Learn about international treaties and bilateral agreements.",
+  "summary": "Understand how GI protection works internationally through the TRIPS Agreement, bilateral treaties, and the challenges of protecting Indian GIs in foreign markets.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 360,
+  
+  "content": "## International GI Protection & TRIPS\n\nA GI registered in India is protected within India. But what about international markets? How do we stop fake 'Darjeeling Tea' or 'Basmati Rice' from being sold in Europe or America?\n\n### The TRIPS Agreement\n\nThe **TRIPS Agreement** (Trade-Related Aspects of Intellectual Property Rights) is part of the World Trade Organization (WTO) framework.\n\n**Key Provisions for GIs:**\n\n1. **Minimum Protection (Article 22):** All WTO members must provide legal means to prevent:\n   - Misleading use of GIs\n   - Use that constitutes unfair competition\n\n2. **Enhanced Protection for Wines & Spirits (Article 23):** Special protection even if:\n   - The true origin is indicated\n   - The GI is used in translation\n   - Accompanied by expressions like 'kind', 'type', 'style'\n\n**Example:** Under Article 23, you cannot sell wine as 'Champagne-style' or 'California Champagne' even if you clearly state it's not from France.\n\n**The Debate:** India (along with EU) has been pushing to extend Article 23's enhanced protection to all GI products, not just wines and spirits. This would give stronger protection to products like Basmati Rice and Darjeeling Tea.\n\n### Bilateral Agreements\n\nIndia has signed bilateral agreements with several countries for mutual GI recognition:\n\n**India-EU Agreement (2007):**\n- Mutual recognition of GIs\n- India recognizes EU GIs like Champagne, Scotch Whisky, Feta Cheese\n- EU recognizes Indian GIs like Darjeeling Tea, Basmati Rice\n\n**Other Agreements:**\n- India-UK (under negotiation)\n- India-Australia (under negotiation)\n\n### The Lisbon System\n\nThe **Lisbon Agreement** (administered by WIPO) provides international registration of appellations of origin.\n\n**How it works:**\n- Register once in your home country\n- File international application through WIPO\n- Get protection in all member countries\n\n**India's Status:** India is **not yet** a member of the Lisbon System, but is considering joining.\n\n### Challenges in International Protection\n\n#### 1. Generic Terms Problem\n\nSome GI names have become 'generic' in certain countries:\n- 'Basmati' is considered generic in some countries\n- 'Jasmine Rice' faces similar issues\n\n**India's Strategy:** Aggressive legal action and bilateral negotiations to prevent genericization.\n\n#### 2. Prior Trademark Registrations\n\nIf someone registered 'Darjeeling' as a trademark in a foreign country before India registered it as a GI, that trademark might have priority.\n\n**Example:** 'Darjeeling' was trademarked by various companies in several countries before India's GI registration.\n\n#### 3. Enforcement Costs\n\nTaking legal action in foreign courts is expensive. Small producer associations often cannot afford it.\n\n**Solution:** Government support through IP offices and trade bodies.\n\n### Success Stories\n\n#### Darjeeling Tea in Europe\n- Protected under EU-India agreement\n- Tea Board of India has taken action against fake Darjeeling tea in EU markets\n- Several companies forced to stop misusing the name\n\n#### Basmati Rice\n- Protected in EU under bilateral agreement\n- India successfully opposed attempts to register 'Basmati' as a trademark in several countries\n\n--- \n\n### 💡 Level 7 Case Study: The Champagne vs. Mysore Sandal Soap Battle\n\n* **The Issue:** In the 1990s, a French company tried to register 'Mysore Sandal' as a trademark in France.\n* **India's Response:** The Karnataka Soaps and Detergents Limited (KSDL), which makes Mysore Sandal Soap, opposed this registration.\n* **The Argument:** 'Mysore Sandal' is a geographical indication tied to Mysore, Karnataka, where sandalwood is traditionally sourced and processed.\n* **The Outcome:** After legal battle, the French trademark application was rejected.\n* **The Lesson:** This case highlighted the need for proactive international protection of Indian GIs. It also showed that reciprocal protection works - just as India protects 'Champagne', other countries should protect 'Mysore Sandal'.",
+  
+  "keyPoints": [
+    "The TRIPS Agreement requires all WTO members to provide minimum GI protection.",
+    "Wines and spirits get enhanced protection under TRIPS Article 23.",
+    "India has bilateral GI recognition agreements with the EU and is negotiating with other countries.",
+    "The Lisbon System allows international GI registration, but India is not yet a member.",
+    "Challenges include genericization, prior trademarks, and high enforcement costs.",
+    "India has successfully protected Darjeeling Tea and Basmati Rice in international markets."
+  ],
+  
+  "learningObjectives": [
+    "Explain the TRIPS Agreement's provisions for GI protection.",
+    "Describe India's bilateral GI agreements.",
+    "Identify the challenges in protecting Indian GIs internationally.",
+    "Analyze the Mysore Sandal case study."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T21:00:00Z"
+}

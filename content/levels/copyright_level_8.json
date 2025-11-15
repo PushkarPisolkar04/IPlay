@@ -1,0 +1,40 @@
+{
+  "id": "copyright_level_8",
+  "realmId": "realm_copyright",
+  "levelNumber": 8,
+  "name": "Registration, DMCA & Enforcement",
+  "description": "What's a 'DMCA strike'? Learn how copyright is *actually* enforced online.",
+  "summary": "Protection is automatic, but registration makes it stronger. This level covers the 'how-to' of copyright registration in India and explains the DMCA Takedown notice system.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=oI5eJeFkM2s",
+  "videoDuration": 748,
+  
+  "content": "## Automatic vs. Registered Copyright\n\nAs we learned in Level 1, copyright protection is **automatic** in India. The moment you create it, you are protected. You don't *have* to register it.\n\nSo, why would anyone pay to register their work with the Government's Copyright Office?\n\n**The Power of Registration:**\nRegistration is not for *protection*—it's for *proof*. \n\nIf you have to sue someone for infringing your work, you must prove in court that you are the real owner. This can be difficult.\n\nHowever, if your work is registered with the **Copyright Office (under the Ministry of Commerce and Industry)**, that registration certificate is considered **'prima facie' evidence** of ownership under Section 48 of the Indian Copyright Act. This means the court *assumes* you are the owner, and the burden of proof shifts to the *other party* to prove you are not. This is a massive legal advantage.\n\n### How to Register Copyright in India\n\nThe process is simple and can be done online:\n\n1. **Visit the Copyright Office Portal:** Go to copyright.gov.in\n2. **Fill Form XIV:** For literary, artistic, musical, or cinematographic works\n3. **Pay the Fee:** ₹500 for online applications (for Indian nationals)\n4. **Submit Documents:** Upload a copy of the work and proof of authorship\n5. **Wait for Approval:** The Copyright Office examines and issues a certificate (usually within 6-12 months)\n\n## How is Copyright Enforced Online?\n\nIf you see your photo on someone's Instagram or your video re-uploaded to YouTube, you don't have to go to court. You can use the platform's built-in enforcement system.\n\n### Online Enforcement in India\n\nIn India, online platforms are governed by the **Information Technology Act, 2000** (specifically Section 79), which provides 'Safe Harbor' protection to intermediaries (like YouTube, Facebook) if they act quickly to remove infringing content when notified.\n\nHowever, since most major platforms (Google, YouTube, Facebook, Instagram) are American companies, they also follow the **DMCA (Digital Millennium Copyright Act)** process, which has become the global standard.\n\n### The DMCA 'Takedown Notice' (The 'Copyright Strike')\n\nThis is a simple two-step process:\n\n1.  **Takedown Notice:** The copyright owner (e.g., a music label) sends a legal notice to the platform (e.g., YouTube) saying, 'This video at this URL is using our song without permission. Take it down.'\n\n2.  **The 'Safe Harbor' Rule:** To stay 'safe' from being sued, YouTube *must* comply. It immediately takes the video down and gives the uploader a 'Copyright Strike'. The platform doesn't judge who is right or wrong at this stage.\n\n### What if the Strike is Unfair? (The 'Counter-Notice')\n\nWhat if your video was a review, and your use was 'Fair Dealing'?\n\nYou have the right to send a **Counter-Notice** back to YouTube. This is a legal document where you state, under penalty of perjury, 'I have a good faith belief that my content was removed by mistake (e.g., it was Fair Dealing).'\n\nWhen YouTube gets this, it puts the ball back in the copyright owner's court. The owner now has 10-14 days to either:\n\n* Do nothing (and your video gets restored).\n* File an *actual lawsuit* against you in court.\n\nThis system is the backbone of all online copyright enforcement you see today, and Indian creators and copyright owners use it regularly to protect their work on international platforms.",
+  
+  "keyPoints": [
+    "Copyright protection is automatic in India, but registration provides strong proof of ownership.",
+    "Registration is done through the Copyright Office (copyright.gov.in) using Form XIV for ₹500.",
+    "A copyright registration certificate is 'prima facie' evidence under Section 48 of the Indian Copyright Act.",
+    "Online platforms in India follow the IT Act, 2000 (Section 79) for Safe Harbor protection.",
+    "The DMCA takedown system is used by international platforms (YouTube, Instagram) and is available to Indian creators.",
+    "If you believe a strike is wrong (e.g., it was Fair Dealing), you can file a 'Counter-Notice' to defend your content."
+  ],
+  
+  "learningObjectives": [
+    "Explain the benefit of registering a copyright in India and the process to do so.",
+    "Identify the Indian law (IT Act Section 79) and international system (DMCA) for online enforcement.",
+    "Describe the 'takedown notice' and 'counter-notice' process.",
+    "Analyze a 'copyright strike' scenario on YouTube and how Indian creators can respond."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 200,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:00:00Z"
+}

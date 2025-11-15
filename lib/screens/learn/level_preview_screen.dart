@@ -47,25 +47,22 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
     });
 
     try {
+      print('🔍 Loading level preview: ${widget.levelId}');
       final userId = FirebaseAuth.instance.currentUser?.uid;
       
-      // Load level content
-      final jsonContent = await _contentService.getLevelContent(widget.levelId);
+      // Load level from JSON
+      final level = await _contentService.getLevelById(widget.levelId);
       
-      if (jsonContent != null) {
-        _levelJson = jsonContent;
-        _level = _convertJsonToModel(jsonContent);
+      if (level != null) {
+        print('✅ Level preview loaded: ${level.name}');
+        _level = level;
       } else {
-        final level = _contentService.getLevelById(widget.levelId);
-        if (level != null) {
-          _level = level;
-        } else {
-          setState(() {
-            _errorMessage = 'Level content not found';
-            _isLoading = false;
-          });
-          return;
-        }
+        print('❌ Level is null');
+        setState(() {
+          _errorMessage = 'Level content not found';
+          _isLoading = false;
+        });
+        return;
       }
 
       // Check if level is completed
@@ -79,25 +76,26 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
       }
 
       // Get prerequisite levels
-      _prerequisiteLevels = _getPrerequisiteLevels();
+      _prerequisiteLevels = await _getPrerequisiteLevels();
 
       setState(() {
         _isLoading = false;
       });
-    } catch (e) {
-      // print('Error loading level preview: $e');
+    } catch (e, stackTrace) {
+      print('❌ Error loading level preview: $e');
+      print('Stack trace: $stackTrace');
       setState(() {
-        _errorMessage = 'Failed to load level preview';
+        _errorMessage = 'Failed to load level preview: $e';
         _isLoading = false;
       });
     }
   }
 
-  List<String> _getPrerequisiteLevels() {
+  Future<List<String>> _getPrerequisiteLevels() async {
     if (_level == null) return [];
     
     // Get all levels in the realm
-    final allLevels = _contentService.getLevelsForRealm(widget.realmId);
+    final allLevels = await _contentService.getLevelsForRealm(widget.realmId);
     
     // Find levels that come before this one
     final prerequisites = <String>[];

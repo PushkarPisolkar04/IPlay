@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_6",
+  "realmId": "realm_patent",
+  "levelNumber": 6,
+  "name": "Infringement & 'Freedom to Operate' (FTO)",
+  "description": "Learn the two sides of the coin: 'Patent Infringement' (who can sue you) and 'Freedom to Operate' (who you can sue).",
+  "summary": "This level explains patent infringement and the crucial business concept of 'Freedom to Operate' (FTO). You'll learn that *having a patent* does not automatically give you the *right to sell* your product.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=k1WPKFc6qPI",
+  "videoDuration": 55,
+  
+  "content": "## What is Patent Infringement?\n\nPatent infringement is the act of making, using, selling, or importing a patented invention *without the permission* of the patent owner.\n\n* **The Test:** It's a simple, 'all-elements' rule. To determine infringement, you compare a competitor's product *directly to the patent's 'claims'*. \n* **Infringement:** The product is infringing if it contains *every single element* (or its legal 'equivalent') listed in at least one of the patent's independent claims.\n* **No Infringement:** If the product is *missing* even *one* element from the claim, it does not infringe.\n\nThis is why claim wording is so important. If you claim 'a 3-legged stool', a 4-legged stool does not infringe!\n\n## The 'Freedom to Operate' (FTO) Problem\n\nThis is the most misunderstood concept in patent law. \n\n> **A patent is a 'negative' right. It gives you the right to STOP others, not the right to DO anything.**\n\nThis means that **having a patent does not automatically give you the right to sell your own product!** Your new, patented invention might still infringe on someone else's *older, broader* patent.\n\nThis is called the 'Freedom to Operate' (FTO) problem. An FTO analysis asks: 'Is our new product clear of *all other* active patents?'\n\n--- \n\n### 💡 Level 6 Case Study: The 'Smart Car'\n\nLet's say you work at a company. \n\n* **Company A (The Pioneer):** In 2010, Company A got a very broad, 20-year patent for the *core idea* of 'a car that uses GPS to drive itself'. (Claim 1: 'A vehicle that uses a GPS receiver to steer...'). This patent is active until 2030.\n\n* **Your Company (The Improver):** In 2025, *you* invent a brilliant *new type* of laser sensor for self-driving cars. Your sensor is new, inventive, and useful. You get a patent on it! (Your Claim 1: 'A self-driving car sensor that uses a rotating laser...')\n\n* **The Problem:** You want to sell your 'new, patented self-driving car'. \n\n* **Can you sell it?** **NO!** \n\n* **Why?** Your car uses your new laser (which is fine) *but* it *also* uses Company A's *older, patented idea* of 'a car that uses GPS to drive itself'. \n\n* **The Result (A 'Blocking Patent'):**\n    * You **infringe** Company A's patent if you try to sell your car.\n    * Company A **infringes** *your* patent if they try to use your new laser sensor.\n\nThis is a 'blocking patent' situation. You are both blocked. The only way to move forward is to **'cross-license'**—you give them permission to use your sensor, and they give you permission to use their broad self-driving patent. This happens *all the time* in tech.",
+  
+  "keyPoints": [
+    "Infringement is when a product includes *every element* of a patent's claim.",
+    "A patent is a 'negative right': it gives you the right to *stop others*, not the right to *sell* your product.",
+    "'Freedom to Operate' (FTO) is an analysis to see if your product infringes *other people's* patents.",
+    "It is possible for your new, patented invention to *also* infringe an older, broader patent.",
+    "This 'blocking patent' scenario is common and often resolved through 'cross-licensing' agreements."
+  ],
+  
+  "learningObjectives": [
+    "Define patent infringement and the 'all-elements' rule.",
+    "Explain the 'negative right' concept (the right to exclude, not the right to make).",
+    "Define 'Freedom to Operate' (FTO).",
+    "Analyze the 'blocking patent' scenario and explain why 'cross-licensing' is the solution."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 350,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:00:00Z"
+}

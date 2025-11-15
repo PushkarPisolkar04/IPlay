@@ -1,0 +1,367 @@
+{
+  "levelId": "trademark_level_2",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+
+    {
+      "id": "trademark_2_q1",
+      "question": "Which of the following is the strongest type of trademark?",
+      "options": [
+        "Descriptive",
+        "Generic",
+        "Fanciful",
+        "Suggestive"
+      ],
+      "correctIndex": 2,
+      "explanation": "Fanciful marks are invented words with no prior meaning (like 'Kodak'). They are the strongest type of trademark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q2",
+      "question": "Which of these is an example of an arbitrary mark?",
+      "options": [
+        "Apple for computers",
+        "Laptop for computers",
+        "Best Shoes for shoes",
+        "CameraPro for cameras"
+      ],
+      "correctIndex": 0,
+      "explanation": "‘Apple’ is arbitrary when used for computers because it has no connection to the product's nature.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q3",
+      "question": "Which of the following cannot receive trademark protection?",
+      "options": [
+        "Generic terms",
+        "Descriptive terms",
+        "Suggestive terms",
+        "Arbitrary terms"
+      ],
+      "correctIndex": 0,
+      "explanation": "Generic terms refer to the general class of goods and can never be trademarked.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q4",
+      "question": "‘Netflix’ is best classified as what type of mark?",
+      "options": [
+        "Descriptive",
+        "Suggestive",
+        "Generic",
+        "Fanciful"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Netflix’ suggests its service (internet + flicks) without directly describing it, so it’s suggestive.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q5",
+      "question": "Which category is considered the weakest for trademark protection?",
+      "options": [
+        "Descriptive",
+        "Fanciful",
+        "Arbitrary",
+        "Suggestive"
+      ],
+      "correctIndex": 0,
+      "explanation": "Descriptive marks are weak because they directly describe the product. They require secondary meaning for protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q6",
+      "question": "‘Best Computers’ would likely be refused registration because it is:",
+      "options": [
+        "Fanciful",
+        "Generic",
+        "Descriptive and weak",
+        "Suggestive"
+      ],
+      "correctIndex": 2,
+      "explanation": "‘Best Computers’ merely describes quality and product type, making it descriptive and weak.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q7",
+      "question": "What is the purpose of the spectrum of distinctiveness?",
+      "options": [
+        "To decide the strength of trademarks",
+        "To measure product quality",
+        "To rank businesses",
+        "To assign IP ownership"
+      ],
+      "correctIndex": 0,
+      "explanation": "The spectrum helps determine how strong or weak a mark is legally.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q8",
+      "question": "Which of the following best describes a 'suggestive' mark?",
+      "options": [
+        "It directly describes the product",
+        "It suggests a characteristic, requiring imagination to connect",
+        "It names the product category",
+        "It’s an invented word"
+      ],
+      "correctIndex": 1,
+      "explanation": "Suggestive marks hint at the product's qualities but require imagination, e.g., ‘Coppertone’ for sunscreen.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q9",
+      "question": "‘Kodak’ is an example of which category?",
+      "options": [
+        "Fanciful",
+        "Descriptive",
+        "Generic",
+        "Suggestive"
+      ],
+      "correctIndex": 0,
+      "explanation": "‘Kodak’ is a made-up word with no meaning — a classic fanciful mark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_2_q10",
+      "question": "Which of these can acquire protection after proving secondary meaning?",
+      "options": [
+        "Generic marks",
+        "Descriptive marks",
+        "Arbitrary marks",
+        "Fanciful marks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Descriptive marks can gain protection once they acquire distinctiveness through secondary meaning.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_2_q11",
+      "question": "In the 'Apple vs. Best Computers' case study, why is 'Apple' stronger?",
+      "options": [
+        "It’s descriptive of computers",
+        "It’s arbitrary with no connection to computers",
+        "It’s generic",
+        "It’s a government-owned term"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Apple’ is arbitrary in this context, giving it high distinctiveness compared to ‘Best Computers’.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q12",
+      "question": "Which of these represents a descriptive mark that may become distinctive?",
+      "options": [
+        "Sharp for TVs",
+        "Best Soap for soap",
+        "QuickPrint for printing services",
+        "Table for furniture"
+      ],
+      "correctIndex": 2,
+      "explanation": "‘QuickPrint’ directly describes the service but could gain distinctiveness via long-term recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q13",
+      "question": "Why are generic terms denied trademark protection?",
+      "options": [
+        "They are too unique",
+        "They belong to everyone for describing goods",
+        "They violate patent laws",
+        "They confuse consumers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generic terms describe an entire class of goods, so allowing ownership would be unfair to competitors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q14",
+      "question": "A descriptive mark like 'Creamy Yogurt' can be protected if:",
+      "options": [
+        "It has acquired secondary meaning",
+        "It is used internationally",
+        "It is registered automatically",
+        "It’s not descriptive in another language"
+      ],
+      "correctIndex": 0,
+      "explanation": "Secondary meaning arises when consumers associate the descriptive mark with a specific brand.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q15",
+      "question": "‘Jaguar’ for cars falls into which category?",
+      "options": [
+        "Generic",
+        "Descriptive",
+        "Arbitrary",
+        "Suggestive"
+      ],
+      "correctIndex": 2,
+      "explanation": "‘Jaguar’ is arbitrary — it’s a word with existing meaning, but unrelated to the product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q16",
+      "question": "What happens if a once-distinctive mark becomes generic over time?",
+      "options": [
+        "It remains protected forever",
+        "It loses its trademark protection",
+        "It becomes a patent",
+        "It turns into a trade secret"
+      ],
+      "correctIndex": 1,
+      "explanation": "This is called 'genericide' — e.g., 'Escalator' lost protection after becoming generic.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q17",
+      "question": "‘Coppertone’ for sunscreen is an example of:",
+      "options": [
+        "Descriptive",
+        "Suggestive",
+        "Fanciful",
+        "Generic"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Coppertone’ suggests a tan but doesn’t describe the product directly, so it’s suggestive.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q18",
+      "question": "Which of the following is NOT part of the spectrum of distinctiveness?",
+      "options": [
+        "Generic",
+        "Arbitrary",
+        "Functional",
+        "Fanciful"
+      ],
+      "correctIndex": 2,
+      "explanation": "Functionality relates to design, not distinctiveness; it’s outside the spectrum of marks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q19",
+      "question": "Secondary meaning develops primarily through:",
+      "options": [
+        "Consumer recognition and use over time",
+        "Government declaration",
+        "Trademark office decision",
+        "Automatic registration"
+      ],
+      "correctIndex": 0,
+      "explanation": "When consumers start identifying a descriptive term with a brand, it gains secondary meaning.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_2_q20",
+      "question": "‘Xerox’ is at risk of losing protection due to:",
+      "options": [
+        "Secondary meaning",
+        "Genericide",
+        "Abandonment",
+        "Non-use"
+      ],
+      "correctIndex": 1,
+      "explanation": "‘Xerox’ is so widely used as a verb (‘to xerox a document’) that it risks becoming generic.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_2_q21",
+      "question": "Why is ‘Best Computers’ weak even though it sounds appealing?",
+      "options": [
+        "It lacks distinctiveness and is descriptive",
+        "It uses an offensive term",
+        "It’s fanciful",
+        "It’s owned by another company"
+      ],
+      "correctIndex": 0,
+      "explanation": "Descriptive phrases like ‘Best Computers’ don’t indicate a unique source — they describe quality.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_2_q22",
+      "question": "A fanciful mark can be refused if:",
+      "options": [
+        "It’s immoral or deceptive under law",
+        "It’s not used commercially",
+        "It’s too unique",
+        "It’s a common surname"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even fanciful marks can be rejected if they’re deceptive, obscene, or contrary to public policy.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_2_q23",
+      "question": "In India, the distinctiveness test for trademarks is primarily about:",
+      "options": [
+        "Consumer perception",
+        "Number of years of use",
+        "Business turnover",
+        "Trademark length"
+      ],
+      "correctIndex": 0,
+      "explanation": "Distinctiveness depends on whether the public identifies the mark with a particular source.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_2_q24",
+      "question": "If ‘Creamy Yogurt’ becomes widely known as one brand, it gains:",
+      "options": [
+        "Primary meaning",
+        "Secondary meaning",
+        "Generic status",
+        "No effect"
+      ],
+      "correctIndex": 1,
+      "explanation": "Through extensive use and recognition, a descriptive term can gain secondary meaning and protection.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_2_q25",
+      "question": "Why is the spectrum of distinctiveness crucial for businesses?",
+      "options": [
+        "It determines how easily they can register and enforce marks",
+        "It helps decide product pricing",
+        "It defines import/export rights",
+        "It affects patent applications"
+      ],
+      "correctIndex": 0,
+      "explanation": "Understanding where a mark falls on the spectrum helps businesses choose legally strong trademarks.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

@@ -1,0 +1,810 @@
+{
+  "version": "2.0.0",
+  "updatedAt": "2025-11-11T12:00:00Z",
+  "totalBadges": 50,
+  "categories": ["milestone", "xp", "streak", "mastery", "game", "social", "special"],
+  "note": "Add badge images to assets/badges/ folder. Each badge should have a PNG file matching its id (e.g., first_step.png). Badges are designed to avoid overlap - each achievement type has distinct badges.",
+  "badges": [
+    {
+      "id": "first_step",
+      "name": "First Step",
+      "description": "Complete your first level",
+      "category": "milestone",
+      "rarity": "common",
+      "iconPath": "assets/badges/first_step.png",
+      "xpBonus": 10,
+      "unlockCondition": {
+        "type": "levels_complete",
+        "value": 1,
+        "description": "Complete any 1 level"
+      },
+      "displayOrder": 1,
+      "isActive": true
+    },
+    {
+      "id": "level_explorer",
+      "name": "Level Explorer",
+      "description": "Complete 10 levels",
+      "category": "milestone",
+      "rarity": "common",
+      "iconPath": "assets/badges/level_explorer.png",
+      "xpBonus": 25,
+      "unlockCondition": {
+        "type": "levels_complete",
+        "value": 10,
+        "description": "Complete any 10 levels"
+      },
+      "displayOrder": 2,
+      "isActive": true
+    },
+    {
+      "id": "level_veteran",
+      "name": "Level Veteran",
+      "description": "Complete 25 levels",
+      "category": "milestone",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/level_veteran.png",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "levels_complete",
+        "value": 25,
+        "description": "Complete any 25 levels"
+      },
+      "displayOrder": 3,
+      "isActive": true
+    },
+    {
+      "id": "level_master",
+      "name": "Level Master",
+      "description": "Complete 40 levels",
+      "category": "milestone",
+      "rarity": "rare",
+      "iconPath": "assets/badges/level_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "levels_complete",
+        "value": 40,
+        "description": "Complete any 40 levels"
+      },
+      "displayOrder": 4,
+      "isActive": true
+    },
+    {
+      "id": "level_legend",
+      "name": "Level Legend",
+      "description": "Complete all 60 levels",
+      "category": "milestone",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/level_legend.png",
+      "xpBonus": 300,
+      "unlockCondition": {
+        "type": "levels_complete",
+        "value": 60,
+        "description": "Complete all 60 levels"
+      },
+      "displayOrder": 5,
+      "isActive": true
+    },
+    {
+      "id": "first_quiz",
+      "name": "Quiz Rookie",
+      "description": "Complete your first quiz",
+      "category": "milestone",
+      "rarity": "common",
+      "iconPath": "assets/badges/first_quiz.png",
+      "xpBonus": 15,
+      "unlockCondition": {
+        "type": "quiz_complete",
+        "count": 1,
+        "description": "Complete any 1 quiz"
+      },
+      "displayOrder": 6,
+      "isActive": true
+    },
+    {
+      "id": "perfect_start",
+      "name": "Perfect Start",
+      "description": "Score 100% on your first perfect quiz",
+      "category": "milestone",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/perfect_start.png",
+      "xpBonus": 30,
+      "unlockCondition": {
+        "type": "perfect_quiz",
+        "count": 1,
+        "description": "Score 100% on any quiz"
+      },
+      "displayOrder": 7,
+      "isActive": true
+    },
+    {
+      "id": "perfectionist",
+      "name": "Perfectionist",
+      "description": "Score 100% on 5 quizzes",
+      "category": "milestone",
+      "rarity": "rare",
+      "iconPath": "assets/badges/perfectionist.png",
+      "xpBonus": 75,
+      "unlockCondition": {
+        "type": "perfect_quiz",
+        "count": 5,
+        "description": "Score 100% on 5 quizzes"
+      },
+      "displayOrder": 8,
+      "isActive": true
+    },
+    {
+      "id": "quiz_genius",
+      "name": "Quiz Genius",
+      "description": "Score 100% on 10 quizzes",
+      "category": "milestone",
+      "rarity": "epic",
+      "iconPath": "assets/badges/quiz_genius.png",
+      "xpBonus": 150,
+      "unlockCondition": {
+        "type": "perfect_quiz",
+        "count": 10,
+        "description": "Score 100% on 10 quizzes"
+      },
+      "displayOrder": 9,
+      "isActive": true
+    },
+    {
+      "id": "quiz_master_supreme",
+      "name": "Quiz Master Supreme",
+      "description": "Score 100% on 25 quizzes",
+      "category": "milestone",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/quiz_master_supreme.png",
+      "xpBonus": 300,
+      "unlockCondition": {
+        "type": "perfect_quiz",
+        "count": 25,
+        "description": "Score 100% on 25 quizzes"
+      },
+      "displayOrder": 10,
+      "isActive": true
+    },
+    {
+      "id": "first_challenge",
+      "name": "Challenge Accepted",
+      "description": "Complete your first daily challenge",
+      "category": "milestone",
+      "rarity": "common",
+      "iconPath": "assets/badges/challenge_acceptdd.png",
+      "xpBonus": 20,
+      "unlockCondition": {
+        "type": "daily_challenge_complete",
+        "count": 1,
+        "description": "Complete 1 daily challenge"
+      },
+      "displayOrder": 11,
+      "isActive": true
+    },
+    {
+      "id": "daily_champion",
+      "name": "Daily Champion",
+      "description": "Complete 30 daily challenges",
+      "category": "milestone",
+      "rarity": "rare",
+      "iconPath": "assets/badges/daily_champion.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "daily_challenge_complete",
+        "count": 30,
+        "description": "Complete 30 daily challenges"
+      },
+      "displayOrder": 12,
+      "isActive": true
+    },
+    {
+      "id": "xp_collector",
+      "name": "XP Collector",
+      "description": "Earn 1000 total XP",
+      "category": "xp",
+      "rarity": "common",
+      "iconPath": "assets/badges/xp_collector.png",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "xp_total",
+        "value": 1000,
+        "description": "Earn 1000 total XP"
+      },
+      "displayOrder": 13,
+      "isActive": true
+    },
+    {
+      "id": "xp_master",
+      "name": "XP Master",
+      "description": "Earn 2500 total XP",
+      "category": "xp",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/xp_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "xp_total",
+        "value": 2500,
+        "description": "Earn 2500 total XP"
+      },
+      "displayOrder": 14,
+      "isActive": true
+    },
+    {
+      "id": "xp_legend",
+      "name": "XP Legend",
+      "description": "Earn 5000 total XP",
+      "category": "xp",
+      "rarity": "rare",
+      "iconPath": "assets/badges/xp_legend.png",
+      "xpBonus": 150,
+      "unlockCondition": {
+        "type": "xp_total",
+        "value": 5000,
+        "description": "Earn 5000 total XP"
+      },
+      "displayOrder": 15,
+      "isActive": true
+    },
+    {
+      "id": "xp_titan",
+      "name": "XP Titan",
+      "description": "Earn 10000 total XP",
+      "category": "xp",
+      "rarity": "epic",
+      "iconPath": "assets/badges/xp_titan.png",
+      "xpBonus": 250,
+      "unlockCondition": {
+        "type": "xp_total",
+        "value": 10000,
+        "description": "Earn 10000 total XP"
+      },
+      "displayOrder": 16,
+      "isActive": true
+    },
+    {
+      "id": "xp_god",
+      "name": "XP God",
+      "description": "Earn 20000 total XP",
+      "category": "xp",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/xp_god.png",
+      "xpBonus": 500,
+      "unlockCondition": {
+        "type": "xp_total",
+        "value": 20000,
+        "description": "Earn 20000 total XP"
+      },
+      "displayOrder": 17,
+      "isActive": true
+    },
+    {
+      "id": "streak_starter",
+      "name": "Streak Starter",
+      "description": "Login for 3 consecutive days",
+      "category": "streak",
+      "rarity": "common",
+      "iconPath": "assets/badges/streak_starter.png",
+      "xpBonus": 15,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 3,
+        "description": "Maintain a 3-day login streak"
+      },
+      "displayOrder": 18,
+      "isActive": true
+    },
+    {
+      "id": "week_warrior",
+      "name": "Week Warrior",
+      "description": "Login for 7 consecutive days",
+      "category": "streak",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/week_warrior.png",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 7,
+        "description": "Maintain a 7-day login streak"
+      },
+      "displayOrder": 19,
+      "isActive": true
+    },
+    {
+      "id": "dedicated_learner",
+      "name": "Dedicated Learner",
+      "description": "Login for 14 consecutive days",
+      "category": "streak",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/dedicated_learner.png",
+      "xpBonus": 75,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 14,
+        "description": "Maintain a 14-day login streak"
+      },
+      "displayOrder": 20,
+      "isActive": true
+    },
+    {
+      "id": "month_master",
+      "name": "Month Master",
+      "description": "Login for 30 consecutive days",
+      "category": "streak",
+      "rarity": "rare",
+      "iconPath": "assets/badges/month_master.png",
+      "xpBonus": 150,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 30,
+        "description": "Maintain a 30-day login streak"
+      },
+      "displayOrder": 21,
+      "isActive": true
+    },
+    {
+      "id": "unstoppable",
+      "name": "Unstoppable",
+      "description": "Login for 60 consecutive days",
+      "category": "streak",
+      "rarity": "epic",
+      "iconPath": "assets/badges/unstopable.png",
+      "xpBonus": 300,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 60,
+        "description": "Maintain a 60-day login streak"
+      },
+      "displayOrder": 22,
+      "isActive": true
+    },
+    {
+      "id": "legendary_streak",
+      "name": "Legendary Streak",
+      "description": "Login for 100 consecutive days",
+      "category": "streak",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/legendary_streak.png",
+      "xpBonus": 500,
+      "unlockCondition": {
+        "type": "streak_days",
+        "value": 100,
+        "description": "Maintain a 100-day login streak"
+      },
+      "displayOrder": 23,
+      "isActive": true
+    },
+    {
+      "id": "challenge_streak_7",
+      "name": "Challenge Streak",
+      "description": "Complete daily challenges for 7 days straight",
+      "category": "streak",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/challenge_streak_7.png",
+      "xpBonus": 75,
+      "unlockCondition": {
+        "type": "daily_challenge_streak",
+        "value": 7,
+        "description": "Complete daily challenges 7 days in a row"
+      },
+      "displayOrder": 24,
+      "isActive": true
+    },
+    {
+      "id": "challenge_streak_30",
+      "name": "Challenge Master",
+      "description": "Complete daily challenges for 30 days straight",
+      "category": "streak",
+      "rarity": "epic",
+      "iconPath": "assets/badges/challenge_streak_30.png",
+      "xpBonus": 300,
+      "unlockCondition": {
+        "type": "daily_challenge_streak",
+        "value": 30,
+        "description": "Complete daily challenges 30 days in a row"
+      },
+      "displayOrder": 25,
+      "isActive": true
+    },
+    {
+      "id": "copyright_master",
+      "name": "Copyright Master",
+      "description": "Complete the Copyright Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/copyright_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_copyright",
+        "description": "Complete all Copyright levels"
+      },
+      "displayOrder": 26,
+      "isActive": true
+    },
+    {
+      "id": "trademark_master",
+      "name": "Trademark Master",
+      "description": "Complete the Trademark Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/trademark_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_trademark",
+        "description": "Complete all Trademark levels"
+      },
+      "displayOrder": 27,
+      "isActive": true
+    },
+    {
+      "id": "patent_master",
+      "name": "Patent Master",
+      "description": "Complete the Patent Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/patent_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_patent",
+        "description": "Complete all Patent levels"
+      },
+      "displayOrder": 28,
+      "isActive": true
+    },
+    {
+      "id": "design_master",
+      "name": "Design Master",
+      "description": "Complete the Industrial Design Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/design_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_design",
+        "description": "Complete all Industrial Design levels"
+      },
+      "displayOrder": 29,
+      "isActive": true
+    },
+    {
+      "id": "gi_master",
+      "name": "GI Master",
+      "description": "Complete the Geographical Indication Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/gi_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_gi",
+        "description": "Complete all GI levels"
+      },
+      "displayOrder": 30,
+      "isActive": true
+    },
+    {
+      "id": "secrets_master",
+      "name": "Secrets Master",
+      "description": "Complete the Trade Secrets Realm",
+      "category": "mastery",
+      "rarity": "rare",
+      "iconPath": "assets/badges/secrets_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "realm_complete",
+        "realmId": "realm_trade_secrets",
+        "description": "Complete all Trade Secrets levels"
+      },
+      "displayOrder": 31,
+      "isActive": true
+    },
+    {
+      "id": "ipr_champion",
+      "name": "IPR Champion",
+      "description": "Complete all 6 IPR realms",
+      "category": "mastery",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/ipr_champion.png",
+      "xpBonus": 500,
+      "unlockCondition": {
+        "type": "all_realms_complete",
+        "count": 6,
+        "description": "Complete all 6 IPR realms"
+      },
+      "displayOrder": 32,
+      "isActive": true
+    },
+    {
+      "id": "first_game",
+      "name": "Game Starter",
+      "description": "Play your first IPR game",
+      "category": "game",
+      "rarity": "common",
+      "iconPath": "assets/badges/first_game.png",
+      "xpBonus": 20,
+      "unlockCondition": {
+        "type": "games_played",
+        "count": 1,
+        "description": "Play any 1 game"
+      },
+      "displayOrder": 33,
+      "isActive": true
+    },
+    {
+      "id": "game_enthusiast",
+      "name": "Game Enthusiast",
+      "description": "Play 3 different IPR games",
+      "category": "game",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/game_enthusiast.png",
+      "xpBonus": 40,
+      "unlockCondition": {
+        "type": "unique_games_played",
+        "count": 3,
+        "description": "Play 3 different games"
+      },
+      "displayOrder": 34,
+      "isActive": true
+    },
+    {
+      "id": "game_master",
+      "name": "Game Master",
+      "description": "Play all 7 IPR games",
+      "category": "game",
+      "rarity": "rare",
+      "iconPath": "assets/badges/game_master.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "all_games_played",
+        "count": 7,
+        "description": "Play all 7 games"
+      },
+      "displayOrder": 35,
+      "isActive": true
+    },
+    {
+      "id": "high_scorer",
+      "name": "High Scorer",
+      "description": "Achieve a high score in any game",
+      "category": "game",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/high_scorer.png",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "game_high_score",
+        "count": 1,
+        "description": "Get high score in any game"
+      },
+      "displayOrder": 36,
+      "isActive": true
+    },
+    {
+      "id": "game_perfectionist",
+      "name": "Game Perfectionist",
+      "description": "Get perfect score in 3 games",
+      "category": "game",
+      "rarity": "rare",
+      "iconPath": "assets/badges/game_perfectionist.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "game_perfect_score",
+        "count": 3,
+        "description": "Perfect score in 3 games"
+      },
+      "displayOrder": 37,
+      "isActive": true
+    },
+    {
+      "id": "quiz_master_game",
+      "name": "Quiz Master Champion",
+      "description": "Score 100% in Quiz Master game",
+      "category": "game",
+      "rarity": "rare",
+      "iconPath": "assets/badges/quiz_master_game.png",
+      "xpBonus": 75,
+      "unlockCondition": {
+        "type": "specific_game_perfect",
+        "gameId": "quiz_master",
+        "description": "Perfect score in Quiz Master"
+      },
+      "displayOrder": 38,
+      "isActive": true
+    },
+    {
+      "id": "ip_defender_hero",
+      "name": "IP Defender Hero",
+      "description": "Complete IP Defender with perfect score",
+      "category": "game",
+      "rarity": "epic",
+      "iconPath": "assets/badges/ip_defender_hero.png",
+      "xpBonus": 150,
+      "unlockCondition": {
+        "type": "specific_game_perfect",
+        "gameId": "ip_defender",
+        "description": "Perfect score in IP Defender"
+      },
+      "displayOrder": 39,
+      "isActive": true
+    },
+    {
+      "id": "game_addict",
+      "name": "Game Addict",
+      "description": "Play games 50 times",
+      "category": "game",
+      "rarity": "epic",
+      "iconPath": "assets/badges/game_addict.png",
+      "xpBonus": 200,
+      "unlockCondition": {
+        "type": "total_game_plays",
+        "count": 50,
+        "description": "Play any games 50 times total"
+      },
+      "displayOrder": 40,
+      "isActive": true
+    },
+    {
+      "id": "social_learner",
+      "name": "Social Learner",
+      "description": "Join your first classroom",
+      "category": "social",
+      "rarity": "common",
+      "iconPath": "❌",
+      "xpBonus": 25,
+      "unlockCondition": {
+        "type": "classroom_join",
+        "description": "Join any classroom"
+      },
+      "displayOrder": 41,
+      "isActive": true
+    },
+    {
+      "id": "class_champion",
+      "name": "Class Champion",
+      "description": "Rank #1 in your classroom leaderboard",
+      "category": "social",
+      "rarity": "rare",
+      "iconPath": "❌",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "leaderboard_rank",
+        "scope": "classroom",
+        "rank": 1,
+        "description": "Reach rank 1 in classroom"
+      },
+      "displayOrder": 42,
+      "isActive": true
+    },
+    {
+      "id": "school_star",
+      "name": "School Star",
+      "description": "Rank in top 3 of your school leaderboard",
+      "category": "social",
+      "rarity": "rare",
+      "iconPath": "assets/badges/school_star.png",
+      "xpBonus": 150,
+      "unlockCondition": {
+        "type": "leaderboard_rank",
+        "scope": "school",
+        "rank": 3,
+        "description": "Reach top 3 in school"
+      },
+      "displayOrder": 43,
+      "isActive": true
+    },
+    {
+      "id": "state_leader",
+      "name": "State Leader",
+      "description": "Rank in top 10 of your state leaderboard",
+      "category": "social",
+      "rarity": "epic",
+      "iconPath": "assets/badges/state_leader.png",
+      "xpBonus": 200,
+      "unlockCondition": {
+        "type": "leaderboard_rank",
+        "scope": "state",
+        "rank": 10,
+        "description": "Reach top 10 in state"
+      },
+      "displayOrder": 44,
+      "isActive": true
+    },
+    {
+      "id": "assignment_ace",
+      "name": "Assignment Ace",
+      "description": "Complete 5 teacher assignments",
+      "category": "social",
+      "rarity": "uncommon",
+      "iconPath": "assets/badges/assignment_ace.png",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "assignment_complete",
+        "count": 5,
+        "description": "Complete 5 assignments"
+      },
+      "displayOrder": 45,
+      "isActive": true
+    },
+    {
+      "id": "helpful_student",
+      "name": "Helpful Student",
+      "description": "Complete 15 teacher assignments",
+      "category": "social",
+      "rarity": "rare",
+      "iconPath": "assets/badges/helpful_student.png",
+      "xpBonus": 100,
+      "unlockCondition": {
+        "type": "assignment_complete",
+        "count": 15,
+        "description": "Complete 15 assignments"
+      },
+      "displayOrder": 46,
+      "isActive": true
+    },
+    {
+      "id": "early_adopter",
+      "name": "Early Adopter",
+      "description": "Joined IPlay in the first month",
+      "category": "special",
+      "rarity": "legendary",
+      "iconPath": "assets/badges/early_adopter.png",
+      "xpBonus": 250,
+      "unlockCondition": {
+        "type": "early_adopter",
+        "description": "Join in first month of launch"
+      },
+      "displayOrder": 47,
+      "isActive": true
+    },
+    {
+      "id": "speedrunner",
+      "name": "Speedrunner",
+      "description": "Complete a level in under 5 minutes",
+      "category": "special",
+      "rarity": "rare",
+      "iconPath": "❌",
+      "xpBonus": 75,
+      "unlockCondition": {
+        "type": "speedrunner",
+        "timeLimit": 300,
+        "description": "Complete level in under 5 minutes"
+      },
+      "displayOrder": 48,
+      "isActive": true
+    },
+    {
+      "id": "night_owl",
+      "name": "Night Owl",
+      "description": "Complete 5 levels between 10 PM - 6 AM",
+      "category": "special",
+      "rarity": "uncommon",
+      "iconPath": "❌",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "night_owl",
+        "count": 5,
+        "description": "Complete 5 levels at night"
+      },
+      "displayOrder": 49,
+      "isActive": true
+    },
+    {
+      "id": "weekend_warrior",
+      "name": "Weekend Warrior",
+      "description": "Complete 15 levels on weekends",
+      "category": "special",
+      "rarity": "uncommon",
+      "iconPath": "❌",
+      "xpBonus": 50,
+      "unlockCondition": {
+        "type": "weekend_warrior",
+        "count": 15,
+        "description": "Complete 15 levels on weekends"
+      },
+      "displayOrder": 50,
+      "isActive": true
+    }
+  ]
+}

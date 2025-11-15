@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_10",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T16:30:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_10_q1",
+      "question": "What are 'virtual goods' in trademark classification?",
+      "options": [
+        "Physical products like shoes or bags",
+        "Digital items sold or used in virtual environments",
+        "Items without any commercial value",
+        "Government-approved merchandise"
+      ],
+      "correctIndex": 1,
+      "explanation": "Virtual goods are digital representations of real products used in online or metaverse settings, like virtual sneakers or NFTs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q2",
+      "question": "Under which class are virtual goods usually filed for trademark protection?",
+      "options": [
+        "Class 35",
+        "Class 25",
+        "Class 9",
+        "Class 42"
+      ],
+      "correctIndex": 2,
+      "explanation": "Virtual goods, including downloadable digital items and NFTs, are registered under Class 9 in the NICE classification.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q3",
+      "question": "Which landmark case involved 'MetaBirkins' NFTs?",
+      "options": [
+        "Nike vs. StockX",
+        "Hermès vs. Mason Rothschild",
+        "Tata vs. TataVerse",
+        "Gucci vs. Roblox"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Hermès vs. Mason Rothschild case dealt with 'MetaBirkins' NFTs and the use of famous luxury brand names in digital art.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q4",
+      "question": "What was the main issue in the MetaBirkins case?",
+      "options": [
+        "Trademark infringement in virtual goods",
+        "Patent dispute over NFT design",
+        "Copyright in music NFTs",
+        "Ownership of blockchain code"
+      ],
+      "correctIndex": 0,
+      "explanation": "Hermès sued Rothschild claiming trademark infringement for using its 'Birkin' brand name on NFT artworks without authorization.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q5",
+      "question": "NFT stands for:",
+      "options": [
+        "Non-Financial Token",
+        "Non-Fungible Token",
+        "New File Technology",
+        "Networked Financial Transfer"
+      ],
+      "correctIndex": 1,
+      "explanation": "NFT stands for Non-Fungible Token — a unique digital asset stored on the blockchain, often linked to art or collectibles.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q6",
+      "question": "Why are trademarks important in the metaverse?",
+      "options": [
+        "They regulate virtual taxation",
+        "They prevent misuse of brands in digital spaces",
+        "They help mint NFTs faster",
+        "They block all crypto transactions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademarks prevent brand misuse in virtual worlds, ensuring users aren’t deceived by fake or unauthorized goods.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q7",
+      "question": "Which major company has filed trademark applications for virtual goods?",
+      "options": [
+        "McDonald’s",
+        "Nike",
+        "Coca-Cola",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Many brands like Nike, McDonald’s, and Coca-Cola have filed trademarks for virtual versions of their goods.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q8",
+      "question": "What is a key legal challenge with NFTs and trademarks?",
+      "options": [
+        "Ownership is hard to prove on blockchain",
+        "Each NFT may involve unauthorized brand use",
+        "NFTs cannot be sold internationally",
+        "Only governments can issue NFTs"
+      ],
+      "correctIndex": 1,
+      "explanation": "NFT creators may use brands without permission, leading to trademark disputes over digital goods and representations.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q9",
+      "question": "The metaverse represents:",
+      "options": [
+        "A physical retail store",
+        "A shared virtual 3D space for interaction and commerce",
+        "A cryptocurrency exchange",
+        "An offline communication system"
+      ],
+      "correctIndex": 1,
+      "explanation": "The metaverse is a collective virtual environment combining augmented reality, digital goods, and user interaction.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_10_q10",
+      "question": "Why might virtual goods need separate trademark protection?",
+      "options": [
+        "They are physical products",
+        "They operate under different legal jurisdictions",
+        "Existing real-world marks may not automatically extend to digital use",
+        "They are exempt from IP law"
+      ],
+      "correctIndex": 2,
+      "explanation": "Trademarks for physical goods may not cover digital counterparts, so separate filings for virtual goods are needed.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_10_q11",
+      "question": "Which class in the NICE classification includes 'downloadable digital files authenticated by NFTs'?",
+      "options": [
+        "Class 9",
+        "Class 16",
+        "Class 35",
+        "Class 42"
+      ],
+      "correctIndex": 0,
+      "explanation": "Class 9 includes downloadable digital files authenticated by NFTs under updated NICE classification guidance.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q12",
+      "question": "In the MetaBirkins case, Hermès argued that:",
+      "options": [
+        "NFTs are not protected by IP law",
+        "Rothschild used 'Birkin' as free artistic expression",
+        "The MetaBirkins NFTs caused trademark confusion and dilution",
+        "NFTs have no commercial value"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hermès claimed the NFTs diluted its brand and created confusion by using 'Birkin' for profit.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q13",
+      "question": "Which of these is a form of trademark misuse in the metaverse?",
+      "options": [
+        "Buying branded wearables legally",
+        "Using Nike’s logo on virtual shoes without license",
+        "Creating original virtual art",
+        "Participating in official brand events"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using brand logos or names in virtual goods without authorization violates trademark rights.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q14",
+      "question": "Trademark infringement in the metaverse can occur when:",
+      "options": [
+        "Users roleplay under fake names",
+        "Virtual goods cause confusion with real brands",
+        "A user enters a VR game",
+        "A user creates an avatar"
+      ],
+      "correctIndex": 1,
+      "explanation": "When virtual goods create brand confusion or association, it can amount to infringement in digital spaces.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q15",
+      "question": "Which company created the 'Nikeland' metaverse experience?",
+      "options": [
+        "Adidas",
+        "Nike",
+        "Puma",
+        "Reebok"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nike launched 'Nikeland' on Roblox, integrating its branding into an interactive metaverse experience.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q16",
+      "question": "Why is brand enforcement difficult in the metaverse?",
+      "options": [
+        "Metaverse platforms lack global legal boundaries",
+        "All trademarks expire instantly online",
+        "Blockchain cannot track ownership",
+        "Trademarks don’t apply digitally"
+      ],
+      "correctIndex": 0,
+      "explanation": "The decentralized nature and lack of uniform jurisdiction make enforcing IP rights challenging in metaverse platforms.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q17",
+      "question": "What type of dilution occurs when virtual use of a mark weakens its uniqueness?",
+      "options": [
+        "Tarnishment",
+        "Blurring",
+        "Diversion",
+        "Deception"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blurring occurs when widespread digital use reduces the distinctiveness of a famous mark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q18",
+      "question": "NFT-based trademark violations may also raise issues under:",
+      "options": [
+        "Copyright law",
+        "Patent law",
+        "Trade secret law",
+        "Geographical indications"
+      ],
+      "correctIndex": 0,
+      "explanation": "NFT content often includes copyrighted artwork, raising overlapping IP violations.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q19",
+      "question": "The MetaBirkins decision reinforced that:",
+      "options": [
+        "NFTs are immune from IP law",
+        "Digital art has no commercial impact",
+        "Trademark protection extends to digital and virtual contexts",
+        "All NFTs need licensing"
+      ],
+      "correctIndex": 2,
+      "explanation": "The ruling confirmed that trademark protection applies to digital contexts, not just physical goods.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_10_q20",
+      "question": "Which class would cover downloadable virtual clothing items?",
+      "options": [
+        "Class 25",
+        "Class 9",
+        "Class 18",
+        "Class 28"
+      ],
+      "correctIndex": 1,
+      "explanation": "Virtual clothing, though inspired by Class 25 physical goods, is classified under Class 9 for digital products.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_10_q21",
+      "question": "In the future, brand owners may need to:",
+      "options": [
+        "Ignore virtual infringements",
+        "File separate metaverse-focused trademark applications",
+        "Rely only on copyright laws",
+        "Avoid digital expansion"
+      ],
+      "correctIndex": 1,
+      "explanation": "Many companies are filing separate trademarks for virtual goods and metaverse environments to secure digital protection.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_10_q22",
+      "question": "Why was the MetaBirkins case significant?",
+      "options": [
+        "It was the first NFT-related copyright case",
+        "It was one of the first major NFT-trademark rulings clarifying virtual infringement",
+        "It involved patent infringement",
+        "It was about cryptocurrency scams"
+      ],
+      "correctIndex": 1,
+      "explanation": "It was one of the first cases where a court addressed trademark rights and artistic freedom in the NFT space.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_10_q23",
+      "question": "Which company sued StockX over 'Vault NFTs' linked to sneakers?",
+      "options": [
+        "Puma",
+        "Nike",
+        "Adidas",
+        "Reebok"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nike sued StockX, alleging trademark misuse in NFTs representing physical Nike shoes.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_10_q24",
+      "question": "Which of these may represent the next frontier for trademark law?",
+      "options": [
+        "Digital twins and holographic branding",
+        "Traditional print ads",
+        "Physical retail disputes only",
+        "Copyright on paper books"
+      ],
+      "correctIndex": 0,
+      "explanation": "Emerging issues like holographic ads, avatars, and digital twins challenge traditional trademark concepts.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_10_q25",
+      "question": "What is the biggest challenge in protecting trademarks in virtual worlds?",
+      "options": [
+        "No central authority or clear jurisdiction",
+        "Lack of consumer interest",
+        "High filing costs",
+        "Limited use of brands"
+      ],
+      "correctIndex": 0,
+      "explanation": "Since metaverse platforms are decentralized, enforcing trademark rights globally is complex and lacks clear jurisdiction.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

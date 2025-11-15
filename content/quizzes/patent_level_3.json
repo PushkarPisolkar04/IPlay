@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_3",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_3_q1",
+      "question": "Can you patent a law of nature like gravity?",
+      "options": [
+        "Yes, if you discover it",
+        "No, it's a discovery not an invention",
+        "Yes, if it's useful",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, laws of nature are discoveries, not inventions, and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q2",
+      "question": "Can you patent E=mc²?",
+      "options": [
+        "Yes, if you're the first",
+        "No, it's a law of nature",
+        "Yes, if it's novel",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, E=mc² is a fundamental law of nature and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q3",
+      "question": "Can you patent a newly discovered butterfly?",
+      "options": [
+        "Yes, if it's novel",
+        "No, it's a natural phenomenon",
+        "Yes, if it's useful",
+        "Only if you breed it"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, a naturally occurring butterfly is a natural phenomenon, not an invention.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q4",
+      "question": "Can you patent an abstract idea like 'holding an auction'?",
+      "options": [
+        "Yes, if it's new",
+        "No, abstract ideas cannot be patented",
+        "Yes, if it's online",
+        "Only in the US"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, abstract ideas cannot be patented by themselves.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q5",
+      "question": "Can you patent a practical application of E=mc²?",
+      "options": [
+        "No, never",
+        "Yes, like a novel nuclear reactor using that principle",
+        "Only the formula",
+        "Only in theory"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent a practical application (like a novel reactor) that uses the principle in a new way.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q6",
+      "question": "Can you patent a mathematical formula by itself?",
+      "options": [
+        "Yes, if it's new",
+        "No, it's considered a mental act",
+        "Yes, if it's useful",
+        "Only in Europe"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, pure mathematical formulas are considered mental acts and cannot be patented by themselves.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q7",
+      "question": "Can you patent a computer that uses a new algorithm?",
+      "options": [
+        "No, algorithms can't be patented",
+        "Yes, the physical device using the algorithm inventively",
+        "Only the algorithm",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent a physical device (computer) that uses an algorithm in an inventive way.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q8",
+      "question": "Can you patent a method of performing heart surgery?",
+      "options": [
+        "Yes, if it's novel",
+        "No, most countries don't allow patents on medical treatment methods",
+        "Yes, everywhere",
+        "Only in the US"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, most countries (except the US) don't allow patents on methods of treating humans for ethical reasons.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q9",
+      "question": "Can you patent a new surgical scalpel?",
+      "options": [
+        "No, it's medical",
+        "Yes, you can patent medical tools",
+        "Only the technique",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent medical tools and devices, just not the treatment methods themselves.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q10",
+      "question": "Can you patent a new heart medication drug?",
+      "options": [
+        "No, it's medical",
+        "Yes, drugs can be patented",
+        "Only the treatment method",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, drugs and medications can be patented, just not the methods of treatment.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q11",
+      "question": "Why are literary works not patentable?",
+      "options": [
+        "They're too simple",
+        "They're protected by Copyright instead",
+        "They're not useful",
+        "They're too expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "Literary and artistic works are protected by Copyright, not patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q12",
+      "question": "Can you patent a novel or painting?",
+      "options": [
+        "Yes, if it's original",
+        "No, these are protected by Copyright",
+        "Yes, if it's inventive",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, novels and paintings are artistic works protected by Copyright, not patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q13",
+      "question": "Can you patent an invention for torture devices?",
+      "options": [
+        "Yes, if it's novel",
+        "No, it's contrary to public order and morality",
+        "Yes, if it's inventive",
+        "Only for military"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, inventions contrary to public order or morality (like torture devices) cannot be patented.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q14",
+      "question": "What is the difference between a discovery and an invention?",
+      "options": [
+        "No difference",
+        "Discoveries find what exists; inventions create something new",
+        "Discoveries are patentable",
+        "Inventions are natural"
+      ],
+      "correctIndex": 1,
+      "explanation": "Discoveries find what already exists in nature; inventions create something new that didn't exist before.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q15",
+      "question": "Can you patent a business method as an abstract idea?",
+      "options": [
+        "Yes, always",
+        "No, abstract business methods cannot be patented",
+        "Yes, if it's profitable",
+        "Only online"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, abstract business methods cannot be patented by themselves.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q16",
+      "question": "Can you patent software that implements an online auction?",
+      "options": [
+        "No, auctions are abstract",
+        "Yes, specific software implementing it in a new way",
+        "Only the idea",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent specific software or architecture that implements the auction in a new, inventive way.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q17",
+      "question": "Why can't you patent methods of medical treatment?",
+      "options": [
+        "They're not useful",
+        "Ethical reasons - doctors should prioritize saving lives",
+        "They're not novel",
+        "They're too expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "For ethical reasons - a doctor's priority should be saving lives, not checking if a technique is patented.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q18",
+      "question": "Can you patent a new mineral found in the earth?",
+      "options": [
+        "Yes, if you discover it first",
+        "No, it's a natural phenomenon",
+        "Yes, if it's useful",
+        "Only if you process it"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, naturally occurring minerals are natural phenomena and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q19",
+      "question": "What can you patent related to a law of nature?",
+      "options": [
+        "The law itself",
+        "A practical application using the law",
+        "The discovery",
+        "The theory"
+      ],
+      "correctIndex": 1,
+      "explanation": "You can patent a practical application that uses the law of nature in a new, inventive way.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q20",
+      "question": "Can you patent a sorting algorithm by itself?",
+      "options": [
+        "Yes, if it's fast",
+        "No, algorithms alone are mental acts",
+        "Yes, if it's novel",
+        "Only in software"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, pure algorithms are considered mental acts and cannot be patented by themselves.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q21",
+      "question": "What is the 'morality clause' in patent law?",
+      "options": [
+        "Patents must be expensive",
+        "Patents must be useful",
+        "Inventions contrary to public order or morality cannot be patented",
+        "Patents must be disclosed"
+      ],
+      "correctIndex": 2,
+      "explanation": "The morality clause prevents patents on inventions considered universally unethical.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q22",
+      "question": "Can you patent a more efficient landmine?",
+      "options": [
+        "Yes, if it's novel",
+        "No, it's contrary to public morality",
+        "Yes, if it's inventive",
+        "Only for defense"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, weapons designed to harm civilians are contrary to public morality and cannot be patented.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_3_q23",
+      "question": "Why can't you patent a game's rules as an abstract idea?",
+      "options": [
+        "They're not useful",
+        "They're abstract ideas and mental processes",
+        "They're not novel",
+        "They're too simple"
+      ],
+      "correctIndex": 1,
+      "explanation": "Game rules are abstract ideas and mental processes that cannot be patented by themselves.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q24",
+      "question": "Can you patent a physical game board with a new mechanism?",
+      "options": [
+        "No, games can't be patented",
+        "Yes, the physical device with inventive mechanism",
+        "Only the rules",
+        "Never"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can patent a physical game board or device with a new, inventive mechanism.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_3_q25",
+      "question": "What is the main reason medical treatment methods can't be patented?",
+      "options": [
+        "They're not inventive",
+        "Ethical concerns about patient care",
+        "They're not novel",
+        "They're too expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "The main reason is ethical - patient care should not be restricted by patent monopolies.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

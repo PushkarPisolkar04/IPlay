@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_3",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_3_q1",
+      "question": "Which mango variety has GI protection in India?",
+      "options": [
+        "Alphonso Mango",
+        "Tommy Atkins",
+        "Kent Mango",
+        "Haden Mango"
+      ],
+      "correctIndex": 0,
+      "explanation": "Alphonso Mango from specific regions like Ratnagiri has GI protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q2",
+      "question": "Which rice variety has GI protection in India?",
+      "options": [
+        "Jasmine Rice",
+        "Basmati Rice",
+        "Arborio Rice",
+        "Sushi Rice"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati Rice from specific regions of India has GI protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q3",
+      "question": "Which spice from Kashmir has GI protection?",
+      "options": [
+        "Black Pepper",
+        "Cardamom",
+        "Saffron",
+        "Turmeric"
+      ],
+      "correctIndex": 2,
+      "explanation": "Kashmir Saffron has GI protection due to its unique quality and geographical origin.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q4",
+      "question": "Which orange variety has GI protection?",
+      "options": [
+        "Valencia Orange",
+        "Nagpur Orange",
+        "Blood Orange",
+        "Navel Orange"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nagpur Orange has GI protection due to its unique characteristics from the Nagpur region.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q5",
+      "question": "Which cardamom has GI protection in India?",
+      "options": [
+        "Guatemala Cardamom",
+        "Coorg Cardamom",
+        "Sri Lankan Cardamom",
+        "Chinese Cardamom"
+      ],
+      "correctIndex": 1,
+      "explanation": "Coorg Cardamom (from Kodagu, Karnataka) has GI protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q6",
+      "question": "Which chilli variety has GI protection?",
+      "options": [
+        "Cayenne Pepper",
+        "Mizo Chilli",
+        "Jalapeño",
+        "Habanero"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mizo Chilli from Mizoram has GI protection for its unique characteristics.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q7",
+      "question": "What makes Alphonso Mango unique for GI?",
+      "options": [
+        "Its price",
+        "Its unique taste, aroma, and texture from specific regions",
+        "Its size",
+        "Its color only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Alphonso Mango has unique taste, aroma, and texture linked to specific geographical regions like Ratnagiri.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q8",
+      "question": "What makes Basmati Rice special?",
+      "options": [
+        "Its cooking time",
+        "Its unique aroma, extra-long grain, and characteristics from specific regions",
+        "Its price",
+        "Its packaging"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati Rice has unique aroma, extra-long grain, and characteristics linked to specific Indo-Gangetic regions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q9",
+      "question": "What was the Basmati Battle about?",
+      "options": [
+        "A cooking competition",
+        "RiceTec's attempt to patent Basmati in the US",
+        "A trade war",
+        "A price dispute"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Basmati Battle was India's fight against RiceTec's attempt to patent Basmati rice in the US.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q10",
+      "question": "Why is Kashmir Saffron expensive?",
+      "options": [
+        "High marketing costs",
+        "Labor-intensive harvesting and unique quality from Kashmir's climate",
+        "Government taxes",
+        "Export duties"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kashmir Saffron is expensive due to labor-intensive harvesting and unique quality from Kashmir's specific climate and soil.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q11",
+      "question": "What makes Nagpur Orange special?",
+      "options": [
+        "Its size",
+        "Its unique sweetness and flavor from Nagpur's soil and climate",
+        "Its color",
+        "Its price"
+      ],
+      "correctIndex": 1,
+      "explanation": "Nagpur Orange has unique sweetness and flavor characteristics linked to Nagpur's soil and climate.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q12",
+      "question": "Which region is famous for Coorg Cardamom?",
+      "options": [
+        "Kerala",
+        "Kodagu (Coorg), Karnataka",
+        "Tamil Nadu",
+        "Andhra Pradesh"
+      ],
+      "correctIndex": 1,
+      "explanation": "Coorg Cardamom comes from Kodagu (Coorg) district in Karnataka.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q13",
+      "question": "What characteristic makes Mizo Chilli unique?",
+      "options": [
+        "Its color only",
+        "Its unique pungency and flavor from Mizoram's climate",
+        "Its size",
+        "Its price"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mizo Chilli has unique pungency and flavor characteristics linked to Mizoram's specific climate and soil.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q14",
+      "question": "How does GI protection help farmers?",
+      "options": [
+        "It reduces production costs",
+        "It provides premium pricing and prevents fake products",
+        "It eliminates competition",
+        "It provides free seeds"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protection helps farmers get premium prices and prevents fake products from using their regional name.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q15",
+      "question": "Can Alphonso Mango be grown anywhere in India?",
+      "options": [
+        "Yes, anywhere",
+        "Only in designated regions like Ratnagiri to use the GI tag",
+        "Only in Maharashtra",
+        "Only in coastal areas"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only mangoes from designated regions like Ratnagiri can use the 'Alphonso' GI tag.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q16",
+      "question": "What was the outcome of the Basmati Battle?",
+      "options": [
+        "RiceTec won completely",
+        "India successfully challenged and narrowed RiceTec's patent claims",
+        "No resolution",
+        "Basmati became generic"
+      ],
+      "correctIndex": 1,
+      "explanation": "India successfully challenged RiceTec's patent, protecting Basmati's geographical identity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q17",
+      "question": "Which of these is NOT an agricultural GI from India?",
+      "options": [
+        "Darjeeling Tea",
+        "Alphonso Mango",
+        "Champagne",
+        "Kashmir Saffron"
+      ],
+      "correctIndex": 2,
+      "explanation": "Champagne is a French GI, not an Indian agricultural GI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q18",
+      "question": "What makes agricultural GIs valuable?",
+      "options": [
+        "They are always organic",
+        "They guarantee unique quality linked to specific regions",
+        "They are always cheaper",
+        "They have longer shelf life"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agricultural GIs are valuable because they guarantee unique quality and characteristics linked to specific regions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q19",
+      "question": "How many strands of saffron are needed to make 1 gram?",
+      "options": [
+        "10-20 strands",
+        "50-100 strands",
+        "150-200 strands",
+        "500+ strands"
+      ],
+      "correctIndex": 2,
+      "explanation": "Approximately 150-200 saffron strands are needed to make just 1 gram, making it labor-intensive.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q20",
+      "question": "What is the primary benefit of GI for consumers?",
+      "options": [
+        "Lower prices",
+        "Assurance of authenticity and quality",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides consumers with assurance of authenticity and quality linked to the geographical origin.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q21",
+      "question": "Which factor contributes to Basmati's unique aroma?",
+      "options": [
+        "Packaging",
+        "Specific soil, climate, and traditional cultivation methods",
+        "Cooking method",
+        "Storage time"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati's unique aroma comes from specific soil, climate, and traditional cultivation methods in the Indo-Gangetic plains.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q22",
+      "question": "What happens if fake Alphonso Mango is sold?",
+      "options": [
+        "Nothing",
+        "Legal action can be taken for GI infringement",
+        "Only a warning is given",
+        "It's allowed if cheaper"
+      ],
+      "correctIndex": 1,
+      "explanation": "Selling fake products with a GI tag is infringement and can result in legal action.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_3_q23",
+      "question": "Which organization fought the Basmati Battle for India?",
+      "options": [
+        "Ministry of Agriculture",
+        "Agricultural and Processed Food Products Export Development Authority (APEDA)",
+        "Supreme Court",
+        "World Trade Organization"
+      ],
+      "correctIndex": 1,
+      "explanation": "APEDA led India's fight against RiceTec's Basmati patent in the US.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q24",
+      "question": "What makes Coorg Cardamom different from other cardamom?",
+      "options": [
+        "Its price",
+        "Its unique aroma and flavor from Coorg's climate and soil",
+        "Its size only",
+        "Its color"
+      ],
+      "correctIndex": 1,
+      "explanation": "Coorg Cardamom has unique aroma and flavor characteristics linked to Coorg's specific climate and soil.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_3_q25",
+      "question": "Why are agricultural GIs important for rural development?",
+      "options": [
+        "They increase taxes",
+        "They provide premium income and protect traditional livelihoods",
+        "They restrict farming",
+        "They reduce production"
+      ],
+      "correctIndex": 1,
+      "explanation": "Agricultural GIs provide premium income to farmers and protect traditional agricultural practices and livelihoods.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

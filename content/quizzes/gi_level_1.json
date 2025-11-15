@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_1",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_1_q1",
+      "question": "What does GI stand for?",
+      "options": [
+        "General Information",
+        "Geographical Indication",
+        "Global Identity",
+        "Government Initiative"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI stands for Geographical Indication, which protects products linked to specific regions.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q2",
+      "question": "Which of these is a famous Indian GI?",
+      "options": [
+        "Darjeeling Tea",
+        "Colombian Coffee",
+        "Swiss Chocolate",
+        "French Wine"
+      ],
+      "correctIndex": 0,
+      "explanation": "Darjeeling Tea is one of India's most famous Geographical Indications.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q3",
+      "question": "What does a GI protect?",
+      "options": [
+        "Brand names",
+        "Products linked to a specific geographical origin",
+        "Manufacturing processes",
+        "Company logos"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protects products that have a specific geographical origin and qualities tied to that origin.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q4",
+      "question": "Which is an example of an Indian agricultural GI?",
+      "options": [
+        "Basmati Rice",
+        "Jasmine Rice",
+        "Arborio Rice",
+        "Sushi Rice"
+      ],
+      "correctIndex": 0,
+      "explanation": "Basmati Rice from specific regions of India is a protected GI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q5",
+      "question": "How is GI different from a trademark?",
+      "options": [
+        "GI is owned by a region/community, trademark is owned by a company",
+        "They are the same thing",
+        "GI is for services, trademark is for goods",
+        "Trademark is regional, GI is global"
+      ],
+      "correctIndex": 0,
+      "explanation": "GI represents collective rights of a region/community, while trademarks are owned by individual companies.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q6",
+      "question": "Approximately how many GIs does India have?",
+      "options": [
+        "50+",
+        "100+",
+        "400+",
+        "1000+"
+      ],
+      "correctIndex": 2,
+      "explanation": "India has over 400 registered Geographical Indications covering various products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q7",
+      "question": "Which mango variety has GI protection in India?",
+      "options": [
+        "Alphonso Mango",
+        "Tommy Atkins",
+        "Kent Mango",
+        "Keitt Mango"
+      ],
+      "correctIndex": 0,
+      "explanation": "Alphonso Mango from specific regions has GI protection in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q8",
+      "question": "Why is GI important for heritage products?",
+      "options": [
+        "It increases manufacturing costs",
+        "It protects traditional knowledge and prevents misuse",
+        "It makes products more expensive",
+        "It restricts production"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protects traditional knowledge, regional reputation, and prevents unauthorized use of regional names.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q9",
+      "question": "What makes Darjeeling Tea special for GI protection?",
+      "options": [
+        "Its price",
+        "Its unique flavor and quality linked to the Darjeeling region",
+        "Its packaging",
+        "Its brand name"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea has unique characteristics (flavor, aroma) directly linked to its geographical origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q10",
+      "question": "Can an individual company own a GI?",
+      "options": [
+        "Yes, any company can own it",
+        "No, GI is a collective right of producers in a region",
+        "Only large companies can own it",
+        "Only government can own it"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI is a collective right; no single company can own it. It belongs to all eligible producers in the region.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q11",
+      "question": "Which of these is NOT a GI product category?",
+      "options": [
+        "Agricultural products",
+        "Handicrafts",
+        "Software",
+        "Textiles"
+      ],
+      "correctIndex": 2,
+      "explanation": "GI protects agricultural products, handicrafts, and textiles, but not software.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q12",
+      "question": "What is the main benefit of GI for farmers?",
+      "options": [
+        "Lower production costs",
+        "Premium pricing and market recognition",
+        "Tax exemption",
+        "Free marketing"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI helps farmers get premium prices and market recognition for their authentic regional products.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q13",
+      "question": "Which statement about GI is TRUE?",
+      "options": [
+        "GI can be transferred to another region",
+        "GI is linked permanently to a specific geographical area",
+        "GI expires after 10 years",
+        "GI can be sold to companies"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI is permanently linked to its geographical origin and cannot be transferred or sold.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q14",
+      "question": "What does 'geographical origin' mean in GI?",
+      "options": [
+        "Where the product is sold",
+        "Where the product is manufactured or originates, giving it unique qualities",
+        "Where the company is registered",
+        "Where the product is exported"
+      ],
+      "correctIndex": 1,
+      "explanation": "Geographical origin refers to where the product is made/grown, which gives it unique characteristics.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q15",
+      "question": "Can Darjeeling Tea be produced anywhere in India?",
+      "options": [
+        "Yes, anywhere",
+        "No, only in the designated Darjeeling region",
+        "Only in West Bengal",
+        "Only in tea estates"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea can only be produced in the designated Darjeeling region to use the GI tag.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q16",
+      "question": "Which of these is a key characteristic of GI products?",
+      "options": [
+        "They are always expensive",
+        "They have qualities or reputation linked to their geographical origin",
+        "They are mass-produced",
+        "They are always handmade"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI products have specific qualities, reputation, or characteristics linked to their geographical origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q17",
+      "question": "What happens if someone falsely uses a GI tag?",
+      "options": [
+        "Nothing",
+        "They face legal action and penalties",
+        "They get a warning only",
+        "They can continue if they pay a fee"
+      ],
+      "correctIndex": 1,
+      "explanation": "Unauthorized use of a GI tag is illegal and can result in legal action and penalties.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q18",
+      "question": "Which factor makes a product eligible for GI?",
+      "options": [
+        "High price",
+        "Unique qualities linked to geographical origin",
+        "Famous brand name",
+        "Large production volume"
+      ],
+      "correctIndex": 1,
+      "explanation": "A product must have unique qualities, reputation, or characteristics linked to its geographical origin.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q19",
+      "question": "Who benefits from GI protection?",
+      "options": [
+        "Only large companies",
+        "Local producers, farmers, and artisans in the region",
+        "Only exporters",
+        "Only government"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protection benefits local producers, farmers, and artisans by protecting their regional products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q20",
+      "question": "What is the primary purpose of GI?",
+      "options": [
+        "To increase taxes",
+        "To protect regional products from misuse and ensure authenticity",
+        "To restrict trade",
+        "To promote tourism"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protects regional products from misuse and ensures consumers get authentic products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_1_q21",
+      "question": "Can a GI be registered for a service?",
+      "options": [
+        "Yes, always",
+        "Currently no, GI is for goods only",
+        "Only for tourism services",
+        "Only for restaurants"
+      ],
+      "correctIndex": 1,
+      "explanation": "Currently, GI protection in India applies to goods (products), not services.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q22",
+      "question": "What makes Basmati Rice eligible for GI?",
+      "options": [
+        "Its price",
+        "Its unique aroma, length, and qualities from specific regions",
+        "Its packaging",
+        "Its cooking time"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati Rice has unique characteristics (aroma, grain length) linked to specific geographical regions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q23",
+      "question": "Which international agreement covers GI protection?",
+      "options": [
+        "TRIPS Agreement",
+        "Paris Convention",
+        "Berne Convention",
+        "Madrid Protocol"
+      ],
+      "correctIndex": 0,
+      "explanation": "The TRIPS Agreement (Trade-Related Aspects of Intellectual Property Rights) covers GI protection internationally.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q24",
+      "question": "What is the Darjeeling Tea case famous for?",
+      "options": [
+        "It was the first Indian GI registered",
+        "It was the most expensive tea",
+        "It was exported to most countries",
+        "It had the largest production"
+      ],
+      "correctIndex": 0,
+      "explanation": "Darjeeling Tea was the first Geographical Indication registered in India.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_1_q25",
+      "question": "Why can't 'Darjeeling Tea' be produced in Assam?",
+      "options": [
+        "Assam doesn't have tea plantations",
+        "The unique qualities are specific to Darjeeling's geography and climate",
+        "It's too expensive",
+        "Government doesn't allow it"
+      ],
+      "correctIndex": 1,
+      "explanation": "Darjeeling Tea's unique qualities come from Darjeeling's specific geography, climate, and soil.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

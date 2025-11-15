@@ -1,0 +1,355 @@
+{
+  "levelId": "copyright_level_7",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_7_q1",
+      "question": "What is copyright infringement primarily about?",
+      "options": [
+        "Failing to cite the author",
+        "Using someone's work without permission",
+        "Writing poor content",
+        "Criticizing someone's work"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright infringement is a legal violation that occurs when someone uses another's copyrighted work without permission or a valid exception.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q2",
+      "question": "Plagiarism is primarily a violation of:",
+      "options": [
+        "Copyright law",
+        "Ethical and academic standards",
+        "Trademark law",
+        "Patent rights"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plagiarism is an ethical and academic issue related to not giving proper credit, not a legal copyright offense.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q3",
+      "question": "Which of the following best defines plagiarism?",
+      "options": [
+        "Copying someone’s work and passing it off as your own",
+        "Making parody videos",
+        "Using content under fair dealing",
+        "Quoting with proper citation"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plagiarism is copying someone’s work and pretending it’s your own, which violates ethical standards of attribution.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q4",
+      "question": "Can you plagiarize a work that is in the public domain?",
+      "options": [
+        "Yes, if you don’t give credit",
+        "No, because public domain works are free for all uses",
+        "Yes, always",
+        "Only if you make money from it"
+      ],
+      "correctIndex": 0,
+      "explanation": "Even though public domain works are free to use legally, failing to give credit can still amount to plagiarism ethically.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q5",
+      "question": "Which of these is an example of copyright infringement?",
+      "options": [
+        "Copying a song and uploading it online without permission",
+        "Summarizing a novel for a school report with citation",
+        "Writing a review quoting short parts of a film",
+        "Drawing inspiration for an original story"
+      ],
+      "correctIndex": 0,
+      "explanation": "Uploading copyrighted music without permission is direct infringement, as it reproduces and distributes the work illegally.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q6",
+      "question": "Giving credit to an author always prevents copyright infringement. True or False?",
+      "options": ["True", "False"],
+      "correctIndex": 1,
+      "explanation": "False. Giving credit does not replace the need for permission when using copyrighted material beyond fair use limits.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q7",
+      "question": "Which one is a legal offense?",
+      "options": [
+        "Plagiarism",
+        "Copyright infringement",
+        "Improper citation",
+        "Grammar error"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright infringement is legally enforceable under the Copyright Act, while plagiarism is not.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q8",
+      "question": "Which one is an ethical offense, not a legal one?",
+      "options": [
+        "Infringement",
+        "Plagiarism",
+        "Piracy",
+        "Copyright violation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plagiarism is unethical but not punishable by copyright law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q9",
+      "question": "Which scenario shows both plagiarism and infringement?",
+      "options": [
+        "Copying a copyrighted research paper and submitting it under your name",
+        "Quoting a short passage with citation",
+        "Summarizing a film for class discussion",
+        "Using open-source code with credit"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copying and claiming a copyrighted paper as your own violates both legal (infringement) and ethical (plagiarism) standards.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_7_q10",
+      "question": "Plagiarism is enforced by:",
+      "options": [
+        "Copyright Board",
+        "Universities and institutions",
+        "Police",
+        "Trademark Registry"
+      ],
+      "correctIndex": 1,
+      "explanation": "Plagiarism is handled internally by universities, journals, and employers through ethical guidelines.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q11",
+      "question": "Copyright infringement is enforced by:",
+      "options": [
+        "Courts under the Copyright Act",
+        "Universities",
+        "Academic committees",
+        "Publishers only"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copyright infringement is legally enforced in court under the Copyright Act, 1957.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q12",
+      "question": "Which of these is NOT plagiarism?",
+      "options": [
+        "Using open-licensed material with attribution",
+        "Copying text without quotation marks",
+        "Buying an essay online and submitting it",
+        "Paraphrasing without credit"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using open-licensed (e.g., Creative Commons) material with proper attribution is allowed and not plagiarism.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q13",
+      "question": "Which right is violated in plagiarism?",
+      "options": [
+        "Moral right of paternity",
+        "Right to reproduction",
+        "Economic right to distribution",
+        "None"
+      ],
+      "correctIndex": 0,
+      "explanation": "Plagiarism primarily violates the author’s moral right of paternity — the right to be properly credited.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q14",
+      "question": "Which of these would be legal but still unethical?",
+      "options": [
+        "Copying a public domain poem without attribution",
+        "Downloading a movie illegally",
+        "Uploading music without license",
+        "Selling pirated textbooks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Public domain works can be freely used legally, but not giving credit can be considered plagiarism.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q15",
+      "question": "Plagiarism detection tools like Turnitin are used for:",
+      "options": [
+        "Checking legal infringement",
+        "Checking academic similarity and citation",
+        "Copyright registration",
+        "Trademark verification"
+      ],
+      "correctIndex": 1,
+      "explanation": "Turnitin detects text similarity to check plagiarism, not legal copyright violations.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_7_q16",
+      "question": "Copyright infringement can result in:",
+      "options": [
+        "Academic suspension",
+        "Legal penalties and fines",
+        "Negative reputation only",
+        "None of the above"
+      ],
+      "correctIndex": 1,
+      "explanation": "Infringement can lead to civil or criminal penalties, including fines or injunctions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q17",
+      "question": "If a student copies Wikipedia text without citation, it is:",
+      "options": [
+        "Infringement and plagiarism",
+        "Only plagiarism",
+        "Only infringement",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "Wikipedia content is often under Creative Commons licenses, but copying without citation is plagiarism, not infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q18",
+      "question": "Can plagiarism exist without infringement?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yes. If the copied work is not protected by copyright (e.g., public domain), plagiarism can still exist ethically.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_7_q19",
+      "question": "Can infringement exist without plagiarism?",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yes. A person might legally infringe by using copyrighted material with credit but without permission.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_7_q20",
+      "question": "Which of these best describes 'giving credit doesn't equal permission'?",
+      "options": [
+        "Attribution removes all copyright issues",
+        "Even if you cite, you still need permission to use someone’s copyrighted work commercially",
+        "Attribution always gives fair use protection",
+        "Credit allows unlimited reproduction"
+      ],
+      "correctIndex": 1,
+      "explanation": "Attribution doesn’t replace the need for authorization — credit ≠ license.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q21",
+      "question": "Which of these is handled by courts?",
+      "options": [
+        "Infringement cases",
+        "Academic plagiarism cases",
+        "Citation style errors",
+        "Exam misconduct"
+      ],
+      "correctIndex": 0,
+      "explanation": "Only infringement cases are handled by legal courts, not plagiarism or citation issues.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q22",
+      "question": "Using copyrighted music in a YouTube video without license but mentioning the artist is:",
+      "options": [
+        "Plagiarism only",
+        "Infringement only",
+        "Both plagiarism and infringement",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "Even with credit, using copyrighted music without permission is infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q23",
+      "question": "Which situation is plagiarism but NOT infringement?",
+      "options": [
+        "Copying public domain poetry without credit",
+        "Uploading copyrighted movie online",
+        "Copying software without license",
+        "Selling pirated music"
+      ],
+      "correctIndex": 0,
+      "explanation": "Copying public domain poetry without credit is plagiarism (ethical), not infringement (legal).",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_7_q24",
+      "question": "Why are plagiarism and infringement often confused?",
+      "options": [
+        "Both involve using others’ work improperly",
+        "They have the same punishment",
+        "They’re both legal offenses",
+        "Neither involves attribution"
+      ],
+      "correctIndex": 0,
+      "explanation": "Both involve misuse of others' work, but plagiarism violates ethics while infringement violates law.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_7_q25",
+      "question": "What lesson does the 'four scenarios matrix' teach?",
+      "options": [
+        "That legal and ethical dimensions of copying differ",
+        "That plagiarism always equals infringement",
+        "That credit removes all responsibility",
+        "That infringement has no consequences"
+      ],
+      "correctIndex": 0,
+      "explanation": "The matrix helps differentiate between plagiarism and infringement — legal vs. ethical responsibilities.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

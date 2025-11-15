@@ -1,0 +1,367 @@
+{
+  "levelId": "trademark_level_4",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+
+    {
+      "id": "trademark_4_q1",
+      "question": "What does the ™ symbol indicate?",
+      "options": [
+        "The mark is registered with the government",
+        "The mark is pending registration or unregistered",
+        "The mark has expired",
+        "The mark is for internal use only"
+      ],
+      "correctIndex": 1,
+      "explanation": "™ indicates that a trademark claim is being made but it has not yet been registered with the Trade Marks Registry.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q2",
+      "question": "What does the ® symbol represent?",
+      "options": [
+        "Trademark under review",
+        "Trademark is registered and legally protected",
+        "Trademark used for government products",
+        "Trademark pending renewal"
+      ],
+      "correctIndex": 1,
+      "explanation": "The ® symbol signifies a registered trademark, giving stronger legal protection under Indian law.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q3",
+      "question": "How many main steps are involved in the Indian trademark registration process?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Indian registration process involves 5 steps: Search, Application (TM-A), Examination, Publication, and Registration.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q4",
+      "question": "What is the first step before filing a trademark application?",
+      "options": [
+        "Examination by Registrar",
+        "Trademark search",
+        "Publication in Journal",
+        "Issuance of certificate"
+      ],
+      "correctIndex": 1,
+      "explanation": "Before filing, one should conduct a trademark search to check if a similar mark already exists.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q5",
+      "question": "What is the official form used to apply for a trademark in India?",
+      "options": [
+        "TM-A",
+        "TM-R",
+        "TM-C",
+        "TM-X"
+      ],
+      "correctIndex": 0,
+      "explanation": "The form used for filing a new trademark application in India is Form TM-A.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q6",
+      "question": "After examination, if no objections are raised, what happens next?",
+      "options": [
+        "Immediate registration",
+        "Publication in the Trademark Journal",
+        "Certificate issuance",
+        "Renewal process"
+      ],
+      "correctIndex": 1,
+      "explanation": "If no objections are found, the mark is published in the Trade Marks Journal for public opposition.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q7",
+      "question": "Which government body manages trademark registration in India?",
+      "options": [
+        "Intellectual Property Appellate Board",
+        "Patent Office of India",
+        "Trade Marks Registry",
+        "Copyright Board"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Trade Marks Registry, under the Controller General of Patents, Designs & Trade Marks (CGPDTM), manages registrations.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q8",
+      "question": "Once registered, a trademark in India is valid for how many years?",
+      "options": [
+        "5 years",
+        "10 years",
+        "15 years",
+        "20 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "A registered trademark is valid for 10 years and can be renewed indefinitely every 10 years.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q9",
+      "question": "During publication, how long can third parties oppose the trademark?",
+      "options": [
+        "30 days",
+        "60 days",
+        "90 days",
+        "120 days"
+      ],
+      "correctIndex": 2,
+      "explanation": "Any third party can file an opposition within 90 days of publication in the Trade Marks Journal.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_4_q10",
+      "question": "What happens after successful publication and no opposition?",
+      "options": [
+        "Trademark is automatically renewed",
+        "Certificate of registration is issued",
+        "Re-examination by Registry",
+        "Trademark is removed"
+      ],
+      "correctIndex": 1,
+      "explanation": "After the opposition period, if no objections arise, the mark is registered and a certificate is issued.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_4_q11",
+      "question": "Which of the following steps involves the Registrar checking legal compliance of the mark?",
+      "options": [
+        "Search",
+        "Application",
+        "Examination",
+        "Publication"
+      ],
+      "correctIndex": 2,
+      "explanation": "During Examination, the Registrar checks for compliance with the Trade Marks Act and rules.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q12",
+      "question": "Where is the Trade Marks Registry headquartered in India?",
+      "options": [
+        "New Delhi",
+        "Mumbai",
+        "Chennai",
+        "Kolkata"
+      ],
+      "correctIndex": 1,
+      "explanation": "The main office of the Trade Marks Registry is located in Mumbai, with branches in other cities.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q13",
+      "question": "Which of these is NOT part of the 5-step trademark process?",
+      "options": [
+        "Search",
+        "Application",
+        "Opposition Hearing",
+        "Copyright Filing"
+      ],
+      "correctIndex": 3,
+      "explanation": "Copyright filing is unrelated — the 5 steps are Search, Application, Examination, Publication, and Registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q14",
+      "question": "If an objection is raised by the Registrar, what must the applicant do?",
+      "options": [
+        "Withdraw the application",
+        "File a response or attend a hearing",
+        "Apply for a new class",
+        "Wait for auto-approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Applicants must respond or attend a hearing to overcome objections during the examination stage.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q15",
+      "question": "What is the document that legally confirms trademark ownership?",
+      "options": [
+        "Certificate of Renewal",
+        "Trademark Certificate",
+        "Patent Grant Document",
+        "Journal Publication Notice"
+      ],
+      "correctIndex": 1,
+      "explanation": "After successful registration, the Registrar issues a Certificate of Registration as proof of ownership.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q16",
+      "question": "Which online portal can applicants use to file TM-A forms?",
+      "options": [
+        "ipindia.gov.in",
+        "trademarkregister.com",
+        "indiaipportal.org",
+        "copyrightindia.in"
+      ],
+      "correctIndex": 0,
+      "explanation": "Trademark applications can be filed online via the official IP India portal: https://ipindia.gov.in/",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q17",
+      "question": "Who issues the certificate of registration in India?",
+      "options": [
+        "Registrar of Companies",
+        "Trade Marks Registry under CGPDTM",
+        "Patent Controller",
+        "Ministry of Commerce"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Trade Marks Registry, functioning under the Controller General of Patents, Designs and Trade Marks (CGPDTM), issues it.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q18",
+      "question": "What happens if a registered trademark is not renewed within time?",
+      "options": [
+        "It gets permanently deleted",
+        "It lapses but can be restored within a grace period",
+        "It automatically renews",
+        "It converts into a patent"
+      ],
+      "correctIndex": 1,
+      "explanation": "If not renewed, the mark lapses but can be restored within the prescribed grace period by paying renewal fees.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q19",
+      "question": "Why is publication in the Trade Marks Journal important?",
+      "options": [
+        "To notify the Registrar",
+        "To inform the public and allow opposition",
+        "To mark the end of examination",
+        "To generate registration fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Publication allows the public to view and, if necessary, oppose a pending trademark.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_4_q20",
+      "question": "What is the renewal duration for a registered trademark in India?",
+      "options": [
+        "Every 5 years",
+        "Every 7 years",
+        "Every 10 years",
+        "Every 15 years"
+      ],
+      "correctIndex": 2,
+      "explanation": "A registered trademark must be renewed every 10 years to maintain its validity.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_4_q21",
+      "question": "Using the ® symbol before registration is:",
+      "options": [
+        "Encouraged to claim ownership early",
+        "Illegal and punishable under Indian law",
+        "Allowed if application is filed",
+        "A formality before approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using ® without registration is illegal under Indian law and can attract penalties.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_4_q22",
+      "question": "If two applicants apply for similar marks in the same class, which principle applies?",
+      "options": [
+        "First-to-use",
+        "First-to-file",
+        "Common law doctrine",
+        "Patent-first rule"
+      ],
+      "correctIndex": 0,
+      "explanation": "In India, trademark rights are based on 'first-to-use', not merely 'first-to-file'.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_4_q23",
+      "question": "Which stage provides a chance for public opposition?",
+      "options": [
+        "Search",
+        "Application",
+        "Publication",
+        "Registration"
+      ],
+      "correctIndex": 2,
+      "explanation": "The publication stage invites opposition from the public before registration is granted.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_4_q24",
+      "question": "Which section of the Trade Marks Act governs registration procedures?",
+      "options": [
+        "Section 9",
+        "Section 18–26",
+        "Section 45",
+        "Section 72"
+      ],
+      "correctIndex": 1,
+      "explanation": "Sections 18 to 26 of the Trade Marks Act, 1999, cover the registration procedure and related rules.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_4_q25",
+      "question": "If a trademark is not renewed, what happens after the grace period ends?",
+      "options": [
+        "It is deemed abandoned and removed from the Register",
+        "It remains valid for 2 more years",
+        "It becomes a patent",
+        "It is automatically renewed by the Registry"
+      ],
+      "correctIndex": 0,
+      "explanation": "If not renewed within the grace period, the mark is removed from the Register and deemed abandoned.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

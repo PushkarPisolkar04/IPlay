@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_8",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "copyright_8_q1",
+      "question": "Is copyright protection in India automatic or registration-based?",
+      "options": [
+        "Automatic upon creation",
+        "Only after registration",
+        "Only after publication",
+        "After 1 year of use"
+      ],
+      "correctIndex": 0,
+      "explanation": "In India, copyright protection is automatic the moment a work is created, but registration strengthens enforcement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q2",
+      "question": "What is the main purpose of registering a copyright?",
+      "options": [
+        "To make it legally valid",
+        "To provide prima facie evidence in court",
+        "To get government funding",
+        "To make it permanent"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registration provides prima facie (initial) legal evidence under Section 48, strengthening the creator’s claim in disputes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q3",
+      "question": "Which form is used to apply for copyright registration in India?",
+      "options": [
+        "Form A",
+        "Form XIV",
+        "Form C",
+        "Form 10"
+      ],
+      "correctIndex": 1,
+      "explanation": "Form XIV is the official application form for registering a copyright in India with the Copyright Office.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q4",
+      "question": "What is the typical government fee for copyright registration in India?",
+      "options": [
+        "₹100",
+        "₹500",
+        "₹1000",
+        "₹2500"
+      ],
+      "correctIndex": 1,
+      "explanation": "The standard fee for registration in India is ₹500 per work, though some categories may vary.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q5",
+      "question": "Which section of the Indian Copyright Act gives registered works prima facie legal evidence?",
+      "options": [
+        "Section 45",
+        "Section 48",
+        "Section 52",
+        "Section 57"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 48 states that registration serves as prima facie evidence of ownership and authorship in legal proceedings.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q6",
+      "question": "Which website hosts the official Indian Copyright Office for registration?",
+      "options": [
+        "copyright.gov.in",
+        "ipindia.gov.in",
+        "india.gov.in",
+        "mca.gov.in"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright registration is done through IP India’s official portal (ipindia.gov.in).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q7",
+      "question": "What is the first step in the Indian copyright registration process?",
+      "options": [
+        "Submit Form XIV online",
+        "Pay renewal fees",
+        "File a lawsuit",
+        "Publish the work"
+      ],
+      "correctIndex": 0,
+      "explanation": "The registration process begins by submitting Form XIV along with the work and a ₹500 fee.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q8",
+      "question": "Which law governs online intermediary liability in India?",
+      "options": [
+        "Copyright Act, 1957",
+        "IT Act, 2000 (Section 79)",
+        "DMCA, 1998",
+        "IPC Section 420"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 79 of the IT Act, 2000 provides safe harbor protection to online intermediaries if they act on takedown notices.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q9",
+      "question": "Which international law governs takedown notices on platforms like YouTube?",
+      "options": [
+        "GDPR",
+        "DMCA (Digital Millennium Copyright Act)",
+        "IT Act",
+        "WIPO Act"
+      ],
+      "correctIndex": 1,
+      "explanation": "The DMCA (1998) governs the takedown system used by platforms like YouTube for copyright complaints.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q10",
+      "question": "What does a DMCA takedown notice do?",
+      "options": [
+        "Removes infringing content from online platforms",
+        "Registers a copyright automatically",
+        "Provides tax benefits",
+        "Renews copyright validity"
+      ],
+      "correctIndex": 0,
+      "explanation": "A DMCA takedown notice asks online platforms to remove content that allegedly infringes someone’s copyright.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q11",
+      "question": "What is the role of a counter-notice in the DMCA system?",
+      "options": [
+        "To permanently delete content",
+        "To appeal a false takedown request",
+        "To register a new work",
+        "To renew copyright protection"
+      ],
+      "correctIndex": 1,
+      "explanation": "A counter-notice lets users appeal if their content was removed unfairly, leading to reinstatement unless sued within 14 days.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q12",
+      "question": "Which authority handles DMCA takedown requests for YouTube?",
+      "options": [
+        "Indian Copyright Office",
+        "Google’s Legal Team",
+        "IT Ministry",
+        "WIPO"
+      ],
+      "correctIndex": 1,
+      "explanation": "YouTube processes DMCA notices through Google’s legal team and online submission portal.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q13",
+      "question": "Does registering your work automatically register it internationally?",
+      "options": [
+        "Yes, in all countries",
+        "No, but protection exists via the Berne Convention",
+        "Only in the USA",
+        "Only after DMCA filing"
+      ],
+      "correctIndex": 1,
+      "explanation": "India’s membership in the Berne Convention grants automatic protection abroad without separate registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q14",
+      "question": "What happens after filing Form XIV in India?",
+      "options": [
+        "Immediate approval",
+        "Scrutiny by the Registrar and waiting period for objections",
+        "Court hearing",
+        "Automatic copyright renewal"
+      ],
+      "correctIndex": 1,
+      "explanation": "After submission, the Registrar examines the application, and others can raise objections within a stipulated time.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q15",
+      "question": "Under the IT Act 2000, intermediaries are safe from liability if they:",
+      "options": [
+        "Ignore takedown notices",
+        "Act on valid takedown requests promptly",
+        "Publish infringing content themselves",
+        "Modify user uploads"
+      ],
+      "correctIndex": 1,
+      "explanation": "Intermediaries must act quickly on takedown notices to retain safe harbor under Section 79 of the IT Act.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q16",
+      "question": "Which document serves as proof of registration?",
+      "options": [
+        "Acknowledgment slip",
+        "Certificate of Registration",
+        "Affidavit of originality",
+        "Form 16"
+      ],
+      "correctIndex": 1,
+      "explanation": "Once approved, the Indian Copyright Office issues a Certificate of Registration as proof.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_8_q17",
+      "question": "Can you sue for infringement without registration in India?",
+      "options": [
+        "Yes, copyright exists automatically",
+        "No, registration is mandatory",
+        "Only after DMCA notice",
+        "Only after renewal"
+      ],
+      "correctIndex": 0,
+      "explanation": "Yes, since copyright exists automatically, registration is not mandatory for legal action but helps as evidence.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_8_q18",
+      "question": "How long does it usually take to process a copyright registration in India?",
+      "options": [
+        "1 week",
+        "2-3 months",
+        "6-8 months",
+        "1 year"
+      ],
+      "correctIndex": 2,
+      "explanation": "Copyright registration in India typically takes 6–8 months, depending on objections and workload.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q19",
+      "question": "Who issues the Certificate of Registration in India?",
+      "options": [
+        "Registrar of Copyrights",
+        "Controller General of Patents",
+        "High Court",
+        "IT Ministry"
+      ],
+      "correctIndex": 0,
+      "explanation": "The Registrar of Copyrights, under the Copyright Office, issues the registration certificate.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q20",
+      "question": "What does 'prima facie evidence' mean?",
+      "options": [
+        "Final and undisputed proof",
+        "Initial legal proof unless disproved",
+        "Temporary certificate",
+        "Court order"
+      ],
+      "correctIndex": 1,
+      "explanation": "Prima facie evidence means the certificate is accepted as valid proof unless challenged in court.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q21",
+      "question": "If you receive a false DMCA takedown, you can:",
+      "options": [
+        "File a counter-notice",
+        "Ignore it",
+        "Pay a fine",
+        "Complain to police"
+      ],
+      "correctIndex": 0,
+      "explanation": "A counter-notice allows you to contest false takedowns and restore your content if no lawsuit follows within 14 days.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q22",
+      "question": "What is the purpose of the counter-notice process?",
+      "options": [
+        "To allow appeals against wrongful DMCA removals",
+        "To register copyrights faster",
+        "To enforce tax rules",
+        "To transfer ownership"
+      ],
+      "correctIndex": 0,
+      "explanation": "The counter-notice ensures fair use rights and prevents abuse of DMCA takedowns.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_8_q23",
+      "question": "Which Indian law helps remove infringing content online similar to DMCA?",
+      "options": [
+        "IT Act, 2000 (Section 79)",
+        "Patent Act, 1970",
+        "Consumer Protection Act",
+        "Trade Marks Act, 1999"
+      ],
+      "correctIndex": 0,
+      "explanation": "Section 79 of the IT Act plays a similar role to the DMCA in handling online copyright issues within India.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_8_q24",
+      "question": "If someone falsely files a DMCA takedown, what can happen?",
+      "options": [
+        "They face legal liability for misrepresentation",
+        "Their claim is ignored",
+        "The user’s content is deleted permanently",
+        "Nothing happens"
+      ],
+      "correctIndex": 0,
+      "explanation": "False DMCA filings can result in legal penalties for misrepresentation under the DMCA itself.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "copyright_8_q25",
+      "question": "Which system ensures global enforcement for online copyright?",
+      "options": [
+        "DMCA notice-and-takedown system",
+        "GDPR data sharing",
+        "WIPO domain dispute policy",
+        "Patent Cooperation Treaty"
+      ],
+      "correctIndex": 0,
+      "explanation": "The DMCA takedown system is globally recognized for managing online copyright enforcement on international platforms.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

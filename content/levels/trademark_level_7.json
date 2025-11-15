@@ -1,0 +1,40 @@
+{
+  "id": "trademark_level_7",
+  "realmId": "realm_trademark",
+  "levelNumber": 7,
+  "name": "Dilution (Protecting 'Famous' Marks)",
+  "description": "An 'advanced' right for 'famous' marks. Learn what 'Dilution' is and why it's not about confusion.",
+  "summary": "This level covers the special protection for 'well-known' marks. You'll learn about 'Dilution', a type of harm that occurs *without* consumer confusion, and its two forms: Blurring and Tarnishment.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=R0_9-mC-T3c",
+  "videoDuration": 218,
+  
+  "content": "## Dilution: Protection Beyond Confusion\n\nFor all previous levels, the #1 rule was 'Likelihood of Confusion'. Now, we break that rule. \n\n**Dilution** (under Section 29(4) of the Indian Trade Marks Act) is a special harm that can only happen to **'Famous' or 'Well-Known' marks**. \n\nIt is a legal claim that **does not require any consumer confusion**. \n\nDilution is the 'whittling away' or 'lessening' of a famous mark's selling power and uniqueness. It argues that a famous mark (like 'TATA' or 'GOOGLE') is so famous that *any* use of it, even on unrelated products, harms the original brand. \n\nThere are two main types of dilution:\n\n### 1. Dilution by Blurring\n\nThis is the most common form. It happens when a famous mark is used on an **unrelated product**, which 'blurs' the mark's singular association in the public's mind. \n\nIf someone starts selling **'Kodak'** shoes or **'Apple'** soap, no one will be *confused*. No one will think the computer company is now making soap. \n\nBut, the 'Kodak' mark is now associated with cameras *and* shoes. The 'Apple' mark is associated with computers *and* soap. This 'blurs' the unique, singular power of the mark. The link between 'Kodak' and 'cameras' is weakened. That is dilution.\n\n### 2. Dilution by Tarnishment\n\nThis is when a famous mark is used in an unsavory or low-quality way that 'tarnishes' the brand's reputation. \n\nFor example, if someone starts selling cheap, low-quality, explicit magazines under the name **'TATA'**, the TATA group could sue for dilution by tarnishment. \n\nThey don't need to prove anyone is confused. They just need to prove that linking their reputable brand name to a low-quality or obscene product harms their goodwill.\n\n--- \n\n### 💡 Level 7 Case Study: 'TATA' & 'Mercedes-Benz'\n\nIndian courts have repeatedly protected famous marks from dilution.\n\n* **Mercedes-Benz vs. 'Benz' Underwear:** The famous car company, Mercedes-Benz, sued a local company that was selling underwear using the name 'Benz'. The court agreed this was dilution. No one thought the car company was making underwear (no confusion), but the use of 'Benz' on a common item tarnished and 'whittled away' the luxury and exclusivity of the 'Benz' mark.\n\n* **Tata Sons Ltd. vs. 'TATA' Weight Scales:** The TATA group sued a company that was putting the 'TATA' logo on their weighing scales. The court ruled in TATA's favor, stating that 'TATA' is a well-known mark and that its use by anyone, even for different goods, constitutes an 'unfair advantage' and causes dilution. \n\nThis is the ultimate protection for a brand: their name is so famous that no one else can use it... for *anything*.",
+  
+  "keyPoints": [
+    "Dilution is a special harm that applies ONLY to 'famous' or 'well-known' marks.",
+    "Dilution does NOT require any 'likelihood of confusion' to be proven.",
+    "'Dilution by Blurring' is when a mark's uniqueness is weakened by use on unrelated goods (e.g., 'Kodak' shoes).",
+    "'Dilution by Tarnishment' is when a mark's reputation is harmed by use with low-quality or unsavory goods.",
+    "Indian courts have protected marks like 'Mercedes-Benz' and 'TATA' from dilution."
+  ],
+  
+  "learningObjectives": [
+    "Define 'trademark dilution' and identify who it protects.",
+    "Explain the key difference between 'infringement' (confusion) and 'dilution' (no confusion).",
+    "Define and provide an example of 'Dilution by Blurring'.",
+    "Define and provide an example of 'Dilution by Tarnishment'.",
+    "Analyze the 'Mercedes-Benz' case to understand dilution in practice."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 300,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:05:00Z"
+}

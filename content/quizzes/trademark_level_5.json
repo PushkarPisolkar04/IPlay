@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_5",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_5_q1",
+      "question": "What is the main purpose of the 'likelihood of confusion' test in trademark law?",
+      "options": [
+        "To determine ownership of the trademark",
+        "To check if two trademarks can coexist without confusing consumers",
+        "To decide trademark renewal fees",
+        "To assess logo color similarity only"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'likelihood of confusion' test determines whether consumers are likely to be confused between two marks due to similarity in marks, goods, or services.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q2",
+      "question": "Trademark infringement occurs when:",
+      "options": [
+        "Two companies operate in different industries",
+        "A mark causes consumer confusion regarding source or origin",
+        "A company fails to renew its mark",
+        "A mark is registered after the expiry of another"
+      ],
+      "correctIndex": 1,
+      "explanation": "Infringement happens when consumers are likely to believe two products or services come from the same source due to confusingly similar marks.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q3",
+      "question": "Which of the following is NOT a factor in determining likelihood of confusion?",
+      "options": [
+        "Similarity of marks",
+        "Similarity of goods/services",
+        "Consumer perception",
+        "Trademark owner's income"
+      ],
+      "correctIndex": 3,
+      "explanation": "The owner's income has no bearing on confusion analysis; the focus is on similarity and consumer perception.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q4",
+      "question": "In the case of 'Dove Soap vs. Dove Chocolate', why was coexistence allowed?",
+      "options": [
+        "Both brands used the same logo",
+        "The goods belonged to unrelated classes and posed no confusion",
+        "One was unregistered",
+        "The court favored the chocolate company"
+      ],
+      "correctIndex": 1,
+      "explanation": "Since soap and chocolates belong to completely different product categories, there was no likelihood of consumer confusion.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q5",
+      "question": "What does the 'strength of the mark' factor evaluate?",
+      "options": [
+        "How creative or distinctive the mark is",
+        "How long it has existed",
+        "The cost of registration",
+        "The color used in the logo"
+      ],
+      "correctIndex": 0,
+      "explanation": "A strong, distinctive mark (like KODAK) enjoys broader protection than a weak or descriptive one (like BEST SHOES).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q6",
+      "question": "Which factor examines whether consumers have actually mistaken one product for another?",
+      "options": [
+        "Intent of the infringer",
+        "Actual confusion",
+        "Goods similarity",
+        "Market strength"
+      ],
+      "correctIndex": 1,
+      "explanation": "Actual confusion provides direct evidence that consumers are being misled, strengthening infringement claims.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q7",
+      "question": "Which case involved clear infringement due to similar name and business field?",
+      "options": [
+        "Starbux vs. Starbucks",
+        "Apple vs. Best Computers",
+        "Dove vs. Dove",
+        "Lego vs. PlayBricks"
+      ],
+      "correctIndex": 0,
+      "explanation": "Starbux copied the name, font, and theme of Starbucks, leading to consumer confusion and infringement.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q8",
+      "question": "The similarity of goods and services is considered under which legal test?",
+      "options": [
+        "Likelihood of confusion test",
+        "Dilution test",
+        "Functionality test",
+        "Distinctiveness test"
+      ],
+      "correctIndex": 0,
+      "explanation": "Similarity of goods is a major factor under the 'likelihood of confusion' test used in infringement analysis.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q9",
+      "question": "What is 'consumer class' in the confusion test?",
+      "options": [
+        "Type of customer likely to purchase the goods",
+        "Trademark registry classification",
+        "The level of education of the trademark owner",
+        "Court-assigned product group"
+      ],
+      "correctIndex": 0,
+      "explanation": "Consumer class refers to the target audience and their level of attention — e.g., average buyer vs. specialized customer.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_5_q10",
+      "question": "Which is a key goal of trademark infringement law?",
+      "options": [
+        "To punish trademark copycats criminally",
+        "To protect the public from confusion about product origin",
+        "To ensure equal market share",
+        "To reward companies for marketing"
+      ],
+      "correctIndex": 1,
+      "explanation": "The core purpose is to prevent consumer confusion and protect the goodwill of the rightful trademark owner.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_5_q11",
+      "question": "Which of the following factors strengthens a claim of infringement?",
+      "options": [
+        "Strong mark and identical goods",
+        "Descriptive mark and different goods",
+        "Unrelated products",
+        "Registered mark but no confusion"
+      ],
+      "correctIndex": 0,
+      "explanation": "The combination of a strong mark and similar goods increases the likelihood of confusion and hence infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q12",
+      "question": "Why is the infringer's intent relevant in confusion analysis?",
+      "options": [
+        "It shows moral guilt",
+        "It indicates whether they deliberately tried to mislead consumers",
+        "It decides trademark ownership",
+        "It determines registration fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Intent to deceive suggests deliberate infringement, strengthening the plaintiff’s case.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q13",
+      "question": "If two marks sound alike but are spelled differently, can there still be infringement?",
+      "options": [
+        "Yes, if consumers are likely to pronounce them the same way",
+        "No, spelling differences avoid confusion",
+        "Only if they use similar logos",
+        "Only if both are registered"
+      ],
+      "correctIndex": 0,
+      "explanation": "Phonetic similarity (like 'Sunsilk' vs. 'Sunseelk') can cause confusion even if spelling differs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q14",
+      "question": "What happens if both marks are used in unrelated industries?",
+      "options": [
+        "Automatic infringement",
+        "No confusion, hence no infringement",
+        "Both lose protection",
+        "Both marks are cancelled"
+      ],
+      "correctIndex": 1,
+      "explanation": "If the goods/services are unrelated, consumers won’t associate the two, so infringement is unlikely.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q15",
+      "question": "Which factor looks at how attentive or careful the average consumer is?",
+      "options": [
+        "Consumer class",
+        "Intent of infringer",
+        "Strength of mark",
+        "Actual confusion"
+      ],
+      "correctIndex": 0,
+      "explanation": "Consumer class affects how easily confusion might occur; less attentive consumers are more easily misled.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q16",
+      "question": "A famous mark like 'NIKE' has a broader protection scope because:",
+      "options": [
+        "It is a registered word mark",
+        "It is distinctive and widely recognized",
+        "It is owned by a global company",
+        "It’s used only for shoes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Famous marks enjoy strong protection even across unrelated goods due to high consumer recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q17",
+      "question": "How can a company defend itself from an infringement claim?",
+      "options": [
+        "Show that their mark is not confusingly similar",
+        "Prove that they have more employees",
+        "Claim to have used better marketing",
+        "Argue that both marks use same color"
+      ],
+      "correctIndex": 0,
+      "explanation": "The primary defense is showing no likelihood of confusion exists between the marks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q18",
+      "question": "Why is actual confusion strong evidence in court?",
+      "options": [
+        "Because it directly shows that consumers were misled",
+        "Because it proves both marks are identical",
+        "Because it indicates no intent to deceive",
+        "Because it affects registration costs"
+      ],
+      "correctIndex": 0,
+      "explanation": "Actual confusion—like misdirected emails or mistaken purchases—proves the test’s real-world impact.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q19",
+      "question": "A weaker mark like 'Best Electronics' is less likely to succeed in an infringement claim because:",
+      "options": [
+        "It’s descriptive and has limited protection",
+        "It’s too long",
+        "It’s not registered",
+        "It’s in a foreign language"
+      ],
+      "correctIndex": 0,
+      "explanation": "Descriptive or weak marks have narrow protection and rarely succeed in confusion claims.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_5_q20",
+      "question": "Which factor measures how similar the competing marks look and sound?",
+      "options": [
+        "Mark similarity",
+        "Intent factor",
+        "Actual confusion",
+        "Market overlap"
+      ],
+      "correctIndex": 0,
+      "explanation": "Mark similarity assesses visual, phonetic, and conceptual resemblance between trademarks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_5_q21",
+      "question": "If 'Starbecks' opens a café with similar green branding to Starbucks, what would most likely occur?",
+      "options": [
+        "No infringement since name is different",
+        "Infringement due to confusing similarity and intent",
+        "No confusion due to regional difference",
+        "Both trademarks will be void"
+      ],
+      "correctIndex": 1,
+      "explanation": "The phonetic similarity and similar trade dress clearly point to consumer confusion and deliberate imitation.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_5_q22",
+      "question": "Why does the law consider the 'intent' of the infringer?",
+      "options": [
+        "It helps determine damages and seriousness of violation",
+        "It replaces the need for confusion evidence",
+        "It decides registration approval",
+        "It increases renewal period"
+      ],
+      "correctIndex": 0,
+      "explanation": "Intent impacts penalties; deliberate attempts to copy a famous mark result in heavier legal consequences.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_5_q23",
+      "question": "How does coexistence work when two marks are identical?",
+      "options": [
+        "If they operate in unrelated markets, confusion may not occur",
+        "They must always merge",
+        "It’s illegal under all conditions",
+        "It depends on owner nationality"
+      ],
+      "correctIndex": 0,
+      "explanation": "Coexistence is possible if both operate in distinct industries where confusion is unlikely.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_5_q24",
+      "question": "Which court test is used in India to assess trademark infringement?",
+      "options": [
+        "Likelihood of confusion test",
+        "Economic impact test",
+        "Secondary meaning test",
+        "Market saturation test"
+      ],
+      "correctIndex": 0,
+      "explanation": "Indian courts apply the 'likelihood of confusion' test similar to global standards.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_5_q25",
+      "question": "A consumer buys 'Starbux Coffee' thinking it’s Starbucks. What does this demonstrate?",
+      "options": [
+        "Actual confusion and evidence of infringement",
+        "Descriptive use",
+        "Fair use defense",
+        "Coexistence doctrine"
+      ],
+      "correctIndex": 0,
+      "explanation": "This real-world confusion directly supports an infringement claim against 'Starbux'.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

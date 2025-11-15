@@ -42,7 +42,9 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    if (_tabs.isNotEmpty) {
+      _tabController.dispose();
+    }
     super.dispose();
   }
 
@@ -90,10 +92,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         await _loadLeaderboardData();
       }
       
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
       // print('Error loading leaderboard: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -125,9 +131,11 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   }
 
   Future<void> _loadLeaderboardData() async {
-    if (_tabs.isEmpty) return;
+    if (_tabs.isEmpty || !mounted) return;
     
-    setState(() => _isLoading = true);
+    if (mounted) {
+      setState(() => _isLoading = true);
+    }
     
     try {
       final currentTab = _tabs[_tabController.index];
@@ -145,10 +153,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         await _loadNationalLeaderboard();
       }
       
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     } catch (e) {
       // print('Error loading leaderboard data: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -163,14 +175,17 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .collection('users')
         .where('classroomIds', arrayContains: classroomId)
         .where('role', isEqualTo: 'student')
-        .orderBy('totalXP', descending: true)
-        .limit(100)
         .get();
     
-    _students = studentsSnapshot.docs.map((doc) => {
+    // Sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs.map((doc) => {
       'id': doc.id,
       ...doc.data(),
     }).toList();
+    
+    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
+    
+    _students = studentsList.take(100).toList();
   }
 
   Future<void> _loadTeacherAllStudents() async {
@@ -180,12 +195,10 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'student')
-        .orderBy('totalXP', descending: true)
-        .limit(200)
         .get();
     
-    // Filter students who are in teacher's classrooms
-    _students = studentsSnapshot.docs
+    // Filter students who are in teacher's classrooms and sort by XP
+    final studentsList = studentsSnapshot.docs
         .where((doc) {
           final studentClassrooms = doc.data()['classroomIds'] as List?;
           return studentClassrooms?.any((id) => _teacherClassroomIds.contains(id)) ?? false;
@@ -195,6 +208,10 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
           ...doc.data(),
         })
         .toList();
+    
+    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
+    
+    _students = studentsList.take(200).toList();
   }
 
   Future<void> _loadSchoolLeaderboard() async {
@@ -204,14 +221,17 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .collection('users')
         .where('schoolId', isEqualTo: _userSchoolId)
         .where('role', isEqualTo: 'student')
-        .orderBy('totalXP', descending: true)
-        .limit(100)
         .get();
     
-    _students = studentsSnapshot.docs.map((doc) => {
+    // Sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs.map((doc) => {
       'id': doc.id,
       ...doc.data(),
     }).toList();
+    
+    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
+    
+    _students = studentsList.take(100).toList();
   }
 
   Future<void> _loadStateLeaderboard() async {
@@ -221,28 +241,34 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .collection('users')
         .where('state', isEqualTo: _userState)
         .where('role', isEqualTo: 'student')
-        .orderBy('totalXP', descending: true)
-        .limit(100)
         .get();
     
-    _students = studentsSnapshot.docs.map((doc) => {
+    // Sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs.map((doc) => {
       'id': doc.id,
       ...doc.data(),
     }).toList();
+    
+    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
+    
+    _students = studentsList.take(100).toList();
   }
 
   Future<void> _loadNationalLeaderboard() async {
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'student')
-        .orderBy('totalXP', descending: true)
-        .limit(100)
         .get();
     
-    _students = studentsSnapshot.docs.map((doc) => {
+    // Sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs.map((doc) => {
       'id': doc.id,
       ...doc.data(),
     }).toList();
+    
+    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
+    
+    _students = studentsList.take(100).toList();
   }
 
   @override
@@ -277,15 +303,30 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
 
   Widget _buildLeaderboardList() {
     if (_students.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      return RefreshIndicator(
+        onRefresh: _loadLeaderboardData,
+        child: ListView(
           children: [
-            Icon(Icons.emoji_events_outlined, size: 64, color: AppDesignSystem.textTertiary),
-            const SizedBox(height: 16),
-            Text(
-              'No students yet',
-              style: AppDesignSystem.h3.copyWith(color: AppDesignSystem.textSecondary),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 200,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.emoji_events_outlined, size: 64, color: AppDesignSystem.textTertiary),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No students found',
+                      style: AppDesignSystem.h3.copyWith(color: AppDesignSystem.textSecondary),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Pull down to refresh',
+                      style: AppDesignSystem.bodySmall.copyWith(color: AppDesignSystem.textTertiary),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

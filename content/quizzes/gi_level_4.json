@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_4",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_4_q1",
+      "question": "Which silk has GI protection in India?",
+      "options": [
+        "Chinese Silk",
+        "Kanchipuram Silk",
+        "Thai Silk",
+        "Italian Silk"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kanchipuram Silk from Tamil Nadu has GI protection for its unique weaving and quality.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q2",
+      "question": "Which textile from Telangana has GI protection?",
+      "options": [
+        "Banarasi Silk",
+        "Pochampally Ikat",
+        "Pashmina",
+        "Khadi"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pochampally Ikat from Telangana has GI protection for its unique tie-dye weaving technique.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q3",
+      "question": "Which silk is famous from Mysore?",
+      "options": [
+        "Tussar Silk",
+        "Mysore Silk",
+        "Muga Silk",
+        "Eri Silk"
+      ],
+      "correctIndex": 1,
+      "explanation": "Mysore Silk from Karnataka has GI protection for its fine quality and traditional weaving.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q4",
+      "question": "Which fabric from Madhya Pradesh has GI protection?",
+      "options": [
+        "Kanchipuram Silk",
+        "Chanderi Fabric",
+        "Banarasi Silk",
+        "Pashmina"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chanderi Fabric from Madhya Pradesh has GI protection for its lightweight and sheer texture.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q5",
+      "question": "Which painting style from Bihar has GI protection?",
+      "options": [
+        "Warli Painting",
+        "Madhubani Painting",
+        "Tanjore Painting",
+        "Pattachitra"
+      ],
+      "correctIndex": 1,
+      "explanation": "Madhubani Painting from Bihar has GI protection for its distinctive folk art style.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q6",
+      "question": "Which toy from Karnataka has GI protection?",
+      "options": [
+        "Kondapalli Toys",
+        "Channapatna Toys",
+        "Etikoppaka Toys",
+        "Kinhal Toys"
+      ],
+      "correctIndex": 1,
+      "explanation": "Channapatna Toys from Karnataka have GI protection for their traditional wooden lacquerware.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q7",
+      "question": "Which pottery from Rajasthan has GI protection?",
+      "options": [
+        "Terracotta",
+        "Blue Pottery",
+        "Black Pottery",
+        "Red Pottery"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blue Pottery from Jaipur, Rajasthan has GI protection for its distinctive blue glaze technique.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q8",
+      "question": "Which metalware from Karnataka has GI protection?",
+      "options": [
+        "Moradabad Brassware",
+        "Bidriware",
+        "Dhokra",
+        "Panchaloha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bidriware from Karnataka has GI protection for its unique silver inlay work on blackened metal.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q9",
+      "question": "Which shawl from Kashmir has GI protection?",
+      "options": [
+        "Wool Shawl",
+        "Pashmina",
+        "Cotton Shawl",
+        "Silk Shawl"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pashmina from Kashmir has GI protection for its fine wool from Changthangi goats.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q10",
+      "question": "What makes Kanchipuram Silk special?",
+      "options": [
+        "Its price",
+        "Its unique weaving technique, pure mulberry silk, and zari work",
+        "Its color",
+        "Its length"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kanchipuram Silk is special for its traditional weaving technique, pure mulberry silk, and intricate zari work.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q11",
+      "question": "What is unique about Pochampally Ikat?",
+      "options": [
+        "Its price",
+        "Its tie-dye technique applied to threads before weaving",
+        "Its size",
+        "Its weight"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pochampally Ikat uses a unique tie-dye technique where threads are dyed before weaving to create patterns.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q12",
+      "question": "Why is GI important for artisans?",
+      "options": [
+        "It reduces their work",
+        "It protects their traditional crafts and provides market recognition",
+        "It increases taxes",
+        "It restricts sales"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protects traditional crafts from imitation and provides artisans with market recognition and premium pricing.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q13",
+      "question": "What is the Kanchipuram Silk protection case about?",
+      "options": [
+        "Price disputes",
+        "Protecting authentic Kanchipuram silk from fake products",
+        "Export restrictions",
+        "Tax issues"
+      ],
+      "correctIndex": 1,
+      "explanation": "The case focused on protecting authentic Kanchipuram silk weavers from fake products using the name.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q14",
+      "question": "What makes Madhubani Painting distinctive?",
+      "options": [
+        "Its price",
+        "Its geometric patterns and use of natural dyes",
+        "Its size",
+        "Its frame"
+      ],
+      "correctIndex": 1,
+      "explanation": "Madhubani Painting is distinctive for its geometric patterns, vibrant colors, and use of natural dyes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q15",
+      "question": "What are Channapatna Toys made from?",
+      "options": [
+        "Plastic",
+        "Wood with natural lacquer",
+        "Metal",
+        "Clay"
+      ],
+      "correctIndex": 1,
+      "explanation": "Channapatna Toys are made from wood and colored with natural lacquer, making them safe and eco-friendly.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q16",
+      "question": "What is unique about Blue Pottery?",
+      "options": [
+        "Its price",
+        "Its distinctive blue glaze and Persian-influenced designs",
+        "Its size",
+        "Its weight"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blue Pottery is unique for its distinctive blue glaze technique and Persian-influenced floral designs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q17",
+      "question": "What is Bidriware known for?",
+      "options": [
+        "Gold plating",
+        "Silver inlay work on blackened metal alloy",
+        "Copper work",
+        "Bronze casting"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bidriware is known for its intricate silver inlay work on a blackened zinc-copper alloy.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q18",
+      "question": "What makes Pashmina special?",
+      "options": [
+        "Its price",
+        "Its fine wool from Changthangi goats in high altitudes",
+        "Its color",
+        "Its length"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pashmina is made from fine wool of Changthangi goats found in high-altitude regions of Kashmir.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q19",
+      "question": "How does GI help preserve traditional crafts?",
+      "options": [
+        "By restricting production",
+        "By providing legal protection and market value to traditional techniques",
+        "By increasing taxes",
+        "By limiting artisans"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides legal protection and market value, encouraging artisans to continue traditional techniques.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q20",
+      "question": "What is the traditional weaving technique of Chanderi?",
+      "options": [
+        "Power loom",
+        "Handloom with cotton, silk, and zari",
+        "Machine weaving",
+        "Knitting"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chanderi fabric is traditionally handwoven using a combination of cotton, silk, and zari threads.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q21",
+      "question": "Which state is Madhubani Painting from?",
+      "options": [
+        "Uttar Pradesh",
+        "Bihar",
+        "West Bengal",
+        "Odisha"
+      ],
+      "correctIndex": 1,
+      "explanation": "Madhubani Painting originates from the Mithila region of Bihar.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q22",
+      "question": "What is the primary material in Kanchipuram Silk?",
+      "options": [
+        "Cotton",
+        "Pure mulberry silk",
+        "Synthetic fiber",
+        "Wool"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kanchipuram Silk is made from pure mulberry silk, known for its quality and durability.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_4_q23",
+      "question": "Why are Channapatna Toys considered safe for children?",
+      "options": [
+        "They are large",
+        "They use natural lacquer and non-toxic colors",
+        "They are expensive",
+        "They are soft"
+      ],
+      "correctIndex": 1,
+      "explanation": "Channapatna Toys use natural lacquer and non-toxic vegetable dyes, making them safe for children.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q24",
+      "question": "What is the origin of Blue Pottery technique in India?",
+      "options": [
+        "Chinese influence",
+        "Persian influence brought to Jaipur",
+        "European influence",
+        "Indigenous development"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blue Pottery technique was brought to Jaipur from Persia and adapted by local artisans.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_4_q25",
+      "question": "How does GI protection benefit consumers of handicrafts?",
+      "options": [
+        "Lower prices",
+        "Assurance of authenticity and traditional craftsmanship",
+        "Faster delivery",
+        "More variety"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protection assures consumers they are buying authentic products made with traditional craftsmanship.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

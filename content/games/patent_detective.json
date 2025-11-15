@@ -1,0 +1,1479 @@
+{
+  "id": "patent_detective",
+  "name": "Patent Detective",
+  "description": "Solve patent mysteries using clues and deduction",
+  "summary": "Put on your detective hat! Read clues about mysterious objects and deduce which patented invention they describe. Use your brain to crack the case!",
+  "iconPath": "assets/games/patent_detective.png",
+  "color": "0xFF00BCD4",
+  "difficulty": "hard",
+  "gameType": "deduction",
+  "xpReward": 85,
+  "estimatedMinutes": 10,
+  "casesPerGame": 10,
+  "randomSelection": true,
+  "allowRetry": true,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-12T00:00:00Z",
+  "rewards": {
+    "completion": 85,
+    "perfectScore": 170,
+    "firstTime": 105,
+    "highScore": 210
+  },
+  "leaderboard": {
+    "enabled": true,
+    "scope": ["classroom", "school", "global"]
+  },
+  "cases": [
+    {
+      "id": "case_001",
+      "caseNumber": "Case #001",
+      "category": "Office Equipment",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: This object is found in almost every office",
+        "🔍 Clue 2: It was invented in 1998 by two designers",
+        "🔍 Clue 3: It uses mesh material instead of foam padding",
+        "🔍 Clue 4: It's designed to support you for 8+ hours a day",
+        "🔍 Clue 5: The patent is for a 'pellicle suspension system'"
+      ],
+      "suspects": [
+        "Ergonomic Office Chair",
+        "Standing Desk",
+        "Office Lamp",
+        "Filing Cabinet"
+      ],
+      "correctIndex": 0,
+      "patentInfo": {
+        "patentNumber": "US5853221A",
+        "inventor": "William Stumpf & Don Chadwick",
+        "year": 1998,
+        "title": "Ergonomic Office Chair (Aeron Chair)",
+        "innovation": "Revolutionary mesh seating that provides support without foam padding, allowing air circulation and reducing heat buildup during long sitting sessions."
+      },
+      "explanation": "The Aeron Chair's pellicle suspension system was revolutionary because it eliminated traditional foam padding while providing superior support and breathability."
+    },
+    {
+      "id": "case_002",
+      "caseNumber": "Case #002",
+      "category": "Computing",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1970 by Douglas Engelbart",
+        "🔍 Clue 2: It has two perpendicular wheels inside",
+        "🔍 Clue 3: You move it on a flat surface to control something",
+        "🔍 Clue 4: Modern versions use optical sensors instead of wheels",
+        "🔍 Clue 5: It's called an 'X-Y position indicator'"
+      ],
+      "suspects": [
+        "Keyboard",
+        "Computer Mouse",
+        "Trackpad",
+        "Joystick"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US3541541A",
+        "inventor": "Douglas Engelbart",
+        "year": 1970,
+        "title": "Computer Mouse",
+        "innovation": "First computer mouse using two perpendicular wheels to track 2D movement, revolutionizing how humans interact with computers."
+      },
+      "explanation": "Engelbart's mouse used two wheels at right angles to track movement in X and Y directions, creating the foundation for modern computer interaction."
+    },
+    {
+      "id": "case_003",
+      "caseNumber": "Case #003",
+      "category": "Lighting",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1962 by Nick Holonyak Jr.",
+        "🔍 Clue 2: It uses semiconductor technology",
+        "🔍 Clue 3: It's extremely energy-efficient compared to old bulbs",
+        "🔍 Clue 4: It emits visible light when current passes through",
+        "🔍 Clue 5: The patent is for a 'light-emitting diode'"
+      ],
+      "suspects": [
+        "Fluorescent Tube",
+        "Incandescent Bulb",
+        "LED Lamp",
+        "Halogen Light"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US3293513A",
+        "inventor": "Nick Holonyak Jr.",
+        "year": 1962,
+        "title": "LED (Light-Emitting Diode)",
+        "innovation": "First practical visible LED, revolutionizing lighting technology and eventually replacing incandescent bulbs worldwide."
+      },
+      "explanation": "Holonyak created the first practical visible LED, which has now replaced traditional bulbs in most applications due to efficiency and longevity."
+    },
+    {
+      "id": "case_004",
+      "caseNumber": "Case #004",
+      "category": "Office Supplies",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented accidentally in 1977 by Spencer Silver and Art Fry",
+        "🔍 Clue 2: They stick to surfaces but can be removed easily",
+        "🔍 Clue 3: The adhesive is 'low-tack' and reusable",
+        "🔍 Clue 4: They're usually small, square, and yellow",
+        "🔍 Clue 5: Perfect for leaving reminders on your desk"
+      ],
+      "suspects": [
+        "Tape Dispenser",
+        "Sticky Notes (Post-it)",
+        "Glue Stick",
+        "Paper Clips"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US4166152A",
+        "inventor": "Spencer Silver & Art Fry",
+        "year": 1977,
+        "title": "Sticky Notes (Post-it Notes)",
+        "innovation": "Low-tack reusable pressure-sensitive adhesive that doesn't damage surfaces, allowing notes to be repositioned multiple times."
+      },
+      "explanation": "The unique adhesive allows Post-it notes to stick temporarily and be repositioned without leaving residue or damaging surfaces."
+    },
+    {
+      "id": "case_005",
+      "caseNumber": "Case #005",
+      "category": "Office Tools",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Patented in 1867 by George McGill",
+        "🔍 Clue 2: It binds papers together permanently",
+        "🔍 Clue 3: Uses small metal fasteners",
+        "🔍 Clue 4: Requires a single pressing motion to operate",
+        "🔍 Clue 5: The fasteners are stored in a strip inside"
+      ],
+      "suspects": [
+        "Paper Clip",
+        "Hole Punch",
+        "Stapler",
+        "Binder Clip"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US67665A",
+        "inventor": "George McGill",
+        "year": 1867,
+        "title": "Stapler",
+        "innovation": "First practical stapler that could bind papers with one motion, using a strip of pre-formed metal staples."
+      },
+      "explanation": "McGill's single-stroke stapler mechanism made binding papers quick and easy, becoming a standard office tool."
+    },
+    {
+      "id": "case_006",
+      "caseNumber": "Case #006",
+      "category": "Kitchen Appliances",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Discovered accidentally in 1950 by Percy Spencer",
+        "🔍 Clue 2: He was working on radar technology when he made the discovery",
+        "🔍 Clue 3: It heats food using electromagnetic radiation",
+        "🔍 Clue 4: A chocolate bar melted in his pocket, leading to the invention",
+        "🔍 Clue 5: It can heat food in minutes without an open flame"
+      ],
+      "suspects": [
+        "Toaster Oven",
+        "Microwave Oven",
+        "Convection Oven",
+        "Electric Stove"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2495429A",
+        "inventor": "Percy Spencer",
+        "year": 1950,
+        "title": "Microwave Oven",
+        "innovation": "Discovered microwave cooking accidentally while working on radar magnetrons, revolutionizing food preparation."
+      },
+      "explanation": "Spencer noticed a chocolate bar melted in his pocket while working with magnetrons, leading to the invention of the microwave oven."
+    },
+    {
+      "id": "case_007",
+      "caseNumber": "Case #007",
+      "category": "Cookware",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented accidentally in 1941 by Roy Plunkett",
+        "🔍 Clue 2: He was researching refrigerants when he discovered it",
+        "🔍 Clue 3: The coating prevents food from sticking during cooking",
+        "🔍 Clue 4: The material is called PTFE (polytetrafluoroethylene)",
+        "🔍 Clue 5: Brand name rhymes with 'nylon'"
+      ],
+      "suspects": [
+        "Cast Iron Pan",
+        "Ceramic Cookware",
+        "Non-Stick Pan (Teflon)",
+        "Stainless Steel Pan"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US2230654A",
+        "inventor": "Roy Plunkett",
+        "year": 1941,
+        "title": "Non-Stick Coating (Teflon)",
+        "innovation": "Accidentally discovered PTFE while researching refrigerants, creating the first non-stick coating for cookware."
+      },
+      "explanation": "Plunkett accidentally discovered Teflon while researching refrigerants, and it became the world's first non-stick coating."
+    },
+    {
+      "id": "case_008",
+      "caseNumber": "Case #008",
+      "category": "Kitchen Appliances",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Patented in 1952 by Arthur Leslie Large",
+        "🔍 Clue 2: It boils water for tea or coffee",
+        "🔍 Clue 3: Has an automatic shut-off when water boils",
+        "🔍 Clue 4: Plugs into electricity instead of using a stove",
+        "🔍 Clue 5: The thermostat prevents it from boiling dry"
+      ],
+      "suspects": [
+        "Coffee Maker",
+        "Electric Kettle",
+        "Tea Pot",
+        "Water Heater"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2585252A",
+        "inventor": "Arthur Leslie Large",
+        "year": 1952,
+        "title": "Electric Kettle",
+        "innovation": "First kettle with automatic shut-off thermostat when water boils, making it safe and energy-efficient."
+      },
+      "explanation": "The automatic shut-off thermostat prevents the kettle from boiling dry, making it much safer than stovetop kettles."
+    },
+    {
+      "id": "case_009",
+      "caseNumber": "Case #009",
+      "category": "Kitchen Tools",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Patented in 1868 by William Lyman",
+        "🔍 Clue 2: It has a rotating cutting wheel",
+        "🔍 Clue 3: Used to open metal food containers",
+        "🔍 Clue 4: The design is still used today",
+        "🔍 Clue 5: It cuts around the rim of cylindrical containers"
+      ],
+      "suspects": [
+        "Bottle Opener",
+        "Can Opener",
+        "Jar Opener",
+        "Cork Screw"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US80577A",
+        "inventor": "William Lyman",
+        "year": 1868,
+        "title": "Rotary Can Opener",
+        "innovation": "First practical rotary can opener with cutting wheel design still used today."
+      },
+      "explanation": "Lyman's rotary design with a cutting wheel became the standard for can openers and is still used over 150 years later."
+    },
+    {
+      "id": "case_010",
+      "caseNumber": "Case #010",
+      "category": "Kitchen Appliances",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1886 by Josephine Cochrane",
+        "🔍 Clue 2: She was frustrated with servants breaking her fine china",
+        "🔍 Clue 3: It uses water jets to clean items",
+        "🔍 Clue 4: Built into kitchen cabinets in modern homes",
+        "🔍 Clue 5: Saves time by cleaning dishes automatically"
+      ],
+      "suspects": [
+        "Washing Machine",
+        "Dishwasher",
+        "Garbage Disposal",
+        "Food Processor"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US355139A",
+        "inventor": "Josephine Cochrane",
+        "year": 1886,
+        "title": "Dishwasher",
+        "innovation": "First practical dishwasher using water pressure to clean dishes, invented by a woman frustrated with broken china."
+      },
+      "explanation": "Cochrane invented the dishwasher after servants kept breaking her fine china, creating the first practical automatic dish cleaning machine."
+    },
+    {
+      "id": "case_011",
+      "caseNumber": "Case #011",
+      "category": "Kitchen Appliances",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1922 by Stephen Poplawski",
+        "🔍 Clue 2: Originally designed for making soda fountain drinks",
+        "🔍 Clue 3: Has spinning blades at the bottom",
+        "🔍 Clue 4: Can puree, mix, and crush ingredients",
+        "🔍 Clue 5: Perfect for making smoothies"
+      ],
+      "suspects": [
+        "Food Processor",
+        "Mixer",
+        "Blender",
+        "Juicer"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US2109501A",
+        "inventor": "Stephen Poplawski",
+        "year": 1922,
+        "title": "Blender",
+        "innovation": "First blender designed for making soda fountain drinks, with rotating blades for mixing and pureeing."
+      },
+      "explanation": "Poplawski invented the blender for soda fountains, and it evolved into the kitchen appliance we use for smoothies today."
+    },
+    {
+      "id": "case_012",
+      "caseNumber": "Case #012",
+      "category": "Home Entertainment",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1927 by Philo Farnsworth",
+        "🔍 Clue 2: Uses a cathode ray tube in early versions",
+        "🔍 Clue 3: First fully electronic system for broadcasting",
+        "🔍 Clue 4: Displays moving pictures with sound",
+        "🔍 Clue 5: Found in almost every living room"
+      ],
+      "suspects": [
+        "Radio",
+        "Television",
+        "Projector",
+        "Monitor"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2141059A",
+        "inventor": "Philo Farnsworth",
+        "year": 1927,
+        "title": "Electronic Television",
+        "innovation": "First fully electronic television system using cathode ray tube, replacing mechanical TV systems."
+      },
+      "explanation": "Farnsworth's electronic television replaced mechanical systems, enabling modern TV broadcasting and entertainment."
+    },
+    {
+      "id": "case_013",
+      "caseNumber": "Case #013",
+      "category": "Home Electronics",
+      "difficulty": "hard",
+      "points": 25,
+      "clues": [
+        "🔍 Clue 1: Invented in 1956 by Robert Adler",
+        "🔍 Clue 2: The first wireless version used ultrasonic frequencies",
+        "🔍 Clue 3: Called 'Zenith Space Command'",
+        "🔍 Clue 4: Modern versions use infrared light",
+        "🔍 Clue 5: Controls TV from across the room"
+      ],
+      "suspects": [
+        "TV Antenna",
+        "Remote Control",
+        "Cable Box",
+        "Game Controller"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2817798A",
+        "inventor": "Robert Adler",
+        "year": 1956,
+        "title": "Wireless TV Remote Control",
+        "innovation": "First wireless TV remote using ultrasonic frequencies that humans couldn't hear (Zenith Space Command)."
+      },
+      "explanation": "The Space Command remote used ultrasonic sound waves to control the TV wirelessly, revolutionizing home entertainment."
+    },
+    {
+      "id": "case_014",
+      "caseNumber": "Case #014",
+      "category": "Home Appliances",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1901 by Hubert Cecil Booth",
+        "🔍 Clue 2: Uses suction instead of blowing",
+        "🔍 Clue 3: First powered version for cleaning floors",
+        "🔍 Clue 4: Removes dirt and dust from carpets",
+        "🔍 Clue 5: Modern versions can be robotic"
+      ],
+      "suspects": [
+        "Broom",
+        "Mop",
+        "Vacuum Cleaner",
+        "Carpet Sweeper"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US634042A",
+        "inventor": "Hubert Cecil Booth",
+        "year": 1901,
+        "title": "Vacuum Cleaner",
+        "innovation": "First powered vacuum cleaner using suction instead of blowing, revolutionizing floor cleaning."
+      },
+      "explanation": "Booth's vacuum cleaner was revolutionary because it used suction to remove dirt, unlike earlier devices that just blew dust around."
+    },
+    {
+      "id": "case_015",
+      "caseNumber": "Case #015",
+      "category": "Climate Control",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1906 by Willis Carrier",
+        "🔍 Clue 2: Controls both temperature and humidity",
+        "🔍 Clue 3: Originally designed for a printing plant",
+        "🔍 Clue 4: Makes hot summers bearable",
+        "🔍 Clue 5: Called 'Apparatus for treating air'"
+      ],
+      "suspects": [
+        "Heater",
+        "Fan",
+        "Air Conditioner",
+        "Dehumidifier"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US808897A",
+        "inventor": "Willis Carrier",
+        "year": 1906,
+        "title": "Air Conditioner",
+        "innovation": "First modern air conditioning system controlling both temperature and humidity, not just cooling."
+      },
+      "explanation": "Carrier's system was revolutionary because it controlled humidity as well as temperature, solving problems in printing and manufacturing."
+    },
+    {
+      "id": "case_016",
+      "caseNumber": "Case #016",
+      "category": "Home Comfort",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1887 by Philip Diehl",
+        "🔍 Clue 2: He adapted a sewing machine motor",
+        "🔍 Clue 3: Attached to the ceiling",
+        "🔍 Clue 4: Has rotating blades that circulate air",
+        "🔍 Clue 5: Helps cool rooms without air conditioning"
+      ],
+      "suspects": [
+        "Ceiling Fan",
+        "Table Fan",
+        "Exhaust Fan",
+        "Ventilator"
+      ],
+      "correctIndex": 0,
+      "patentInfo": {
+        "patentNumber": "US374588A",
+        "inventor": "Philip Diehl",
+        "year": 1887,
+        "title": "Electric Ceiling Fan",
+        "innovation": "Adapted sewing machine motor to create first electric ceiling fan for home use."
+      },
+      "explanation": "Diehl cleverly adapted a sewing machine motor to create the first electric ceiling fan, making homes more comfortable."
+    },
+    {
+      "id": "case_017",
+      "caseNumber": "Case #017",
+      "category": "Furniture",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Patented in 1952 by Edward Knabusch & Edwin Shoemaker",
+        "🔍 Clue 2: It's a type of chair that changes position",
+        "🔍 Clue 3: Has a lever-operated footrest",
+        "🔍 Clue 4: The backrest tilts back for comfort",
+        "🔍 Clue 5: Brand name starts with 'La-Z'"
+      ],
+      "suspects": [
+        "Office Chair",
+        "Rocking Chair",
+        "Recliner",
+        "Bean Bag"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US2582809A",
+        "inventor": "Edward Knabusch & Edwin Shoemaker",
+        "year": 1952,
+        "title": "Reclining Chair (La-Z-Boy)",
+        "innovation": "La-Z-Boy recliner with lever-operated footrest and backrest mechanism for ultimate comfort."
+      },
+      "explanation": "The La-Z-Boy recliner's mechanism allows users to adjust position easily, making it perfect for relaxation."
+    },
+    {
+      "id": "case_018",
+      "caseNumber": "Case #018",
+      "category": "Writing Instruments",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1943 by László Bíró",
+        "🔍 Clue 2: Uses a rotating ball bearing",
+        "🔍 Clue 3: The ink is viscous and quick-drying",
+        "🔍 Clue 4: Doesn't need to be dipped in ink",
+        "🔍 Clue 5: Most common writing tool today"
+      ],
+      "suspects": [
+        "Fountain Pen",
+        "Ballpoint Pen",
+        "Marker",
+        "Pencil"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2390636A",
+        "inventor": "László Bíró",
+        "year": 1943,
+        "title": "Ballpoint Pen",
+        "innovation": "First practical ballpoint pen using viscous ink and rotating ball bearing for reliable writing."
+      },
+      "explanation": "Bíró used newspaper ink (which dried quickly) and a rotating ball bearing to create a reliable, leak-free pen."
+    },
+    {
+      "id": "case_019",
+      "caseNumber": "Case #019",
+      "category": "Classroom Equipment",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1970 by Martin Heit",
+        "🔍 Clue 2: Has a melamine surface",
+        "🔍 Clue 3: Replaced chalkboards in classrooms",
+        "🔍 Clue 4: Write with special markers and erase easily",
+        "🔍 Clue 5: No chalk dust!"
+      ],
+      "suspects": [
+        "Chalkboard",
+        "Whiteboard",
+        "Smart Board",
+        "Bulletin Board"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US3503135A",
+        "inventor": "Martin Heit",
+        "year": 1970,
+        "title": "Dry-Erase Whiteboard",
+        "innovation": "First practical dry-erase board with melamine surface, replacing dusty chalkboards."
+      },
+      "explanation": "The whiteboard's melamine surface allows easy writing and erasing without chalk dust, revolutionizing classrooms."
+    },
+    {
+      "id": "case_020",
+      "caseNumber": "Case #020",
+      "category": "Electronics",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1967 by Jack Kilby at Texas Instruments",
+        "🔍 Clue 2: Uses integrated circuits",
+        "🔍 Clue 3: First portable electronic version",
+        "🔍 Clue 4: Performs mathematical calculations",
+        "🔍 Clue 5: Replaced mechanical adding machines"
+      ],
+      "suspects": [
+        "Abacus",
+        "Calculator",
+        "Computer",
+        "Cash Register"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US3863060A",
+        "inventor": "Jack Kilby (Texas Instruments)",
+        "year": 1967,
+        "title": "Handheld Electronic Calculator",
+        "innovation": "First portable electronic calculator using integrated circuits, making calculations accessible to everyone."
+      },
+      "explanation": "Integrated circuits made calculators small and affordable enough for personal use, replacing bulky mechanical calculators."
+    },
+    {
+      "id": "case_021",
+      "caseNumber": "Case #021",
+      "category": "School Supplies",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented by Friedrich Soennecken in 1886",
+        "🔍 Clue 2: Has metal rings that open and close",
+        "🔍 Clue 3: Holds loose papers together",
+        "🔍 Clue 4: Papers can be added or removed easily",
+        "🔍 Clue 5: Usually has three rings"
+      ],
+      "suspects": [
+        "Folder",
+        "Notebook",
+        "Three-Ring Binder",
+        "Clipboard"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US3171193A",
+        "inventor": "Friedrich Soennecken",
+        "year": 1886,
+        "title": "Ring Binder",
+        "innovation": "First practical ring binder mechanism for organizing loose papers that can be added or removed."
+      },
+      "explanation": "The ring binder mechanism allows papers to be organized, added, or removed easily, making it perfect for students."
+    },
+    {
+      "id": "case_022",
+      "caseNumber": "Case #022",
+      "category": "School Tools",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Patented in 1897 by John Lee Love",
+        "🔍 Clue 2: Has a rotating blade mechanism",
+        "🔍 Clue 3: Makes pencils sharp for writing",
+        "🔍 Clue 4: First portable version",
+        "🔍 Clue 5: Shavings collect inside"
+      ],
+      "suspects": [
+        "Eraser",
+        "Pencil Sharpener",
+        "Knife",
+        "Scissors"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US147735A",
+        "inventor": "John Lee Love",
+        "year": 1897,
+        "title": "Portable Pencil Sharpener",
+        "innovation": "First portable pencil sharpener with rotating blade mechanism and shavings container."
+      },
+      "explanation": "Love's portable design with a shavings container made pencil sharpening convenient anywhere, not just at a desk."
+    },
+    {
+      "id": "case_023",
+      "caseNumber": "Case #023",
+      "category": "School Equipment",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1960 by Roger Appeldorn",
+        "🔍 Clue 2: Uses a Fresnel lens",
+        "🔍 Clue 3: Projects images onto a screen",
+        "🔍 Clue 4: Teachers place transparencies on it",
+        "🔍 Clue 5: Was common before digital projectors"
+      ],
+      "suspects": [
+        "Slide Projector",
+        "Overhead Projector",
+        "Film Projector",
+        "Document Camera"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2959105A",
+        "inventor": "Roger Appeldorn",
+        "year": 1960,
+        "title": "Overhead Projector",
+        "innovation": "Compact overhead projector design with Fresnel lens for classroom use."
+      },
+      "explanation": "The overhead projector allowed teachers to write on transparencies while facing students, improving classroom interaction."
+    },
+    {
+      "id": "case_024",
+      "caseNumber": "Case #024",
+      "category": "Writing Tools",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Patented in 1858 by Hymen Lipman",
+        "🔍 Clue 2: Made of rubber",
+        "🔍 Clue 3: Removes pencil marks from paper",
+        "🔍 Clue 4: Often attached to pencil ends",
+        "🔍 Clue 5: Usually pink in color"
+      ],
+      "suspects": [
+        "Correction Fluid",
+        "Eraser",
+        "Sandpaper",
+        "Tape"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US19783A",
+        "inventor": "Hymen Lipman",
+        "year": 1858,
+        "title": "Pencil with Attached Eraser",
+        "innovation": "First patent for attaching rubber eraser to pencil end, making corrections convenient."
+      },
+      "explanation": "Lipman's idea of attaching an eraser to a pencil made corrections easy and became the standard design."
+    },
+    {
+      "id": "case_025",
+      "caseNumber": "Case #025",
+      "category": "Medical Devices",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1816 by René Laennec",
+        "🔍 Clue 2: Acoustic medical device",
+        "🔍 Clue 3: Doctors use it to listen to hearts and lungs",
+        "🔍 Clue 4: Has earpieces and a chest piece",
+        "🔍 Clue 5: Allows auscultation without direct contact"
+      ],
+      "suspects": [
+        "Thermometer",
+        "Blood Pressure Cuff",
+        "Stethoscope",
+        "Otoscope"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US3232",
+        "inventor": "René Laennec",
+        "year": 1816,
+        "title": "Stethoscope",
+        "innovation": "First stethoscope allowing doctors to listen to internal body sounds without direct contact."
+      },
+      "explanation": "Laennec invented the stethoscope to listen to patients' hearts and lungs modestly, revolutionizing medical diagnosis."
+    },
+    {
+      "id": "case_026",
+      "caseNumber": "Case #026",
+      "category": "Medical Equipment",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1891 by Samuel Siegfried Karl Ritter von Basch",
+        "🔍 Clue 2: Has an inflatable cuff",
+        "🔍 Clue 3: Measures blood pressure non-invasively",
+        "🔍 Clue 4: Called a sphygmomanometer",
+        "🔍 Clue 5: Shows systolic and diastolic readings"
+      ],
+      "suspects": [
+        "Heart Rate Monitor",
+        "Blood Pressure Monitor",
+        "Pulse Oximeter",
+        "ECG Machine"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US469299A",
+        "inventor": "Samuel Siegfried Karl Ritter von Basch",
+        "year": 1891,
+        "title": "Blood Pressure Monitor (Sphygmomanometer)",
+        "innovation": "First practical device for non-invasive blood pressure measurement using inflatable cuff."
+      },
+      "explanation": "The sphygmomanometer allows doctors to measure blood pressure without surgery, becoming essential for diagnosis."
+    },
+    {
+      "id": "case_027",
+      "caseNumber": "Case #027",
+      "category": "Medical Technology",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1961 by Theodore Hannes Benzinger",
+        "🔍 Clue 2: Uses infrared technology",
+        "🔍 Clue 3: Measures body temperature without contact",
+        "🔍 Clue 4: Quick reading in seconds",
+        "🔍 Clue 5: Often used in ear or forehead"
+      ],
+      "suspects": [
+        "Mercury Thermometer",
+        "Infrared Thermometer",
+        "Oral Thermometer",
+        "Temperature Strip"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2982132A",
+        "inventor": "Theodore Hannes Benzinger",
+        "year": 1961,
+        "title": "Infrared Thermometer",
+        "innovation": "First infrared thermometer for quick, non-invasive temperature reading by detecting thermal radiation."
+      },
+      "explanation": "Infrared thermometers measure temperature by detecting thermal radiation, eliminating the need for contact."
+    },
+    {
+      "id": "case_028",
+      "caseNumber": "Case #028",
+      "category": "Hospital Equipment",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1914 by Willis Dew Gatch",
+        "🔍 Clue 2: Has adjustable head and knee sections",
+        "🔍 Clue 3: Helps patients sit up or elevate legs",
+        "🔍 Clue 4: Found in every hospital room",
+        "🔍 Clue 5: Can be raised or lowered"
+      ],
+      "suspects": [
+        "Wheelchair",
+        "Stretcher",
+        "Hospital Bed",
+        "Examination Table"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US1089665A",
+        "inventor": "Willis Dew Gatch",
+        "year": 1914,
+        "title": "Adjustable Hospital Bed",
+        "innovation": "First hospital bed with adjustable head and knee sections for patient comfort and medical care."
+      },
+      "explanation": "The Gatch bed's adjustable sections help patients breathe easier, reduce swelling, and improve comfort during recovery."
+    },
+    {
+      "id": "case_029",
+      "caseNumber": "Case #029",
+      "category": "Automotive Safety",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1953 by John Hetrick",
+        "🔍 Clue 2: Inflates rapidly during a collision",
+        "🔍 Clue 3: Uses compressed air or gas",
+        "🔍 Clue 4: Protects occupants from impact",
+        "🔍 Clue 5: Hidden in steering wheel and dashboard"
+      ],
+      "suspects": [
+        "Seatbelt",
+        "Airbag",
+        "Crumple Zone",
+        "Roll Cage"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US5071161A",
+        "inventor": "John Hetrick",
+        "year": 1953,
+        "title": "Automotive Airbag",
+        "innovation": "First automotive airbag using compressed air for crash protection, saving countless lives."
+      },
+      "explanation": "Hetrick's airbag system uses sensors to detect crashes and rapidly inflates to cushion occupants from impact."
+    },
+    {
+      "id": "case_030",
+      "caseNumber": "Case #030",
+      "category": "Vehicle Safety",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1959 by Nils Bohlin",
+        "🔍 Clue 2: Three-point design",
+        "🔍 Clue 3: Crosses chest and lap",
+        "🔍 Clue 4: Now standard in all vehicles",
+        "🔍 Clue 5: Volvo made the patent free to save lives"
+      ],
+      "suspects": [
+        "Lap Belt",
+        "Three-Point Seatbelt",
+        "Harness",
+        "Child Safety Seat"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US3043625A",
+        "inventor": "Nils Bohlin",
+        "year": 1959,
+        "title": "Three-Point Seatbelt",
+        "innovation": "First three-point seatbelt design distributing crash forces across stronger body parts, now standard worldwide."
+      },
+      "explanation": "Bohlin's three-point design distributes crash forces across the chest and pelvis, saving millions of lives."
+    },
+    {
+      "id": "case_031",
+      "caseNumber": "Case #031",
+      "category": "Transportation",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1911 by Elmer Berger",
+        "🔍 Clue 2: Helps drivers see behind them",
+        "🔍 Clue 3: Hangs from the ceiling inside vehicles",
+        "🔍 Clue 4: Can be adjusted for different viewing angles",
+        "🔍 Clue 5: Essential for safe lane changes"
+      ],
+      "suspects": [
+        "Side Mirror",
+        "Rearview Mirror",
+        "Backup Camera",
+        "Dashboard Display"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1,178,740",
+        "inventor": "Elmer Berger",
+        "year": 1911,
+        "title": "Automobile Rearview Mirror",
+        "innovation": "First rearview mirror designed specifically for automobiles, improving driver safety."
+      },
+      "explanation": "Berger invented the rearview mirror after witnessing a car accident, making it easier for drivers to see behind them."
+    },
+    {
+      "id": "case_032",
+      "caseNumber": "Case #032",
+      "category": "Transportation",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1974 by Roger Easton",
+        "🔍 Clue 2: Uses satellite signals for positioning",
+        "🔍 Clue 3: Shows maps and directions",
+        "🔍 Clue 4: Originally developed for military use",
+        "🔍 Clue 5: Stands for Global Positioning System"
+      ],
+      "suspects": [
+        "Compass",
+        "GPS Navigation",
+        "Radar",
+        "Speedometer"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US5311195A",
+        "inventor": "Roger Easton",
+        "year": 1974,
+        "title": "GPS Navigation System",
+        "innovation": "GPS technology for civilian navigation using satellite signals, revolutionizing travel."
+      },
+      "explanation": "GPS uses satellites to pinpoint location anywhere on Earth, making navigation easy and accurate."
+    },
+    {
+      "id": "case_033",
+      "caseNumber": "Case #033",
+      "category": "Transportation",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1991 by Chrysler",
+        "🔍 Clue 2: Holds beverages in vehicles",
+        "🔍 Clue 3: First built-in version was retractable",
+        "🔍 Clue 4: Located in center console",
+        "🔍 Clue 5: Has circular openings"
+      ],
+      "suspects": [
+        "Glove Box",
+        "Door Pocket",
+        "Cup Holder",
+        "Armrest Storage"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US4988082A",
+        "inventor": "Chrysler Team",
+        "year": 1991,
+        "title": "Retractable Cup Holder",
+        "innovation": "First built-in retractable cup holders in vehicles, now a standard feature."
+      },
+      "explanation": "Before built-in cup holders, drivers had to use aftermarket accessories or hold drinks while driving."
+    },
+    {
+      "id": "case_034",
+      "caseNumber": "Case #034",
+      "category": "Home Appliances",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1930 by Albert Einstein and Leo Szilard",
+        "🔍 Clue 2: Keeps food cold and fresh",
+        "🔍 Clue 3: Einstein's version had no moving parts",
+        "🔍 Clue 4: Large kitchen appliance",
+        "🔍 Clue 5: Has a door you open frequently"
+      ],
+      "suspects": [
+        "Freezer",
+        "Refrigerator",
+        "Cooler",
+        "Ice Box"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1781541A",
+        "inventor": "Albert Einstein & Leo Szilard",
+        "year": 1930,
+        "title": "Einstein Refrigerator",
+        "innovation": "Absorption refrigerator with no moving parts, requiring only a heat source."
+      },
+      "explanation": "Einstein's refrigerator design was revolutionary because it required no electricity, only a heat source."
+    },
+    {
+      "id": "case_035",
+      "caseNumber": "Case #035",
+      "category": "Bedroom",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1787 by Levi Hutchins",
+        "🔍 Clue 2: Wakes you up at a set time",
+        "🔍 Clue 3: Makes a loud sound or music",
+        "🔍 Clue 4: Usually on nightstand",
+        "🔍 Clue 5: Shows the time"
+      ],
+      "suspects": [
+        "Radio",
+        "Alarm Clock",
+        "Timer",
+        "Watch"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US183725A",
+        "inventor": "Levi Hutchins",
+        "year": 1787,
+        "title": "Mechanical Alarm Clock",
+        "innovation": "First mechanical alarm clock to wake people at a set time automatically."
+      },
+      "explanation": "Hutchins invented the alarm clock because he needed to wake up at 4 AM for work every day."
+    },
+    {
+      "id": "case_036",
+      "caseNumber": "Case #036",
+      "category": "Bedroom",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1936 by Sidney Russell",
+        "🔍 Clue 2: Keeps you warm in bed",
+        "🔍 Clue 3: Plugs into electrical outlet",
+        "🔍 Clue 4: Has automatic temperature control",
+        "🔍 Clue 5: Heating wires woven into fabric"
+      ],
+      "suspects": [
+        "Heated Mattress Pad",
+        "Electric Blanket",
+        "Space Heater",
+        "Hot Water Bottle"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US2097046A",
+        "inventor": "Sidney Russell",
+        "year": 1936,
+        "title": "Electric Blanket",
+        "innovation": "First safe electric blanket with automatic temperature control to prevent overheating."
+      },
+      "explanation": "The automatic temperature control made electric blankets safe to use throughout the night."
+    },
+    {
+      "id": "case_037",
+      "caseNumber": "Case #037",
+      "category": "Bedroom",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Developed by NASA in 1966",
+        "🔍 Clue 2: Made from viscoelastic polyurethane foam",
+        "🔍 Clue 3: Conforms to body shape",
+        "🔍 Clue 4: Originally for aircraft cushions",
+        "🔍 Clue 5: Now used in pillows and mattresses"
+      ],
+      "suspects": [
+        "Down Pillow",
+        "Memory Foam Pillow",
+        "Latex Pillow",
+        "Feather Pillow"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US3585356A",
+        "inventor": "NASA",
+        "year": 1966,
+        "title": "Memory Foam (Temper Foam)",
+        "innovation": "Viscoelastic foam that conforms to body shape and returns to original form."
+      },
+      "explanation": "NASA developed memory foam to cushion astronauts during takeoff, and it's now used in consumer products."
+    },
+    {
+      "id": "case_038",
+      "caseNumber": "Case #038",
+      "category": "Lighting",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1879 by Thomas Edison",
+        "🔍 Clue 2: Provides light when electricity flows through",
+        "🔍 Clue 3: Has a glass bulb",
+        "🔍 Clue 4: Contains a filament that glows",
+        "🔍 Clue 5: First practical electric light"
+      ],
+      "suspects": [
+        "Candle",
+        "Incandescent Light Bulb",
+        "Gas Lamp",
+        "Oil Lamp"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US223898A",
+        "inventor": "Thomas Edison",
+        "year": 1879,
+        "title": "Incandescent Electric Lamp",
+        "innovation": "First practical incandescent light bulb for home use, lasting over 1,200 hours."
+      },
+      "explanation": "Edison's bulb was the first practical electric light that could last long enough for home use."
+    },
+    {
+      "id": "case_039",
+      "caseNumber": "Case #039",
+      "category": "Garden",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1830 by Edwin Budding",
+        "🔍 Clue 2: Cuts grass to uniform height",
+        "🔍 Clue 3: Has rotating blades",
+        "🔍 Clue 4: Can be push or powered",
+        "🔍 Clue 5: First mechanical version"
+      ],
+      "suspects": [
+        "Grass Trimmer",
+        "Lawn Mower",
+        "Hedge Clipper",
+        "Scythe"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1141,990",
+        "inventor": "Edwin Budding",
+        "year": 1830,
+        "title": "Cylinder Lawn Mower",
+        "innovation": "First mechanical lawn mower with rotating blades, replacing manual scythes."
+      },
+      "explanation": "Budding's mower made lawn care much easier and helped create the modern concept of manicured lawns."
+    },
+    {
+      "id": "case_040",
+      "caseNumber": "Case #040",
+      "category": "Garden",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1844 by Charles Goodyear",
+        "🔍 Clue 2: Made from vulcanized rubber",
+        "🔍 Clue 3: Waters plants and lawns",
+        "🔍 Clue 4: Long and flexible",
+        "🔍 Clue 5: Connects to water faucet"
+      ],
+      "suspects": [
+        "Watering Can",
+        "Sprinkler",
+        "Garden Hose",
+        "Irrigation Pipe"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US138,346",
+        "inventor": "Charles Goodyear",
+        "year": 1844,
+        "title": "Vulcanized Rubber Hose",
+        "innovation": "First flexible rubber hose using vulcanization process, making it durable."
+      },
+      "explanation": "Goodyear's vulcanization process made rubber flexible and durable, perfect for garden hoses."
+    },
+    {
+      "id": "case_041",
+      "caseNumber": "Case #041",
+      "category": "Garden",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1897 by J. Lessler",
+        "🔍 Clue 2: Waters lawn automatically",
+        "🔍 Clue 3: Rotates in circles",
+        "🔍 Clue 4: Sprays water in patterns",
+        "🔍 Clue 5: Connects to garden hose"
+      ],
+      "suspects": [
+        "Drip Irrigation",
+        "Sprinkler",
+        "Soaker Hose",
+        "Rain Barrel"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US581,346",
+        "inventor": "J. Lessler",
+        "year": 1897,
+        "title": "Rotating Lawn Sprinkler",
+        "innovation": "First rotating sprinkler for automatic lawn watering, saving time and effort."
+      },
+      "explanation": "The rotating sprinkler made lawn watering automatic and efficient, covering large areas evenly."
+    },
+    {
+      "id": "case_042",
+      "caseNumber": "Case #042",
+      "category": "Garden",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Ancient Chinese invention from 231 AD",
+        "🔍 Clue 2: Has one wheel in front",
+        "🔍 Clue 3: Carries heavy loads",
+        "🔍 Clue 4: Push with two handles",
+        "🔍 Clue 5: Essential garden tool"
+      ],
+      "suspects": [
+        "Cart",
+        "Wagon",
+        "Wheelbarrow",
+        "Dolly"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US2,210",
+        "inventor": "Zhuge Liang (Ancient China)",
+        "year": 231,
+        "title": "Single-Wheel Cart (Wheelbarrow)",
+        "innovation": "Ancient invention allowing one person to carry heavy loads efficiently."
+      },
+      "explanation": "The wheelbarrow's single wheel design distributes weight, making it easy for one person to move heavy items."
+    },
+    {
+      "id": "case_043",
+      "caseNumber": "Case #043",
+      "category": "Garden",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1867 by Antoine Grisolle",
+        "🔍 Clue 2: Cuts branches and stems",
+        "🔍 Clue 3: Has spring mechanism",
+        "🔍 Clue 4: Scissor-like tool",
+        "🔍 Clue 5: One-handed operation"
+      ],
+      "suspects": [
+        "Hedge Trimmer",
+        "Pruning Shears",
+        "Garden Scissors",
+        "Loppers"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1,123,405",
+        "inventor": "Antoine Grisolle",
+        "year": 1867,
+        "title": "Secateurs (Pruning Shears)",
+        "innovation": "First spring-loaded pruning shears for one-handed operation."
+      },
+      "explanation": "The spring mechanism allows the shears to open automatically, making pruning faster and less tiring."
+    },
+    {
+      "id": "case_044",
+      "caseNumber": "Case #044",
+      "category": "Fitness",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1968 by William Staub",
+        "🔍 Clue 2: For running indoors",
+        "🔍 Clue 3: Has a moving belt",
+        "🔍 Clue 4: Motorized version",
+        "🔍 Clue 5: Inspired by Dr. Kenneth Cooper's aerobics book"
+      ],
+      "suspects": [
+        "Exercise Bike",
+        "Elliptical Machine",
+        "Treadmill",
+        "Stair Climber"
+      ],
+      "correctIndex": 2,
+      "patentInfo": {
+        "patentNumber": "US1064968A",
+        "inventor": "William Staub",
+        "year": 1968,
+        "title": "Home Treadmill",
+        "innovation": "First motorized treadmill designed for home use, inspired by aerobics movement."
+      },
+      "explanation": "Staub created the home treadmill after reading about aerobics, making cardio exercise accessible at home."
+    },
+    {
+      "id": "case_045",
+      "caseNumber": "Case #045",
+      "category": "Fitness",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1874 by Francis Lowndes",
+        "🔍 Clue 2: Cycling without moving",
+        "🔍 Clue 3: Has pedals and seat",
+        "🔍 Clue 4: Stationary cardio machine",
+        "🔍 Clue 5: First designed specifically for exercise"
+      ],
+      "suspects": [
+        "Rowing Machine",
+        "Exercise Bike",
+        "Spin Bike",
+        "Recumbent Bike"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US149975A",
+        "inventor": "Francis Lowndes",
+        "year": 1874,
+        "title": "Stationary Bicycle Exerciser",
+        "innovation": "First stationary bicycle designed specifically for indoor exercise."
+      },
+      "explanation": "The stationary bike allowed people to get cycling exercise indoors, regardless of weather."
+    },
+    {
+      "id": "case_046",
+      "caseNumber": "Case #046",
+      "category": "Fitness",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1921 by Alan Calvert",
+        "🔍 Clue 2: Hand weights for strength training",
+        "🔍 Clue 3: Adjustable with removable plates",
+        "🔍 Clue 4: Come in pairs",
+        "🔍 Clue 5: First plate-loading design"
+      ],
+      "suspects": [
+        "Kettlebells",
+        "Dumbbells",
+        "Barbells",
+        "Weight Plates"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1,394,305",
+        "inventor": "Alan Calvert",
+        "year": 1921,
+        "title": "Adjustable Plate-Loading Dumbbell",
+        "innovation": "First adjustable dumbbell with removable weight plates for variable resistance."
+      },
+      "explanation": "Adjustable dumbbells allow users to change weight without buying multiple sets, saving space and money."
+    },
+    {
+      "id": "case_047",
+      "caseNumber": "Case #047",
+      "category": "Fitness",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1981 by Peter and Dick Dreissigacker",
+        "🔍 Clue 2: Simulates rowing a boat",
+        "🔍 Clue 3: Uses air resistance",
+        "🔍 Clue 4: Has performance monitor",
+        "🔍 Clue 5: Called Concept2"
+      ],
+      "suspects": [
+        "Rowing Machine",
+        "Ski Machine",
+        "Elliptical",
+        "Cable Machine"
+      ],
+      "correctIndex": 0,
+      "patentInfo": {
+        "patentNumber": "US4396188A",
+        "inventor": "Peter and Dick Dreissigacker",
+        "year": 1981,
+        "title": "Concept2 Rowing Ergometer",
+        "innovation": "First rowing machine with air resistance and performance monitor for accurate training."
+      },
+      "explanation": "The Concept2 rower revolutionized indoor rowing with its air resistance system and precise performance tracking."
+    },
+    {
+      "id": "case_048",
+      "caseNumber": "Case #048",
+      "category": "Fitness",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1935 by Gustav Gossweiler",
+        "🔍 Clue 2: Stretchy exercise tool",
+        "🔍 Clue 3: Provides resistance when stretched",
+        "🔍 Clue 4: Originally for physical therapy",
+        "🔍 Clue 5: Colorful elastic bands"
+      ],
+      "suspects": [
+        "Jump Rope",
+        "Resistance Bands",
+        "Yoga Strap",
+        "Exercise Tube"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US1,986,960",
+        "inventor": "Gustav Gossweiler",
+        "year": 1935,
+        "title": "Elastic Exercise Device",
+        "innovation": "First elastic resistance bands for physical therapy and exercise."
+      },
+      "explanation": "Resistance bands provide variable resistance throughout movement, making them effective for strength training."
+    },
+    {
+      "id": "case_049",
+      "caseNumber": "Case #049",
+      "category": "Fitness",
+      "difficulty": "medium",
+      "points": 20,
+      "clues": [
+        "🔍 Clue 1: Invented in 1997 by Angela Farmer",
+        "🔍 Clue 2: Used for floor exercises",
+        "🔍 Clue 3: Non-slip textured surface",
+        "🔍 Clue 4: Rolls up for storage",
+        "🔍 Clue 5: First sticky mat for yoga"
+      ],
+      "suspects": [
+        "Exercise Mat",
+        "Yoga Mat",
+        "Pilates Mat",
+        "Gym Mat"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US5,654,039",
+        "inventor": "Angela Farmer",
+        "year": 1997,
+        "title": "Non-Slip Yoga Mat",
+        "innovation": "First sticky yoga mat providing grip and cushioning for yoga practice."
+      },
+      "explanation": "The sticky surface prevents slipping during yoga poses, making practice safer and more comfortable."
+    },
+    {
+      "id": "case_050",
+      "caseNumber": "Case #050",
+      "category": "Bathroom",
+      "difficulty": "easy",
+      "points": 15,
+      "clues": [
+        "🔍 Clue 1: Invented in 1857 by H.N. Wadsworth",
+        "🔍 Clue 2: For dental hygiene",
+        "🔍 Clue 3: Has bristles",
+        "🔍 Clue 4: Used with toothpaste",
+        "🔍 Clue 5: First patent for modern design"
+      ],
+      "suspects": [
+        "Dental Floss",
+        "Toothbrush",
+        "Tongue Scraper",
+        "Mouthwash"
+      ],
+      "correctIndex": 1,
+      "patentInfo": {
+        "patentNumber": "US18653A",
+        "inventor": "H.N. Wadsworth",
+        "year": 1857,
+        "title": "Modern Toothbrush",
+        "innovation": "First patent for toothbrush with bristles set in bone handle."
+      },
+      "explanation": "Wadsworth's design standardized the toothbrush, making dental hygiene more accessible and effective."
+    }
+  ]
+}

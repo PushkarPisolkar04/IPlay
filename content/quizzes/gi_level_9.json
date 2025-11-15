@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_9",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_9_q1",
+      "question": "What is the typical premium pricing for GI products?",
+      "options": [
+        "5-10% higher",
+        "20-300% higher",
+        "Same as non-GI",
+        "Lower than non-GI"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI products typically command 20-300% premium pricing due to their authenticity and quality.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q2",
+      "question": "How many people benefit from GI protection in India?",
+      "options": [
+        "100,000+",
+        "1 million+",
+        "5+ million",
+        "10+ million"
+      ],
+      "correctIndex": 2,
+      "explanation": "Over 5 million people in India benefit from GI protection across various sectors.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q3",
+      "question": "How does GI contribute to women empowerment?",
+      "options": [
+        "It doesn't",
+        "Many GI crafts are traditionally practiced by women, providing income",
+        "Only men benefit",
+        "It restricts women"
+      ],
+      "correctIndex": 1,
+      "explanation": "Many GI crafts like Madhubani painting and textile weaving are practiced by women, providing economic empowerment.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q4",
+      "question": "What is ODOP?",
+      "options": [
+        "A tax scheme",
+        "One District One Product initiative",
+        "An export policy",
+        "A quality standard"
+      ],
+      "correctIndex": 1,
+      "explanation": "ODOP (One District One Product) is a government initiative to promote unique products from each district.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q5",
+      "question": "How does GI help preserve traditional skills?",
+      "options": [
+        "It doesn't",
+        "By providing economic incentive to continue traditional practices",
+        "By restricting modern methods",
+        "By increasing taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides economic incentives and market value, encouraging artisans to preserve traditional skills.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q6",
+      "question": "What was the impact on Pochampally Ikat weavers after GI?",
+      "options": [
+        "No change",
+        "Increased income, market recognition, and revival of craft",
+        "Decreased income",
+        "Loss of jobs"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protection led to increased income, better market recognition, and revival of the Pochampally Ikat craft.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q7",
+      "question": "How does GI support rural development?",
+      "options": [
+        "It doesn't",
+        "By providing premium income and employment in rural areas",
+        "By moving people to cities",
+        "By industrializing villages"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides premium income and employment opportunities, supporting rural livelihoods and development.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q8",
+      "question": "What is the economic benefit of GI for farmers?",
+      "options": [
+        "Lower costs",
+        "Premium pricing and better market access",
+        "Tax exemption",
+        "Free inputs"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI helps farmers get premium prices and better market access for their authentic regional products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q9",
+      "question": "How does GI promote sustainable development?",
+      "options": [
+        "It doesn't",
+        "By encouraging traditional, often eco-friendly practices",
+        "By promoting chemicals",
+        "By increasing industrialization"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI encourages traditional practices which are often more sustainable and eco-friendly.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q10",
+      "question": "What role does GI play in cultural preservation?",
+      "options": [
+        "No role",
+        "Protects traditional knowledge and cultural heritage",
+        "Destroys culture",
+        "Modernizes everything"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI protects traditional knowledge, crafts, and cultural heritage by providing economic value.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q11",
+      "question": "How many women are involved in Madhubani painting?",
+      "options": [
+        "Hundreds",
+        "Thousands",
+        "Tens of thousands",
+        "None"
+      ],
+      "correctIndex": 2,
+      "explanation": "Tens of thousands of women in Bihar are involved in Madhubani painting, earning livelihoods.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q12",
+      "question": "What is the ODOP initiative's goal?",
+      "options": [
+        "To increase taxes",
+        "To promote unique products from each district for economic development",
+        "To restrict production",
+        "To import products"
+      ],
+      "correctIndex": 1,
+      "explanation": "ODOP aims to promote unique products from each district to boost local economies and preserve traditions.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q13",
+      "question": "How does GI prevent migration from rural areas?",
+      "options": [
+        "It doesn't",
+        "By providing sustainable livelihoods in villages",
+        "By restricting movement",
+        "By force"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides sustainable livelihoods in rural areas, reducing the need for migration to cities.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q14",
+      "question": "What happened to Pochampally weavers' income after GI?",
+      "options": [
+        "Decreased",
+        "Increased significantly (2-3 times)",
+        "No change",
+        "Became zero"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pochampally weavers' income increased 2-3 times after GI protection due to premium pricing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q15",
+      "question": "How does GI help in skill transmission?",
+      "options": [
+        "It doesn't",
+        "By making traditional skills economically viable, encouraging younger generations",
+        "By restricting learning",
+        "By promoting machines"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI makes traditional skills economically viable, encouraging younger generations to learn them.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q16",
+      "question": "What is the multiplier effect of GI?",
+      "options": [
+        "No effect",
+        "Benefits extend to related industries like tourism, packaging, transport",
+        "Only affects producers",
+        "Negative effect"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI benefits extend to related industries like tourism, packaging, and transportation, creating a multiplier effect.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q17",
+      "question": "How does GI support artisan communities?",
+      "options": [
+        "It doesn't",
+        "By providing market recognition, premium pricing, and protection from fakes",
+        "By restricting their work",
+        "By increasing costs"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides market recognition, premium pricing, and protects artisans from fake products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q18",
+      "question": "What is the social impact of GI?",
+      "options": [
+        "No impact",
+        "Improved livelihoods, community pride, and cultural preservation",
+        "Negative impact",
+        "Only economic impact"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI has positive social impacts including improved livelihoods, community pride, and cultural preservation.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q19",
+      "question": "How does GI help in poverty alleviation?",
+      "options": [
+        "It doesn't",
+        "By providing premium income to rural producers and artisans",
+        "By increasing poverty",
+        "By restricting income"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI helps alleviate poverty by providing premium income opportunities to rural producers and artisans.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q20",
+      "question": "What is the environmental benefit of GI?",
+      "options": [
+        "No benefit",
+        "Encourages traditional, sustainable practices",
+        "Increases pollution",
+        "Promotes chemicals"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI encourages traditional practices which are often more sustainable and environmentally friendly.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q21",
+      "question": "How does GI contribute to tourism?",
+      "options": [
+        "It doesn't",
+        "GI products attract tourists interested in authentic regional products",
+        "It reduces tourism",
+        "It restricts travel"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI products and their regions attract tourists seeking authentic cultural and culinary experiences.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q22",
+      "question": "What was the key transformation in Pochampally?",
+      "options": [
+        "Industrialization",
+        "Revival of traditional weaving with better incomes",
+        "Abandonment of weaving",
+        "Migration to cities"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI led to revival of traditional Ikat weaving in Pochampally with significantly better incomes for weavers.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q23",
+      "question": "How does GI empower producer associations?",
+      "options": [
+        "It doesn't",
+        "By giving them collective bargaining power and market recognition",
+        "By weakening them",
+        "By dissolving them"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI gives producer associations collective bargaining power and stronger market recognition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_9_q24",
+      "question": "What is the long-term benefit of GI for communities?",
+      "options": [
+        "No benefit",
+        "Sustainable livelihoods and preservation of cultural identity",
+        "Loss of identity",
+        "Forced modernization"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI provides sustainable livelihoods while preserving cultural identity and traditional practices.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_9_q25",
+      "question": "How does ODOP link with GI?",
+      "options": [
+        "No connection",
+        "ODOP promotes district products, many of which are GI-protected",
+        "They conflict",
+        "ODOP replaces GI"
+      ],
+      "correctIndex": 1,
+      "explanation": "ODOP promotes unique district products, many of which have or can obtain GI protection.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

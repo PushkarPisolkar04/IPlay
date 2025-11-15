@@ -1,0 +1,32 @@
+{
+  "id": "copyright_level_4",
+  "realmId": "realm_copyright",
+  "levelNumber": 4,
+  "name": "The Author's Special Rights (Moral Rights)",
+  "description": "Copyright isn't just about money. It's also about respect. Learn about the author's 'Moral Rights'.",
+  "summary": "Discover the two special rights that stay with an author even after they sell their work: the right to be credited (Paternity) and the right to protect their work's honor (Integrity).",
+  "videoUrl": "http://www.youtube.com/watch?v=XBRDDuICHXo",
+  "videoDuration": 191,
+  "content": "## The Author's Special Rights (Moral Rights)\n\nIn the last level, we learned about **Economic Rights**—the rights that let a creator make money (copy, sell, adapt). \n\nNow, we'll look at a different set of rights that are personal to the author and are not about money. These are **Moral Rights**. In India, these are protected under Section 57 of the Copyright Act.\n\nThese rights are so important that an author *retains them* even after they have sold or licensed all their economic rights. You can't sell your moral rights.\n\nThere are two key moral rights:\n\n1. **Right of Paternity (or Attribution):**\n   This is simple: It is the right to **claim authorship** of the work. It's the right to have your name on your creation. If you write a book, you have the right to be named as the author, even if you've sold the publishing rights to a company.\n\n2. **Right of Integrity:**\n   This is the right to **prevent any distortion, mutilation, or modification** of the work that would be 'prejudicial to the author's honour or reputation'. This means no one can take your work and change it in a way that disrespects you or the original creation. This includes:\n   - Preventing someone from adding to or changing your work without permission.\n   - Stopping the work from being displayed in a way that harms your reputation.\n   - Preventing the complete destruction of your work (in some cases).\n\n### 💡 Level 4 Case Study: The Mural and the Government (Amar Nath Sehgal v. Union of India)\n\nThis is a landmark case for moral rights in India.\n\n* **The Work:** A prominent artist, Amar Nath Sehgal, was commissioned to create a massive, unique bronze mural for the Vigyan Bhavan convention centre in New Delhi in the 1960s.\n* **The Act:** Decades later, during renovations, government officials pulled the mural down, damaging it, and dumped it in a storeroom.\n* **The Lawsuit:** Mr. Sehgal didn't sue for money (he had already been paid). He sued for the 'violation of his moral rights'. He argued that the destruction and dumping of his art was a modification that was prejudicial to his honour and reputation. \n* **The Verdict:** The Court agreed! It ruled that even though the government *owned* the physical mural, the author's moral rights were violated. The government was ordered to apologize and return the damaged mural to him.\n\nThis case proves that even if you sell your art, you never sell your 'soul'—your moral rights to be credited and respected remain with you.",
+  "keyPoints": [
+    "Moral rights are separate from economic rights and are personal to the author.",
+    "Moral rights generally cannot be sold or given away.",
+    "The 'Right of Paternity' is the right to be credited as the author.",
+    "The 'Right of Integrity' is the right to protect your work from distortion or mutilation.",
+    "The Amar Nath Sehgal case confirmed that authors in India can protect their work's integrity even from its owner."
+  ],
+  "learningObjectives": [
+    "Define moral rights and how they differ from economic rights.",
+    "Identify and explain the 'Right of Paternity'.",
+    "Identify and explain the 'Right of Integrity'.",
+    "Analyze the Amar Nath Sehgal case to understand moral rights in practice."
+  ],
+  "difficulty": "Medium",
+  "xpReward": 200,
+  "estimatedMinutes": 10,
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:20:00Z"
+}

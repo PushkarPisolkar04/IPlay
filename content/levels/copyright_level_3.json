@@ -1,0 +1,32 @@
+{
+  "id": "copyright_level_3",
+  "realmId": "realm_copyright",
+  "levelNumber": 3,
+  "name": "Rights of the Creator (Economic Rights)",
+  "description": "It's not just about credit, it's about control. Learn the 'bundle of rights' that let creators earn money.",
+  "summary": "This level breaks down the 'economic rights' a creator holds. You'll learn about the power to copy, distribute, adapt, and perform a work, which forms the basis of the creative economy.",
+  "videoUrl": "http://www.youtube.com/watch?v=cza7dVWF8zE",
+  "videoDuration": 476,
+  "content": "## Rights of the Creator (Economic Rights)\n\nWhen you own a copyright, you don't just own one thing. You own a 'bundle of rights' that you can use, sell, or license to others. These are called **Economic Rights** because they are how a creator makes money.\n\nThe most important economic rights are:\n\n1. **The Right to Reproduce (The 'Copy' Right):**\n   This is the most basic right. It's the right to make copies of your work. This includes photocopying a book, ripping a CD, or even saving a digital photo to a new hard drive.\n\n2. **The Right to Distribute (The 'Sell' Right):**\n   This is the right to sell, rent, or lend copies of your work to the public. This is what allows a studio to sell DVDs or a music label to sell MP3s.\n\n3. **The Right to Create Derivative Works (The 'Adapt' Right):**\n   This is the right to create a new work *based on* your original. This is one of the most valuable rights. It includes:\n   - A movie based on a book (e.g., *The Hunger Games*).\n   - A song translation into another language.\n   - A sequel or prequel to a film.\n   - A 'remix' of a song.\n\n4. **The Right to Publicly Perform:**\n   This is the right to perform your work *in public*. This is critical for musicians, playwrights, and filmmakers. It covers a song being played on the radio, a play being staged in a theatre, or a movie being screened.\n\n5. **The Right to Publicly Display:**\n   This right is similar to performance but is for *visual* works. It gives an artist the right to control the first public display of their painting or photograph in a gallery.\n\n### 💡 Level 3 Case Study: J.K. Rowling & Harry Potter\n\nJ.K. Rowling didn't just sell *one* thing. She used her 'bundle of rights' to build an empire:\n\n* **Reproduction:** She licensed publishers to *print millions of copies* of her books.\n* **Distribution:** She licensed those publishers to *sell and distribute* the books worldwide.\n* **Derivative Works:** This was the big one. She licensed:\n    * Warner Bros. to make the *movies* (a film adaptation).\n    * Other companies to make *video games* and *merchandise*.\n    * The creators of the *'Harry Potter and the Cursed Child' play* (a sequel).\n* **Public Performance:** The rights licensed to Warner Bros. included the right to *screen the films* in theatres. \n\nShe controlled *each* of these rights separately, allowing her to earn income from many different streams all based on her one original 'Literary Work'.",
+  "keyPoints": [
+    "Economic rights are the 'bundle of rights' that let creators earn money.",
+    "The 'Right to Reproduce' means the right to make copies.",
+    "The 'Right to Distribute' means the right to sell or rent copies.",
+    "The 'Right to Create Derivative Works' is the right to adapt a work (e.g., make a movie from a book).",
+    "Public performance (for music/films) and public display (for art) are also key economic rights."
+  ],
+  "learningObjectives": [
+    "Identify the 5 main economic rights in the 'bundle of rights'.",
+    "Define what a 'derivative work' is and provide three examples.",
+    "Differentiate between the right to reproduce and the right to distribute.",
+    "Analyze a real-world case (like Harry Potter) and map its success to specific economic rights."
+  ],
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:10:00Z"
+}

@@ -1,0 +1,453 @@
+{
+  "version": "1.0.0",
+  "challenges": [
+    {
+      "id": "daily_challenge_1",
+      "title": "Copyright Basics Challenge",
+      "description": "Test your knowledge of copyright fundamentals",
+      "difficulty": "easy",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What does copyright primarily protect?",
+          "options": [
+            "Ideas and thoughts",
+            "Original creative expressions",
+            "Facts and data",
+            "Names and slogans"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Copyright protects original creative expressions, not ideas or facts."
+        },
+        {
+          "question": "When does copyright protection begin?",
+          "options": [
+            "After registration",
+            "After publication",
+            "Automatically upon creation",
+            "After 5 years of use"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Copyright protection begins automatically when a work is created."
+        },
+        {
+          "question": "Which is an example of copyright infringement?",
+          "options": [
+            "Using ideas from a book",
+            "Copying entire paragraphs without permission",
+            "Writing about the same topic",
+            "Creating similar but original content"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Copying substantial portions of protected work without permission is infringement."
+        },
+        {
+          "question": "What is 'fair use' in copyright?",
+          "options": [
+            "Using any work for free",
+            "Limited use for purposes like education or criticism",
+            "Copying with attribution",
+            "Using old works"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Fair use allows limited use of copyrighted material for specific purposes without permission."
+        },
+        {
+          "question": "How long does copyright typically last in India?",
+          "options": [
+            "20 years",
+            "50 years after author's death",
+            "60 years after author's death",
+            "Forever"
+          ],
+          "correctAnswer": 2,
+          "explanation": "In India, copyright generally lasts for 60 years after the author's death."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_2",
+      "title": "Trademark Essentials",
+      "description": "Challenge your trademark knowledge",
+      "difficulty": "easy",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What is a trademark?",
+          "options": [
+            "A type of patent",
+            "A sign that distinguishes goods or services",
+            "A copyright symbol",
+            "A business license"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A trademark is a distinctive sign that identifies and distinguishes goods or services."
+        },
+        {
+          "question": "Which can be registered as a trademark?",
+          "options": [
+            "Generic terms only",
+            "Descriptive words only",
+            "Distinctive words, logos, or symbols",
+            "Common phrases"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Distinctive and non-generic marks can be registered as trademarks."
+        },
+        {
+          "question": "What does the ® symbol indicate?",
+          "options": [
+            "Trademark application pending",
+            "Registered trademark",
+            "Copyright protection",
+            "Patent pending"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The ® symbol indicates a registered trademark."
+        },
+        {
+          "question": "How long does trademark registration last in India?",
+          "options": [
+            "5 years",
+            "10 years (renewable)",
+            "20 years",
+            "Lifetime"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Trademark registration in India lasts for 10 years and can be renewed indefinitely."
+        },
+        {
+          "question": "What is trademark infringement?",
+          "options": [
+            "Using similar ideas",
+            "Unauthorized use of a registered mark",
+            "Creating a new brand",
+            "Registering your own mark"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Trademark infringement is the unauthorized use of a mark that is identical or confusingly similar to a registered trademark."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_3",
+      "title": "Patent Fundamentals",
+      "description": "Test your understanding of patents",
+      "difficulty": "medium",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What does a patent protect?",
+          "options": [
+            "Creative expressions",
+            "Brand names",
+            "Inventions and innovations",
+            "Trade secrets"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Patents protect inventions and technological innovations."
+        },
+        {
+          "question": "How long does a patent last in India?",
+          "options": [
+            "10 years",
+            "15 years",
+            "20 years from filing date",
+            "Lifetime"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Patents in India are valid for 20 years from the date of filing."
+        },
+        {
+          "question": "What are the three requirements for patentability?",
+          "options": [
+            "New, useful, and expensive",
+            "Novel, non-obvious, and useful",
+            "Unique, profitable, and simple",
+            "Original, creative, and valuable"
+          ],
+          "correctAnswer": 1,
+          "explanation": "An invention must be novel, non-obvious, and useful to be patentable."
+        },
+        {
+          "question": "Which cannot be patented in India?",
+          "options": [
+            "A new machine",
+            "A software algorithm",
+            "A chemical process",
+            "A mechanical device"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Software algorithms and mathematical methods are generally not patentable in India."
+        },
+        {
+          "question": "What is a provisional patent application?",
+          "options": [
+            "A full patent grant",
+            "A temporary application to establish priority",
+            "A rejected application",
+            "An international patent"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A provisional application establishes an early filing date while allowing time to develop the invention."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_4",
+      "title": "Industrial Design Basics",
+      "description": "Learn about design protection",
+      "difficulty": "easy",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What does industrial design protect?",
+          "options": [
+            "The function of a product",
+            "The visual appearance of a product",
+            "The manufacturing process",
+            "The product name"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Industrial design protects the aesthetic or ornamental aspects of a product."
+        },
+        {
+          "question": "How long does design registration last in India?",
+          "options": [
+            "5 years",
+            "10 years (extendable to 15)",
+            "20 years",
+            "Lifetime"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Design registration in India lasts for 10 years, extendable by 5 more years."
+        },
+        {
+          "question": "Which is an example of industrial design?",
+          "options": [
+            "A software algorithm",
+            "The shape of a bottle",
+            "A brand name",
+            "A chemical formula"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The shape and appearance of products like bottles can be protected as industrial designs."
+        },
+        {
+          "question": "What makes a design registrable?",
+          "options": [
+            "It must be functional",
+            "It must be new and original",
+            "It must be expensive",
+            "It must be complex"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A design must be new and original to be registrable."
+        },
+        {
+          "question": "Can a design be both patented and registered?",
+          "options": [
+            "Yes, if it has both functional and aesthetic features",
+            "No, you must choose one",
+            "Only for software",
+            "Only for buildings"
+          ],
+          "correctAnswer": 0,
+          "explanation": "If a product has both functional innovations and aesthetic features, it may qualify for both patent and design protection."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_5",
+      "title": "Geographical Indications",
+      "description": "Explore GI protection",
+      "difficulty": "easy",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What is a Geographical Indication (GI)?",
+          "options": [
+            "A type of patent",
+            "A sign indicating a product's geographical origin",
+            "A trademark for locations",
+            "A copyright for maps"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A GI indicates that a product originates from a specific geographical location with special qualities."
+        },
+        {
+          "question": "Which is an example of a GI product in India?",
+          "options": [
+            "Generic rice",
+            "Darjeeling Tea",
+            "Any mango",
+            "Regular cotton"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Darjeeling Tea is a famous GI-protected product from India."
+        },
+        {
+          "question": "Who can use a GI tag?",
+          "options": [
+            "Anyone who pays a fee",
+            "Only the first applicant",
+            "Authorized producers from that region",
+            "Any manufacturer"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Only authorized producers from the specific geographical region can use the GI tag."
+        },
+        {
+          "question": "What does GI protection prevent?",
+          "options": [
+            "All competition",
+            "Unauthorized use of the geographical name",
+            "Export of products",
+            "Price changes"
+          ],
+          "correctAnswer": 1,
+          "explanation": "GI protection prevents unauthorized use of the geographical indication by producers outside the region."
+        },
+        {
+          "question": "How long does GI protection last?",
+          "options": [
+            "10 years",
+            "20 years",
+            "As long as the sign remains valid",
+            "50 years"
+          ],
+          "correctAnswer": 2,
+          "explanation": "GI protection lasts indefinitely as long as the sign continues to indicate the origin and quality."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_6",
+      "title": "Trade Secrets Protection",
+      "description": "Master trade secret concepts",
+      "difficulty": "medium",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "What is a trade secret?",
+          "options": [
+            "A registered patent",
+            "Confidential business information providing competitive advantage",
+            "A public trademark",
+            "A published invention"
+          ],
+          "correctAnswer": 1,
+          "explanation": "A trade secret is confidential information that gives a business a competitive edge."
+        },
+        {
+          "question": "Which is an example of a trade secret?",
+          "options": [
+            "A company's logo",
+            "Coca-Cola's formula",
+            "A published patent",
+            "A registered trademark"
+          ],
+          "correctAnswer": 1,
+          "explanation": "The Coca-Cola formula is one of the world's most famous trade secrets."
+        },
+        {
+          "question": "How long does trade secret protection last?",
+          "options": [
+            "10 years",
+            "20 years",
+            "As long as it remains secret",
+            "50 years"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Trade secret protection lasts indefinitely as long as the information remains confidential."
+        },
+        {
+          "question": "What is required to maintain trade secret protection?",
+          "options": [
+            "Annual registration",
+            "Reasonable efforts to maintain secrecy",
+            "Public disclosure",
+            "Patent filing"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Companies must take reasonable steps to keep the information confidential."
+        },
+        {
+          "question": "What happens if a trade secret is independently discovered?",
+          "options": [
+            "The original owner loses all rights",
+            "Both parties can use it",
+            "Legal action is required",
+            "It becomes public domain"
+          ],
+          "correctAnswer": 1,
+          "explanation": "If someone independently discovers the same information, they can use it without infringing."
+        }
+      ]
+    },
+    {
+      "id": "daily_challenge_7",
+      "title": "IPR Mixed Challenge",
+      "description": "Test your overall IPR knowledge",
+      "difficulty": "medium",
+      "xpReward": 50,
+      "questions": [
+        {
+          "question": "Which IPR protects the shape of a Coca-Cola bottle?",
+          "options": [
+            "Patent",
+            "Copyright",
+            "Industrial Design",
+            "Trade Secret"
+          ],
+          "correctAnswer": 2,
+          "explanation": "The distinctive shape of the Coca-Cola bottle is protected as an industrial design."
+        },
+        {
+          "question": "What protects a company's logo?",
+          "options": [
+            "Patent",
+            "Trademark",
+            "Copyright",
+            "Both B and C"
+          ],
+          "correctAnswer": 3,
+          "explanation": "A logo can be protected by both trademark (as a brand identifier) and copyright (as artistic work)."
+        },
+        {
+          "question": "Which IPR has the shortest protection period?",
+          "options": [
+            "Patent (20 years)",
+            "Copyright (60 years after death)",
+            "Trademark (renewable indefinitely)",
+            "Trade Secret (indefinite)"
+          ],
+          "correctAnswer": 0,
+          "explanation": "Patents have the shortest fixed protection period of 20 years."
+        },
+        {
+          "question": "What is the main difference between patent and trade secret?",
+          "options": [
+            "Cost of protection",
+            "Patents are public, trade secrets are confidential",
+            "Duration of protection",
+            "Type of innovation protected"
+          ],
+          "correctAnswer": 1,
+          "explanation": "Patents require public disclosure in exchange for limited monopoly, while trade secrets remain confidential."
+        },
+        {
+          "question": "Which IPR requires registration for protection in India?",
+          "options": [
+            "Copyright",
+            "Trade Secret",
+            "Patent",
+            "All of the above"
+          ],
+          "correctAnswer": 2,
+          "explanation": "Patents require registration. Copyright is automatic, and trade secrets don't require registration."
+        }
+      ]
+    }
+  ]
+}

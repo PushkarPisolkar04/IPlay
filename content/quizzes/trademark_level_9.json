@@ -1,0 +1,366 @@
+{
+  "levelId": "trademark_level_9",
+  "realmId": "realm_trademark",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T16:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "trademark_9_q1",
+      "question": "What is 'cybersquatting'?",
+      "options": [
+        "Registering multiple domains for SEO",
+        "Registering a domain in bad faith to profit from another’s trademark",
+        "Buying expired domains legally",
+        "Creating mirror websites"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cybersquatting means registering or using a domain name similar to a trademark with the intent to sell or misuse it.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q2",
+      "question": "Which body handles disputes for '.IN' domain names?",
+      "options": [
+        "WIPO Arbitration Center",
+        "ICANN",
+        "INDRP",
+        "NIXI Tribunal"
+      ],
+      "correctIndex": 2,
+      "explanation": "The INDRP (IN Domain Name Dispute Resolution Policy) handles disputes for .IN domain names under NIXI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q3",
+      "question": "The international system for resolving domain disputes is called:",
+      "options": [
+        "WIPO-DRP",
+        "ICANN Policy",
+        "UDRP",
+        "INADR"
+      ],
+      "correctIndex": 2,
+      "explanation": "UDRP (Uniform Domain-Name Dispute-Resolution Policy) is managed by WIPO for global domain disputes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q4",
+      "question": "Cybersquatters usually register domains to:",
+      "options": [
+        "Host genuine business",
+        "Increase brand recognition",
+        "Sell the domain at a higher price or mislead users",
+        "Avoid domain renewal fees"
+      ],
+      "correctIndex": 2,
+      "explanation": "Cybersquatters act in bad faith — often to sell domains back to brand owners or divert web traffic.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q5",
+      "question": "Keyword advertising involves:",
+      "options": [
+        "Buying competitor’s brand name as a keyword in ads",
+        "Using random words to boost ranking",
+        "Registering a keyword domain",
+        "Creating hidden meta tags"
+      ],
+      "correctIndex": 0,
+      "explanation": "Keyword advertising refers to using a competitor’s trademark in paid search ads, e.g., on Google Ads.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q6",
+      "question": "Which of the following is an example of cybersquatting?",
+      "options": [
+        "Registering your personal name as a domain",
+        "Registering tata-motors-india.com without being Tata",
+        "Creating an official website for a college project",
+        "Buying a domain for your startup"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registering a domain like 'tata-motors-india.com' to mislead or sell it is classic cybersquatting.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q7",
+      "question": "Who administers the UDRP system?",
+      "options": [
+        "WIPO",
+        "UNESCO",
+        "ITU",
+        "World Bank"
+      ],
+      "correctIndex": 0,
+      "explanation": "The World Intellectual Property Organization (WIPO) manages the UDRP domain dispute mechanism.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q8",
+      "question": "Under Indian law, cybersquatting can also amount to:",
+      "options": [
+        "Defamation",
+        "Trademark infringement and passing off",
+        "Patent misuse",
+        "Copyright violation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cybersquatting infringes on trademarks and can constitute 'passing off' under the Trade Marks Act.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q9",
+      "question": "Which organization manages '.IN' domain registrations in India?",
+      "options": [
+        "ICANN",
+        "WIPO",
+        "NIXI",
+        "TRAI"
+      ],
+      "correctIndex": 2,
+      "explanation": "The National Internet Exchange of India (NIXI) oversees the '.IN' registry and the INDRP dispute process.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "trademark_9_q10",
+      "question": "Comparative advertising is lawful when:",
+      "options": [
+        "It directly defames competitors",
+        "It compares fairly without misleading consumers",
+        "It hides competitor names",
+        "It uses false claims"
+      ],
+      "correctIndex": 1,
+      "explanation": "Comparative ads are legal if they are factual and not deceptive about competitors’ products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+
+    {
+      "id": "trademark_9_q11",
+      "question": "Under UDRP, a complainant must prove that:",
+      "options": [
+        "The domain is hosted internationally",
+        "The domain was registered and used in bad faith",
+        "The domain name is expensive",
+        "The registrant is anonymous"
+      ],
+      "correctIndex": 1,
+      "explanation": "UDRP requires proof that the domain is identical or confusingly similar to a mark and was registered in bad faith.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q12",
+      "question": "What is the main difference between UDRP and INDRP?",
+      "options": [
+        "INDRP covers .IN domains; UDRP covers international domains",
+        "UDRP is only for government sites",
+        "INDRP is a US law",
+        "UDRP is faster but limited to India"
+      ],
+      "correctIndex": 0,
+      "explanation": "INDRP applies to '.IN' country-code domains, while UDRP applies to global generic top-level domains (like .com, .org).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q13",
+      "question": "Using a competitor’s trademark as a Google Ad keyword is:",
+      "options": [
+        "Always legal",
+        "Legal if not misleading or implying endorsement",
+        "Illegal in all countries",
+        "A copyright violation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Keyword advertising can be allowed if it doesn’t cause consumer confusion or false association.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q14",
+      "question": "Which Indian company has faced cybersquatting issues with its brand name?",
+      "options": [
+        "Reliance",
+        "Tata",
+        "Infosys",
+        "Zomato"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tata and other large brands have dealt with cybersquatters registering misleading domain names.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q15",
+      "question": "Keyword advertising disputes are mainly about:",
+      "options": [
+        "Data privacy",
+        "Misleading consumers through brand confusion",
+        "Domain expiration",
+        "Email spam"
+      ],
+      "correctIndex": 1,
+      "explanation": "The key issue is whether consumers are misled into thinking the ad is from the competitor’s brand.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q16",
+      "question": "Comparative ads are *deceptive* when they:",
+      "options": [
+        "Use humor",
+        "Use factual comparisons",
+        "Contain misleading or exaggerated claims",
+        "Mention competitors by name"
+      ],
+      "correctIndex": 2,
+      "explanation": "Deceptive ads go beyond fair comparison — they mislead or disparage competitors’ products.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q17",
+      "question": "What happens when a cybersquatter loses a domain dispute under INDRP?",
+      "options": [
+        "They pay damages to the government",
+        "They must transfer or cancel the domain name",
+        "They can keep the domain if they apologize",
+        "They are banned from the internet"
+      ],
+      "correctIndex": 1,
+      "explanation": "The INDRP panel may order the transfer or cancellation of the disputed domain.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q18",
+      "question": "Which legal concept protects consumers from deceptive keyword ads?",
+      "options": [
+        "Passing off",
+        "Patent licensing",
+        "Design registration",
+        "Doctrine of exhaustion"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using a competitor’s trademark misleadingly in ads can amount to 'passing off'.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q19",
+      "question": "Which global body oversees implementation of the UDRP policy?",
+      "options": [
+        "WIPO under ICANN",
+        "UNESCO",
+        "OECD",
+        "ISO"
+      ],
+      "correctIndex": 0,
+      "explanation": "The UDRP operates under ICANN’s oversight, with WIPO acting as a dispute-resolution provider.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "trademark_9_q20",
+      "question": "A comparative ad showing true facts about price difference is:",
+      "options": [
+        "Illegal",
+        "Permissible under fair comparison",
+        "Defamatory",
+        "Trademark infringement"
+      ],
+      "correctIndex": 1,
+      "explanation": "Truthful, fair comparisons that don’t mislead are allowed under comparative advertising principles.",
+      "difficulty": "medium",
+      "points": 15
+    },
+
+    {
+      "id": "trademark_9_q21",
+      "question": "Which landmark case dealt with keyword advertising and trademarks?",
+      "options": [
+        "Google France v. Louis Vuitton (CJEU)",
+        "Apple v. Samsung",
+        "Infosys v. ICANN",
+        "Cadbury v. Nestlé"
+      ],
+      "correctIndex": 0,
+      "explanation": "The 'Google France v. Louis Vuitton' case clarified liability in keyword advertising disputes in the EU.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_9_q22",
+      "question": "What’s a key sign of 'bad faith' in domain registration?",
+      "options": [
+        "Domain matches a famous trademark and is offered for sale",
+        "Domain is inactive",
+        "Domain redirects to a blog",
+        "Domain is used for education"
+      ],
+      "correctIndex": 0,
+      "explanation": "Offering a domain identical to a known trademark for sale indicates bad faith under UDRP/INDRP.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_9_q23",
+      "question": "A company registers 'amazzon.in' and redirects it to ads — this is:",
+      "options": [
+        "Fair use",
+        "Typo-squatting, a form of cybersquatting",
+        "Parallel import",
+        "Domain mirroring"
+      ],
+      "correctIndex": 1,
+      "explanation": "Typo-squatting involves registering misspelled domains to exploit traffic from user mistakes.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_9_q24",
+      "question": "Cybersquatting primarily violates which right of trademark owners?",
+      "options": [
+        "Right to assign marks",
+        "Right to exclusive commercial use of their brand name online",
+        "Right to renew marks every 10 years",
+        "Right to parallel import"
+      ],
+      "correctIndex": 1,
+      "explanation": "It interferes with the exclusive right of trademark owners to use their mark in commerce, including on the internet.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "trademark_9_q25",
+      "question": "Keyword bidding on a rival’s brand name is illegal when:",
+      "options": [
+        "It causes consumer confusion or implies endorsement",
+        "It’s done through Google Ads",
+        "The rival is in another country",
+        "The ad includes a discount"
+      ],
+      "correctIndex": 0,
+      "explanation": "Using competitor marks in keywords becomes illegal when it misleads users into believing endorsement or affiliation.",
+      "difficulty": "hard",
+      "points": 20
+    }
+  ]
+}

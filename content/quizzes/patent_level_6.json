@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "patent_level_6",
+  "realmId": "realm_patent",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "patent_6_q1",
+      "question": "What is patent infringement?",
+      "options": [
+        "Copying a trademark",
+        "Making, using, selling, or importing a patented invention without permission",
+        "Stealing trade secrets",
+        "Violating copyright"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patent infringement is making, using, selling, or importing a patented invention without the owner's permission.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q2",
+      "question": "What is the test for patent infringement?",
+      "options": [
+        "Similarity test",
+        "All-elements rule - product must contain every element of a claim",
+        "Substantial similarity",
+        "Likelihood of confusion"
+      ],
+      "correctIndex": 1,
+      "explanation": "The all-elements rule: a product infringes if it contains every single element listed in at least one claim.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q3",
+      "question": "If a product is missing one element from a claim, does it infringe?",
+      "options": [
+        "Yes, always",
+        "No, it does not infringe",
+        "Maybe",
+        "Only if similar"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, if even one element is missing from the claim, there is no infringement.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q4",
+      "question": "What is 'Freedom to Operate' (FTO)?",
+      "options": [
+        "Freedom to invent",
+        "Analysis to see if your product infringes other people's patents",
+        "Freedom to sell",
+        "Freedom to license"
+      ],
+      "correctIndex": 1,
+      "explanation": "FTO is an analysis to determine if your product is clear of all other active patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q5",
+      "question": "Is a patent a positive or negative right?",
+      "options": [
+        "Positive - right to make and sell",
+        "Negative - right to stop others, not right to make",
+        "Both",
+        "Neither"
+      ],
+      "correctIndex": 1,
+      "explanation": "A patent is a negative right - it gives you the right to stop others, not the right to make or sell.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q6",
+      "question": "Does having a patent automatically give you the right to sell your product?",
+      "options": [
+        "Yes, that's the point",
+        "No, you might still infringe someone else's broader patent",
+        "Yes, always",
+        "Only in your country"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, your patented invention might still infringe someone else's older, broader patent.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_6_q7",
+      "question": "What is a 'blocking patent'?",
+      "options": [
+        "A rejected patent",
+        "A patent that blocks you from using your own patented invention",
+        "An expired patent",
+        "A secret patent"
+      ],
+      "correctIndex": 1,
+      "explanation": "A blocking patent is when someone else's patent blocks you from using your own patented invention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q8",
+      "question": "In the Smart Car case study, who had the broad patent?",
+      "options": [
+        "Your company",
+        "Company A with the GPS self-driving patent from 2010",
+        "The government",
+        "No one"
+      ],
+      "correctIndex": 1,
+      "explanation": "Company A had the broad patent on 'a car that uses GPS to drive itself' from 2010.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q9",
+      "question": "In the Smart Car case, what did your company invent?",
+      "options": [
+        "GPS navigation",
+        "A new laser sensor for self-driving cars",
+        "The first self-driving car",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Your company invented a new type of laser sensor for self-driving cars.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q10",
+      "question": "In the Smart Car case, can you sell your car?",
+      "options": [
+        "Yes, you have a patent",
+        "No, you infringe Company A's broader patent",
+        "Yes, if you pay fees",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "No, even though you have a patent on the laser, you still infringe Company A's broader GPS self-driving patent.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_6_q11",
+      "question": "In the Smart Car case, what happens if Company A uses your laser?",
+      "options": [
+        "Nothing",
+        "They infringe your patent",
+        "It's allowed",
+        "You lose your patent"
+      ],
+      "correctIndex": 1,
+      "explanation": "If Company A uses your laser sensor, they infringe your patent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q12",
+      "question": "What is the solution to a blocking patent situation?",
+      "options": [
+        "Sue each other",
+        "Cross-licensing - both give permission to each other",
+        "Cancel patents",
+        "Government intervention"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cross-licensing is the solution - both parties give each other permission to use their patents.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q13",
+      "question": "How common are blocking patent situations?",
+      "options": [
+        "Never happen",
+        "Very common, especially in tech",
+        "Rare",
+        "Only in pharmaceuticals"
+      ],
+      "correctIndex": 1,
+      "explanation": "Blocking patent situations are very common, especially in technology industries.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q14",
+      "question": "What does 'cross-licensing' mean?",
+      "options": [
+        "Licensing across countries",
+        "Two parties give each other permission to use their patents",
+        "Licensing to competitors",
+        "Canceling licenses"
+      ],
+      "correctIndex": 1,
+      "explanation": "Cross-licensing is when two parties give each other permission to use their respective patents.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q15",
+      "question": "Can you infringe a patent even if you independently invented it?",
+      "options": [
+        "No, independent invention is a defense",
+        "Yes, independent invention is not a defense in patent law",
+        "Only if you knew about it",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, independent invention is not a defense - if you infringe the claims, you infringe regardless of how you invented it.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_6_q16",
+      "question": "What must you compare to determine infringement?",
+      "options": [
+        "The description",
+        "The product to the patent's claims",
+        "The drawings",
+        "The abstract"
+      ],
+      "correctIndex": 1,
+      "explanation": "You must compare the accused product directly to the patent's claims.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "patent_6_q17",
+      "question": "If your product has all elements of Claim 1 plus extra features, does it infringe?",
+      "options": [
+        "No, it's different",
+        "Yes, it contains all elements of the claim",
+        "Maybe",
+        "Only if identical"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, if it contains all elements of the claim, it infringes even if it has additional features.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_6_q18",
+      "question": "What is the purpose of an FTO analysis?",
+      "options": [
+        "To find patents to buy",
+        "To ensure your product doesn't infringe others' patents before launch",
+        "To find competitors",
+        "To value patents"
+      ],
+      "correctIndex": 1,
+      "explanation": "FTO analysis ensures your product is clear of other patents before you invest in manufacturing and launch.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q19",
+      "question": "When should you do an FTO analysis?",
+      "options": [
+        "After launch",
+        "Before investing heavily in a product",
+        "Never",
+        "Only if sued"
+      ],
+      "correctIndex": 1,
+      "explanation": "You should do FTO analysis before investing heavily in manufacturing and launching a product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q20",
+      "question": "Can two companies both have patents that block each other?",
+      "options": [
+        "No, impossible",
+        "Yes, this is a common blocking patent scenario",
+        "Only in theory",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, it's common for two companies to have patents that block each other, requiring cross-licensing.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q21",
+      "question": "What does a patent give you the right to do?",
+      "options": [
+        "Make and sell your invention",
+        "Exclude others from making, using, or selling the invention",
+        "Both make and exclude",
+        "Nothing"
+      ],
+      "correctIndex": 1,
+      "explanation": "A patent gives you the right to exclude others, not necessarily the right to make or sell yourself.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q22",
+      "question": "Why is understanding FTO important?",
+      "options": [
+        "It's not important",
+        "Your new patent doesn't guarantee you can sell your product",
+        "It's only for lawyers",
+        "It's only for large companies"
+      ],
+      "correctIndex": 1,
+      "explanation": "It's crucial because having a patent doesn't guarantee you have freedom to operate - you might still infringe others.",
+      "difficulty": "hard",
+      "points": 20
+    },
+    {
+      "id": "patent_6_q23",
+      "question": "In the Smart Car case, who is blocking whom?",
+      "options": [
+        "Only Company A blocks you",
+        "Both companies block each other",
+        "Only you block Company A",
+        "No one blocks anyone"
+      ],
+      "correctIndex": 1,
+      "explanation": "Both companies block each other - you can't use their GPS patent, they can't use your laser patent.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q24",
+      "question": "What is the 'all-elements rule'?",
+      "options": [
+        "Must have all patents",
+        "Must have every element of at least one claim to infringe",
+        "Must have all features",
+        "Must be identical"
+      ],
+      "correctIndex": 1,
+      "explanation": "The all-elements rule means a product must have every element of at least one claim to infringe.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "patent_6_q25",
+      "question": "Can you design around a patent?",
+      "options": [
+        "No, never",
+        "Yes, by removing or changing elements so you don't meet all claim elements",
+        "Only with permission",
+        "Only in some countries"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yes, you can design around a patent by removing or changing elements so you don't meet all the claim elements.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

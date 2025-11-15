@@ -1,0 +1,41 @@
+﻿{
+  "id": "patent_level_4",
+  "realmId": "realm_patent",
+  "levelNumber": 4,
+  "name": "The Filing Process (Provisional vs. Complete)",
+  "description": "Secure your 'filing date'—the most important date in patent law. Learn the strategy of 'provisional' applications.",
+  "summary": "This level explains the first-to-file rule and the strategic difference between a 'Provisional' application (a fast, simple placeholder) and a 'Complete' application (the full, detailed document).",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=NIh3nLIdKIs",
+  "videoDuration": 370,
+  
+  "content": "## The Most Important Rule: 'First-to-File'\n\nAlmost every country in the world, including the US, Europe, China, and Japan, operates on a **'First-to-File'** system.\n\nThis means it doesn't matter if you *invented* it first. The only thing that matters is who *filed the patent application* first. \n\n* **The Scenario:** You invent a new solar panel on January 1st. Your competitor (who stole your idea) files a patent for it on February 1st. You finally get around to filing your application on March 1st. \n* **The Outcome:** Your competitor wins. They get the patent. You get nothing. \n\nThis is why securing your **'filing date'** (also called the 'priority date') is the most important race in patent law.\n\n## How to Secure Your Priority Date: Two Strategies\n\nThere are two main types of applications you can file to get a 'date of first filing'.\n\n### 1. The Provisional Application (The 'Placeholder')\n*(Note: This is a strategy used in many, but not all, countries, most notably the US. Many other countries have similar 'utility model' or short-term options.)*\n\nThis is a *fast, cheap, and simple* placeholder document. \n\n* **What it is:** It's a basic description of your invention (drawings, notes, a simple paper). It is **not** formally examined by the patent office.\n* **What it does:** It secures you a **'priority date'** for 12 months. It's like planting a flag in the ground. You are 'Patent Pending'.\n* **The Catch:** You *must* file a 'Complete' application within 12 months, or the provisional application expires, and you lose your priority date. \n* **Why use it?** It gives you 12 months to test your invention, find funding, and write the full application, all while being protected from someone else 'first-to-file'.\n\n### 2. The Complete (or Non-Provisional) Application (The 'Real Thing')\n\nThis is the *full, formal patent application*. \n\n* **What it is:** This is a complex legal document, usually drafted by a patent attorney. It must contain the *full disclosure* of the invention (from Level 1) and a very specific legal section called the **'Claims'** (which we will cover next). \n* **What it does:** This is the application that is actually **examined** by the patent office. This is the document that, if approved, will become your 20-year patent.\n\nMost inventors use a two-step process: \n1.  File a **Provisional** *fast* to get the priority date.\n2.  File the **Complete** application *within 12 months* to start the examination process.",
+  
+  "keyPoints": [
+    "The world operates on a 'First-to-File' system. The first person to file the application wins the patent.",
+    "Your 'priority date' (your filing date) is the most important date in the patent process.",
+    "A 'Provisional Application' is a fast, informal 'placeholder' that secures your priority date for 12 months.",
+    "Using a provisional application gives you 'Patent Pending' status.",
+    "A 'Complete (Non-Provisional) Application' is the full, formal legal document that is examined and becomes the patent.",
+    "You must file a 'Complete' application within 12 months of your 'Provisional' one."
+  ],
+  
+  "learningObjectives": [
+    "Define the 'First-to-File' system and its importance.",
+    "Explain what a 'priority date' is.",
+    "Differentiate between a 'Provisional' and a 'Complete' (Non-Provisional) application.",
+    "Explain the 12-month deadline connecting provisional and complete applications.",
+    "Describe the main strategic benefit of filing a provisional application."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 250,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:50:00Z"
+}

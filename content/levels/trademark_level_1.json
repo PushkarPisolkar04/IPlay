@@ -1,0 +1,39 @@
+{
+  "id": "trademark_level_1",
+  "realmId": "realm_trademark",
+  "levelNumber": 1,
+  "name": "What is a Trademark? (The 'Brand' Idea)",
+  "description": "Welcome to the Realm of Brand Identity. Learn what a trademark is and its #1 job: to stop confusion.",
+  "summary": "This level introduces trademarks—the logos, names, and slogans that act as a 'source identifier'. You'll learn the core purpose of trademark law: to protect consumers from confusion.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=3gWaAJR5L18",
+  "videoDuration": 680,
+  
+  "content": "## What is a Trademark? (The 'Brand' Idea)\n\nWelcome to the second realm! If Copyright protects the *creation* (the art, the song), a Trademark protects the *brand* (the name, the logo).\n\n**A trademark is a 'source identifier'.** \n\nIt's any sign—a word, logo, slogan, or even a sound—that helps a consumer identify the *source* of a product or service and distinguish it from others.\n\n### The #1 Goal: Prevent Consumer Confusion\n\nThe entire purpose of trademark law is to protect **consumers**. It's designed to make sure that when you buy a product, you know exactly who made it. \n\nIf you see a **red can with a white swoosh**, you know it's Coca-Cola.  If you see a **golden 'M'**, you know you're getting McDonald's fries. \n\nTrademark law prevents a new, rival company from using a similar logo or name that might *confuse* you into buying their product by mistake. \n\n### What can be a Trademark?\n\nAlmost anything that identifies your brand, including:\n\n* **Word Marks:** The name 'APPLE' for computers or 'GOOGLE' for search.\n* **Logos (Device Marks):** The Nike 'Swoosh', the Twitter 'Bird'.\n* **Slogans (Taglines):** 'Just Do It' (Nike) or 'I'm Lovin' It' (McDonald's).\n* **Non-Traditional Marks:** We'll cover these later, but they include sounds (the Intel 'bong'), colors (Cadbury purple), and shapes (the Coca-Cola bottle).\n\n--- \n\n### 💡 Level 1 Case Study: The Nike 'Swoosh'\n\n* **The Brand:** Nike, a sports apparel company.\n* **The Mark:** The 'Swoosh' logo. \n* **How it Works:** When you see that 'Swoosh' logo on a shoe or a shirt, you instantly know it's a genuine Nike product. You associate it with a certain level of quality and style.\n* **The Protection:** Trademark law prevents a competitor from putting a 'Swoosh' (or a very similar checkmark) on their cheap, low-quality shoes. This protects **Nike's reputation** (from being associated with low-quality goods) and protects **you, the consumer** (from being tricked into buying a fake).\n\nThat's the power of a trademark: it's a symbol of trust and a guarantee of origin, all in one simple mark.",
+  
+  "keyPoints": [
+    "A trademark is a 'source identifier' for a brand (e.g., name, logo).",
+    "The primary goal of trademark law is to prevent consumer confusion.",
+    "Trademarks protect brand reputation and consumer trust.",
+    "They cover word marks (Nike), logos (the 'Swoosh'), and slogans ('Just Do It').",
+    "Unlike copyright, a trademark's main job is commercial, not artistic."
+  ],
+  
+  "learningObjectives": [
+    "Define 'trademark' and its primary purpose.",
+    "Explain why 'preventing consumer confusion' is the #1 goal of trademark law.",
+    "Identify three different types of trademarks (word, logo, slogan).",
+    "Analyze a simple case study (like the Nike 'Swoosh') to explain how a trademark functions."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T18:30:00Z"
+}

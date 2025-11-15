@@ -33,9 +33,6 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
   Set<int> _completedLevels = {};
   int _currentLevelNumber = 1;
   bool _isLoading = true;
-  bool _isDownloaded = false;
-  bool _isDownloading = false;
-  double _downloadProgress = 0.0;
   
   // Cached XP calculations
   int _cachedEarnedXP = 0;
@@ -51,11 +48,8 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     try {
       final realmId = widget.realm['realmId'] as String;
       
-      // Load levels from ContentService
-      _levels = _contentService.getLevelsForRealm(realmId);
-      
-      // Check if realm is downloaded for offline
-      _isDownloaded = await _contentService.isRealmAvailableOffline(realmId);
+      // Load levels from ContentService (async)
+      final levels = await _contentService.getLevelsForRealm(realmId);
       
       // Load user progress from ProgressService
       final user = FirebaseAuth.instance.currentUser;
@@ -63,16 +57,25 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
         final progress = await _progressService.getRealmProgress(user.uid, realmId);
         if (progress != null) {
           setState(() {
+            _levels = levels;
             _completedLevels = Set<int>.from(progress.completedLevels);
             _currentLevelNumber = progress.currentLevelNumber;
           });
+        } else {
+          setState(() {
+            _levels = levels;
+          });
         }
+      } else {
+        setState(() {
+          _levels = levels;
+        });
       }
       
       // Calculate cached XP values
       _updateCachedXP();
     } catch (e) {
-      // print('Error loading realm data: $e');
+      print('Error loading realm data: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -88,231 +91,6 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
       }
     }
     _cachedTotalXP = _levels.fold(0, (sum, level) => sum + level.xpReward);
-  }
-
-  Future<void> _downloadRealmForOffline() async {
-    final realmId = widget.realm['realmId'] as String;
-    
-    setState(() {
-      _isDownloading = true;
-      _downloadProgress = 0.0;
-    });
-
-    try {
-      // Show download dialog
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: const Text('Downloading Realm'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Downloading all levels and content for offline access...'),
-                  const SizedBox(height: 16),
-                  LinearProgressIndicator(
-                    value: _downloadProgress,
-                    backgroundColor: AppDesignSystem.backgroundGrey,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      widget.realm['color'] is Color 
-                          ? widget.realm['color'] as Color 
-                          : Color(widget.realm['color'] as int? ?? AppDesignSystem.primaryIndigo.value),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${(_downloadProgress * 100).toInt()}%',
-                    style: AppTextStyles.bodySmall,
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-
-      // Download each level with progress updates
-      for (int i = 0; i < _levels.length; i++) {
-        final level = _levels[i];
-        final levelId = level.id;
-        
-        // Load and cache level content
-        await _contentService.getLevelContent(levelId);
-        
-        // Update progress
-        setState(() {
-          _downloadProgress = (i + 1) / _levels.length;
-        });
-        
-        // Update dialog
-        if (mounted) {
-          // Force rebuild of dialog
-          Navigator.of(context).pop();
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => AlertDialog(
-              title: const Text('Downloading Realm'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Downloading level ${i + 1} of ${_levels.length}...'),
-                  const SizedBox(height: 16),
-                  LinearProgressIndicator(
-                    value: _downloadProgress,
-                    backgroundColor: AppDesignSystem.backgroundGrey,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      widget.realm['color'] is Color 
-                          ? widget.realm['color'] as Color 
-                          : Color(widget.realm['color'] as int? ?? AppDesignSystem.primaryIndigo.value),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${(_downloadProgress * 100).toInt()}%',
-                    style: AppTextStyles.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      }
-
-      // Mark realm as downloaded
-      final success = await _contentService.downloadRealmForOffline(realmId);
-      
-      if (success) {
-        setState(() {
-          _isDownloaded = true;
-        });
-        
-        // Close dialog
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-        
-        // Show success message
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Realm downloaded! You can now access it offline.',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: AppDesignSystem.success,
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
-      } else {
-        throw Exception('Download failed');
-      }
-    } catch (e) {
-      // print('Error downloading realm: $e');
-      
-      // Close dialog
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-      
-      // Show error message
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.error, color: Colors.white),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    'Failed to download realm. Please try again.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: AppDesignSystem.error,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
-    } finally {
-      setState(() {
-        _isDownloading = false;
-        _downloadProgress = 0.0;
-      });
-    }
-  }
-
-  Future<void> _deleteOfflineRealm() async {
-    final realmId = widget.realm['realmId'] as String;
-    
-    // Show confirmation dialog
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Offline Content'),
-        content: const Text(
-          'Are you sure you want to delete the offline content for this realm? '
-          'You can download it again later.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: AppDesignSystem.error,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-    
-    if (confirmed == true) {
-      try {
-        await _contentService.deleteOfflineRealm(realmId);
-        
-        setState(() {
-          _isDownloaded = false;
-        });
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Offline content deleted'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-        }
-      } catch (e) {
-        // print('Error deleting offline realm: $e');
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('Failed to delete offline content'),
-              backgroundColor: AppDesignSystem.error,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        }
-      }
-    }
   }
 
   LevelStatus _getLevelStatus(int levelNumber) {
@@ -383,32 +161,6 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
         title: Text(title),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
-          if (_isDownloaded)
-            IconButton(
-              icon: const Icon(Icons.download_done),
-              color: AppDesignSystem.success,
-              onPressed: _deleteOfflineRealm,
-              tooltip: 'Downloaded - Tap to delete',
-            )
-          else
-            IconButton(
-              icon: _isDownloading 
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : const Icon(Icons.download_outlined),
-              onPressed: _isDownloading ? null : _downloadRealmForOffline,
-              tooltip: _isDownloaded 
-                  ? 'Downloaded' 
-                  : 'Download for offline',
-            ),
-        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
@@ -531,39 +283,37 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
                   color: color,
                   difficulty: difficulty,
                   estimatedMinutes: level.estimatedMinutes,
-                  onTap: () {
-                    // Navigate to level preview screen
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LevelPreviewScreen(
-                          levelId: level.id,
-                          realmId: widget.realm['realmId'] as String,
-                        ),
-                      ),
-                    );
-                  },
+                  onTap: status == LevelStatus.locked 
+                    ? () {
+                        // Show locked message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Complete Level ${level.levelNumber - 1} to unlock this level'),
+                            backgroundColor: AppDesignSystem.warning,
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    : () async {
+                        // Navigate to level preview screen
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LevelPreviewScreen(
+                              levelId: level.id,
+                              realmId: widget.realm['realmId'] as String,
+                            ),
+                          ),
+                        );
+                        
+                        // Reload data if level was completed
+                        if (result == true) {
+                          _loadData();
+                        }
+                      },
                 ),
               );
             }).toList()),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // Download button
-            if (!_isDownloaded)
-              SecondaryButton(
-                text: _isDownloading ? 'Downloading...' : 'Download for Offline',
-                onPressed: _isDownloading ? null : _downloadRealmForOffline,
-                fullWidth: true,
-                icon: _isDownloading ? null : Icons.download,
-              )
-            else
-              SecondaryButton(
-                text: 'Delete Offline Content',
-                onPressed: _deleteOfflineRealm,
-                fullWidth: true,
-                icon: Icons.delete_outline,
-              ),
             
             const SizedBox(height: AppSpacing.xl),
           ],

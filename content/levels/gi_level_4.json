@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_4",
+  "realmId": "realm_gi",
+  "levelNumber": 4,
+  "name": "Indian Handicrafts & Textiles GIs",
+  "description": "Discover the rich heritage of Indian handicrafts and textiles protected by GI - from Madhubani paintings to Kanchipuram silk.",
+  "summary": "Learn about India's cultural heritage products that have GI protection, including traditional handicrafts, textiles, and art forms that represent centuries of craftsmanship.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 360,
+  
+  "content": "## Indian Handicrafts & Textiles GIs\n\nIndia's cultural heritage is as diverse as its geography. GI protection extends to traditional handicrafts and textiles, preserving centuries-old craftsmanship and supporting artisan communities.\n\n### Famous Textile GIs\n\n#### 1. Kanchipuram Silk Sarees (Tamil Nadu)\n**GI Registration:** 2005\n- Handwoven silk sarees from Kanchipuram town\n- Made from pure mulberry silk with contrasting borders\n- Traditional temple designs and motifs\n- Zari (gold/silver thread) work is a hallmark\n- Each saree takes 10-20 days to weave\n\n#### 2. Pochampally Ikat (Telangana)\n**GI Registration:** 2005\n- Geometric patterns created through resist-dyeing technique\n- Threads are tie-dyed before weaving\n- Traditional handloom weaving process\n- Unique double ikat technique\n\n#### 3. Mysore Silk (Karnataka)\n**GI Registration:** 2005\n- Pure silk produced by Karnataka Silk Industries Corporation\n- Known for its soft texture and rich colors\n- Traditional designs with gold zari borders\n\n#### 4. Chanderi Fabric (Madhya Pradesh)\n**GI Registration:** 2005\n- Lightweight, sheer fabric with glossy texture\n- Blend of silk and cotton\n- Traditional motifs inspired by nature and temples\n- Handwoven on traditional pit looms\n\n### Famous Handicraft GIs\n\n#### 1. Madhubani Paintings (Bihar)\n**GI Registration:** 2007\n- Traditional art form from Mithila region\n- Natural dyes and pigments\n- Themes from Hindu mythology and nature\n- Distinctive geometric patterns and eye motifs\n- Traditionally done by women artists\n\n#### 2. Channapatna Toys (Karnataka)\n**GI Registration:** 2006\n- Wooden toys from Channapatna town\n- Made from ivory wood (Wrightia tinctoria)\n- Colored with natural dyes\n- Lacquer coating for smooth finish\n- Safe for children (no sharp edges)\n\n#### 3. Blue Pottery of Jaipur (Rajasthan)\n**GI Registration:** 2015\n- Distinctive blue dye made from cobalt oxide\n- Persian-influenced designs\n- Made from quartz stone powder, not clay\n- Low-temperature firing technique\n\n#### 4. Bidriware (Karnataka)\n**GI Registration:** 2006\n- Metal handicraft from Bidar\n- Black metal (zinc and copper alloy) inlaid with silver\n- Intricate floral and geometric designs\n- Traditional blackening process using soil\n\n#### 5. Pashmina (Jammu & Kashmir)\n**GI Registration:** 2008\n- Fine cashmere wool from Changthangi goats\n- Grown in Ladakh region at high altitudes\n- Extremely soft and warm\n- Hand-spun and hand-woven\n- Takes 3-4 goats' wool for one shawl\n\n### Why GI Matters for Artisans\n\n1. **Prevents Imitation:** Stops cheap machine-made copies from using traditional names\n2. **Premium Pricing:** Authentic products command higher prices\n3. **Market Access:** GI tag helps in international markets\n4. **Livelihood Protection:** Supports traditional artisan communities\n5. **Cultural Preservation:** Keeps traditional skills alive\n\n--- \n\n### 💡 Level 4 Case Study: Kanchipuram Silk Sarees\n\n* **The Craft:** Kanchipuram has been weaving silk sarees for over 400 years. The town has more than 5,000 weaver families.\n* **The Threat:** Machine-made sarees from other regions were being sold as 'Kanchipuram silk', damaging the reputation and livelihood of genuine weavers.\n* **The GI Protection (2005):** Only handwoven silk sarees made in Kanchipuram town can use the GI tag.\n* **The Impact:** \n  - Genuine weavers can now charge premium prices\n  - Buyers can identify authentic products through the GI logo\n  - The traditional craft is being preserved for future generations\n  - Export market has grown significantly",
+  
+  "keyPoints": [
+    "India has numerous GI-protected handicrafts and textiles representing centuries of tradition.",
+    "Kanchipuram Silk, Pochampally Ikat, and Mysore Silk are famous textile GIs.",
+    "Madhubani Paintings, Channapatna Toys, and Bidriware are protected handicraft GIs.",
+    "GI protection helps artisans get premium prices and prevents cheap imitations.",
+    "Each craft has unique techniques, materials, and designs specific to its region.",
+    "GI tags help preserve traditional skills and support artisan livelihoods."
+  ],
+  
+  "learningObjectives": [
+    "Identify at least 5 Indian handicraft or textile GIs.",
+    "Explain what makes each craft unique to its region.",
+    "Describe how GI protection benefits traditional artisans.",
+    "Analyze the Kanchipuram Silk case study."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 200,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:30:00Z"
+}

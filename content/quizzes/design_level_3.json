@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "design_level_3",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "design_3_q1",
+      "question": "What is the term of design registration in India?",
+      "options": [
+        "5 years",
+        "10 years",
+        "15 years",
+        "20 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration in India is valid for 10 years from the date of registration.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q2",
+      "question": "Can design registration be extended?",
+      "options": [
+        "No, never",
+        "Yes, for another 5 years",
+        "Yes, indefinitely",
+        "Only by court order"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration can be extended for an additional 5 years, making the total term 15 years.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q3",
+      "question": "What is design infringement?",
+      "options": [
+        "Using a similar color",
+        "Unauthorized copying or imitation of a registered design",
+        "Using the same material",
+        "Selling at a lower price"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design infringement occurs when someone copies or imitates a registered design without authorization.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q4",
+      "question": "What remedies are available for design infringement?",
+      "options": [
+        "Only warnings",
+        "Injunction, damages, and account of profits",
+        "No remedies",
+        "Only criminal prosecution"
+      ],
+      "correctIndex": 1,
+      "explanation": "Remedies include injunction to stop infringement, damages for losses, and account of profits made by infringer.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q5",
+      "question": "What is 'piracy' in design context?",
+      "options": [
+        "Sea theft",
+        "Unauthorized copying of designs",
+        "Legal copying",
+        "Licensing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design piracy refers to unauthorized copying or imitation of registered designs.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q6",
+      "question": "Can you register a design after it's been publicly disclosed?",
+      "options": [
+        "Yes, anytime",
+        "Yes, within 6 months (grace period)",
+        "No, never",
+        "Only with court permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "India provides a 6-month grace period for registration after public disclosure by the applicant.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q7",
+      "question": "What is the 'informed user' test?",
+      "options": [
+        "A test for designers",
+        "A test to determine if designs create different overall impressions",
+        "A test for manufacturers",
+        "A test for price"
+      ],
+      "correctIndex": 1,
+      "explanation": "The informed user test determines if designs create different overall impressions to a knowledgeable user.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q8",
+      "question": "What is 'design freedom'?",
+      "options": [
+        "Freedom to copy",
+        "The range of design choices available to a designer",
+        "Freedom from registration",
+        "Freedom from fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design freedom refers to the range of design choices available when creating a product.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q9",
+      "question": "Can functional features be protected as designs?",
+      "options": [
+        "Yes, always",
+        "No, only aesthetic features can be protected",
+        "Only if expensive",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only aesthetic features can be protected as designs; purely functional features cannot.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q10",
+      "question": "What is the 'must-fit' exception?",
+      "options": [
+        "Designs that must fit clothing",
+        "Features dictated solely by function cannot be protected",
+        "Designs that must fit budgets",
+        "Designs that must fit trends"
+      ],
+      "correctIndex": 1,
+      "explanation": "The must-fit exception means features dictated solely by technical function cannot be protected as designs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q11",
+      "question": "Who can file a design infringement suit?",
+      "options": [
+        "Anyone",
+        "The registered proprietor of the design",
+        "Only government",
+        "Only lawyers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Only the registered proprietor (owner) of the design can file an infringement suit.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q12",
+      "question": "What is 'design dilution'?",
+      "options": [
+        "Making designs weaker",
+        "Weakening of design's distinctiveness through similar designs",
+        "Adding water to designs",
+        "Reducing design size"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design dilution occurs when the distinctiveness of a design is weakened by similar designs in the market.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q13",
+      "question": "Can you register a design for multiple products?",
+      "options": [
+        "Yes, one registration covers all products",
+        "No, separate registration needed for each product class",
+        "Only for similar products",
+        "Only with extra fee"
+      ],
+      "correctIndex": 1,
+      "explanation": "Separate design registrations are needed for different product classes.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q14",
+      "question": "What is 'design searching'?",
+      "options": [
+        "Looking for designers",
+        "Searching existing designs to check novelty",
+        "Searching for manufacturers",
+        "Searching for prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design searching involves checking existing designs to ensure your design is novel.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q15",
+      "question": "What happens if two people independently create the same design?",
+      "options": [
+        "Both get protection",
+        "First to file gets protection",
+        "Neither gets protection",
+        "Government decides"
+      ],
+      "correctIndex": 1,
+      "explanation": "India follows a 'first to file' system, so whoever files first gets protection.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q16",
+      "question": "Can you license a registered design?",
+      "options": [
+        "No, never",
+        "Yes, design rights can be licensed",
+        "Only to family",
+        "Only to government"
+      ],
+      "correctIndex": 1,
+      "explanation": "Registered design rights can be licensed to others for use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q17",
+      "question": "What is 'design assignment'?",
+      "options": [
+        "Homework for designers",
+        "Transfer of design ownership from one party to another",
+        "Design testing",
+        "Design approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design assignment is the transfer of design ownership rights from one party to another.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q18",
+      "question": "What is the penalty for design infringement?",
+      "options": [
+        "Only warning",
+        "Injunction, damages up to ₹25,000, and delivery up",
+        "No penalty",
+        "Only apology"
+      ],
+      "correctIndex": 1,
+      "explanation": "Penalties include injunction, damages up to ₹25,000 for each design infringed, and delivery up of infringing goods.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q19",
+      "question": "Can a design be cancelled after registration?",
+      "options": [
+        "No, never",
+        "Yes, if it lacks novelty or was wrongly registered",
+        "Only by owner",
+        "Only after 10 years"
+      ],
+      "correctIndex": 1,
+      "explanation": "A design can be cancelled if it's found to lack novelty or was wrongly registered.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q20",
+      "question": "What is 'design prosecution'?",
+      "options": [
+        "Criminal case",
+        "The process of obtaining design registration",
+        "Design testing",
+        "Design manufacturing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design prosecution refers to the process of obtaining design registration through the Design Office.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q21",
+      "question": "Can you claim priority from a foreign application?",
+      "options": [
+        "No, never",
+        "Yes, within 6 months under Paris Convention",
+        "Only from neighboring countries",
+        "Only with special permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "You can claim priority from a foreign application filed within 6 months under the Paris Convention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q22",
+      "question": "What is 'design restoration'?",
+      "options": [
+        "Repairing old designs",
+        "Restoring a lapsed design registration",
+        "Restoring design colors",
+        "Restoring design files"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design restoration is the process of restoring a design registration that has lapsed due to non-payment of fees.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q23",
+      "question": "What is the role of design drawings?",
+      "options": [
+        "For decoration",
+        "To clearly show the design for registration",
+        "For marketing",
+        "For pricing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design drawings clearly show the design's appearance for registration and protection purposes.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_3_q24",
+      "question": "Can you register a design for a spare part?",
+      "options": [
+        "Yes, always",
+        "Generally no, if it's a 'must-fit' functional part",
+        "Only if expensive",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Spare parts that are purely functional ('must-fit') generally cannot be registered as designs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_3_q25",
+      "question": "What is the benefit of design registration?",
+      "options": [
+        "No benefit",
+        "Exclusive rights to use and prevent copying for 10-15 years",
+        "Only marketing benefit",
+        "Only tax benefit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration provides exclusive rights to use the design and prevent others from copying it for 10-15 years.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

@@ -22,7 +22,6 @@ class _LearnScreenState extends State<LearnScreen> {
   final ContentService _contentService = ContentService();
   List<RealmModel> _realms = [];
   Map<String, dynamic> _userProgress = {};
-  Set<String> _downloadedRealms = {};
   bool _isLoading = true;
   
   // Cached calculations to avoid recomputing in build
@@ -43,15 +42,11 @@ class _LearnScreenState extends State<LearnScreen> {
 
   Future<void> _loadData() async {
     try {
-      // Load realms from ContentService
+      // Load realms from ContentService (async)
+      final realms = await _contentService.getAllRealms();
+      
       setState(() {
-        _realms = _contentService.getAllRealms();
-      });
-
-      // Load downloaded realms
-      final downloadedRealmIds = await _contentService.getDownloadedRealmIds();
-      setState(() {
-        _downloadedRealms = Set<String>.from(downloadedRealmIds);
+        _realms = realms;
       });
 
       // Load user progress from Firestore
@@ -268,27 +263,27 @@ class _LearnScreenState extends State<LearnScreen> {
                           final isCompleted = progress >= 1.0;
                           
                           return Container(
-                            margin: const EdgeInsets.only(bottom: 16),
+                            margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
                                   Color(realm.color),
-                                  Color(realm.color).withValues(alpha: 0.7),
+                                  Color(realm.color).withValues(alpha: 0.8),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Color(realm.color).withValues(alpha: 0.3),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
+                                  color: Color(realm.color).withValues(alpha: 0.25),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(12),
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
@@ -301,159 +296,102 @@ class _LearnScreenState extends State<LearnScreen> {
                                     );
                                   },
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    padding: const EdgeInsets.all(14),
+                                    child: Row(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white.withValues(alpha: 0.3),
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                              child: Text(
-                                                realm.iconEmoji,
-                                                style: const TextStyle(fontSize: 32),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 16),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                        // Larger icon
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.25),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Image.asset(
+                                            realm.iconPath,
+                                            width: 48,
+                                            height: 48,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return const Icon(
+                                                Icons.school,
+                                                size: 48,
+                                                color: Colors.white,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 14),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: Text(
-                                                          realm.name,
-                                                          style: const TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      realm.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 17,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white,
                                                       ),
-                                                      if (_downloadedRealms.contains(realm.id))
-                                                        Container(
-                                                          padding: const EdgeInsets.symmetric(
-                                                            horizontal: 8,
-                                                            vertical: 4,
-                                                          ),
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.white.withValues(alpha: 0.3),
-                                                            borderRadius: BorderRadius.circular(12),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            children: [
-                                                              const Icon(
-                                                                Icons.download_done,
-                                                                color: Colors.white,
-                                                                size: 14,
-                                                              ),
-                                                              const SizedBox(width: 4),
-                                                              const Text(
-                                                                'Downloaded',
-                                                                style: TextStyle(
-                                                                  fontSize: 11,
-                                                                  color: Colors.white,
-                                                                  fontWeight: FontWeight.w600,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    '${realm.totalLevels} Levels',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.white.withValues(alpha: 0.9),
+                                                      maxLines: 1,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
                                                   ),
+                                                  if (isCompleted)
+                                                    const Icon(
+                                                      Icons.check_circle,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ),
                                                 ],
                                               ),
-                                            ),
-                                            if (isCompleted)
-                                              Container(
-                                                padding: const EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white.withValues(alpha: 0.3),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.check_circle,
-                                                  color: Colors.white,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          realm.description,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white.withValues(alpha: 0.95),
-                                            height: 1.4,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        // Progress bar
-                                        if (isStarted && !isCompleted) ...[
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: LinearProgressIndicator(
-                                              value: progress,
-                                              backgroundColor: Colors.white.withValues(alpha: 0.3),
-                                              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                                              minHeight: 8,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            '${(progress * 100).toInt()}% Complete',
-                                            style: const TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                        // Start/Continue button
-                                        const SizedBox(height: 12),
-                                        Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.3),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
+                                              const SizedBox(height: 4),
                                               Text(
-                                                isCompleted 
-                                                    ? 'Review' 
-                                                    : isStarted 
-                                                        ? 'Continue' 
-                                                        : 'Start Learning',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
-                                                  fontSize: 16,
+                                                '${realm.totalLevels} Levels',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white.withValues(alpha: 0.9),
                                                 ),
                                               ),
-                                              const SizedBox(width: 8),
-                                              const Icon(Icons.arrow_forward, size: 20, color: Colors.white),
+                                              const SizedBox(height: 8),
+                                              // Progress bar
+                                              if (isStarted) ...[
+                                                ClipRRect(
+                                                  borderRadius: BorderRadius.circular(4),
+                                                  child: LinearProgressIndicator(
+                                                    value: progress,
+                                                    backgroundColor: Colors.white.withValues(alpha: 0.3),
+                                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                                                    minHeight: 6,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${(progress * 100).toInt()}% Complete',
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ] else ...[
+                                                Text(
+                                                  'Start your journey',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    color: Colors.white.withValues(alpha: 0.85),
+                                                  ),
+                                                ),
+                                              ],
                                             ],
                                           ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white,
+                                          size: 18,
                                         ),
                                       ],
                                     ),

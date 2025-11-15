@@ -1,0 +1,40 @@
+﻿{
+  "id": "gi_level_6",
+  "realmId": "realm_gi",
+  "levelNumber": 6,
+  "name": "Authorized Users & Quality Control",
+  "description": "Who can use a registered GI? Learn about authorized users, quality standards, and inspection bodies.",
+  "summary": "Understand how GI protection works in practice - who can use the GI tag, how quality is maintained, and the role of inspection bodies.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 300,
+  
+  "content": "## Authorized Users & Quality Control\n\nA GI is registered, but who can actually use it? And how do we ensure that products bearing the GI tag maintain quality? This level answers these critical questions.\n\n### Who Are 'Authorized Users'?\n\nUnlike a trademark (where only the owner can use it), a GI is a **collective right**. Any producer from the geographical area who meets the quality standards can become an 'Authorized User'.\n\n**Requirements to become an Authorized User:**\n1. **Location:** Must be a producer/manufacturer located within the defined geographical area\n2. **Compliance:** Must follow the registered quality standards and specifications\n3. **Registration:** Must register with the registered proprietor (the association that holds the GI)\n4. **Inspection:** Must allow periodic quality inspections\n\n**Example:** Any tea garden in the Darjeeling district that meets the quality standards can apply to the Tea Board to become an authorized user of the 'Darjeeling Tea' GI.\n\n### The Role of the Registered Proprietor\n\nThe **Registered Proprietor** (the association that registered the GI) has important responsibilities:\n\n1. **Authorize Users:** Approve producers who meet the standards\n2. **Monitor Quality:** Ensure all authorized users maintain quality\n3. **Take Action:** File cases against unauthorized use\n4. **Maintain Standards:** Update quality specifications as needed\n5. **Promote the GI:** Market and create awareness\n\n### Quality Control & Inspection Bodies\n\nEvery GI registration must specify an **Inspection Body** - an independent organization that:\n\n- Verifies that products meet the registered specifications\n- Conducts periodic inspections of authorized users\n- Tests samples for quality parameters\n- Issues compliance certificates\n\n**Examples of Inspection Bodies:**\n- **Tea Board of India** - for Darjeeling Tea\n- **Spices Board** - for spice GIs\n- **Handloom Export Promotion Council** - for textile GIs\n- **Agricultural Universities** - for agricultural GIs\n\n### The GI Tag & Logo\n\nAuthorized users can display:\n\n1. **The GI Name** - \"Darjeeling Tea\", \"Kanchipuram Silk\", etc.\n2. **The GI Logo** - Official logo with the product name\n3. **Registration Number** - GI No. XXX\n\n**Placement:** Usually on product labels, packaging, or tags\n\n### Unauthorized Use: What Happens?\n\nIf someone uses a registered GI without authorization:\n\n**Civil Remedies:**\n- Injunction (court order to stop use)\n- Damages (compensation for losses)\n- Account of profits (surrender illegal profits)\n\n**Criminal Penalties:**\n- Imprisonment: 6 months to 3 years\n- Fine: ₹50,000 to ₹2,00,000\n\n### Quality Standards: An Example\n\n**Darjeeling Tea Quality Standards:**\n- Must be grown in one of the 87 registered tea gardens\n- Specific altitude range (up to 2,000 meters)\n- Orthodox manufacturing process (not CTC)\n- Distinctive muscatel flavor and aroma\n- Specific chemical parameters (theaflavins, thearubigins)\n- Moisture content below 5%\n- No artificial flavoring or coloring\n\n--- \n\n### 💡 Level 6 Case Study: Fake Darjeeling Tea Crackdown\n\n* **The Problem:** In 2015, investigations revealed that while Darjeeling produces only 10 million kg of tea annually, over 40 million kg was being sold globally as 'Darjeeling Tea'.\n* **The Action:** The Tea Board of India, as the registered proprietor:\n  - Conducted raids on unauthorized sellers\n  - Filed cases against fake tea manufacturers\n  - Strengthened the inspection system\n  - Introduced hologram stickers for genuine products\n* **The Result:** \n  - Several unauthorized sellers were prosecuted\n  - Fines and imprisonment were imposed\n  - Consumer awareness increased\n  - Genuine Darjeeling tea prices stabilized\n* **The Lesson:** GI protection is only effective with strong enforcement and quality control.",
+  
+  "keyPoints": [
+    "A GI is a collective right - any producer from the region who meets standards can use it.",
+    "Producers must register as 'Authorized Users' with the registered proprietor.",
+    "Every GI must have an Inspection Body to verify quality and conduct periodic checks.",
+    "The Registered Proprietor (association) is responsible for monitoring quality and taking action against unauthorized use.",
+    "Unauthorized use of a GI is both a civil wrong and a criminal offense.",
+    "Quality standards are specific and must be maintained by all authorized users."
+  ],
+  
+  "learningObjectives": [
+    "Define 'Authorized User' and explain the requirements.",
+    "Describe the role of the Registered Proprietor.",
+    "Explain the function of Inspection Bodies in GI protection.",
+    "Identify the penalties for unauthorized use of a registered GI."
+  ],
+  
+  "difficulty": "Medium",
+  "xpReward": 200,
+  "estimatedMinutes": 12,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:50:00Z"
+}

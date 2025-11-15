@@ -8,6 +8,7 @@ import '../../core/constants/app_text_styles.dart';
 import '../../core/services/content_service.dart';
 import '../../core/services/certificate_service.dart';
 import '../../core/models/user_model.dart';
+import '../../core/models/realm_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/progress_bar.dart';
@@ -221,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final userLevel = _getUserLevel();
     final xpToNext = _getXPToNextLevel();
     final levelProgress = _getLevelProgress();
-    final realms = _contentService.getAllRealms();
+    final realms = _contentService.getAllRealmsSync();
     final String initials = _user!.displayName.split(' ')
         .map((n) => n.isNotEmpty ? n[0] : '')
         .take(2)
@@ -299,28 +300,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
         child: Column(
           children: [
-            // Large avatar
-            AvatarWidget(
-              initials: initials,
-              size: 120,
-              backgroundColor: AppDesignSystem.primaryPink,
-              imageUrl: _user!.avatarUrl,
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Name
-            Text(
-              _user!.displayName,
-              style: AppTextStyles.h1,
-            ),
-            
-            const SizedBox(height: 4),
-            
-            // Details
-            Text(
-              _user!.state,
-              style: AppTextStyles.caption,
+            // Profile header with gradient background
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                    AppDesignSystem.primaryPink.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  // Large avatar
+                  AvatarWidget(
+                    initials: initials,
+                    size: 100,
+                    backgroundColor: AppDesignSystem.primaryPink,
+                    imageUrl: _user!.avatarUrl,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Name
+                  Text(
+                    _user!.displayName,
+                    style: AppTextStyles.h2.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  
+                  const SizedBox(height: 6),
+                  
+                  // Details
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      _user!.state,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: AppDesignSystem.primaryIndigo,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             
             const SizedBox(height: AppSpacing.lg),
@@ -547,29 +584,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             
-            CleanCard(
-              child: Column(
-                children: realms.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final realm = entry.value;
-                  final realmProgress = _progressSummary[realm.id];
-                  final progress = realmProgress != null && realmProgress is Map
-                      ? (realmProgress['levelsCompleted'] ?? 0) / (realmProgress['totalLevels'] ?? 1)
-                      : 0.0;
-                  
-                  return Column(
-                    children: [
-                      if (index > 0) const Divider(height: 24),
-                      _RealmProgress(
-                        icon: realm.iconEmoji,
-                        title: realm.name,
-                        progress: progress,
-                        color: Color(realm.color),
+            FutureBuilder<List<RealmModel>>(
+              future: _contentService.getAllRealms(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CleanCard(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
+                    ),
                   );
-                }).toList(),
-              ),
+                }
+                
+                final realms = snapshot.data!;
+                return CleanCard(
+                  child: Column(
+                    children: realms.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final realm = entry.value;
+                      final realmProgress = _progressSummary[realm.id];
+                      final progress = realmProgress != null && realmProgress is Map
+                          ? (realmProgress['levelsCompleted'] ?? 0) / (realmProgress['totalLevels'] ?? 1)
+                          : 0.0;
+                      
+                      return Column(
+                        children: [
+                          if (index > 0) const Divider(height: 24),
+                          _RealmProgress(
+                            icon: realm.iconPath,
+                            title: realm.name,
+                            progress: progress,
+                            color: Color(realm.color),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
             ),
             
             const SizedBox(height: AppSpacing.lg),
@@ -634,6 +688,238 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
+            
+            // Teacher-specific section
+            if (_user!.role == 'teacher') ...[
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/main');
+                },
+                child: CleanCard(
+                  color: AppDesignSystem.primaryGreen.withValues(alpha: 0.1),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.primaryGreen.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.dashboard,
+                              size: 32,
+                              color: AppDesignSystem.primaryGreen,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Teacher Dashboard',
+                                style: AppTextStyles.cardTitle.copyWith(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Manage classrooms and students',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
+            
+            // Principal-specific section
+            if (_user!.role == 'principal') ...[
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, '/main');
+                },
+                child: CleanCard(
+                  color: AppDesignSystem.secondaryPurple.withValues(alpha: 0.1),
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.secondaryPurple.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.admin_panel_settings,
+                              size: 32,
+                              color: AppDesignSystem.secondaryPurple,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Principal Dashboard',
+                                style: AppTextStyles.cardTitle.copyWith(
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Manage school and analytics',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+            ],
+            
+            // Messages Section
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, '/chat-list');
+              },
+              child: CleanCard(
+                color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF3B82F6).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Stack(
+                          children: [
+                            const Center(
+                              child: Icon(
+                                Icons.chat_bubble_outline,
+                                size: 28,
+                                color: Color(0xFF3B82F6),
+                              ),
+                            ),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('chats')
+                                  .where('participants', arrayContains: FirebaseAuth.instance.currentUser?.uid)
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) return const SizedBox();
+                                
+                                int totalUnread = 0;
+                                for (var doc in snapshot.data!.docs) {
+                                  final data = doc.data() as Map<String, dynamic>;
+                                  final unreadCount = (data['unreadCount'] as Map<String, dynamic>?)?[FirebaseAuth.instance.currentUser?.uid] ?? 0;
+                                  totalUnread += unreadCount as int;
+                                }
+                                
+                                if (totalUnread == 0) return const SizedBox();
+                                
+                                return Positioned(
+                                  right: 4,
+                                  top: 4,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: AppDesignSystem.error,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white, width: 2),
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 18,
+                                      minHeight: 18,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        totalUnread > 9 ? '9+' : totalUnread.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Messages',
+                              style: AppTextStyles.cardTitle.copyWith(
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Chat with your teachers',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: AppDesignSystem.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: AppDesignSystem.textSecondary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: AppSpacing.lg),
             
             // My Badges
             Row(
@@ -817,7 +1103,7 @@ class _StatCard extends StatelessWidget {
 
 /// Realm progress item
 class _RealmProgress extends StatelessWidget {
-  final String icon; // Emoji string
+  final String icon; // Asset path
   final String title;
   final double progress;
   final Color color;
@@ -833,9 +1119,13 @@ class _RealmProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
+        Image.asset(
           icon,
-          style: TextStyle(fontSize: 24),
+          width: 24,
+          height: 24,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.school, size: 24);
+          },
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -909,7 +1199,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         return {
           'id': doc.id,
           'name': data['name'] ?? 'Badge',
-          'iconEmoji': data['iconEmoji'] ?? '🏅',
+          'iconPath': data['iconPath'] ?? data['icon'] ?? data['iconEmoji'] ?? 'assets/badges/default_badge.png',
           'description': data['description'] ?? '',
           'rarity': data['rarity'] ?? 'common',
         };
@@ -1000,7 +1290,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         final unlockDate = _badgeUnlockDates[badgeId];
         
         return _BadgeItem(
-          icon: badge['iconEmoji'],
+          icon: badge['iconPath'],
           name: badge['name'],
           isUnlocked: isUnlocked,
           unlockDate: unlockDate,
@@ -1052,12 +1342,14 @@ class _BadgeItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Text(
+                  child: Image.asset(
                     icon,
-                    style: TextStyle(
-                      fontSize: 64,
-                      color: isUnlocked ? null : Colors.grey,
-                    ),
+                    width: 64,
+                    height: 64,
+                    color: isUnlocked ? null : Colors.grey,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.emoji_events, size: 64);
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -1117,12 +1409,14 @@ class _BadgeItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            Image.asset(
               icon,
-              style: TextStyle(
-                fontSize: 32,
-                color: isUnlocked ? null : Colors.grey,
-              ),
+              width: 32,
+              height: 32,
+              color: isUnlocked ? null : Colors.grey,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.emoji_events, size: 32);
+              },
             ),
             const SizedBox(height: 4),
             if (unlockDate != null && isUnlocked)

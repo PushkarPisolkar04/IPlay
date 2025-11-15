@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_10",
+  "realmId": "realm_patent",
+  "levelNumber": 10,
+  "name": "Hot News: Patenting AI, Genes, and Pharma",
+  "description": "The final level. Can an AI be an 'inventor'? Can you patent a human gene? Learn the ethical frontiers of patent law.",
+  "summary": "This level explores today's biggest ethical and legal patent debates: the 'DABUS' AI inventor case, the 'Myriad' gene patenting case, and the pharmaceutical practice of 'evergreening'.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=_T9MYiWoZzQ",
+  "videoDuration": 2105,
+  
+  "content": "## Hot News: The Ethical Frontiers of Patent Law\n\nThe 20-year bargain was designed for industrial-era machines. Today, it's being tested by AI, genetics, and modern medicine. These are the 'hot' legal questions with no easy answers.\n\n### 1. The AI Inventor (The 'DABUS' Case)\n\n* **The Question:** To get a patent, you must name the human 'inventor'. But what if an **AI** invents something *by itself*? \n* **The 'DABUS' Case:** An inventor named Stephen Thaler filed patents in countries around the world, listing an AI he created, named 'DABUS', as the sole inventor. \n* **The Global Verdict (So Far):** Nearly every major patent office and court (in the US, UK, and Europe) has **rejected** this. They have ruled that an 'inventor' *must* be a **natural person (a human being)**. They argue the law was written by humans, for humans. \n* **The Lesson:** As of today, an AI cannot be an 'inventor'. This raises a huge question: if an AI creates a new cure for cancer, and it has no human 'inventor', does that mean it can't be patented and goes straight into the public domain? The law has no good answer yet.\n\n### 2. Patenting Human Genes (The 'Myriad' Case)\n\n* **The Question:** Can you patent a human gene? For decades, companies did. A company called 'Myriad Genetics' patented the **BRCA1 and BRCA2 genes**, which are linked to breast cancer. They had a 20-year monopoly on *all* testing for these genes.\n* **The Global Shift:** A landmark 2013 US Supreme Court case (*AMP v. Myriad Genetics*) ruled **unanimously** that you **CANNOT** patent a naturally-occurring gene. The court ruled that a gene is a **'product of nature'** (like a mineral or a plant) and is a *discovery*, not an *invention*. \n* **The Exception (cDNA):** The court *did* allow patents on **'cDNA'** (complementary DNA). This is a *synthetic* version of a gene created in a lab. Since it doesn't exist in nature, it *is* an invention. \n* **The Lesson:** This case was a major victory for public health, and the principle is now followed globally: you can't patent parts of the human body, but you *can* patent synthetic, man-made biological inventions.\n\n### 3. Pharma 'Evergreening'\n\n* **The Problem:** A company's 20-year patent on a blockbuster drug (like a painkiller) is about to expire, allowing cheap generics to enter the market. \n* **The 'Evergreening' Tactic:** Right before it expires, the company files a *new* patent for a *minor, non-obvious change*. For example:\n    * Changing it from a 'pill' to a 'capsule'.\n    * Changing the 'dosage' from 20mg to 10mg.\n    * Changing it to an 'extended-release' version.\n* **The Result:** This can block generics for several more years, 'evergreening' the monopoly. \n* **The Debate:** Is this a 'scam' that hurts the public? Or is it a 'legitimate new invention' (e.g., the extended-release version is a real improvement)? This is a fierce, ongoing legal battle between 'Big Pharma' and generic drug makers in every country.",
+  
+  "keyPoints": [
+    "The 'DABUS' case is a global test of whether an AI can be named as an 'inventor' on a patent. Most countries have said NO.",
+    "The global consensus (led by the 'Myriad' case) is that you CANNOT patent a 'natural' human gene (a discovery).",
+    "You CAN patent a 'synthetic' gene (like cDNA) because it is a man-made 'invention'.",
+    "'Evergreening' is a pharmaceutical strategy to extend a patent monopoly by patenting *minor changes* (like a new dosage) to an old drug.",
+    "This practice is highly controversial and is at the center of the 'drug price' debate."
+  ],
+  
+  "learningObjectives": [
+    "Explain the legal question in the 'DABUS' AI case and the current international ruling.",
+    "Explain the 'Myriad' case and the difference between patenting a 'natural gene' vs. 'synthetic cDNA'.",
+    "Define 'Evergreening' in the pharmaceutical industry.",
+    "Analyze the two sides of the 'evergreening' debate (scam vs. new invention)."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 350,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:20:00Z"
+}

@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_8",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_8_q1",
+      "question": "Can a GI and trademark coexist?",
+      "options": [
+        "Never",
+        "Yes, if they are for different products or don't cause confusion",
+        "Only with government permission",
+        "Only if expensive"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI and trademarks can coexist if they are for different products or don't cause consumer confusion.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q2",
+      "question": "When do GI and trademark conflict?",
+      "options": [
+        "Always",
+        "When they are for the same or similar products and cause confusion",
+        "Never",
+        "Only in India"
+      ],
+      "correctIndex": 1,
+      "explanation": "Conflicts arise when GI and trademark are for the same/similar products and could confuse consumers.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q3",
+      "question": "Which section of GI Act deals with prior registration?",
+      "options": [
+        "Section 9",
+        "Section 25",
+        "Section 11",
+        "Section 30"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 25 of the GI Act deals with the prior registration rule for trademarks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q4",
+      "question": "What is the 'prior registration rule'?",
+      "options": [
+        "GI always wins",
+        "Whichever is registered first generally has priority",
+        "Trademark always wins",
+        "Government decides"
+      ],
+      "correctIndex": 1,
+      "explanation": "The prior registration rule means whichever right (GI or trademark) is registered first generally has priority.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q5",
+      "question": "What are 'grandfathered rights'?",
+      "options": [
+        "Rights for elderly people",
+        "Pre-existing trademark rights that are protected despite later GI registration",
+        "Rights that expire",
+        "Rights for government"
+      ],
+      "correctIndex": 1,
+      "explanation": "Grandfathered rights protect pre-existing trademarks even after a GI is registered for the same name.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q6",
+      "question": "Can Dove soap and Dove chocolate coexist?",
+      "options": [
+        "No, never",
+        "Yes, they are different product categories",
+        "Only in some countries",
+        "Only with permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dove soap and chocolate can coexist as they are in different product categories and don't cause confusion.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q7",
+      "question": "What is the Napa Valley coexistence example?",
+      "options": [
+        "A conflict case",
+        "An example where GI and trademarks coexist for wine region",
+        "A genericization case",
+        "A price dispute"
+      ],
+      "correctIndex": 1,
+      "explanation": "Napa Valley shows how a GI can coexist with individual winery trademarks in the same region.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q8",
+      "question": "If a trademark is registered before a GI, what happens?",
+      "options": [
+        "Trademark is cancelled",
+        "Trademark holder retains rights (grandfathered)",
+        "GI is cancelled",
+        "Both are cancelled"
+      ],
+      "correctIndex": 1,
+      "explanation": "Pre-existing trademark holders typically retain their rights even after GI registration (grandfathered rights).",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q9",
+      "question": "Can a company use both a GI and its own trademark?",
+      "options": [
+        "No, never",
+        "Yes, if they are an authorized user of the GI",
+        "Only large companies",
+        "Only with government permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized users can use both the GI tag and their own company trademark on products.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q10",
+      "question": "What happens if someone tries to register a trademark identical to an existing GI?",
+      "options": [
+        "Automatic approval",
+        "Application will likely be refused",
+        "Requires extra fee",
+        "Requires government approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "Trademark applications identical to existing GIs for the same products will likely be refused.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q11",
+      "question": "Why can multiple wineries in Napa Valley use the 'Napa Valley' GI?",
+      "options": [
+        "They pay fees",
+        "It's a collective geographical indication for the region",
+        "They are all owned by one company",
+        "Government requires it"
+      ],
+      "correctIndex": 1,
+      "explanation": "Napa Valley is a collective GI that all qualifying wineries in the region can use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q12",
+      "question": "What is the key difference between GI and trademark ownership?",
+      "options": [
+        "No difference",
+        "GI is collective, trademark is individual",
+        "GI is individual, trademark is collective",
+        "Both are government-owned"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI is a collective right of a region/community, while trademarks are individual/company rights.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q13",
+      "question": "Can a GI be registered if a similar trademark exists?",
+      "options": [
+        "Yes, always",
+        "It depends on prior registration and potential confusion",
+        "No, never",
+        "Only with court approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI registration depends on which was registered first and whether there's potential for consumer confusion.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q14",
+      "question": "What protects pre-existing trademark holders?",
+      "options": [
+        "Nothing",
+        "Grandfathered rights under Section 25",
+        "Only court orders",
+        "Only government orders"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 25 provides grandfathered rights to protect pre-existing trademark holders.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q15",
+      "question": "Can a Darjeeling tea producer use their own brand name?",
+      "options": [
+        "No, only GI tag",
+        "Yes, they can use both GI tag and their brand name",
+        "Only with permission",
+        "Only if they pay extra"
+      ],
+      "correctIndex": 1,
+      "explanation": "Authorized producers can use both the Darjeeling GI tag and their own brand name/trademark.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q16",
+      "question": "What is the purpose of the prior registration rule?",
+      "options": [
+        "To increase fees",
+        "To provide certainty and protect earlier rights",
+        "To restrict trade",
+        "To favor trademarks"
+      ],
+      "correctIndex": 1,
+      "explanation": "The prior registration rule provides legal certainty and protects rights established earlier.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q17",
+      "question": "In the Napa Valley example, what do individual wineries have?",
+      "options": [
+        "Only GI rights",
+        "Both GI rights and their own trademarks",
+        "Only trademarks",
+        "No rights"
+      ],
+      "correctIndex": 1,
+      "explanation": "Napa Valley wineries can use the regional GI and also have their own individual winery trademarks.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q18",
+      "question": "Can a GI be used as part of a trademark?",
+      "options": [
+        "No, never",
+        "Yes, if combined with distinctive elements and properly used",
+        "Only by government",
+        "Only for exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "A GI can be part of a trademark if combined with distinctive elements and used by authorized producers.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q19",
+      "question": "What happens in a conflict between GI and trademark for same product?",
+      "options": [
+        "GI always wins",
+        "Prior registration and actual use determine the outcome",
+        "Trademark always wins",
+        "Both are cancelled"
+      ],
+      "correctIndex": 1,
+      "explanation": "Conflicts are resolved based on prior registration, actual use, and potential for consumer confusion.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q20",
+      "question": "Why is coexistence possible in different product categories?",
+      "options": [
+        "It's not possible",
+        "Different products don't cause consumer confusion",
+        "Government requires it",
+        "It's cheaper"
+      ],
+      "correctIndex": 1,
+      "explanation": "Coexistence is possible when products are in different categories and don't cause consumer confusion.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q21",
+      "question": "What is the benefit of allowing GI and trademark coexistence?",
+      "options": [
+        "Higher prices",
+        "Protects both regional identity and individual brand identity",
+        "Reduces competition",
+        "Increases taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Coexistence protects both the regional identity (GI) and individual producer brands (trademarks).",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q22",
+      "question": "Can a trademark be registered for 'Basmati Rice'?",
+      "options": [
+        "Yes, easily",
+        "No, Basmati is a protected GI",
+        "Only by government",
+        "Only for exports"
+      ],
+      "correctIndex": 1,
+      "explanation": "Basmati is a protected GI, so trademark registration for 'Basmati Rice' would likely be refused.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_8_q23",
+      "question": "What must be shown to prove consumer confusion?",
+      "options": [
+        "Nothing",
+        "Evidence that consumers might mistake one product for another",
+        "Only price differences",
+        "Only packaging differences"
+      ],
+      "correctIndex": 1,
+      "explanation": "Consumer confusion requires evidence that consumers might mistake one product's origin for another.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q24",
+      "question": "How does Section 25 protect trademark holders?",
+      "options": [
+        "It doesn't",
+        "It preserves rights of trademarks registered before GI",
+        "It cancels all trademarks",
+        "It increases fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Section 25 preserves the rights of trademark holders who registered before the GI was established.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_8_q25",
+      "question": "What is the key to successful coexistence?",
+      "options": [
+        "High prices",
+        "Clear differentiation and no consumer confusion",
+        "Government control",
+        "Limited production"
+      ],
+      "correctIndex": 1,
+      "explanation": "Successful coexistence requires clear differentiation between marks and no likelihood of consumer confusion.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

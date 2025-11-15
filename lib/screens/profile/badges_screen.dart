@@ -235,58 +235,131 @@ class _BadgeCard extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: Row(
-              children: [
-                Text(
-                  badge.iconEmoji,
-                  style: const TextStyle(fontSize: 32),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    badge.name,
-                    style: AppTextStyles.h3,
-                  ),
-                ),
-              ],
+          builder: (context) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  badge.description,
-                  style: AppTextStyles.bodyMedium,
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isEarned
+                      ? [Colors.amber.shade50, Colors.white]
+                      : [Colors.grey.shade100, Colors.white],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.elasticOut,
+                    builder: (context, value, child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            color: isEarned
+                                ? Colors.amber.withValues(alpha: 0.2)
+                                : Colors.grey.withValues(alpha: 0.2),
+                            shape: BoxShape.circle,
+                            boxShadow: isEarned
+                                ? [
+                                    BoxShadow(
+                                      color: Colors.amber.withValues(alpha: 0.3),
+                                      blurRadius: 20,
+                                      spreadRadius: 5,
+                                    ),
+                                  ]
+                                : [],
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              badge.iconPath,
+                              width: 64,
+                              height: 64,
+                              color: isEarned ? null : Colors.grey,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.emoji_events, size: 64);
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  decoration: BoxDecoration(
-                    color: isEarned
-                        ? AppDesignSystem.success.withValues(alpha: 0.1)
-                        : AppDesignSystem.textTertiary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
+                  const SizedBox(height: 20),
+                  Text(
+                    badge.name,
+                    style: AppTextStyles.h2.copyWith(
+                      color: isEarned ? Colors.amber.shade900 : Colors.grey.shade700,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  child: Text(
-                    isEarned ? '✓ Earned' : '🔒 Locked',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: isEarned ? AppDesignSystem.success : AppDesignSystem.textTertiary,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isEarned
+                          ? AppDesignSystem.success.withValues(alpha: 0.15)
+                          : AppDesignSystem.textTertiary.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isEarned ? Icons.check_circle : Icons.lock,
+                          size: 16,
+                          color: isEarned ? AppDesignSystem.success : AppDesignSystem.textTertiary,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          isEarned ? 'Earned' : 'Locked',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: isEarned ? AppDesignSystem.success : AppDesignSystem.textTertiary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
+                  const SizedBox(height: 16),
+                  Text(
+                    badge.description,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppDesignSystem.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isEarned ? Colors.amber : AppDesignSystem.primaryIndigo,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text('Close'),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -300,9 +373,13 @@ class _BadgeCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  badge.iconEmoji,
-                  style: const TextStyle(fontSize: 40),
+                Image.asset(
+                  badge.iconPath,
+                  width: 40,
+                  height: 40,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.emoji_events, size: 40);
+                  },
                 ),
                 const SizedBox(height: 6),
                 Flexible(

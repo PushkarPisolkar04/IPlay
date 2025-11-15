@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_1",
+  "realmId": "realm_patent",
+  "levelNumber": 1,
+  "name": "What is a Patent? (The 20-Year Bargain)",
+  "description": "Welcome to the Realm of Invention. Learn the core 'patent bargain': full disclosure for a temporary monopoly.",
+  "summary": "This level introduces patents, the IP right that protects inventions. You'll learn the global 'patent bargain'—you must fully disclose your invention, and in return, you get a temporary monopoly.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=A_j-0-p_sAU",
+  "videoDuration": 154,
+  
+  "content": "## What is a Patent? (The 20-Year Bargain)\n\nWelcome to the third realm. If Copyright protects *expression* and Trademarks protect *brand*, then **Patents protect *inventions***.\n\nA patent is a powerful legal right granted by a government to an inventor. It gives the inventor the *exclusive right* to make, use, sell, or import their invention for a limited period.\n\nNo one else can do these things in the country where the patent is granted without the inventor's permission. A patent is **territorial**—an Italian patent only works in Italy; a Japanese patent only works in Japan.\n\n### The 'Patent Bargain'\n\nThis exclusive right is not a free gift. It's a **'bargain'** between the inventor and the public (represented by the government). \n\nHere is the deal:\n\n* **The Inventor's Side (Full Disclosure):** The inventor must reveal their invention to the public in *complete detail*. They must file a patent document that explains exactly how the invention works, so that anyone 'skilled in the art' could read it and re-create the invention.\n\n* **The Public's Side (Monopoly):** In exchange for this full and honest disclosure, the public gives the inventor a temporary monopoly on the invention. \n\n### The 'Term': 20 Years\n\nThanks to a major international agreement (the **TRIPS Agreement**), the standard patent term is now consistent in most of the world:\n\n> **20 years** from the date you *first file* your patent application.\n\nThis 20-year term is **not renewable**. \n\nAfter 20 years, the 'bargain' is complete. The patent expires, and the invention enters the **public domain**. At that point, anyone—your competitors, the public, anyone—is free to use, make, and sell your invention in that country without asking for permission.\n\nThis system is designed to encourage innovation in two ways:\n\n1.  It gives inventors a strong financial incentive (the 20-year monopoly) to create new things.\n2.  It ensures that all new knowledge is *shared* with the public (in the disclosure) so that other inventors can learn from it and build even better things in the future.",
+  
+  "keyPoints": [
+    "Patents protect functional *inventions* (how things work).",
+    "A patent is a 'bargain': the inventor gives *full disclosure* in exchange for a *temporary monopoly*.",
+    "The standard international patent term (under the TRIPS Agreement) is **20 years** from the filing date.",
+    "Patents are **territorial**: a patent from one country only works in that country.",
+    "A patent is **not renewable**. After 20 years, the invention enters the public domain."
+  ],
+  
+  "learningObjectives": [
+    "Define 'patent' and what it protects.",
+    "Explain the 'patent bargain' (disclosure for monopoly).",
+    "State the standard international term of a patent (20 years) and that it is not renewable.",
+    "Define what 'territorial' means in the context of patents."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T19:35:00Z"
+}

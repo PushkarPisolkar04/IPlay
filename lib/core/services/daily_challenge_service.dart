@@ -1,102 +1,118 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../models/daily_challenge_model.dart';
 
-/// Service for daily challenges
+/// Service for daily challenges (loads from local JSON)
 class DailyChallengeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _uuid = const Uuid();
+  
+  List<Map<String, dynamic>>? _cachedChallenges;
 
-  /// Get today's daily challenge
-  Future<DailyChallengeModel?> getTodaysChallenge() async {
+  /// Load all challenges from local JSON
+  Future<List<Map<String, dynamic>>> _loadChallenges() async {
+    if (_cachedChallenges != null) return _cachedChallenges!;
+    
     try {
-      final today = DateTime.now();
-      final startOfDay = DateTime(today.year, today.month, today.day);
-      final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      final query = await _firestore
-          .collection('daily_challenges')
-          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('date', isLessThan: Timestamp.fromDate(endOfDay))
-          .limit(1)
-          .get();
-
-      if (query.docs.isEmpty) return null;
-
-      return DailyChallengeModel.fromFirestore(query.docs.first.data());
-    } catch (e) {
-      throw Exception('Failed to get today\'s challenge: $e');
+      print('📅 Loading daily challenges from JSON...');
+      final jsonString = await rootBundle.loadString('content/daily_challenges.json');
+      print('✅ Daily challenges JSON loaded');
+      
+      final jsonData = json.decode(jsonString) as Map<String, dynamic>;
+      print('✅ JSON parsed. Keys: ${jsonData.keys.join(", ")}');
+      
+      final challengesList = jsonData['challenges'];
+      if (challengesList == null) {
+        print('❌ Error: challenges field is null in JSON');
+        return [];
+      }
+      
+      _cachedChallenges = List<Map<String, dynamic>>.from(challengesList as List);
+      print('✅ Loaded ${_cachedChallenges!.length} daily challenges');
+      return _cachedChallenges!;
+    } catch (e, stackTrace) {
+      print('❌ Error loading daily challenges: $e');
+      print('Stack trace: $stackTrace');
+      return [];
     }
   }
 
-  /// Get challenge by ID
-  Future<DailyChallengeModel?> getChallenge(String challengeId) async {
+  /// Get today's daily challenge (rotates through available challenges)
+  Future<DailyChallengeModel?> getTodaysChallenge() async {
     try {
-      final doc = await _firestore
-          .collection('daily_challenges')
-          .doc(challengeId)
-          .get();
+      final challenges = await _loadChallenges();
+      if (challenges.isEmpty) return null;
 
-      if (!doc.exists) return null;
+      // Use day of year to rotate through challenges
+      final today = DateTime.now();
+      final dayOfYear = today.difference(DateTime(today.year, 1, 1)).inDays;
+      final challengeIndex = dayOfYear % challenges.length;
+      
+      final challengeData = challenges[challengeIndex];
+      
+      // Convert to DailyChallengeModel
+      final questions = (challengeData['questions'] as List).map((q) {
+        return ChallengeQuestion(
+          question: q['question'] as String,
+          options: List<String>.from(q['options'] as List),
+          correctAnswer: q['correctAnswer'] as int,
+          explanation: q['explanation'] as String,
+        );
+      }).toList();
 
-      return DailyChallengeModel.fromFirestore(doc.data()!);
+      final startOfDay = DateTime(today.year, today.month, today.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      return DailyChallengeModel(
+        id: '${challengeData['id']}_${today.year}_${today.month}_${today.day}',
+        questions: questions,
+        xpReward: challengeData['xpReward'] as int,
+        date: startOfDay,
+        expiresAt: endOfDay,
+      );
     } catch (e) {
-      throw Exception('Failed to get challenge: $e');
+      print('Error getting today\'s challenge: $e');
+      return null;
     }
   }
 
   /// Check if user has attempted today's challenge
   Future<bool> hasAttemptedToday(String userId) async {
     try {
+      final prefs = await SharedPreferences.getInstance();
       final today = DateTime.now();
-      final startOfDay = DateTime(today.year, today.month, today.day);
-
-      // Get today's challenge
-      final challenge = await getTodaysChallenge();
-      if (challenge == null) return false;
-
-      // Check if user has attempted it
-      final query = await _firestore
-          .collection('daily_challenge_attempts')
-          .where('userId', isEqualTo: userId)
-          .where('challengeId', isEqualTo: challenge.id)
-          .limit(1)
-          .get();
-
-      return query.docs.isNotEmpty;
+      final todayKey = 'challenge_${today.year}_${today.month}_${today.day}';
+      return prefs.containsKey(todayKey);
     } catch (e) {
-      throw Exception('Failed to check today\'s attempt: $e');
+      print('Error checking today\'s attempt: $e');
+      return false;
     }
   }
 
-  /// Submit challenge attempt
+  /// Submit challenge attempt (stores locally and in Firestore)
   Future<ChallengeAttemptModel> submitAttempt({
     required String userId,
     required String challengeId,
     required int score,
   }) async {
     try {
-      // Check if already attempted
-      final existing = await _firestore
-          .collection('daily_challenge_attempts')
-          .where('userId', isEqualTo: userId)
-          .where('challengeId', isEqualTo: challengeId)
-          .limit(1)
-          .get();
-
-      if (existing.docs.isNotEmpty) {
+      // Check if already attempted today using SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final todayKey = 'challenge_${today.year}_${today.month}_${today.day}';
+      final attemptedToday = prefs.getString(todayKey);
+      
+      if (attemptedToday != null) {
         throw Exception('Challenge already attempted today');
       }
 
-      // Get challenge details
-      final challenge = await getChallenge(challengeId);
+      // Get today's challenge to calculate XP
+      final challenge = await getTodaysChallenge();
       if (challenge == null) {
         throw Exception('Challenge not found');
-      }
-
-      // Check if challenge has expired
-      if (DateTime.now().isAfter(challenge.expiresAt)) {
-        throw Exception('Challenge has expired');
       }
 
       // Calculate XP based on score (5 questions, 10 XP each = 50 XP max)
@@ -111,23 +127,37 @@ class DailyChallengeService {
         attemptedAt: DateTime.now(),
       );
 
-      final batch = _firestore.batch();
+      // Save attempt locally
+      await prefs.setString(todayKey, json.encode({
+        'id': attempt.id,
+        'score': attempt.score,
+        'xpEarned': attempt.xpEarned,
+        'attemptedAt': attempt.attemptedAt.toIso8601String(),
+      }));
 
-      // Save attempt
-      batch.set(
-        _firestore.collection('daily_challenge_attempts').doc(attempt.id),
-        attempt.toFirestore(),
-      );
+      // Also save to Firestore for persistence and leaderboard
+      try {
+        final batch = _firestore.batch();
 
-      // Award XP to user
-      batch.update(
-        _firestore.collection('users').doc(userId),
-        {
-          'totalXP': FieldValue.increment(xpEarned),
-        },
-      );
+        // Save attempt
+        batch.set(
+          _firestore.collection('daily_challenge_attempts').doc(attempt.id),
+          attempt.toFirestore(),
+        );
 
-      await batch.commit();
+        // Award XP to user
+        batch.update(
+          _firestore.collection('users').doc(userId),
+          {
+            'totalXP': FieldValue.increment(xpEarned),
+          },
+        );
+
+        await batch.commit();
+      } catch (e) {
+        print('Error saving to Firestore: $e');
+        // Continue even if Firestore fails - local save is enough
+      }
 
       return attempt;
     } catch (e) {
@@ -135,24 +165,49 @@ class DailyChallengeService {
     }
   }
 
-  /// Get user's attempt for a specific challenge
+  /// Get user's attempt for a specific challenge (checks local storage first)
   Future<ChallengeAttemptModel?> getUserAttempt({
     required String userId,
     required String challengeId,
   }) async {
     try {
-      final query = await _firestore
-          .collection('daily_challenge_attempts')
-          .where('userId', isEqualTo: userId)
-          .where('challengeId', isEqualTo: challengeId)
-          .limit(1)
-          .get();
+      // Check local storage first
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final todayKey = 'challenge_${today.year}_${today.month}_${today.day}';
+      final attemptData = prefs.getString(todayKey);
+      
+      if (attemptData != null) {
+        final data = json.decode(attemptData) as Map<String, dynamic>;
+        return ChallengeAttemptModel(
+          id: data['id'] as String,
+          userId: userId,
+          challengeId: challengeId,
+          score: data['score'] as int,
+          xpEarned: data['xpEarned'] as int,
+          attemptedAt: DateTime.parse(data['attemptedAt'] as String),
+        );
+      }
 
-      if (query.docs.isEmpty) return null;
+      // Fallback to Firestore
+      try {
+        final query = await _firestore
+            .collection('daily_challenge_attempts')
+            .where('userId', isEqualTo: userId)
+            .where('challengeId', isEqualTo: challengeId)
+            .limit(1)
+            .get();
 
-      return ChallengeAttemptModel.fromFirestore(query.docs.first.data());
+        if (query.docs.isEmpty) return null;
+
+        return ChallengeAttemptModel.fromFirestore(query.docs.first.data());
+      } catch (e) {
+        print('Error fetching from Firestore: $e');
+        return null;
+      }
     } catch (e) {
-      throw Exception('Failed to get user attempt: $e');
+      print('Error getting user attempt: $e');
+      return null;
     }
   }
 

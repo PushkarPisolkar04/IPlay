@@ -1,0 +1,362 @@
+﻿{
+  "levelId": "design_level_6",
+  "realmId": "realm_design",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  "questions": [
+    {
+      "id": "design_6_q1",
+      "question": "What is design registration?",
+      "options": [
+        "A tax",
+        "Official recording of design with government",
+        "A license",
+        "A permit"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design registration is the official recording of a design with the government for legal protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q2",
+      "question": "Can you register multiple designs in one application?",
+      "options": [
+        "Yes, unlimited",
+        "No, one design per application",
+        "Only 2 designs",
+        "Only 5 designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Generally, one design per application is required in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q3",
+      "question": "What is design opposition?",
+      "options": [
+        "Supporting a design",
+        "Challenging a design application",
+        "Copying a design",
+        "Selling a design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design opposition is the process of challenging a design application before registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q4",
+      "question": "Can you register a design for medical devices?",
+      "options": [
+        "No, never",
+        "Yes, if novel and aesthetic",
+        "Only surgical tools",
+        "Only expensive devices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Medical device designs can be registered if they are novel and focus on aesthetic features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q5",
+      "question": "What is design examination?",
+      "options": [
+        "Testing quality",
+        "Official review of design application",
+        "Manufacturing test",
+        "Price check"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design examination is the official review of a design application by the Design Office.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q6",
+      "question": "Can you register a design for watches?",
+      "options": [
+        "No, never",
+        "Yes, watch designs can be registered",
+        "Only luxury watches",
+        "Only digital watches"
+      ],
+      "correctIndex": 1,
+      "explanation": "Watch designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q7",
+      "question": "What is design publication?",
+      "options": [
+        "Advertising",
+        "Official publication of registered design",
+        "Selling designs",
+        "Manufacturing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design publication is the official publication of a registered design in the Design Journal.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q8",
+      "question": "Can you register a design for eyewear?",
+      "options": [
+        "No, never",
+        "Yes, eyewear designs can be registered",
+        "Only sunglasses",
+        "Only prescription glasses"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eyewear designs can be registered if they meet novelty and originality criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q9",
+      "question": "What is design priority?",
+      "options": [
+        "First in line",
+        "Right to claim earlier filing date from foreign application",
+        "VIP treatment",
+        "Fast processing"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design priority allows claiming an earlier filing date from a foreign application under Paris Convention.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q10",
+      "question": "Can you register a design for bags?",
+      "options": [
+        "No, never",
+        "Yes, bag designs can be registered",
+        "Only leather bags",
+        "Only expensive bags"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bag designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q11",
+      "question": "What is design renewal?",
+      "options": [
+        "Making new designs",
+        "Extending design protection for additional 5 years",
+        "Repairing designs",
+        "Updating designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design renewal extends protection for an additional 5 years beyond the initial 10-year term.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q12",
+      "question": "Can you register a design for stationery?",
+      "options": [
+        "No, never",
+        "Yes, stationery designs can be registered",
+        "Only pens",
+        "Only notebooks"
+      ],
+      "correctIndex": 1,
+      "explanation": "Stationery designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q13",
+      "question": "What is design rectification?",
+      "options": [
+        "Fixing errors",
+        "Correcting entries in the design register",
+        "Destroying designs",
+        "Copying designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design rectification is the process of correcting errors in the design register.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q14",
+      "question": "Can you register a design for kitchenware?",
+      "options": [
+        "No, never",
+        "Yes, kitchenware designs can be registered",
+        "Only plates",
+        "Only expensive items"
+      ],
+      "correctIndex": 1,
+      "explanation": "Kitchenware designs can be registered if they meet novelty and originality requirements.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q15",
+      "question": "What is design surrender?",
+      "options": [
+        "Giving up",
+        "Voluntarily cancelling design registration",
+        "Selling design",
+        "Licensing design"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design surrender is the voluntary cancellation of a design registration by the owner.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q16",
+      "question": "Can you register a design for lighting fixtures?",
+      "options": [
+        "No, never",
+        "Yes, lighting fixture designs can be registered",
+        "Only lamps",
+        "Only chandeliers"
+      ],
+      "correctIndex": 1,
+      "explanation": "Lighting fixture designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q17",
+      "question": "What is design amendment?",
+      "options": [
+        "Changing prices",
+        "Modifying design application before registration",
+        "Changing ownership",
+        "Changing colors"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design amendment allows modifying a design application before registration with permission.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q18",
+      "question": "Can you register a design for bathroom fixtures?",
+      "options": [
+        "No, never",
+        "Yes, bathroom fixture designs can be registered",
+        "Only faucets",
+        "Only expensive fixtures"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bathroom fixture designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q19",
+      "question": "What is design maintenance?",
+      "options": [
+        "Cleaning designs",
+        "Paying fees to keep registration active",
+        "Repairing designs",
+        "Updating designs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design maintenance involves paying required fees to keep the design registration active.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q20",
+      "question": "Can you register a design for garden tools?",
+      "options": [
+        "No, never",
+        "Yes, if the design is novel and aesthetic",
+        "Only shovels",
+        "Only expensive tools"
+      ],
+      "correctIndex": 1,
+      "explanation": "Garden tool designs can be registered if they are novel and focus on aesthetic features.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q21",
+      "question": "What is design recordal?",
+      "options": [
+        "Recording music",
+        "Recording changes in design ownership or licenses",
+        "Recording prices",
+        "Recording sales"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design recordal is the official recording of changes in ownership, licenses, or other details.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q22",
+      "question": "Can you register a design for office furniture?",
+      "options": [
+        "No, never",
+        "Yes, office furniture designs can be registered",
+        "Only desks",
+        "Only chairs"
+      ],
+      "correctIndex": 1,
+      "explanation": "Office furniture designs can be registered if they meet novelty and originality criteria.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q23",
+      "question": "What is design monitoring?",
+      "options": [
+        "Watching TV",
+        "Tracking market for potential infringement",
+        "Checking quality",
+        "Checking prices"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design monitoring involves tracking the market for potential infringement of registered designs.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "design_6_q24",
+      "question": "Can you register a design for decorative items?",
+      "options": [
+        "No, never",
+        "Yes, decorative item designs can be registered",
+        "Only vases",
+        "Only expensive items"
+      ],
+      "correctIndex": 1,
+      "explanation": "Decorative item designs can be registered if they are novel and original.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "design_6_q25",
+      "question": "What is design due diligence?",
+      "options": [
+        "Being careful",
+        "Investigating design rights before business transactions",
+        "Checking prices",
+        "Checking quality"
+      ],
+      "correctIndex": 1,
+      "explanation": "Design due diligence is the investigation of design rights before mergers, acquisitions, or licensing.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

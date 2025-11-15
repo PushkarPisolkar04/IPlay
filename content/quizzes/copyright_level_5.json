@@ -1,0 +1,364 @@
+{
+  "levelId": "copyright_level_5",
+  "realmId": "realm_copyright",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T15:00:00Z",
+  
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+  
+  "questions": [
+    {
+      "id": "copyright_5_q1",
+      "question": "Who is generally considered the first owner of copyright in a creative work?",
+      "options": [
+        "The person who created the work",
+        "The publisher of the work",
+        "The person who inspired the creator",
+        "The government"
+      ],
+      "correctIndex": 0,
+      "explanation": "The creator of the work is the first owner of copyright unless the work is created under employment or a specific agreement states otherwise.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q2",
+      "question": "What is the duration of copyright protection in India for literary works?",
+      "options": [
+        "Lifetime of the author",
+        "Life of the author + 60 years",
+        "60 years from publication",
+        "100 years from creation"
+      ],
+      "correctIndex": 1,
+      "explanation": "In India, copyright lasts for the lifetime of the author plus 60 years after their death.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q3",
+      "question": "In a work created by an employee during employment, who owns the copyright?",
+      "options": [
+        "The employee (creator)",
+        "The employer",
+        "The client of the company",
+        "No one"
+      ],
+      "correctIndex": 1,
+      "explanation": "In ‘work-for-hire’ cases, the employer is considered the copyright owner unless otherwise agreed.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q4",
+      "question": "If an independent designer creates a logo for a client, who owns the copyright by default?",
+      "options": [
+        "The client",
+        "The designer",
+        "The design software company",
+        "The government"
+      ],
+      "correctIndex": 1,
+      "explanation": "Freelancers or independent creators own copyright by default unless they transfer rights through a written contract.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q5",
+      "question": "What happens when copyright protection expires?",
+      "options": [
+        "The work is destroyed",
+        "The government takes ownership",
+        "The work enters the public domain",
+        "The creator can renew it"
+      ],
+      "correctIndex": 2,
+      "explanation": "When copyright expires, the work enters the public domain and can be freely used by anyone.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q6",
+      "question": "What does 'Public Domain' mean?",
+      "options": [
+        "Works that are publicly displayed in museums",
+        "Works with expired copyright or not eligible for protection",
+        "Works that are government-owned",
+        "Works that are illegally copied"
+      ],
+      "correctIndex": 1,
+      "explanation": "Public Domain refers to creative works that are free to use because their copyright has expired or they were never eligible for protection.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q7",
+      "question": "Which of the following is an example of a work in the public domain?",
+      "options": [
+        "A newly released film",
+        "A 19th-century book whose author died over 100 years ago",
+        "A song still under copyright",
+        "A modern photograph"
+      ],
+      "correctIndex": 1,
+      "explanation": "A 19th-century book is likely in the public domain since its author’s life + 60 years have passed.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q8",
+      "question": "If a photographer employed by a company takes pictures for an ad campaign, who owns the copyright?",
+      "options": [
+        "The photographer",
+        "The company",
+        "The client",
+        "The advertising agency"
+      ],
+      "correctIndex": 1,
+      "explanation": "Under employment, the employer (company) owns the copyright, not the individual photographer.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q9",
+      "question": "What is a 'work-for-hire' arrangement?",
+      "options": [
+        "When a freelancer voluntarily gives up rights",
+        "When the creator is hired and the employer owns the rights",
+        "When copyright is purchased after creation",
+        "When multiple people share ownership"
+      ],
+      "correctIndex": 1,
+      "explanation": "In a work-for-hire situation, the employer or commissioning party owns the copyright from creation.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q10",
+      "question": "Who owns copyright if a freelancer assigns their rights to a client through a written agreement?",
+      "options": [
+        "The freelancer",
+        "The client",
+        "Both jointly",
+        "The government"
+      ],
+      "correctIndex": 1,
+      "explanation": "Once rights are assigned through a written agreement, the client becomes the new owner of the copyright.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q11",
+      "question": "What is the duration of copyright for a cinematograph film in India?",
+      "options": [
+        "Life + 60 years of the producer",
+        "60 years from the beginning of the calendar year following publication",
+        "Lifetime of the director",
+        "Lifetime of the lead actor"
+      ],
+      "correctIndex": 1,
+      "explanation": "Films have protection for 60 years from the beginning of the calendar year following publication, regardless of creator’s death.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q12",
+      "question": "Which of these best describes 'first ownership'?",
+      "options": [
+        "The first person to buy a copy of the work",
+        "The person who initially holds copyright rights",
+        "The publisher of a book",
+        "A person who uploads the work online first"
+      ],
+      "correctIndex": 1,
+      "explanation": "First ownership refers to the person who originally holds the copyright, usually the creator.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q13",
+      "question": "How can copyright ownership be transferred?",
+      "options": [
+        "By oral agreement",
+        "By written assignment or contract",
+        "Automatically after 10 years",
+        "By simply giving consent verbally"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright transfer must be in writing and signed by the owner to be legally valid.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q14",
+      "question": "When does a photograph enter the public domain in India?",
+      "options": [
+        "60 years after the photographer’s death",
+        "60 years from publication",
+        "100 years after creation",
+        "It never enters public domain"
+      ],
+      "correctIndex": 1,
+      "explanation": "For photographs, copyright lasts 60 years from the beginning of the year following publication.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q15",
+      "question": "What is a key benefit of the public domain?",
+      "options": [
+        "It allows free access and reuse of creative works",
+        "It restricts copying and sharing",
+        "It gives creators permanent control",
+        "It generates government revenue"
+      ],
+      "correctIndex": 0,
+      "explanation": "The public domain encourages creativity by allowing everyone to freely use and build upon older works.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q16",
+      "question": "If a creator dies without transferring rights, who inherits the copyright?",
+      "options": [
+        "The government",
+        "Their legal heirs",
+        "The publisher",
+        "The employer"
+      ],
+      "correctIndex": 1,
+      "explanation": "Copyright passes to the legal heirs of the creator upon death, lasting for their lifetime + 60 years.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q17",
+      "question": "What does the 'Life + 60 years' rule apply to?",
+      "options": [
+        "All categories of works",
+        "Only to works with known authors",
+        "Only unpublished works",
+        "Only films"
+      ],
+      "correctIndex": 1,
+      "explanation": "The 'Life + 60 years' rule applies mainly to literary, artistic, musical, and dramatic works with identifiable authors.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q18",
+      "question": "What is NOT true about public domain works?",
+      "options": [
+        "Anyone can use them freely",
+        "They can be remixed or modified",
+        "Permission from the creator is required",
+        "They can be used commercially"
+      ],
+      "correctIndex": 2,
+      "explanation": "Permission is not required for public domain works, since copyright protection no longer applies.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "copyright_5_q19",
+      "question": "In the 'Coder vs. Photographer' case study, what was the key issue?",
+      "options": [
+        "Who owned the copyright when work was commissioned",
+        "Whether the work was original",
+        "Whether plagiarism occurred",
+        "Whether it was published online"
+      ],
+      "correctIndex": 0,
+      "explanation": "The case explored ownership confusion between a client and a freelancer, highlighting the importance of written agreements.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q20",
+      "question": "Copyright in India for anonymous or pseudonymous works lasts for:",
+      "options": [
+        "Life + 60 years of author",
+        "60 years from publication",
+        "100 years from creation",
+        "Lifetime of publisher"
+      ],
+      "correctIndex": 1,
+      "explanation": "Anonymous or pseudonymous works are protected for 60 years from publication since the author’s identity is unknown.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q21",
+      "question": "If multiple authors collaborate, how is copyright term calculated?",
+      "options": [
+        "From the date the last author dies",
+        "From the date the first author dies",
+        "From publication date",
+        "From registration date"
+      ],
+      "correctIndex": 0,
+      "explanation": "In joint authorship, the term extends to 60 years after the death of the last surviving author.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q22",
+      "question": "Which of the following automatically enters public domain on creation?",
+      "options": [
+        "Government works under Section 52(1)",
+        "Works never eligible for copyright (like ideas)",
+        "Registered books",
+        "Software after release"
+      ],
+      "correctIndex": 1,
+      "explanation": "Ideas, facts, and procedures are never protected by copyright and thus are part of the public domain from the start.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q23",
+      "question": "Can a creator regain copyright after assigning it?",
+      "options": [
+        "Yes, automatically after 5 years",
+        "Only if the agreement allows it",
+        "No, once assigned it’s gone permanently",
+        "Yes, by oral request"
+      ],
+      "correctIndex": 1,
+      "explanation": "Reassignment or termination must be allowed within the written contract; otherwise, the transfer is final.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q24",
+      "question": "Copyright ownership can be shared among multiple parties. What is this called?",
+      "options": [
+        "Joint ownership",
+        "Dual assignment",
+        "Public ownership",
+        "Collaborative license"
+      ],
+      "correctIndex": 0,
+      "explanation": "When multiple creators share rights, it’s known as joint ownership; each has an equal claim.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "copyright_5_q25",
+      "question": "When does copyright for government works expire in India?",
+      "options": [
+        "60 years from first publication",
+        "Life + 60 years of author",
+        "Never expires",
+        "After 100 years"
+      ],
+      "correctIndex": 0,
+      "explanation": "Government works are protected for 60 years from first publication under Indian law.",
+      "difficulty": "medium",
+      "points": 15
+    }
+  ]
+}

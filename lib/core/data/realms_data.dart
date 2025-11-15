@@ -8,7 +8,7 @@ class RealmsData {
         id: 'realm_copyright',
         name: 'Copyright Realm',
         description: 'Master copyright protection from basics to legal filing',
-        iconEmoji: '©️',
+        iconPath: 'assets/logos/copyright_logo.png',
         color: 0xFFFF6B35, // Orange
         totalLevels: 8,
         totalXP: 1370,
@@ -29,7 +29,7 @@ class RealmsData {
         id: 'realm_trademark',
         name: 'Trademark Realm',
         description: 'Learn brand protection from basics to registration',
-        iconEmoji: '™️',
+        iconPath: 'assets/logos/trademark_logo.png',
         color: 0xFF2196F3, // Blue
         totalLevels: 8,
         totalXP: 1370,
@@ -50,7 +50,7 @@ class RealmsData {
         id: 'realm_patent',
         name: 'Patent Realm',
         description: 'Understand invention protection and filing process',
-        iconEmoji: '🔬',
+        iconPath: 'assets/logos/patent_logo.png',
         color: 0xFF4CAF50, // Green
         totalLevels: 9,
         totalXP: 1700,
@@ -72,7 +72,7 @@ class RealmsData {
         id: 'realm_design',
         name: 'Industrial Design Realm',
         description: 'Protect product designs and aesthetics',
-        iconEmoji: '🎨',
+        iconPath: 'assets/logos/design_logo.png',
         color: 0xFFE91E63, // Pink
         totalLevels: 7,
         totalXP: 1150,
@@ -92,7 +92,7 @@ class RealmsData {
         id: 'realm_gi',
         name: 'Geographical Indication',
         description: 'Learn about GI protection for regional products',
-        iconEmoji: '🗺️',
+        iconPath: 'assets/logos/gi_logo.png',
         color: 0xFFFFC107, // Yellow
         totalLevels: 6,
         totalXP: 910,
@@ -111,7 +111,7 @@ class RealmsData {
         id: 'realm_trade_secrets',
         name: 'Trade Secrets Realm',
         description: 'Protect confidential business information',
-        iconEmoji: '🤫',
+        iconPath: 'assets/logos/trade_secrets_logo.png',
         color: 0xFF9C27B0, // Purple
         totalLevels: 6,
         totalXP: 900,

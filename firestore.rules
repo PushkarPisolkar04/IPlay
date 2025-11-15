@@ -64,6 +64,10 @@ service cloud.firestore {
       // Users can read their own data
       allow read: if isOwner(userId);
       
+      // All authenticated users can read basic user data for leaderboards
+      // This allows students to see other students' names, XP, and avatars
+      allow read: if isAuthenticated();
+      
       // Teachers can read students in their classrooms
       allow read: if isTeacher() && 
                      exists(/databases/$(database)/documents/classrooms/$(resource.data.classroomId)) &&
@@ -85,6 +89,17 @@ service cloud.firestore {
       
       // Users can delete their own account
       allow delete: if isOwner(userId);
+      
+      // Bookmarks subcollection
+      match /bookmarks/{bookmarkId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // Badge unlocks subcollection
+      match /badge_unlocks/{badgeId} {
+        allow read: if isOwner(userId) || isTeacher() || isPrincipal();
+        allow write: if isOwner(userId);
+      }
     }
     
     // Classrooms Collection
@@ -454,17 +469,91 @@ service cloud.firestore {
     // NOTIFICATIONS COLLECTION
     // ============================================================================
     match /notifications/{notificationId} {
-      // Users can read their own notifications
-      allow read: if isAuthenticated() && isOwner(resource.data.userId);
+      // Users can read their own notifications (using toUserId field)
+      allow read: if isAuthenticated() && request.auth.uid == resource.data.toUserId;
       
       // System and authorized users can create notifications
       allow create: if isAuthenticated();
       
       // Users can update their own notifications (mark as read)
-      allow update: if isAuthenticated() && isOwner(resource.data.userId);
+      allow update: if isAuthenticated() && request.auth.uid == resource.data.toUserId;
       
       // Users can delete their own notifications
-      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.toUserId;
+    }
+    
+    // ============================================================================
+    // MODERATION SYSTEM
+    // ============================================================================
+    
+    // Profanity Words Collection
+    match /profanity_words/{doc} {
+      // All authenticated users can read the profanity list
+      allow read: if isAuthenticated();
+      
+      // Only admins can update (via admin panel or console)
+      allow write: if false; // Admins use console or admin panel with elevated permissions
+    }
+    
+    // Moderation Reports Collection
+    match /moderation_reports/{reportId} {
+      // Principals can read reports
+      allow read: if isPrincipal();
+      
+      // Admins can read reports (via custom claims)
+      allow read: if isAuthenticated() && request.auth.token.isAdmin == true;
+      
+      // System can create reports (any authenticated user for now)
+      allow create: if isAuthenticated();
+      
+      // Principals can update reports (review, resolve)
+      allow update: if isPrincipal();
+      
+      // Admins can update reports (via custom claims)
+      allow update: if isAuthenticated() && request.auth.token.isAdmin == true;
+      
+      // Reports cannot be deleted
+      allow delete: if false;
+    }
+    
+    // ============================================================================
+    // CMS COLLECTIONS - Content Management System
+    // ============================================================================
+    
+    // Content Metadata Collection - Tracks versions of content in Storage
+    match /content_metadata/{contentType} {
+      // All users can read content metadata (to check for updates)
+      allow read: if true;
+      
+      // Only admins can write content metadata
+      allow write: if isAuthenticated() && request.auth.token.isAdmin == true;
+    }
+    
+    // App Config Collection - Dynamic app configuration
+    match /app_config/{doc} {
+      // All users can read app config
+      allow read: if true;
+      
+      // Only admins can write app config
+      allow write: if isAuthenticated() && request.auth.token.isAdmin == true;
+    }
+    
+    // Admin Audit Log Collection - Tracks all admin actions
+    match /admin_audit_log/{logId} {
+      // Only admins can read audit logs
+      allow read: if isAuthenticated() && request.auth.token.isAdmin == true;
+      
+      // Only admins can write audit logs
+      allow write: if isAuthenticated() && request.auth.token.isAdmin == true;
+    }
+    
+    // Content Data Collection - Actual content stored in Firestore (no Storage needed)
+    match /content_data/{contentType}/{contentId} {
+      // All users can read content
+      allow read: if true;
+      
+      // Only admins can write content
+      allow write: if isAuthenticated() && request.auth.token.isAdmin == true;
     }
     
     // ============================================================================

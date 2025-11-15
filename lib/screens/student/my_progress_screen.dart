@@ -43,7 +43,9 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
       }
     } catch (e) {
       // print('Error loading progress: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 

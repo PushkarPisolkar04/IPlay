@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
 import 'avatar_widget.dart';
 import 'notification_bell_icon.dart';
+import 'messages_icon.dart';
 
-/// Top bar with avatar and notification bell
+/// Top bar with avatar, messages, and notification bell
 class TopBarWithAvatar extends StatelessWidget {
   final String? avatarUrl;
   final String initials;
   final bool showOnlineBadge;
   final VoidCallback? onAvatarTap;
   final bool showNotificationBell;
+  final bool showMessages;
   
   const TopBarWithAvatar({
     super.key,
@@ -18,6 +20,7 @@ class TopBarWithAvatar extends StatelessWidget {
     this.showOnlineBadge = false,
     this.onAvatarTap,
     this.showNotificationBell = true,
+    this.showMessages = true,
   });
   
   @override
@@ -27,6 +30,10 @@ class TopBarWithAvatar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          if (showMessages) ...[
+            const MessagesIcon(),
+            const SizedBox(width: 8),
+          ],
           if (showNotificationBell) ...[
             const NotificationBellIcon(),
             const SizedBox(width: 8),

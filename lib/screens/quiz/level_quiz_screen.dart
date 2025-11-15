@@ -569,12 +569,13 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       body: Stack(
         children: [
           SafeArea(
-            child: Center(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(height: AppSpacing.xl),
                     // Confetti
                     if (passed)
                       Align(
@@ -624,73 +625,125 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
                     const SizedBox(height: AppSpacing.md),
 
-                    // XP Earned
+                    // XP Earned with animation
                     if (passed) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.sm,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.star, color: Colors.amber),
-                            const SizedBox(width: 8),
-                            Text(
-                              '+${widget.level.xpReward}${_bonusXP > 0 ? ' + $_bonusXP' : ''} XP Earned!',
-                              style: AppTextStyles.h3.copyWith(
-                                color: AppDesignSystem.primaryIndigo,
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.elasticOut,
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale: value,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
+                                vertical: AppSpacing.sm,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                    ],
-
-                    // Certificate notification
-                    if (_certificateGenerated) ...[
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        decoration: BoxDecoration(
-                          color: Colors.amber.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.amber.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.workspace_premium,
-                              color: Colors.amber,
-                              size: 32,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Certificate Earned!',
-                                    style: AppTextStyles.h4.copyWith(
-                                      color: Colors.amber[800],
-                                    ),
+                              decoration: BoxDecoration(
+                                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.amber.withValues(alpha: 0.3 * value),
+                                    blurRadius: 20 * value,
+                                    spreadRadius: 5 * value,
                                   ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween(begin: 0.0, end: 1.0),
+                                    duration: const Duration(milliseconds: 600),
+                                    builder: (context, rotateValue, child) {
+                                      return Transform.rotate(
+                                        angle: rotateValue * 2 * 3.14159,
+                                        child: const Icon(Icons.star, color: Colors.amber, size: 28),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
                                   Text(
-                                    'Realm completed! Check your profile.',
-                                    style: AppTextStyles.bodySmall,
+                                    '+${widget.level.xpReward}${_bonusXP > 0 ? ' + $_bonusXP' : ''} XP Earned!',
+                                    style: AppTextStyles.h3.copyWith(
+                                      color: AppDesignSystem.primaryIndigo,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+
+                    // Certificate notification with animation
+                    if (_certificateGenerated) ...[
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: const Duration(milliseconds: 1000),
+                        curve: Curves.bounceOut,
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale: value,
+                            child: Container(
+                              padding: const EdgeInsets.all(AppSpacing.md),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.amber.withValues(alpha: 0.3),
+                                  width: 2,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.amber.withValues(alpha: 0.3 * value),
+                                    blurRadius: 15 * value,
+                                    spreadRadius: 3 * value,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween(begin: 0.0, end: 1.0),
+                                    duration: const Duration(milliseconds: 800),
+                                    builder: (context, pulseValue, child) {
+                                      return Transform.scale(
+                                        scale: 1.0 + (0.2 * pulseValue),
+                                        child: const Icon(
+                                          Icons.workspace_premium,
+                                          color: Colors.amber,
+                                          size: 32,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Certificate Earned!',
+                                          style: AppTextStyles.h4.copyWith(
+                                            color: Colors.amber[800],
+                                          ),
+                                        ),
+                                        Text(
+                                          'Realm completed! Check your profile.',
+                                          style: AppTextStyles.bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: AppSpacing.md),
                     ],
@@ -734,7 +787,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppDesignSystem.primaryIndigo,
-                            side: const BorderSide(color: AppDesignSystem.primaryIndigo),
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),
@@ -764,7 +818,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           onPressed: () => Navigator.pop(context),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppDesignSystem.primaryIndigo,
-                            side: const BorderSide(color: AppDesignSystem.primaryIndigo),
+                            backgroundColor: Colors.white,
+                            side: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),
@@ -773,6 +828,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         ),
                       ),
                     ],
+                    const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
               ),

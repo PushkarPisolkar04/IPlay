@@ -1,0 +1,39 @@
+﻿{
+  "id": "gi_level_1",
+  "realmId": "realm_gi",
+  "levelNumber": 1,
+  "name": "What is a Geographical Indication (GI)?",
+  "description": "Welcome to the GI Realm! Learn what makes Darjeeling Tea and Basmati Rice legally special.",
+  "summary": "Discover what Geographical Indications are and why they protect regional products. Learn how GI is different from trademarks and why it matters for India's heritage products.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  "videoDuration": 180,
+  
+  "content": "## What is a Geographical Indication (GI)?\n\nWelcome to the GI Realm! This is one of the most unique and culturally important types of intellectual property.\n\nA **Geographical Indication (GI)** is a sign used on products that have a specific geographical origin and possess qualities, reputation, or characteristics that are essentially attributable to that place of origin.\n\n### The Simple Idea\n\nThink of it this way: Some products are special *because of where they come from*. The soil, climate, traditional methods, and local expertise of a specific region give these products unique qualities that cannot be replicated anywhere else.\n\n**Examples:**\n* **Darjeeling Tea** - Only tea grown in the Darjeeling district of West Bengal can be called 'Darjeeling Tea'\n* **Basmati Rice** - Authentic Basmati can only come from specific regions of India and Pakistan\n* **Champagne** - Only sparkling wine from the Champagne region of France can be called 'Champagne'\n* **Kanchipuram Silk Sarees** - Only silk sarees made in Kanchipuram, Tamil Nadu\n\n### GI vs. Trademark: What's the Difference?\n\nThis is the most important distinction:\n\n| **Trademark** | **Geographical Indication** |\n|---------------|-----------------------------|\n| Identifies a **company/brand** | Identifies a **place/region** |\n| Owned by **one company** | Owned by **all producers in that region** |\n| Example: 'Nike' (one company) | Example: 'Darjeeling Tea' (all tea gardens in Darjeeling) |\n| Can be sold/transferred | Cannot be sold or transferred |\n\n### Why GI Matters for India\n\nIndia is incredibly rich in GI products. We have over **400 registered GIs**, covering:\n- Agricultural products (Alphonso Mango, Nagpur Orange)\n- Handicrafts (Madhubani Paintings, Channapatna Toys)\n- Textiles (Pochampally Ikat, Mysore Silk)\n- Food items (Tirupati Laddu, Hyderabadi Biryani)\n\nGI protection prevents fake products from using these famous names and protects the livelihoods of traditional producers.\n\n--- \n\n### 💡 Level 1 Case Study: Darjeeling Tea\n\n* **The Product:** Darjeeling Tea, grown in the hills of Darjeeling, West Bengal.\n* **What Makes it Special:** The unique combination of altitude (up to 2,000 meters), rainfall, temperature, and soil gives Darjeeling tea its distinctive muscatel flavor and aroma.\n* **The GI Protection:** In 2003, 'Darjeeling Tea' was registered as a GI. This means:\n  - Only tea grown in the 87 registered tea gardens in Darjeeling can use the name 'Darjeeling Tea'\n  - Any tea from outside this region calling itself 'Darjeeling' is committing fraud\n  - The Tea Board of India monitors and certifies genuine Darjeeling Tea\n* **The Impact:** This protection has helped Darjeeling tea maintain its premium price in international markets and prevented cheap imitations from damaging its reputation.",
+  
+  "keyPoints": [
+    "A GI is a sign that identifies a product as originating from a specific geographical location.",
+    "The product must have qualities or reputation essentially due to that place of origin.",
+    "Unlike trademarks (owned by one company), GIs are collective rights (owned by all producers in that region).",
+    "India has over 400 registered GIs covering agricultural products, handicrafts, textiles, and food.",
+    "Famous Indian GIs include Darjeeling Tea, Basmati Rice, Kanchipuram Silk, and Alphonso Mango."
+  ],
+  
+  "learningObjectives": [
+    "Define what a Geographical Indication (GI) is.",
+    "Explain the key difference between a GI and a trademark.",
+    "Identify why GI protection is important for traditional producers.",
+    "Provide three examples of famous Indian GI products."
+  ],
+  
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 8,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:00:00Z"
+}

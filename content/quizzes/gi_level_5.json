@@ -1,0 +1,364 @@
+﻿{
+  "levelId": "gi_level_5",
+  "realmId": "realm_gi",
+  "version": "1.0.0",
+  "updatedAt": "2025-11-11T15:00:00Z",
+
+  "totalQuestions": 25,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  "randomSelection": true,
+
+  "questions": [
+    {
+      "id": "gi_5_q1",
+      "question": "What is the first step in GI registration?",
+      "options": [
+        "Filing application",
+        "Conducting a search for existing GIs",
+        "Paying fees",
+        "Getting approval"
+      ],
+      "correctIndex": 1,
+      "explanation": "The first step is conducting a search to ensure the GI is not already registered.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q2",
+      "question": "Which form is used for GI application in India?",
+      "options": [
+        "Form TM-A",
+        "Form GI-1",
+        "Form XIV",
+        "Form 1"
+      ],
+      "correctIndex": 1,
+      "explanation": "Form GI-1 is used for filing a Geographical Indication application in India.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q3",
+      "question": "What is the application fee for GI registration?",
+      "options": [
+        "₹500",
+        "₹2,000",
+        "₹5,000",
+        "₹10,000"
+      ],
+      "correctIndex": 2,
+      "explanation": "The application fee for GI registration in India is ₹5,000.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q4",
+      "question": "What is the typical timeline for GI registration?",
+      "options": [
+        "1-3 months",
+        "6-9 months",
+        "12-18 months",
+        "24-36 months"
+      ],
+      "correctIndex": 2,
+      "explanation": "The typical timeline for GI registration in India is 12-18 months.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q5",
+      "question": "Who can apply for GI registration?",
+      "options": [
+        "Any individual",
+        "Any company",
+        "Associations of producers or authorized organizations",
+        "Only government"
+      ],
+      "correctIndex": 2,
+      "explanation": "Only associations of producers, organizations, or authorities representing producers can apply.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q6",
+      "question": "What happens after filing the GI application?",
+      "options": [
+        "Immediate approval",
+        "Examination by the GI Registry",
+        "Automatic registration",
+        "Public auction"
+      ],
+      "correctIndex": 1,
+      "explanation": "After filing, the application is examined by the GI Registry for compliance with legal requirements.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q7",
+      "question": "What is published in the GI Journal?",
+      "options": [
+        "Only approved GIs",
+        "Accepted applications for public opposition",
+        "Rejected applications",
+        "Fee details"
+      ],
+      "correctIndex": 1,
+      "explanation": "Accepted applications are published in the GI Journal to allow for public opposition.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q8",
+      "question": "How long is the opposition period after publication?",
+      "options": [
+        "1 month",
+        "3 months",
+        "6 months",
+        "12 months"
+      ],
+      "correctIndex": 1,
+      "explanation": "There is a 3-month opposition period after publication in the GI Journal.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q9",
+      "question": "What must be included in a GI application?",
+      "options": [
+        "Only product name",
+        "Product name, geographical area, qualities, and proof of origin",
+        "Only producer names",
+        "Only price details"
+      ],
+      "correctIndex": 1,
+      "explanation": "The application must include product name, geographical area, unique qualities, and proof of origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q10",
+      "question": "What is the Tirupati Laddu case about?",
+      "options": [
+        "Price dispute",
+        "GI registration to protect authentic Tirupati Laddu",
+        "Export restrictions",
+        "Tax issues"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tirupati Laddu was registered as a GI to protect its authenticity and prevent unauthorized use.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q11",
+      "question": "What happens if no opposition is filed?",
+      "options": [
+        "Application is rejected",
+        "GI is registered and certificate is issued",
+        "Application is withdrawn",
+        "Fee is refunded"
+      ],
+      "correctIndex": 1,
+      "explanation": "If no opposition is filed within 3 months, the GI is registered and a certificate is issued.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q12",
+      "question": "What is examined during the examination stage?",
+      "options": [
+        "Only the fee payment",
+        "Compliance with GI Act, uniqueness, and geographical link",
+        "Only the product name",
+        "Only the applicant's identity"
+      ],
+      "correctIndex": 1,
+      "explanation": "The examiner checks compliance with the GI Act, uniqueness of the product, and its geographical link.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q13",
+      "question": "Can an individual farmer apply for GI?",
+      "options": [
+        "Yes, any farmer can apply",
+        "No, only associations can apply",
+        "Only large farmers can apply",
+        "Only with government permission"
+      ],
+      "correctIndex": 1,
+      "explanation": "Individual farmers cannot apply; only associations or organizations representing producers can apply.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q14",
+      "question": "What is the purpose of the search step?",
+      "options": [
+        "To find competitors",
+        "To check if the GI is already registered or similar GIs exist",
+        "To determine price",
+        "To find buyers"
+      ],
+      "correctIndex": 1,
+      "explanation": "The search step helps identify if the GI is already registered or if similar GIs exist.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q15",
+      "question": "What proof is required for geographical link?",
+      "options": [
+        "Sales receipts",
+        "Evidence showing unique qualities are due to geographical origin",
+        "Tax documents",
+        "Export certificates"
+      ],
+      "correctIndex": 1,
+      "explanation": "Applicants must provide evidence that the product's unique qualities are due to its geographical origin.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q16",
+      "question": "Who can file an opposition?",
+      "options": [
+        "Anyone",
+        "Any person with legitimate interest",
+        "Only government",
+        "Only competitors"
+      ],
+      "correctIndex": 1,
+      "explanation": "Any person with a legitimate interest can file an opposition during the opposition period.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q17",
+      "question": "What happens if an objection is raised during examination?",
+      "options": [
+        "Automatic rejection",
+        "Applicant must respond and address the objection",
+        "Application is withdrawn",
+        "Fee is refunded"
+      ],
+      "correctIndex": 1,
+      "explanation": "If objections are raised, the applicant must respond and address them to proceed with registration.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q18",
+      "question": "What is the role of the Registered Proprietor?",
+      "options": [
+        "To manufacture all products",
+        "To represent and protect the GI on behalf of producers",
+        "To sell products",
+        "To collect taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Registered Proprietor represents producers and is responsible for protecting the GI.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q19",
+      "question": "What is included in the 'statement of case'?",
+      "options": [
+        "Only product name",
+        "Detailed description of product, geographical area, and unique characteristics",
+        "Only price",
+        "Only producer names"
+      ],
+      "correctIndex": 1,
+      "explanation": "The statement of case includes detailed description of the product, geographical area, and unique characteristics.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q20",
+      "question": "Why was Tirupati Laddu registered as a GI?",
+      "options": [
+        "To increase price",
+        "To protect its unique recipe and prevent unauthorized use",
+        "To restrict production",
+        "To increase taxes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Tirupati Laddu was registered to protect its unique recipe and prevent unauthorized commercial use.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q21",
+      "question": "What is the validity period of GI registration?",
+      "options": [
+        "5 years",
+        "10 years, renewable",
+        "20 years",
+        "Perpetual"
+      ],
+      "correctIndex": 1,
+      "explanation": "GI registration is valid for 10 years and can be renewed indefinitely.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q22",
+      "question": "What documents are typically required for GI application?",
+      "options": [
+        "Only identity proof",
+        "Proof of geographical origin, product specifications, and association authorization",
+        "Only bank statements",
+        "Only tax returns"
+      ],
+      "correctIndex": 1,
+      "explanation": "Required documents include proof of geographical origin, product specifications, and association authorization.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q23",
+      "question": "Can a GI application be amended after filing?",
+      "options": [
+        "No, never",
+        "Yes, before acceptance with permission",
+        "Only after registration",
+        "Only by court order"
+      ],
+      "correctIndex": 1,
+      "explanation": "Applications can be amended before acceptance with permission from the Registrar.",
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "gi_5_q24",
+      "question": "What is the purpose of publication in the GI Journal?",
+      "options": [
+        "To advertise the product",
+        "To allow public to oppose if they have objections",
+        "To increase sales",
+        "To collect fees"
+      ],
+      "correctIndex": 1,
+      "explanation": "Publication allows the public to review and oppose the application if they have legitimate objections.",
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "gi_5_q25",
+      "question": "What is the final step in GI registration?",
+      "options": [
+        "Filing application",
+        "Paying fees",
+        "Issuance of GI registration certificate",
+        "Publication"
+      ],
+      "correctIndex": 2,
+      "explanation": "The final step is the issuance of the GI registration certificate after successful completion of all stages.",
+      "difficulty": "easy",
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+﻿{
+  "id": "patent_level_7",
+  "realmId": "realm_patent",
+  "levelNumber": 7,
+  "name": "Rights, Obligations & Compulsory Licensing",
+  "description": "A patent isn't just a right; it's an obligation. Learn what happens when you 'fail to work' your patent.",
+  "summary": "This level explains the 'obligation to work' a patent. You'll learn how governments can use 'Compulsory Licenses' to force an inventor to license their patent for public health or national need.",
+  
+  "videoUrl": "https://www.youtube.com/watch?v=Fj-yVf-a-u4",
+  "videoDuration": 361,
+  
+  "content": "## The Obligations of a Patent Owner\n\nA patent isn't a blank check to do whatever you want. It comes with obligations. The main obligation in most countries is the **'obligation to work'** the patent.\n\nThis means you are expected to *use* or *manufacture* your invention in the country where you got the patent. You can't just get a patent to *block* competitors (e.g., stop anyone from making a life-saving drug) and then not sell the drug yourself. The patent system is meant to *encourage* industry, not just block it.\n\n## The Government's 'Emergency' Power: Compulsory Licensing\n\nWhat happens if a patent owner abuses their monopoly? What if there is a national emergency (like a plague) and a company refuses to sell its patented vaccine?\n\nGovernments have a 'safety valve' built into international patent law (the WTO TRIPS Agreement). It's called a **Compulsory License**.\n\nA compulsory license is when a government *forces* the patent owner to license their invention to a competitor (like a generic drug manufacturer) without their permission. \n\n* **This is NOT a theft:** The government and the new manufacturer must still pay the patent owner a 'reasonable royalty'.\n* **When is it used?** It's a rare and controversial tool, but it is internationally permitted for specific, serious reasons:\n    1.  **National Emergency / Public Health:** This is the big one. For example, during the HIV/AIDS crisis, countries like Brazil and South Africa issued compulsory licenses to get cheap, generic versions of life-saving antiretroviral drugs.\n    2.  **Refusal to 'Work' the Patent:** If an inventor gets a patent in a country and then, after several years, still hasn't used it or manufactured it there, another company can petition the government for a compulsory license.\n    3.  **Anti-Competitive Practices:** If a company is using its patent as part of an illegal monopoly, a compulsory license can be a remedy.\n\n--- \n\n### 💡 Level 7 Case Study: The Global Fight for 'Life-Saving Drugs'\n\n* **The Problem:** A large pharmaceutical company holds the patent on a new, revolutionary cancer drug. They set the price at $100,000 per year, making it unavailable to 99% of the population in developing nations. \n* **The Patent Owner's Stance:** 'This is our patent. We spent billions on R&D, and our 20-year monopoly allows us to set any price we want.'\n* **The Government's Response:** A government (like India or Thailand) might declare this a 'public health crisis'. It issues a **compulsory license** to a local generic drug company.\n* **The Result:** The generic company starts producing the *exact same drug* (legally) and sells it for $1,000 per year. The patent owner is furious but is only entitled to receive a small royalty (e.g., 5%) from the generic company's sales.\n\nThis is the most powerful and controversial part of the patent 'bargain'—the point where public health can override a private monopoly.",
+  
+  "keyPoints": [
+    "Patent owners have an 'obligation to work' (use) their invention in the country where it's patented.",
+    "A 'Compulsory License' is a government-issued license that *forces* a patent owner to license their invention to a competitor.",
+    "The patent owner is still paid a 'reasonable royalty'—it is not expropriation.",
+    "The WTO TRIPS Agreement explicitly allows compulsory licenses for 'public health' and 'national emergencies'.",
+    "This power is most famously used by governments to get access to cheap, generic versions of life-saving medicines."
+  ],
+  
+  "learningObjectives": [
+    "Define the 'obligation to work' a patent.",
+    "Define 'Compulsory License' and its purpose.",
+    "Explain the 'public health' exception in international patent law (TRIPS Agreement).",
+    "Analyze the 'life-saving drug' case study to understand the conflict between patent rights and public health."
+  ],
+  
+  "difficulty": "Hard",
+  "xpReward": 350,
+  "estimatedMinutes": 15,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 80,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T20:05:00Z"
+}

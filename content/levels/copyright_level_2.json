@@ -1,0 +1,38 @@
+{
+  "id": "copyright_level_2",
+  "realmId": "realm_copyright",
+  "levelNumber": 2,
+  "name": "Scope of Protection (What's Covered?)",
+  "description": "What *exactly* does copyright protect? A deep dive into the types of creative works.",
+  "summary": "Learn about the specific categories of works protected by copyright, from books and music to software code and cinematographic films.",
+  
+  "videoUrl": "http://www.youtube.com/watch?v=sGAsi5qEDa8",
+  "videoDuration": 215,
+  
+  "content": "## Scope of Protection (What's Covered?)\n\nIn Level 1, you learned that copyright protects 'expression'. Now, let's look at what that means in practice. Copyright law groups these expressions into broad categories.\n\nThe main types of works protected by copyright in India include:\n\n* **Literary Works:** This isn't just books and poems. Critically, it includes **computer programs and software code**, databases, website content, and articles.\n* **Artistic Works:** This includes paintings, sculptures, photographs, digital art, logos, maps, and even architectural designs.\n* **Musical Works:** This protects the *song itself*—the melody, harmony, and composition, along with the lyrics (which are also a 'Literary Work').\n* **Dramatic Works:** This covers plays, scripts, screenplays, and choreography (the specific steps and movements of a dance).\n* **Cinematographic Films:** This protects movies, TV shows, documentaries, animated films, and even your YouTube videos.\n* **Sound Recordings:** This is a separate but related right. It protects the *specific recording* of a song or sound. For example, Arijit Singh's *recording* of a song is protected separately from the song's *musical work* (which the composer and lyricist own).\n\n### 💡 Level 2 Case Study: A Video Game\n\nModern creative works are often a 'bundle' of many copyrights. A single video game is a perfect example:\n\n* **The Software Code:** Protected as a 'Literary Work'.\n* **The Character Art & Environments:** Protected as 'Artistic Works'.\n* **The Game's Story & Script:** Protected as a 'Literary Work'.\n* **The Background Music:** Protected as 'Musical Works'.\n* **The Voice Acting:** Protected as 'Sound Recordings'.\n* **The Animated Cutscenes:** Protected as 'Cinematographic Films'.\n\nThis is why you can't just 'use' a character or song from a video game—you are dealing with many different layers of copyright!",
+  
+  "keyPoints": [
+    "Copyright protects a wide range of creative work categories.",
+    "Computer software and code are protected as 'Literary Works'.",
+    "A 'Musical Work' (the song) is legally separate from a 'Sound Recording' (the performance).",
+    "A single product, like a video game, is a 'bundle' of many different copyrights.",
+    "Other categories include artistic, dramatic, and cinematographic works."
+  ],
+  
+  "learningObjectives": [
+    "List the 6 main categories of copyrighted works in India.",
+    "Explain why computer software is protected by copyright.",
+    "Differentiate between a 'Musical Work' and a 'Sound Recording'.",
+    "Analyze a complex work (like a video game) and identify its different copyrighted parts."
+  ],
+  "difficulty": "Easy",
+  "xpReward": 150,
+  "estimatedMinutes": 10,
+  
+  "quizEnabled": true,
+  "questionsPerAttempt": 5,
+  "passingScore": 60,
+  
+  "version": "1.0.0",
+  "updatedAt": "2025-11-10T17:00:00Z"
+}

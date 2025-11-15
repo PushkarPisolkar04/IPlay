@@ -56,16 +56,10 @@ class BottomNavBar extends StatelessWidget {
                 onTap: () => onTap(3),
               ),
               _NavItem(
-                icon: Icons.chat_bubble_outline,
-                label: 'Messages',
-                isSelected: currentIndex == 4,
-                onTap: () => onTap(4),
-              ),
-              _NavItem(
                 icon: Icons.person_outline,
                 label: 'Profile',
-                isSelected: currentIndex == 5,
-                onTap: () => onTap(5),
+                isSelected: currentIndex == 4,
+                onTap: () => onTap(4),
               ),
             ],
           ),
