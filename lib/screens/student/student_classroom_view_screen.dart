@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/loading_skeleton.dart';
@@ -43,6 +44,9 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
       }
 
       _classroomData = classroomDoc.data()!;
+      print('Classroom data loaded: ${_classroomData!['name']}');
+      print('Join code: ${_classroomData!['joinCode']}');
+      print('Grade: ${_classroomData!['grade']}');
 
       // Load teacher data
       final teacherId = _classroomData!['teacherId'];
@@ -166,52 +170,131 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  _classroomData!['name'] ?? 'Classroom',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Grade ${_classroomData!['grade'] ?? '-'} • ${_classroomData!['section'] ?? ''}',
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                if (_classroomData!['classCode'] != null) ...[
-                                  const SizedBox(height: 12),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.2),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Icon(
-                                          Icons.key,
-                                          color: Colors.white,
-                                          size: 16,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          'Code: ${_classroomData!['classCode']}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            letterSpacing: 1.5,
+                                // Title and Grade in one row
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            _classroomData!['name'] ?? 'Classroom',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'Grade ${_classroomData!['grade'] ?? '-'}${_classroomData!['section'] != null ? ' • ${_classroomData!['section']}' : ''}',
+                                            style: TextStyle(
+                                              color: Colors.white.withValues(alpha: 0.9),
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Created date on the right
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(alpha: 0.15),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.calendar_today,
+                                            size: 12,
+                                            color: Colors.white.withValues(alpha: 0.9),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            _formatDate(_classroomData!['createdAt']),
+                                            style: TextStyle(
+                                              color: Colors.white.withValues(alpha: 0.9),
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Join code below
+                                if (_classroomData!['joinCode'] != null) ...[
+                                  const SizedBox(height: 12),
+                                  InkWell(
+                                    onTap: () {
+                                      // Copy classroom code to clipboard
+                                      Clipboard.setData(
+                                        ClipboardData(text: _classroomData!['joinCode']),
+                                      );
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Row(
+                                            children: [
+                                              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                              const SizedBox(width: 8),
+                                              Text('Code "${_classroomData!['joinCode']}" copied!'),
+                                            ],
+                                          ),
+                                          backgroundColor: AppDesignSystem.primaryGreen,
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          duration: const Duration(seconds: 2),
                                         ),
-                                      ],
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(alpha: 0.2),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: Colors.white.withValues(alpha: 0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.key,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            'Code: ${_classroomData!['joinCode']}',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: 1.5,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Icon(
+                                            Icons.copy,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
+                                // Description if available
                                 if (_classroomData!['description'] != null) ...[
                                   const SizedBox(height: 12),
                                   Text(
@@ -222,24 +305,6 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     ),
                                   ),
                                 ],
-                                const SizedBox(height: 12),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.calendar_today,
-                                      size: 14,
-                                      color: Colors.white.withValues(alpha: 0.8),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    Text(
-                                      'Created: ${_formatDate(_classroomData!['createdAt'])}',
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.8),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),
@@ -294,13 +359,6 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  _teacherData!['email'] ?? '',
-                                  style: TextStyle(
-                                    color: AppDesignSystem.textSecondary,
-                                    fontSize: 14,
                                   ),
                                 ),
                               ),

@@ -218,32 +218,91 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: const Text('Join Classroom'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom gradient app bar
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Join Classroom',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+            ),
+            // Body content
+            Expanded(
+              child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CleanCard(
-                color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                      AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.group_add,
-                      color: AppDesignSystem.primaryPink,
-                      size: 32,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.group_add,
+                        color: AppDesignSystem.primaryIndigo,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'Enter the join code provided by your teacher',
-                        style: AppTextStyles.bodyMedium,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppDesignSystem.textPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -417,6 +476,10 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
               const SizedBox(height: AppSpacing.xl),
             ],
           ),
+        ),
+              ),
+            ),
+          ],
         ),
       ),
     );

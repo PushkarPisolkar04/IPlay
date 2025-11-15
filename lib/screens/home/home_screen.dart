@@ -608,8 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         child: InkWell(
                                           onTap: () {
-                                            // Navigate to profile tab (index 3)
-                                            widget.onNavigateToTab?.call(3);
+                                            widget.onNavigateToTab?.call(4);
                                           },
                                           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                                           child: Column(
@@ -716,8 +715,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             child: InkWell(
                                               onTap: () {
-                                                // Navigate to leaderboard tab (index 2)
-                                                widget.onNavigateToTab?.call(2);
+                                                widget.onNavigateToTab?.call(3);
                                               },
                                               borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                                               child: Column(
@@ -1189,6 +1187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               if (index > 0) const Divider(height: 1),
                                               ListTile(
+                                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                                 leading: Container(
                                                   padding: const EdgeInsets.all(8),
                                                   decoration: BoxDecoration(
@@ -1249,6 +1248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             children: [
                                               if (index > 0) const Divider(height: 1),
                                               ListTile(
+                                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                                 leading: CircleAvatar(
                                                   backgroundColor: Color(activity['color']).withValues(alpha: 0.1),
                                                   child: Icon(
