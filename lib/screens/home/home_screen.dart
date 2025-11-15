@@ -12,9 +12,9 @@ import '../../widgets/top_bar_with_avatar.dart';
 import '../../widgets/streak_indicator.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../student/my_progress_screen.dart';
+import '../student/student_classroom_view_screen.dart';
 import '../learn/learn_screen.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
-import '../teacher/classroom_detail_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
 class HomeScreen extends StatefulWidget {
@@ -607,7 +607,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ],
                                         ),
                                         child: InkWell(
-                                          onTap: () => Navigator.pushNamed(context, '/profile'),
+                                          onTap: () {
+                                            // Navigate to profile tab (index 3)
+                                            widget.onNavigateToTab?.call(3);
+                                          },
                                           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                                           child: Column(
                                             children: [
@@ -712,12 +715,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                             ),
                                             child: InkWell(
-                                              onTap: () => Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => const UnifiedLeaderboardScreen(),
-                                                ),
-                                              ),
+                                              onTap: () {
+                                                // Navigate to leaderboard tab (index 2)
+                                                widget.onNavigateToTab?.call(2);
+                                              },
                                               borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                                               child: Column(
                                                 children: [
@@ -842,25 +843,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           
                           // Classroom & School Info Card (if exists)
                           if (_classroomInfo != null) ...[
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(AppSpacing.md),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                            InkWell(
+                              onTap: () {
+                                // Navigate to student classroom view
+                                final classroomIds = _user?.classroomIds ?? [];
+                                if (classroomIds.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StudentClassroomViewScreen(
+                                        classroomId: classroomIds.first,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(AppSpacing.md),
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
                                   ),
-                                ],
-                              ),
-                              child: Column(
+                                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -905,28 +922,45 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: 0.2),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                'Grade',
-                                                style: AppTextStyles.caption.copyWith(
-                                                  color: Colors.white.withValues(alpha: 0.9),
+                                        child: InkWell(
+                                          onTap: () {
+                                            // Navigate to student classroom view
+                                            final classroomIds = _user?.classroomIds ?? [];
+                                            if (classroomIds.isNotEmpty) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => StudentClassroomViewScreen(
+                                                    classroomId: classroomIds.first,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                '${_classroomInfo!['grade'] ?? '-'}',
-                                                style: AppTextStyles.h3.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
+                                              );
+                                            }
+                                          },
+                                          borderRadius: BorderRadius.circular(8),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withValues(alpha: 0.2),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Grade',
+                                                  style: AppTextStyles.caption.copyWith(
+                                                    color: Colors.white.withValues(alpha: 0.9),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                Text(
+                                                  '${_classroomInfo!['grade'] ?? '-'}',
+                                                  style: AppTextStyles.h3.copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -960,6 +994,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                 ],
+                              ),
                               ),
                             ),
                             const SizedBox(height: AppSpacing.lg),
@@ -1174,7 +1209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Navigator.pushNamed(
                                                     context,
                                                     '/realm',
-                                                    arguments: {'realmId': item['levelId']},
+                                                    arguments: {'realmId': item['realmId']},
                                                   );
                                                 },
                                               ),

@@ -53,10 +53,29 @@ class SimplifiedChatService {
 
     // Check if chat already exists
     final chatId = _generateChatId(teacherId, studentId);
-    final existingChat = await _firestore.collection('chats').doc(chatId).get();
     
-    if (existingChat.exists) {
-      return chatId;
+    try {
+      final existingChat = await _firestore.collection('chats').doc(chatId).get();
+      
+      if (existingChat.exists) {
+        // Verify the chat has the correct structure
+        final chatData = existingChat.data() as Map<String, dynamic>?;
+        if (chatData != null) {
+          final participants = chatData['participants'] as List?;
+          if (participants == null || !participants.contains(teacherId) || !participants.contains(studentId)) {
+            // Fix the participants array
+            await _firestore.collection('chats').doc(chatId).update({
+              'participants': [teacherId, studentId],
+              'teacherId': teacherId,
+              'studentId': studentId,
+            });
+          }
+        }
+        return chatId;
+      }
+    } catch (e) {
+      // If we get a permission error, the chat doesn't exist or we can't access it
+      // Continue to create a new one
     }
 
     // Create chat

@@ -63,18 +63,18 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   
-  // Show status bar with dark icons and transparent background
+  // Show status bar with white icons on dark/black background
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge,
   );
   
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.black,
+      statusBarIconBrightness: Brightness.light, // White icons
+      statusBarBrightness: Brightness.dark, // Dark background
+      systemNavigationBarColor: Colors.black,
+      systemNavigationBarIconBrightness: Brightness.light, // White navigation icons
     ),
   );
   
@@ -150,7 +150,15 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()..initialize()),
       ],
-      child: MaterialApp(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
+        child: MaterialApp(
         navigatorKey: _navigatorKey,
         title: 'IPlay - IPR Learning',
         debugShowCheckedModeBanner: false,
@@ -270,6 +278,7 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (_) => const SplashScreen());
           }
         },
+        ),
       ),
     );
   }

@@ -398,19 +398,29 @@ class LeaderboardService {
       final newRank = currentRankData['rank'] as int;
       final rankChange = oldRank - newRank; // Positive means moved up
 
-      // Only notify if rank changed by 5 or more positions
-      if (rankChange.abs() >= 5) {
+      // Notify for any rank change (1 or more positions)
+      if (rankChange != 0 && oldRank != 999) {
         String title;
         String body;
         
         if (rankChange > 0) {
           // Moved up
-          title = '🎉 You climbed the leaderboard!';
-          body = 'You moved up $rankChange positions to rank #$newRank in ${_getScopeName(scope)}!';
+          if (rankChange == 1) {
+            title = '📈 You moved up!';
+            body = 'You climbed 1 position to rank #$newRank in ${_getScopeName(scope)}!';
+          } else {
+            title = '🎉 You climbed the leaderboard!';
+            body = 'You moved up $rankChange positions to rank #$newRank in ${_getScopeName(scope)}!';
+          }
         } else {
           // Moved down
-          title = '📉 Leaderboard update';
-          body = 'You moved down ${rankChange.abs()} positions to rank #$newRank in ${_getScopeName(scope)}. Keep learning to climb back up!';
+          if (rankChange == -1) {
+            title = '📉 Rank update';
+            body = 'You moved down 1 position to rank #$newRank in ${_getScopeName(scope)}.';
+          } else {
+            title = '📉 Leaderboard update';
+            body = 'You moved down ${rankChange.abs()} positions to rank #$newRank in ${_getScopeName(scope)}. Keep learning to climb back up!';
+          }
         }
 
         // Save notification to Firestore

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../design/app_design_system.dart';
 import '../constants/app_spacing.dart';
 import '../constants/app_text_styles.dart';
@@ -29,6 +30,13 @@ class AppTheme {
         foregroundColor: AppDesignSystem.textPrimary,
         iconTheme: IconThemeData(color: AppDesignSystem.textPrimary),
         titleTextStyle: AppTextStyles.h3,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.light,
+        ),
       ),
       
       // Card Theme

@@ -73,32 +73,51 @@ class _ChatListScreenState extends State<ChatListScreen> {
     final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Messages', style: AppDesignSystem.h5),
-        backgroundColor: Colors.white,
-        elevation: 1,
-      ),
-      floatingActionButton: _userRole != null
-          ? FloatingActionButton.extended(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => _userRole == 'teacher'
-                        ? const AllStudentsScreen()
-                        : const SelectTeacherScreen(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom gradient app bar
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
-                );
-              },
-              backgroundColor: AppDesignSystem.primaryIndigo,
-              foregroundColor: Colors.white,
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('New Message', style: TextStyle(color: Colors.white)),
-            )
-          : null,
-      body: StreamBuilder<QuerySnapshot>(
-        stream: _chatService.getUserChats(),
-        builder: (context, snapshot) {
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Messages',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48), // Balance the back button
+                  ],
+                ),
+              ),
+            ),
+            // Body content
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _chatService.getUserChats(),
+                builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -216,7 +235,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
                         CircleAvatar(
                           radius: 24,
                           backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                          backgroundImage: userAvatar != null ? NetworkImage(userAvatar) : null,
+                          backgroundImage: userAvatar != null
+                              ? (userAvatar.startsWith('http')
+                                  ? NetworkImage(userAvatar)
+                                  : AssetImage(userAvatar) as ImageProvider)
+                              : null,
                           child: userAvatar == null
                               ? Text(
                                   userName[0].toUpperCase(),
@@ -307,7 +330,29 @@ class _ChatListScreenState extends State<ChatListScreen> {
             ),
           );
         },
+              ),
+            ),
+          ],
+        ),
       ),
+      floatingActionButton: _userRole != null
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => _userRole == 'teacher'
+                        ? const AllStudentsScreen()
+                        : const SelectTeacherScreen(),
+                  ),
+                );
+              },
+              backgroundColor: AppDesignSystem.primaryIndigo,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text('New Message', style: TextStyle(color: Colors.white)),
+            )
+          : null,
     );
   }
 }

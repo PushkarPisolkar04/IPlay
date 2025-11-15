@@ -137,6 +137,8 @@ class ListSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
       padding: const EdgeInsets.all(16),
       itemBuilder: (context, index) => const CardSkeleton(),

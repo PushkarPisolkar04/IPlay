@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../../models/badge_model.dart';
 import '../../services/sound_service.dart';
 import 'badge_animation_queue.dart';
+import '../utils/rank_monitor.dart';
 
 /// Service to manage badge unlocking and tracking
 /// Reads badge definitions from Firestore /badges collection
@@ -135,6 +136,9 @@ class BadgeService {
               await _firestore.collection('users').doc(userId).update({
                 'totalXP': FieldValue.increment(badge.xpBonus),
               });
+              
+              // Check for rank changes after XP update
+              RankMonitor.checkRankChanges(userId);
             }
           }
         }
@@ -388,5 +392,80 @@ class BadgeService {
   /// Clear badge cache (call when badges are updated)
   void clearCache() {
     _badgeCache = null;
+  }
+
+  /// Create notifications for all existing earned badges (one-time migration)
+  Future<void> createNotificationsForEarnedBadges(String userId) async {
+    try {
+      // Get user's earned badges
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final earnedBadgeIds = List<String>.from(userDoc.data()?['badges'] ?? []);
+      if (earnedBadgeIds.isEmpty) return;
+
+      // Get all badge definitions
+      final allBadges = await getAllBadges();
+      
+      // Check which badges already have notifications
+      final existingNotifications = await _firestore
+          .collection('notifications')
+          .where('toUserId', isEqualTo: userId)
+          .where('data.type', isEqualTo: 'badge')
+          .get();
+
+      final notifiedBadgeIds = existingNotifications.docs
+          .map((doc) => doc.data()['data']?['badgeId'] as String?)
+          .whereType<String>()
+          .toSet();
+
+      // Create notifications for badges that don't have them yet
+      final batch = _firestore.batch();
+      int count = 0;
+
+      for (final badgeId in earnedBadgeIds) {
+        if (!notifiedBadgeIds.contains(badgeId)) {
+          final badge = allBadges.firstWhere(
+            (b) => b.id == badgeId,
+            orElse: () => BadgeModel(
+              id: badgeId,
+              name: 'Badge',
+              description: '',
+              iconPath: '',
+              category: 'milestone',
+              xpBonus: 0,
+              rarity: 'common',
+              criteriaType: 'manual',
+              criteriaValue: null,
+            ),
+          );
+
+          final docRef = _firestore.collection('notifications').doc();
+          batch.set(docRef, {
+            'toUserId': userId,
+            'fromUserId': null,
+            'title': '🏆 Badge Earned!',
+            'body': 'You earned: ${badge.name}',
+            'data': {
+              'type': 'badge',
+              'badgeId': badge.id,
+              'badgeName': badge.name,
+              'badgeRarity': badge.rarity,
+            },
+            'read': false,
+            'sentAt': Timestamp.now(),
+          });
+
+          count++;
+        }
+      }
+
+      if (count > 0) {
+        await batch.commit();
+        print('Created $count badge notifications for user $userId');
+      }
+    } catch (e) {
+      print('Error creating badge notifications: $e');
+    }
   }
 }

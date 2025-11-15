@@ -40,10 +40,11 @@ class _BadgesScreenState extends State<BadgesScreen> {
 
         if (userDoc.exists) {
           _earnedBadges = List<String>.from(userDoc.data()?['badges'] ?? []);
+          print('User has ${_earnedBadges.length} earned badges: $_earnedBadges');
         }
 
         final allBadges = await _badgeService.getAllBadges();
-        print('Loaded ${allBadges.length} badges from Firestore');
+        print('Loaded ${allBadges.length} total badges from JSON');
 
         _badgesByCategory = {};
         for (var badge in allBadges) {
@@ -62,6 +63,33 @@ class _BadgesScreenState extends State<BadgesScreen> {
       }
     } else {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _createBadgeNotifications() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      await _badgeService.createNotificationsForEarnedBadges(user.uid);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Badge notifications created! Check your notifications.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

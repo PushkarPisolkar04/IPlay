@@ -160,18 +160,59 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daily Challenge'),
-        backgroundColor: AppDesignSystem.primaryIndigo,
-        foregroundColor: Colors.white,
-      ),
-      body: _isLoading
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom gradient app bar
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Daily Challenge',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 48), // Balance the back button
+                  ],
+                ),
+              ),
+            ),
+            // Body content
+            Expanded(
+              child: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
               ? _buildErrorState()
               : _todayAttempt != null
                   ? _buildCompletedState()
                   : _buildChallengeState(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

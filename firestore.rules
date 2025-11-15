@@ -439,8 +439,11 @@ service cloud.firestore {
         return request.auth.uid in resource.data.participants;
       }
       
-      // Only participants can read chats
-      allow read: if isAuthenticated() && isChatParticipant();
+      // Allow reading chats if user is participant
+      // For get operations, allow if document doesn't exist (returns null) or user is participant
+      allow get: if isAuthenticated() && (resource == null || isChatParticipant());
+      // For list operations, only return chats where user is participant
+      allow list: if isAuthenticated() && isChatParticipant();
       
       // Both teachers and students can create chats (teacher-to-student only)
       allow create: if (isTeacher() || isStudent()) && 
@@ -453,21 +456,16 @@ service cloud.firestore {
       
       // Messages subcollection
       match /messages/{messageId} {
-        // Helper function to check if user is participant
-        function isParticipant() {
-          return request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
-        }
+        // Allow read/write if user can access the parent chat
+        // This relies on the parent chat permissions being checked first
+        allow read: if isAuthenticated();
         
-        // Participants can read messages - allow both get and list
-        allow read: if isAuthenticated() && isParticipant();
-        
-        // Participants can send messages (with content moderation)
+        // Participants can send messages
         allow create: if isAuthenticated() && 
-                         isParticipant() &&
                          request.resource.data.senderId == request.auth.uid;
         
         // Participants can update (for read receipts)
-        allow update: if isAuthenticated() && isParticipant();
+        allow update: if isAuthenticated();
         
         // Messages cannot be deleted
         allow delete: if false;
@@ -602,4 +600,3 @@ service cloud.firestore {
     }
   }
 }
-

@@ -53,73 +53,98 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppDesignSystem.textPrimary),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Notifications',
-          style: TextStyle(
-            color: AppDesignSystem.textPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await _notificationService.markAllAsRead();
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('All notifications marked as read'),
-                    backgroundColor: AppDesignSystem.primaryGreen,
-                    duration: Duration(seconds: 2),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Custom App Bar with gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
-                );
-              }
-            },
-            child: const Text(
-              'Mark all read',
-              style: TextStyle(
-                color: AppDesignSystem.primaryIndigo,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Filter chips
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildFilterChip('all', 'All'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('badge', 'Badges'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('announcement', 'Announcements'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('assignment', 'Assignments'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('message', 'Messages'),
-                  const SizedBox(width: 8),
-                  _buildFilterChip('certificate', 'Certificates'),
                 ],
               ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    // Back button on left
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    // Centered title
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Notifications',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Mark all button on right (icon only for symmetry)
+                    IconButton(
+                      icon: const Icon(Icons.done_all, color: Colors.white),
+                      tooltip: 'Mark all as read',
+                      onPressed: () async {
+                        await _notificationService.markAllAsRead();
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Row(
+                                children: [
+                                  Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                  SizedBox(width: 8),
+                                  Text('All marked as read'),
+                                ],
+                              ),
+                              backgroundColor: AppDesignSystem.primaryGreen,
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          
-          // Notifications list
-          Expanded(
+            // Filter chips with icons
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildFilterChip('all', 'All', Icons.notifications_active),
+                    const SizedBox(width: 10),
+                    _buildFilterChip('badge', 'Badges', Icons.emoji_events),
+                    const SizedBox(width: 10),
+                    _buildFilterChip('announcement', 'Announcements', Icons.campaign),
+                    const SizedBox(width: 10),
+                    _buildFilterChip('message', 'Messages', Icons.message),
+                    const SizedBox(width: 10),
+                    _buildFilterChip('certificate', 'Certificates', Icons.workspace_premium),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Notifications list
+            Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _notificationService.getNotificationsStream(),
               builder: (context, snapshot) {
@@ -227,13 +252,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 );
               },
             ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildFilterChip(String filter, String label) {
+  Widget _buildFilterChip(String filter, String label, IconData icon) {
     final isSelected = _selectedFilter == filter;
     return GestureDetector(
       onTap: () {
@@ -241,21 +267,41 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           _selectedFilter = filter;
         });
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppDesignSystem.primaryIndigo
-              : AppDesignSystem.backgroundGrey,
-          borderRadius: BorderRadius.circular(20),
+          gradient: isSelected ? AppDesignSystem.gradientPrimary : null,
+          color: isSelected ? null : AppDesignSystem.backgroundGrey,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.white : AppDesignSystem.textSecondary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            fontSize: 14,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? Colors.white : AppDesignSystem.textSecondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppDesignSystem.textSecondary,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                fontSize: 13,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -263,11 +309,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Widget _buildNotificationTile(String notificationId, Map<String, dynamic> data) {
     final title = data['title'] ?? 'Notification';
-    final body = data['body'] ?? '';
+    var body = data['body'] ?? '';
     final isRead = data['read'] ?? false;
     final sentAt = (data['sentAt'] as Timestamp?)?.toDate();
     final notificationData = data['data'] as Map<String, dynamic>? ?? {};
     final type = notificationData['type'] ?? 'default';
+
+    // Add badge/certificate details to body if available
+    if (type == 'badge' && notificationData['badgeName'] != null) {
+      body = 'You earned: ${notificationData['badgeName']}';
+    } else if (type == 'certificate' && notificationData['certificateName'] != null) {
+      body = 'Certificate: ${notificationData['certificateName']}';
+    }
 
     final icon = _notificationIcons[type] ?? _notificationIcons['default']!;
     final color = _notificationColors[type] ?? _notificationColors['default']!;
@@ -305,26 +358,38 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: isRead ? Colors.white : color.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(12),
+          gradient: isRead
+              ? null
+              : LinearGradient(
+                  colors: [
+                    Colors.white,
+                    color.withValues(alpha: 0.03),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+          color: isRead ? Colors.white : null,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isRead
-                ? AppDesignSystem.backgroundGrey
-                : color.withValues(alpha: 0.2),
-            width: 1,
+                ? AppDesignSystem.backgroundGrey.withValues(alpha: 0.5)
+                : color.withValues(alpha: 0.3),
+            width: isRead ? 1 : 2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: isRead
+                  ? Colors.black.withValues(alpha: 0.04)
+                  : color.withValues(alpha: 0.1),
+              blurRadius: isRead ? 4 : 12,
+              offset: Offset(0, isRead ? 1 : 3),
             ),
           ],
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             onTap: () async {
               // Mark as read
               if (!isRead) {
@@ -335,17 +400,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               _handleNotificationTap(notificationData);
             },
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Icon
+                  // Icon with gradient background
                   Container(
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      gradient: LinearGradient(
+                        colors: [
+                          color.withValues(alpha: 0.2),
+                          color.withValues(alpha: 0.1),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: color.withValues(alpha: 0.3),
+                        width: 1.5,
+                      ),
                     ),
                     child: Icon(
                       icon,
@@ -368,39 +444,69 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 style: TextStyle(
                                   color: AppDesignSystem.textPrimary,
                                   fontSize: 16,
-                                  fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+                                  fontWeight: isRead ? FontWeight.w600 : FontWeight.bold,
+                                  letterSpacing: -0.3,
                                 ),
                               ),
                             ),
                             if (!isRead)
                               Container(
-                                width: 8,
-                                height: 8,
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: color,
-                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    colors: [color, color.withValues(alpha: 0.8)],
+                                  ),
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: color.withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  'NEW',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 6),
                         Text(
                           body,
                           style: TextStyle(
                             color: AppDesignSystem.textSecondary,
                             fontSize: 14,
+                            height: 1.4,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (sentAt != null) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            _formatTimestamp(sentAt),
-                            style: TextStyle(
-                              color: AppDesignSystem.textTertiary,
-                              fontSize: 12,
-                            ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: 14,
+                                color: AppDesignSystem.textTertiary,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                _formatTimestamp(sentAt),
+                                style: TextStyle(
+                                  color: AppDesignSystem.textTertiary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ],
