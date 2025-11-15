@@ -18,7 +18,7 @@ import 'screens/auth/email_verification_screen.dart';
 import 'screens/main/main_screen.dart';
 import 'screens/learn/realm_detail_screen.dart';
 import 'screens/learn/level_detail_screen.dart';
-import 'screens/games/games_screen.dart';
+import 'screens/games/play_screen.dart';
 import 'screens/profile/badges_screen.dart';
 import 'screens/profile/profile_screen.dart';
 import 'screens/profile/insights_screen.dart';
@@ -34,6 +34,7 @@ import 'screens/notifications/notifications_screen.dart';
 import 'screens/daily_challenge/daily_challenge_screen.dart';
 import 'screens/onboarding/student_tutorial_screen.dart';
 import 'screens/onboarding/teacher_tutorial_screen.dart';
+import 'screens/announcements/unified_announcements_screen.dart';
 import 'core/models/realm_model.dart';
 import 'utils/haptic_feedback_util.dart';
 import 'services/sound_service.dart';
@@ -198,7 +199,7 @@ class _MyAppState extends State<MyApp> {
               }
               return MaterialPageRoute(builder: (_) => const SplashScreen());
             case '/games':
-              return MaterialPageRoute(builder: (_) => const GamesScreen());
+              return MaterialPageRoute(builder: (_) => const PlayScreen());
             case '/badges':
               return MaterialPageRoute(builder: (_) => const BadgesScreen());
             case '/certificates':
@@ -233,6 +234,8 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (_) => const ChatListScreen());
             case '/notifications':
               return MaterialPageRoute(builder: (_) => const NotificationsScreen());
+            case '/announcements':
+              return MaterialPageRoute(builder: (_) => const UnifiedAnnouncementsScreen());
             case '/daily-challenge':
               return MaterialPageRoute(builder: (_) => const DailyChallengeScreen());
             case '/student-tutorial':
@@ -257,9 +260,9 @@ class _MyAppState extends State<MyApp> {
               final args = settings.arguments as Map<String, dynamic>?;
               final gameId = args?['gameId'] as String?;
               if (gameId != null) {
-                return MaterialPageRoute(builder: (_) => const GamesScreen());
+                return MaterialPageRoute(builder: (_) => const PlayScreen());
               }
-              return MaterialPageRoute(builder: (_) => const GamesScreen());
+              return MaterialPageRoute(builder: (_) => const PlayScreen());
             case '/certificate/verify':
               // Navigate to profile/badges screen where certificates are shown
               return MaterialPageRoute(builder: (_) => const BadgesScreen());

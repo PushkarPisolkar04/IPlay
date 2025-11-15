@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../core/services/notification_service.dart';
 
 /// SimplifiedChatService - Education-focused chat system
 /// Only allows teacher-to-student one-on-one messaging
@@ -7,22 +8,36 @@ import 'package:firebase_auth/firebase_auth.dart';
 class SimplifiedChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final NotificationService _notificationService = NotificationService();
 
   /// Create a teacher-to-student chat
-  /// Only teachers can initiate conversations
+  /// Both teachers and students can initiate conversations
   Future<String> createTeacherStudentChat({
     required String teacherId,
     required String studentId,
   }) async {
-    // Verify teacher role
+    // Verify both users exist
     final teacherDoc = await _firestore.collection('users').doc(teacherId).get();
+    final studentDoc = await _firestore.collection('users').doc(studentId).get();
+    
     if (!teacherDoc.exists) {
       throw Exception('Teacher not found');
     }
     
+    if (!studentDoc.exists) {
+      throw Exception('Student not found');
+    }
+    
     final teacherData = teacherDoc.data()!;
+    final studentData = studentDoc.data()!;
+    
+    // Verify roles
     if (teacherData['role'] != 'teacher' && teacherData['isPrincipal'] != true) {
-      throw Exception('Only teachers can initiate conversations');
+      throw Exception('Invalid teacher');
+    }
+    
+    if (studentData['role'] != 'student') {
+      throw Exception('Invalid student');
     }
 
     // Verify student is in teacher's classroom
@@ -33,7 +48,7 @@ class SimplifiedChatService {
         .get();
 
     if (classrooms.docs.isEmpty) {
-      throw Exception('Student must be in your classroom');
+      throw Exception('Student must be in teacher\'s classroom');
     }
 
     // Check if chat already exists
@@ -104,6 +119,30 @@ class SimplifiedChatService {
       'lastMessageAt': FieldValue.serverTimestamp(),
       'unreadCount.$otherUserId': FieldValue.increment(1),
     });
+
+    // Send notification to the other user
+    try {
+      final senderDoc = await _firestore.collection('users').doc(user.uid).get();
+      final senderData = senderDoc.data();
+      final senderName = senderData?['displayName'] ?? 'Someone';
+      final senderAvatar = senderData?['avatarUrl'];
+
+      await _notificationService.sendToUser(
+        userId: otherUserId,
+        title: 'New message from $senderName',
+        body: text.length > 50 ? '${text.substring(0, 50)}...' : text,
+        data: {
+          'type': 'message',
+          'chatId': chatId,
+          'senderId': user.uid,
+          'senderName': senderName,
+          'senderAvatar': senderAvatar,
+        },
+      );
+    } catch (e) {
+      // Notification failed, but message was sent successfully
+      // Don't throw error
+    }
   }
 
   /// Mark messages as read

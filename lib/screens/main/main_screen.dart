@@ -59,23 +59,23 @@ class _MainScreenState extends State<MainScreen> {
   // Get screens based on user role
   List<Widget> get _screens {
     if (_user == null) {
-      return const [
-        HomeScreen(),
-        LearnScreen(),
-        PlayScreen(),
-        UnifiedLeaderboardScreen(),
-        ProfileScreen(),
+      return [
+        HomeScreen(onNavigateToTab: _onTabTapped),
+        const LearnScreen(),
+        const PlayScreen(),
+        const UnifiedLeaderboardScreen(),
+        const ProfileScreen(),
       ];
     }
 
     // STUDENT: Home, Learn, Play, Leaderboard, Profile
     if (_user!.role == 'student') {
-      return const [
-        HomeScreen(),
-        LearnScreen(),
-        PlayScreen(),
-        UnifiedLeaderboardScreen(),
-        ProfileScreen(),
+      return [
+        HomeScreen(onNavigateToTab: _onTabTapped),
+        const LearnScreen(),
+        const PlayScreen(),
+        const UnifiedLeaderboardScreen(),
+        const ProfileScreen(),
       ];
     }
 

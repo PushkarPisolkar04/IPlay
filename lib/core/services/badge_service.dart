@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../models/badge_model.dart';
 import '../../services/sound_service.dart';
 import 'badge_animation_queue.dart';
@@ -13,24 +15,50 @@ class BadgeService {
   // Cache for badge definitions
   List<BadgeModel>? _badgeCache;
 
-  /// Get all badge definitions from Firestore
+  /// Get all badge definitions from local JSON file
   Future<List<BadgeModel>> getAllBadges() async {
     // Return cached badges if available
     if (_badgeCache != null) return _badgeCache!;
 
     try {
-      final snapshot = await _firestore
-          .collection('badges')
-          .orderBy('displayOrder')
-          .get();
+      // Load from local JSON file
+      final String jsonString = await rootBundle.loadString('content/badges.json');
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      final List<dynamic> badgesJson = jsonData['badges'] ?? [];
 
-      _badgeCache = snapshot.docs
-          .map((doc) => BadgeModel.fromFirestore(doc.data()))
+      _badgeCache = badgesJson
+          .map((badgeData) {
+            try {
+              // Convert JSON structure to match BadgeModel
+              final unlockCondition = badgeData['unlockCondition'] as Map<String, dynamic>?;
+              return BadgeModel(
+                id: badgeData['id'] as String,
+                name: badgeData['name'] as String,
+                description: badgeData['description'] as String,
+                iconPath: badgeData['iconPath'] as String,
+                category: badgeData['category'] as String,
+                xpBonus: badgeData['xpBonus'] as int? ?? 0,
+                rarity: badgeData['rarity'] as String,
+                criteriaType: unlockCondition?['type'] as String? ?? 'manual',
+                criteriaValue: unlockCondition?['value'] ?? unlockCondition?['count'] ?? unlockCondition?['realmId'],
+                displayOrder: badgeData['displayOrder'] as int? ?? 0,
+                isActive: badgeData['isActive'] as bool? ?? true,
+              );
+            } catch (e) {
+              print('Error parsing badge: $e');
+              return null;
+            }
+          })
+          .whereType<BadgeModel>()
           .toList();
 
+      // Sort by display order
+      _badgeCache!.sort((a, b) => a.order.compareTo(b.order));
+
+      print('Loaded ${_badgeCache!.length} badges from local JSON');
       return _badgeCache!;
     } catch (e) {
-      // print('Error getting badges: $e');
+      print('Error loading badges from JSON: $e');
       return [];
     }
   }

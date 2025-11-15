@@ -148,11 +148,13 @@ class ListSkeleton extends StatelessWidget {
 class GridSkeleton extends StatelessWidget {
   final int itemCount;
   final int crossAxisCount;
+  final double childAspectRatio;
 
   const GridSkeleton({
     super.key,
     this.itemCount = 6,
     this.crossAxisCount = 2,
+    this.childAspectRatio = 1.0,
   });
 
   @override
@@ -165,7 +167,7 @@ class GridSkeleton extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        childAspectRatio: 1.0,
+        childAspectRatio: childAspectRatio,
       ),
       itemCount: itemCount,
       itemBuilder: (context, index) {
@@ -181,27 +183,33 @@ class GridSkeleton extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              LoadingSkeleton(
-                width: 60,
-                height: 60,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              const SizedBox(height: 12),
-              LoadingSkeleton(
-                width: 100,
-                height: 16,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: 8),
-              LoadingSkeleton(
-                width: 60,
-                height: 14,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: LoadingSkeleton(
+                    width: 50,
+                    height: 50,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                LoadingSkeleton(
+                  width: 70,
+                  height: 12,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 4),
+                LoadingSkeleton(
+                  width: 50,
+                  height: 10,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ],
+            ),
           ),
         );
       },

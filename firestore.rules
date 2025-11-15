@@ -180,6 +180,12 @@ service cloud.firestore {
       // Allow delete if it's your own progress
       allow delete: if isSignedIn() && 
         getProgressUserId() == request.auth.uid;
+      
+      // Games subcollection - allow users to read/write their own game progress
+      match /games/{gameId} {
+        allow read, write: if isSignedIn() && 
+          request.auth.uid == progressId;
+      }
     }
     
     // Badges Collection (Read-only)
@@ -428,12 +434,12 @@ service cloud.firestore {
     // No student-to-student messaging, no group chats
     // ============================================================================
     match /chats/{chatId} {
-      // Only participants can read
-      allow read: if isAuthenticated() && 
-                     request.auth.uid in resource.data.participants;
+      // Only participants can read - allow both get and list operations
+      allow get, list: if isAuthenticated() && 
+                          request.auth.uid in resource.data.participants;
       
-      // Only teachers can create chats (teacher-to-student only)
-      allow create: if isTeacher() && 
+      // Both teachers and students can create chats (teacher-to-student only)
+      allow create: if (isTeacher() || isStudent()) && 
                        request.resource.data.type == 'personal' &&
                        request.auth.uid in request.resource.data.participants &&
                        request.resource.data.participants.size() == 2;
@@ -447,9 +453,9 @@ service cloud.firestore {
       
       // Messages subcollection
       match /messages/{messageId} {
-        // Participants can read messages
-        allow read: if isAuthenticated() && 
-                       request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+        // Participants can read messages - allow both get and list
+        allow get, list: if isAuthenticated() && 
+                            request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
         
         // Participants can send messages (with content moderation)
         allow create: if isAuthenticated() && 

@@ -14,259 +14,24 @@
   "randomSelection": true,
   "allowRetry": true,
   "showHintsAfterWrongAnswer": true,
-  "version": "1.0.0",
-  "updatedAt": "2025-11-11T00:00:00Z",
+  "version": "2.0.0",
+  "updatedAt": "2025-11-15T00:00:00Z",
   "productSets": [
     {
       "id": "sto_001",
-      "productName": "Bisleri Water Bottle",
-      "category": "beverages",
-      "images": [
-        {
-          "url": "assets/products/bisleri_original.png",
-          "isOriginal": true,
-          "label": "Bisleri"
-        },
-        {
-          "url": "assets/products/bisleri_fake1.png",
-          "isOriginal": false,
-          "label": "Bilseri",
-          "differences": ["Logo font slightly different", "Cap color lighter blue", "Label alignment off-center"]
-        },
-        {
-          "url": "assets/products/bisleri_fake2.png",
-          "isOriginal": false,
-          "label": "Bisreli",
-          "differences": ["Spelling error in brand name", "Missing registered trademark symbol", "Bottle shape slightly different"]
-        },
-        {
-          "url": "assets/products/bisleri_fake3.png",
-          "isOriginal": false,
-          "label": "Bislary",
-          "differences": ["Different font style", "Color shade variation", "Missing batch number"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Bisleri is India's leading packaged drinking water brand, established in 1965. It pioneered the bottled water industry in India.",
-        "trademarkInfo": "Bisleri is a registered trademark. The distinctive blue cap and label design are protected trade dress.",
-        "identificationTips": ["Check for the registered trademark symbol", "Verify the hologram on the cap", "Look for clear batch number and manufacturing date", "Authentic bottles have consistent blue color"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_002",
-      "productName": "Amul Butter",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/amul_original.png",
-          "isOriginal": true,
-          "label": "Amul"
-        },
-        {
-          "url": "assets/products/amul_fake1.png",
-          "isOriginal": false,
-          "label": "Amul",
-          "differences": ["Amul girl's face slightly distorted", "Color of packaging duller", "Font weight thinner"]
-        },
-        {
-          "url": "assets/products/amul_fake2.png",
-          "isOriginal": false,
-          "label": "Anul",
-          "differences": ["Spelling changed to 'Anul'", "Missing quality certification mark", "Different shade of yellow"]
-        },
-        {
-          "url": "assets/products/amul_fake3.png",
-          "isOriginal": false,
-          "label": "Amul",
-          "differences": ["Amul girl's polka dots wrong pattern", "Text alignment issues", "Missing expiry date"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Amul, founded in 1946, is India's largest dairy cooperative. The iconic Amul girl mascot has been a symbol of quality for decades.",
-        "trademarkInfo": "The Amul name, logo, and the Amul girl character are registered trademarks of Gujarat Cooperative Milk Marketing Federation.",
-        "identificationTips": ["Check the Amul girl's face details carefully", "Verify the bright yellow packaging color", "Look for FSSAI license number", "Check for proper sealing and expiry date"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_003",
-      "productName": "Parle-G Biscuits",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/parleg_original.png",
-          "isOriginal": true,
-          "label": "Parle-G"
-        },
-        {
-          "url": "assets/products/parleg_fake1.png",
-          "isOriginal": false,
-          "label": "Parle-G",
-          "differences": ["Baby's face proportions wrong", "Orange border thinner", "Font spacing irregular"]
-        },
-        {
-          "url": "assets/products/parleg_fake2.png",
-          "isOriginal": false,
-          "label": "Parle-6",
-          "differences": ["'G' replaced with '6'", "Different baby illustration", "Missing nutritional information"]
-        },
-        {
-          "url": "assets/products/parleg_fake3.png",
-          "isOriginal": false,
-          "label": "Parle-G",
-          "differences": ["Baby's expression different", "Color saturation too high", "Package dimensions slightly off"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Parle-G, launched in 1939, is India's largest-selling biscuit brand and one of the most recognized brands globally.",
-        "trademarkInfo": "The Parle-G name and the baby logo are registered trademarks. The distinctive orange border is part of the protected trade dress.",
-        "identificationTips": ["Verify the baby's face details", "Check the orange border thickness", "Look for proper FSSAI marking", "Authentic packets have consistent print quality"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    }
-    ,
-    {
-      "id": "sto_004",
-      "productName": "Britannia Good Day Cookies",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/britannia_original.png",
-          "isOriginal": true,
-          "label": "Britannia Good Day"
-        },
-        {
-          "url": "assets/products/britannia_fake1.png",
-          "isOriginal": false,
-          "label": "Britannia Good Day",
-          "differences": ["Logo placement shifted", "Red color less vibrant", "Cookie image quality poor"]
-        },
-        {
-          "url": "assets/products/britannia_fake2.png",
-          "isOriginal": false,
-          "label": "Britania Good Day",
-          "differences": ["Missing second 'n' in Britannia", "Font style different", "Missing weight information"]
-        },
-        {
-          "url": "assets/products/britannia_fake3.png",
-          "isOriginal": false,
-          "label": "Britannia Good Day",
-          "differences": ["Cookie image distorted", "Packaging seal different", "Barcode missing"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Britannia Industries, established in 1892, is one of India's oldest and most trusted food brands.",
-        "trademarkInfo": "Britannia and Good Day are registered trademarks. The red and white color scheme is distinctive.",
-        "identificationTips": ["Check spelling of 'Britannia' carefully", "Verify the vibrant red color", "Look for proper nutritional labeling", "Check for manufacturing license"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_005",
-      "productName": "Coca-Cola Bottle",
-      "category": "beverages",
-      "images": [
-        {
-          "url": "assets/products/cocacola_original.png",
-          "isOriginal": true,
-          "label": "Coca-Cola"
-        },
-        {
-          "url": "assets/products/cocacola_fake1.png",
-          "isOriginal": false,
-          "label": "Coca-Cola",
-          "differences": ["Logo script slightly different", "Red shade variation", "Bottle contour not exact"]
-        },
-        {
-          "url": "assets/products/cocacola_fake2.png",
-          "isOriginal": false,
-          "label": "Coca-Kola",
-          "differences": ["'C' replaced with 'K'", "Missing trademark symbol", "Label quality poor"]
-        },
-        {
-          "url": "assets/products/cocacola_fake3.png",
-          "isOriginal": false,
-          "label": "Coca-Cola",
-          "differences": ["Font kerning wrong", "Cap design different", "Missing batch code"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Coca-Cola, created in 1886, is the world's most recognized brand. The distinctive contour bottle was introduced in 1915.",
-        "trademarkInfo": "The Coca-Cola script logo, contour bottle shape, and red color are all protected trademarks and trade dress.",
-        "identificationTips": ["Check the distinctive Spencerian script logo", "Verify the iconic contour bottle shape", "Look for embossed trademark on bottle", "Authentic products have clear batch codes"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_006",
-      "productName": "Nike Shoes",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/nike_original.png",
-          "isOriginal": true,
-          "label": "Nike"
-        },
-        {
-          "url": "assets/products/nike_fake1.png",
-          "isOriginal": false,
-          "label": "Nike",
-          "differences": ["Swoosh logo proportions wrong", "Stitching quality poor", "Sole pattern different"]
-        },
-        {
-          "url": "assets/products/nike_fake2.png",
-          "isOriginal": false,
-          "label": "Hike",
-          "differences": ["Brand name changed to 'Hike'", "Logo reversed", "Material quality inferior"]
-        },
-        {
-          "url": "assets/products/nike_fake3.png",
-          "isOriginal": false,
-          "label": "Nike",
-          "differences": ["Swoosh placement incorrect", "Box quality poor", "Missing product code"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Nike, founded in 1964, is the world's leading athletic footwear and apparel brand. The Swoosh logo was designed in 1971.",
-        "trademarkInfo": "The Nike name and Swoosh logo are among the most valuable trademarks globally, protected in over 170 countries.",
-        "identificationTips": ["Check the Swoosh logo placement and proportions", "Verify stitching quality", "Look for product code on tongue", "Authentic shoes have consistent sole patterns"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_007",
-      "productName": "Adidas Sneakers",
+      "productName": "Adidas",
       "category": "fashion",
       "images": [
         {
           "url": "assets/products/adidas_original.png",
           "isOriginal": true,
-          "label": "Adidas"
+          "label": "Original Adidas"
         },
         {
-          "url": "assets/products/adidas_fake1.png",
+          "url": "assets/products/adidas_fake.png",
           "isOriginal": false,
-          "label": "Adidas",
-          "differences": ["Three stripes uneven", "Logo font different", "Heel tab quality poor"]
-        },
-        {
-          "url": "assets/products/adidas_fake2.png",
-          "isOriginal": false,
-          "label": "Abibas",
-          "differences": ["Name changed to 'Abibas'", "Four stripes instead of three", "Missing size tag"]
-        },
-        {
-          "url": "assets/products/adidas_fake3.png",
-          "isOriginal": false,
-          "label": "Adidas",
-          "differences": ["Stripes width inconsistent", "Trefoil logo distorted", "Box printing blurry"]
+          "label": "Fake Adidas",
+          "differences": ["Three stripes uneven", "Logo font different", "Quality inferior"]
         }
       ],
       "educationalInfo": {
@@ -278,217 +43,45 @@
       "points": 15
     },
     {
-      "id": "sto_008",
-      "productName": "Apple iPhone",
-      "category": "electronics",
+      "id": "sto_002",
+      "productName": "Coca-Cola",
+      "category": "beverages",
       "images": [
         {
-          "url": "assets/products/iphone_original.png",
+          "url": "assets/products/cocacola_original.png",
           "isOriginal": true,
-          "label": "iPhone"
+          "label": "Original Coca-Cola"
         },
         {
-          "url": "assets/products/iphone_fake1.png",
+          "url": "assets/products/cocacola_fake.png",
           "isOriginal": false,
-          "label": "iPhone",
-          "differences": ["Apple logo slightly off-center", "Screen quality inferior", "Port alignment wrong"]
-        },
-        {
-          "url": "assets/products/iphone_fake2.png",
-          "isOriginal": false,
-          "label": "iFone",
-          "differences": ["Spelling changed to 'iFone'", "Different camera layout", "Missing regulatory markings"]
-        },
-        {
-          "url": "assets/products/iphone_fake3.png",
-          "isOriginal": false,
-          "label": "iPhone",
-          "differences": ["Button placement different", "Logo engraving shallow", "IMEI number invalid"]
+          "label": "Fake Coca-Cola",
+          "differences": ["Logo script slightly different", "Red shade variation", "Bottle contour not exact"]
         }
       ],
       "educationalInfo": {
-        "brandHistory": "Apple Inc. introduced the iPhone in 2007, revolutionizing the smartphone industry. It's one of the most counterfeited products globally.",
-        "trademarkInfo": "iPhone, Apple logo, and iOS are registered trademarks. Apple's design patents protect the device's appearance.",
-        "identificationTips": ["Check IMEI number on Apple's website", "Verify iOS authenticity", "Look for precise Apple logo engraving", "Authentic devices have perfect build quality"]
-      },
-      "difficulty": "hard",
-      "points": 20
-    },
-    {
-      "id": "sto_009",
-      "productName": "Samsung Galaxy Phone",
-      "category": "electronics",
-      "images": [
-        {
-          "url": "assets/products/samsung_original.png",
-          "isOriginal": true,
-          "label": "Samsung Galaxy"
-        },
-        {
-          "url": "assets/products/samsung_fake1.png",
-          "isOriginal": false,
-          "label": "Samsung Galaxy",
-          "differences": ["Logo font weight different", "Screen bezel thicker", "Camera module placement off"]
-        },
-        {
-          "url": "assets/products/samsung_fake2.png",
-          "isOriginal": false,
-          "label": "Samsang Galaxy",
-          "differences": ["Spelling error 'Samsang'", "Missing hologram sticker", "Box quality inferior"]
-        },
-        {
-          "url": "assets/products/samsung_fake3.png",
-          "isOriginal": false,
-          "label": "Samsung Galaxy",
-          "differences": ["Button tactile feel different", "Software interface cloned", "Missing warranty card"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Samsung Electronics is a South Korean multinational, and Galaxy is its flagship smartphone series launched in 2009.",
-        "trademarkInfo": "Samsung and Galaxy are registered trademarks. The company uses holographic security labels on packaging.",
-        "identificationTips": ["Check for holographic security label", "Verify IMEI with Samsung", "Look for proper One UI software", "Authentic devices have consistent build quality"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_010",
-      "productName": "Sony Headphones",
-      "category": "electronics",
-      "images": [
-        {
-          "url": "assets/products/sony_original.png",
-          "isOriginal": true,
-          "label": "Sony"
-        },
-        {
-          "url": "assets/products/sony_fake1.png",
-          "isOriginal": false,
-          "label": "Sony",
-          "differences": ["Logo embossing shallow", "Padding quality poor", "Cable thickness different"]
-        },
-        {
-          "url": "assets/products/sony_fake2.png",
-          "isOriginal": false,
-          "label": "Somy",
-          "differences": ["Brand name 'Somy'", "Missing model number", "Packaging design copied poorly"]
-        },
-        {
-          "url": "assets/products/sony_fake3.png",
-          "isOriginal": false,
-          "label": "Sony",
-          "differences": ["Font style different", "Sound quality inferior", "Missing serial number"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Sony Corporation, founded in 1946, is a Japanese multinational known for high-quality audio products.",
-        "trademarkInfo": "Sony is a registered trademark. The company uses unique serial numbers for product authentication.",
-        "identificationTips": ["Check serial number on Sony's website", "Verify logo embossing depth", "Test sound quality", "Look for proper warranty documentation"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_011",
-      "productName": "Levi's Jeans",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/levis_original.png",
-          "isOriginal": true,
-          "label": "Levi's"
-        },
-        {
-          "url": "assets/products/levis_fake1.png",
-          "isOriginal": false,
-          "label": "Levi's",
-          "differences": ["Red tab color faded", "Stitching pattern wrong", "Button engraving unclear"]
-        },
-        {
-          "url": "assets/products/levis_fake2.png",
-          "isOriginal": false,
-          "label": "Levis",
-          "differences": ["Missing apostrophe in 'Levis'", "Denim quality inferior", "Missing care label"]
-        },
-        {
-          "url": "assets/products/levis_fake3.png",
-          "isOriginal": false,
-          "label": "Levi's",
-          "differences": ["Red tab placement wrong", "Arcuate stitching irregular", "Leather patch fake"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Levi Strauss & Co., founded in 1853, invented blue jeans. The red tab was introduced in 1936.",
-        "trademarkInfo": "The Levi's name, red tab, and arcuate stitching pattern on back pockets are all registered trademarks.",
-        "identificationTips": ["Check the red tab - should be bright red with white or red text", "Verify arcuate stitching on back pockets", "Look for quality leather patch", "Check button and rivet engravings"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_012",
-      "productName": "Puma T-Shirt",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/puma_original.png",
-          "isOriginal": true,
-          "label": "Puma"
-        },
-        {
-          "url": "assets/products/puma_fake1.png",
-          "isOriginal": false,
-          "label": "Puma",
-          "differences": ["Puma cat logo proportions wrong", "Fabric quality thinner", "Tag printing blurry"]
-        },
-        {
-          "url": "assets/products/puma_fake2.png",
-          "isOriginal": false,
-          "label": "Puna",
-          "differences": ["Brand name 'Puna'", "Cat logo facing wrong direction", "Missing size label"]
-        },
-        {
-          "url": "assets/products/puma_fake3.png",
-          "isOriginal": false,
-          "label": "Puma",
-          "differences": ["Logo placement off-center", "Stitching quality poor", "Color fading uneven"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Puma, founded in 1948 by Rudolf Dassler, is a German multinational corporation known for athletic and casual footwear, apparel, and accessories.",
-        "trademarkInfo": "The Puma name and leaping cat logo are registered trademarks protected worldwide.",
-        "identificationTips": ["Check the leaping cat logo details", "Verify fabric quality and weight", "Look for proper care and size labels", "Authentic items have consistent stitching"]
+        "brandHistory": "Coca-Cola, created in 1886, is the world's most recognized brand. The distinctive contour bottle was introduced in 1915.",
+        "trademarkInfo": "The Coca-Cola script logo, contour bottle shape, and red color are all protected trademarks and trade dress.",
+        "identificationTips": ["Check the distinctive Spencerian script logo", "Verify the iconic contour bottle shape", "Look for embossed trademark on bottle", "Authentic products have clear batch codes"]
       },
       "difficulty": "easy",
       "points": 10
     },
     {
-      "id": "sto_013",
-      "productName": "Colgate Toothpaste",
-      "category": "food_products",
+      "id": "sto_003",
+      "productName": "Colgate",
+      "category": "personal_care",
       "images": [
         {
           "url": "assets/products/colgate_original.png",
           "isOriginal": true,
-          "label": "Colgate"
+          "label": "Original Colgate"
         },
         {
-          "url": "assets/products/colgate_fake1.png",
+          "url": "assets/products/colgate_fake.png",
           "isOriginal": false,
-          "label": "Colgate",
+          "label": "Fake Colgate",
           "differences": ["Red color less vibrant", "Font spacing irregular", "Cap threading different"]
-        },
-        {
-          "url": "assets/products/colgate_fake2.png",
-          "isOriginal": false,
-          "label": "Colgate",
-          "differences": ["Logo oval shape distorted", "Missing fluoride content info", "Tube sealing poor"]
-        },
-        {
-          "url": "assets/products/colgate_fake3.png",
-          "isOriginal": false,
-          "label": "Colgete",
-          "differences": ["Spelling 'Colgete'", "Different shade of red", "Missing batch number"]
         }
       ],
       "educationalInfo": {
@@ -500,459 +93,179 @@
       "points": 10
     },
     {
-      "id": "sto_014",
-      "productName": "Maggi Noodles",
-      "category": "food_products",
+      "id": "sto_004",
+      "productName": "Dominos",
+      "category": "food_brands",
       "images": [
         {
-          "url": "assets/products/maggi_original.png",
+          "url": "assets/products/dominos_original.png",
           "isOriginal": true,
-          "label": "Maggi"
+          "label": "Original Domino's"
         },
         {
-          "url": "assets/products/maggi_fake1.png",
+          "url": "assets/products/dominos_fake.png",
           "isOriginal": false,
-          "label": "Maggi",
-          "differences": ["Yellow color duller", "Logo placement shifted", "Font weight different"]
-        },
-        {
-          "url": "assets/products/maggi_fake2.png",
-          "isOriginal": false,
-          "label": "Maggy",
-          "differences": ["Spelling 'Maggy' with 'y'", "Missing Nestle logo", "Package dimensions wrong"]
-        },
-        {
-          "url": "assets/products/maggi_fake3.png",
-          "isOriginal": false,
-          "label": "Maggi",
-          "differences": ["Red band color different", "Missing FSSAI mark", "Nutritional info incomplete"]
+          "label": "Fake Domino's",
+          "differences": ["Domino dots placement wrong", "Red and blue shades different", "Font style incorrect"]
         }
       ],
       "educationalInfo": {
-        "brandHistory": "Maggi, owned by Nestlé, was introduced in India in 1982 and became synonymous with instant noodles.",
-        "trademarkInfo": "Maggi is a registered trademark of Nestlé. The yellow and red packaging is distinctive trade dress.",
-        "identificationTips": ["Check spelling - 'Maggi' with two 'g's and 'i'", "Verify bright yellow color", "Look for Nestlé logo", "Check for FSSAI license number"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_015",
-      "productName": "Tata Salt",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/tatasalt_original.png",
-          "isOriginal": true,
-          "label": "Tata Salt"
-        },
-        {
-          "url": "assets/products/tatasalt_fake1.png",
-          "isOriginal": false,
-          "label": "Tata Salt",
-          "differences": ["Blue color shade different", "Tata logo proportions wrong", "Package seal quality poor"]
-        },
-        {
-          "url": "assets/products/tatasalt_fake2.png",
-          "isOriginal": false,
-          "label": "Tata Solt",
-          "differences": ["Spelling 'Solt' instead of 'Salt'", "Missing iodine content info", "Font style different"]
-        },
-        {
-          "url": "assets/products/tatasalt_fake3.png",
-          "isOriginal": false,
-          "label": "Tata Salt",
-          "differences": ["Logo placement incorrect", "Blue shade too light", "Missing manufacturing date"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Tata Salt, launched in 1983, was India's first iodized salt brand and revolutionized the salt industry.",
-        "trademarkInfo": "Tata Salt is a registered trademark of Tata Chemicals Limited. The blue packaging is distinctive.",
-        "identificationTips": ["Verify the Tata logo carefully", "Check the distinctive blue color", "Look for iodine content information", "Authentic packets have proper sealing"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_016",
-      "productName": "Dabur Honey",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/dabur_original.png",
-          "isOriginal": true,
-          "label": "Dabur Honey"
-        },
-        {
-          "url": "assets/products/dabur_fake1.png",
-          "isOriginal": false,
-          "label": "Dabur Honey",
-          "differences": ["Logo color less vibrant", "Bottle shape slightly different", "Label alignment off"]
-        },
-        {
-          "url": "assets/products/dabur_fake2.png",
-          "isOriginal": false,
-          "label": "Dabor Honey",
-          "differences": ["Spelling 'Dabor' instead of 'Dabur'", "Missing purity seal", "Cap design different"]
-        },
-        {
-          "url": "assets/products/dabur_fake3.png",
-          "isOriginal": false,
-          "label": "Dabur Honey",
-          "differences": ["Font kerning wrong", "Missing batch code", "Honey color in image different"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Dabur, founded in 1884, is one of India's oldest and most trusted Ayurvedic and natural healthcare companies.",
-        "trademarkInfo": "Dabur is a registered trademark. The company uses tamper-proof seals and batch codes for authentication.",
-        "identificationTips": ["Check spelling of 'Dabur' carefully", "Verify the purity seal", "Look for clear batch code", "Authentic bottles have consistent labeling"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    }
-    ,
-    {
-      "id": "sto_017",
-      "productName": "Cadbury Dairy Milk",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/cadbury_original.png",
-          "isOriginal": true,
-          "label": "Cadbury Dairy Milk"
-        },
-        {
-          "url": "assets/products/cadbury_fake1.png",
-          "isOriginal": false,
-          "label": "Cadbury Dairy Milk",
-          "differences": ["Purple shade different", "Logo script irregular", "Wrapper quality inferior"]
-        },
-        {
-          "url": "assets/products/cadbury_fake2.png",
-          "isOriginal": false,
-          "label": "Cadbury Dairy Milk",
-          "differences": ["Glass and a half image distorted", "Font weight inconsistent", "Missing weight marking"]
-        },
-        {
-          "url": "assets/products/cadbury_fake3.png",
-          "isOriginal": false,
-          "label": "Cadbury Dairy Nilk",
-          "differences": ["Spelling 'Nilk' instead of 'Milk'", "Purple color too bright", "Missing vegetarian symbol"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Cadbury Dairy Milk, launched in 1905, is one of the world's most popular chocolate brands. In India since 1948.",
-        "trademarkInfo": "Cadbury and Dairy Milk are registered trademarks. The distinctive purple color (Pantone 2685C) is protected trade dress.",
-        "identificationTips": ["Check the specific purple shade", "Verify the 'glass and a half' image", "Look for proper weight marking", "Authentic wrappers have holographic elements"]
+        "brandHistory": "Domino's Pizza, founded in 1960, is an American multinational pizza restaurant chain and one of the largest pizza delivery companies worldwide.",
+        "trademarkInfo": "The Domino's name and domino logo with red and blue colors are registered trademarks.",
+        "identificationTips": ["Check the domino dots - should be three dots", "Verify red and blue color scheme", "Look for proper apostrophe in Domino's", "Authentic branding has consistent font"]
       },
       "difficulty": "medium",
       "points": 15
     },
     {
-      "id": "sto_018",
-      "productName": "Pepsi Bottle",
+      "id": "sto_005",
+      "productName": "KitKat",
+      "category": "food_products",
+      "images": [
+        {
+          "url": "assets/products/kitkat_original.png",
+          "isOriginal": true,
+          "label": "Original KitKat"
+        },
+        {
+          "url": "assets/products/kitkat_fake.png",
+          "isOriginal": false,
+          "label": "Fake KitKat",
+          "differences": ["Red color shade different", "Logo font irregular", "Wrapper quality poor"]
+        }
+      ],
+      "educationalInfo": {
+        "brandHistory": "KitKat was created in 1935 by Rowntree's of York, UK. Now owned by Nestlé, it's one of the world's most popular chocolate bars.",
+        "trademarkInfo": "KitKat name and logo are registered trademarks. The red packaging and four-finger shape are distinctive.",
+        "identificationTips": ["Check the bright red color", "Verify the KitKat logo font", "Look for Nestlé branding", "Authentic wrappers have proper sealing"]
+      },
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "sto_006",
+      "productName": "Melody",
+      "category": "food_products",
+      "images": [
+        {
+          "url": "assets/products/melody_original.png",
+          "isOriginal": true,
+          "label": "Original Melody"
+        },
+        {
+          "url": "assets/products/melody_fake.png",
+          "isOriginal": false,
+          "label": "Fake Melody",
+          "differences": ["Color scheme different", "Logo placement off", "Wrapper quality inferior"]
+        }
+      ],
+      "educationalInfo": {
+        "brandHistory": "Melody is a popular Indian chocolate toffee brand known for its unique taste and colorful packaging.",
+        "trademarkInfo": "Melody is a registered trademark. The distinctive packaging design and colors are protected.",
+        "identificationTips": ["Check the vibrant color scheme", "Verify logo placement", "Look for proper wrapper quality", "Authentic products have clear branding"]
+      },
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "sto_007",
+      "productName": "Nike",
+      "category": "fashion",
+      "images": [
+        {
+          "url": "assets/products/nike_original.png",
+          "isOriginal": true,
+          "label": "Original Nike"
+        },
+        {
+          "url": "assets/products/nike_fake.png",
+          "isOriginal": false,
+          "label": "Fake Nike",
+          "differences": ["Swoosh logo proportions wrong", "Stitching quality poor", "Sole pattern different"]
+        }
+      ],
+      "educationalInfo": {
+        "brandHistory": "Nike, founded in 1964, is the world's leading athletic footwear and apparel brand. The Swoosh logo was designed in 1971.",
+        "trademarkInfo": "The Nike name and Swoosh logo are among the most valuable trademarks globally, protected in over 170 countries.",
+        "identificationTips": ["Check the Swoosh logo placement and proportions", "Verify stitching quality", "Look for product code on tongue", "Authentic shoes have consistent sole patterns"]
+      },
+      "difficulty": "medium",
+      "points": 15
+    },
+    {
+      "id": "sto_008",
+      "productName": "Puma",
+      "category": "fashion",
+      "images": [
+        {
+          "url": "assets/products/puma_original.png",
+          "isOriginal": true,
+          "label": "Original Puma"
+        },
+        {
+          "url": "assets/products/puma_fake.png",
+          "isOriginal": false,
+          "label": "Fake Puma",
+          "differences": ["Puma cat logo proportions wrong", "Fabric quality thinner", "Tag printing blurry"]
+        }
+      ],
+      "educationalInfo": {
+        "brandHistory": "Puma, founded in 1948 by Rudolf Dassler, is a German multinational corporation known for athletic and casual footwear, apparel, and accessories.",
+        "trademarkInfo": "The Puma name and leaping cat logo are registered trademarks protected worldwide.",
+        "identificationTips": ["Check the leaping cat logo details", "Verify fabric quality and weight", "Look for proper care and size labels", "Authentic items have consistent stitching"]
+      },
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "sto_009",
+      "productName": "Snickers",
+      "category": "food_products",
+      "images": [
+        {
+          "url": "assets/products/snicker_original.png",
+          "isOriginal": true,
+          "label": "Original Snickers"
+        },
+        {
+          "url": "assets/products/snicker_fake.png",
+          "isOriginal": false,
+          "label": "Fake Snickers",
+          "differences": ["Logo font different", "Brown color shade off", "Wrapper quality poor"]
+        }
+      ],
+      "educationalInfo": {
+        "brandHistory": "Snickers, created in 1930 by Mars Inc., is the world's best-selling candy bar, known for its combination of nougat, caramel, peanuts, and chocolate.",
+        "trademarkInfo": "Snickers is a registered trademark of Mars, Incorporated. The distinctive brown packaging and logo are protected.",
+        "identificationTips": ["Check the Snickers logo font", "Verify the brown color shade", "Look for Mars branding", "Authentic bars have proper wrapper sealing"]
+      },
+      "difficulty": "easy",
+      "points": 10
+    },
+    {
+      "id": "sto_010",
+      "productName": "Starbucks",
       "category": "beverages",
       "images": [
         {
-          "url": "assets/products/pepsi_original.png",
+          "url": "assets/products/starbucks_original.png",
           "isOriginal": true,
-          "label": "Pepsi"
+          "label": "Original Starbucks"
         },
         {
-          "url": "assets/products/pepsi_fake1.png",
+          "url": "assets/products/starbucks_fake.png",
           "isOriginal": false,
-          "label": "Pepsi",
-          "differences": ["Globe logo colors off", "Blue shade different", "Cap design wrong"]
-        },
-        {
-          "url": "assets/products/pepsi_fake2.png",
-          "isOriginal": false,
-          "label": "Pesi",
-          "differences": ["Missing 'p' - spelled 'Pesi'", "Logo proportions wrong", "Missing batch code"]
-        },
-        {
-          "url": "assets/products/pepsi_fake3.png",
-          "isOriginal": false,
-          "label": "Pepsi",
-          "differences": ["Font style different", "Label alignment off", "Bottle shape slightly different"]
+          "label": "Fake Starbucks",
+          "differences": ["Siren logo details wrong", "Green color shade different", "Font style incorrect"]
         }
       ],
       "educationalInfo": {
-        "brandHistory": "Pepsi-Cola was created in 1893 and is one of the world's most recognized beverage brands, competing globally with Coca-Cola.",
-        "trademarkInfo": "Pepsi and its globe logo are registered trademarks. The red, white, and blue color scheme is distinctive.",
-        "identificationTips": ["Check the globe logo colors carefully", "Verify the blue shade", "Look for proper batch code", "Authentic bottles have consistent labeling"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_019",
-      "productName": "Reebok Shoes",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/reebok_original.png",
-          "isOriginal": true,
-          "label": "Reebok"
-        },
-        {
-          "url": "assets/products/reebok_fake1.png",
-          "isOriginal": false,
-          "label": "Reebok",
-          "differences": ["Delta logo proportions wrong", "Stitching quality poor", "Sole pattern different"]
-        },
-        {
-          "url": "assets/products/reebok_fake2.png",
-          "isOriginal": false,
-          "label": "Reebook",
-          "differences": ["Extra 'e' - spelled 'Reebook'", "Logo placement incorrect", "Missing product code"]
-        },
-        {
-          "url": "assets/products/reebok_fake3.png",
-          "isOriginal": false,
-          "label": "Reebok",
-          "differences": ["Delta symbol distorted", "Material quality inferior", "Box printing blurry"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Reebok, founded in 1958 in the UK, is a global athletic footwear and apparel company, now owned by Adidas.",
-        "trademarkInfo": "Reebok and the Delta logo are registered trademarks. The company uses unique product codes for authentication.",
-        "identificationTips": ["Check the Delta logo carefully", "Verify stitching quality", "Look for product code on tongue", "Authentic shoes have consistent sole patterns"]
+        "brandHistory": "Starbucks, founded in 1971 in Seattle, is the world's largest coffeehouse chain, known for its distinctive green logo featuring a twin-tailed siren.",
+        "trademarkInfo": "Starbucks and the Siren logo are registered trademarks. The green color and circular logo design are protected trade dress.",
+        "identificationTips": ["Check the Siren logo details carefully", "Verify the specific green color (Pantone 3425C)", "Look for proper Starbucks font", "Authentic products have consistent branding"]
       },
       "difficulty": "medium",
       "points": 15
-    },
-    {
-      "id": "sto_020",
-      "productName": "HP Laptop",
-      "category": "electronics",
-      "images": [
-        {
-          "url": "assets/products/hp_original.png",
-          "isOriginal": true,
-          "label": "HP"
-        },
-        {
-          "url": "assets/products/hp_fake1.png",
-          "isOriginal": false,
-          "label": "HP",
-          "differences": ["Logo embossing shallow", "Build quality inferior", "Port alignment wrong"]
-        },
-        {
-          "url": "assets/products/hp_fake2.png",
-          "isOriginal": false,
-          "label": "HP",
-          "differences": ["Logo font different", "Missing serial number sticker", "Keyboard layout irregular"]
-        },
-        {
-          "url": "assets/products/hp_fake3.png",
-          "isOriginal": false,
-          "label": "HP",
-          "differences": ["Screen bezel thicker", "Hinge quality poor", "Missing warranty seal"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "HP (Hewlett-Packard), founded in 1939, is an American multinational information technology company and one of the world's largest PC manufacturers.",
-        "trademarkInfo": "HP and its logo are registered trademarks. Each device has a unique serial number for verification.",
-        "identificationTips": ["Check serial number on HP's website", "Verify logo embossing quality", "Look for proper warranty documentation", "Authentic devices have consistent build quality"]
-      },
-      "difficulty": "hard",
-      "points": 20
-    },
-    {
-      "id": "sto_021",
-      "productName": "Dell Monitor",
-      "category": "electronics",
-      "images": [
-        {
-          "url": "assets/products/dell_original.png",
-          "isOriginal": true,
-          "label": "Dell"
-        },
-        {
-          "url": "assets/products/dell_fake1.png",
-          "isOriginal": false,
-          "label": "Dell",
-          "differences": ["Logo slant angle wrong", "Bezel quality poor", "Stand mechanism different"]
-        },
-        {
-          "url": "assets/products/dell_fake2.png",
-          "isOriginal": false,
-          "label": "Dell",
-          "differences": ["Font style different", "Missing model number", "Cable quality inferior"]
-        },
-        {
-          "url": "assets/products/dell_fake3.png",
-          "isOriginal": false,
-          "label": "Doll",
-          "differences": ["Spelling 'Doll' instead of 'Dell'", "Logo color off", "Missing regulatory markings"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Dell Technologies, founded in 1984 by Michael Dell, is an American multinational computer technology company known for direct-to-consumer sales.",
-        "trademarkInfo": "Dell and its slanted 'E' logo are registered trademarks. Products have service tags for authentication.",
-        "identificationTips": ["Check the slanted 'E' in Dell logo", "Verify service tag on Dell's website", "Look for proper model number", "Authentic monitors have quality bezels"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_022",
-      "productName": "Canon Camera",
-      "category": "electronics",
-      "images": [
-        {
-          "url": "assets/products/canon_original.png",
-          "isOriginal": true,
-          "label": "Canon"
-        },
-        {
-          "url": "assets/products/canon_fake1.png",
-          "isOriginal": false,
-          "label": "Canon",
-          "differences": ["Logo font weight different", "Lens mount quality poor", "Button placement off"]
-        },
-        {
-          "url": "assets/products/canon_fake2.png",
-          "isOriginal": false,
-          "label": "Ganon",
-          "differences": ["Spelling 'Ganon' instead of 'Canon'", "Missing serial number", "Build quality inferior"]
-        },
-        {
-          "url": "assets/products/canon_fake3.png",
-          "isOriginal": false,
-          "label": "Canon",
-          "differences": ["Red stripe color different", "Grip texture wrong", "Missing warranty card"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Canon Inc., founded in 1937, is a Japanese multinational corporation specializing in optical, imaging, and industrial products.",
-        "trademarkInfo": "Canon and its red stripe logo are registered trademarks. Each camera has a unique serial number.",
-        "identificationTips": ["Check serial number on Canon's website", "Verify the red stripe color", "Look for proper lens mount", "Authentic cameras have quality build"]
-      },
-      "difficulty": "hard",
-      "points": 20
-    },
-    {
-      "id": "sto_023",
-      "productName": "Raymond Fabric",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/raymond_original.png",
-          "isOriginal": true,
-          "label": "Raymond"
-        },
-        {
-          "url": "assets/products/raymond_fake1.png",
-          "isOriginal": false,
-          "label": "Raymond",
-          "differences": ["Logo embroidery quality poor", "Fabric texture different", "Tag printing blurry"]
-        },
-        {
-          "url": "assets/products/raymond_fake2.png",
-          "isOriginal": false,
-          "label": "Raymund",
-          "differences": ["Spelling 'Raymund' instead of 'Raymond'", "Missing authenticity hologram", "Color shade off"]
-        },
-        {
-          "url": "assets/products/raymond_fake3.png",
-          "isOriginal": false,
-          "label": "Raymond",
-          "differences": ["Logo placement wrong", "Fabric weight lighter", "Missing care label"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Raymond Limited, founded in 1925, is India's largest integrated manufacturer of worsted suiting fabric, known for 'The Complete Man' campaign.",
-        "trademarkInfo": "Raymond is a registered trademark. The company uses holographic labels for authentication.",
-        "identificationTips": ["Check for holographic authenticity label", "Verify fabric quality and weight", "Look for proper care labels", "Authentic fabrics have consistent weave"]
-      },
-      "difficulty": "medium",
-      "points": 15
-    },
-    {
-      "id": "sto_024",
-      "productName": "Woodland Shoes",
-      "category": "fashion",
-      "images": [
-        {
-          "url": "assets/products/woodland_original.png",
-          "isOriginal": true,
-          "label": "Woodland"
-        },
-        {
-          "url": "assets/products/woodland_fake1.png",
-          "isOriginal": false,
-          "label": "Woodland",
-          "differences": ["Logo embossing shallow", "Leather quality inferior", "Sole pattern different"]
-        },
-        {
-          "url": "assets/products/woodland_fake2.png",
-          "isOriginal": false,
-          "label": "Woodlands",
-          "differences": ["Extra 's' - spelled 'Woodlands'", "Stitching quality poor", "Missing size marking"]
-        },
-        {
-          "url": "assets/products/woodland_fake3.png",
-          "isOriginal": false,
-          "label": "Woodland",
-          "differences": ["Logo placement incorrect", "Box quality poor", "Missing product code"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Woodland, launched in 1992 by Aero Group, is an Indian footwear brand known for outdoor and adventure footwear.",
-        "trademarkInfo": "Woodland is a registered trademark in India. The brand is known for its distinctive logo and quality leather.",
-        "identificationTips": ["Check spelling - 'Woodland' without 's'", "Verify leather quality", "Look for proper embossing", "Authentic shoes have consistent sole patterns"]
-      },
-      "difficulty": "easy",
-      "points": 10
-    },
-    {
-      "id": "sto_025",
-      "productName": "Haldiram's Snacks",
-      "category": "food_products",
-      "images": [
-        {
-          "url": "assets/products/haldiram_original.png",
-          "isOriginal": true,
-          "label": "Haldiram's"
-        },
-        {
-          "url": "assets/products/haldiram_fake1.png",
-          "isOriginal": false,
-          "label": "Haldiram's",
-          "differences": ["Logo color less vibrant", "Package seal quality poor", "Font spacing irregular"]
-        },
-        {
-          "url": "assets/products/haldiram_fake2.png",
-          "isOriginal": false,
-          "label": "Haldirams",
-          "differences": ["Missing apostrophe - 'Haldirams'", "Different shade of yellow", "Missing FSSAI mark"]
-        },
-        {
-          "url": "assets/products/haldiram_fake3.png",
-          "isOriginal": false,
-          "label": "Haldiram's",
-          "differences": ["Logo placement shifted", "Package dimensions wrong", "Missing manufacturing date"]
-        }
-      ],
-      "educationalInfo": {
-        "brandHistory": "Haldiram's, founded in 1937, is one of India's largest and most trusted manufacturers of traditional Indian sweets and snacks.",
-        "trademarkInfo": "Haldiram's is a registered trademark. The distinctive yellow and red packaging is protected trade dress.",
-        "identificationTips": ["Check for apostrophe in 'Haldiram's'", "Verify the bright yellow color", "Look for FSSAI license number", "Authentic packets have proper sealing"]
-      },
-      "difficulty": "easy",
-      "points": 10
     }
-  ],
-  "rewards": {
-    "completion": 70,
-    "perfectScore": 140,
-    "firstTime": 90,
-    "highScore": 180
-  },
-  "leaderboard": {
-    "enabled": true,
-    "scope": ["classroom", "school", "global"]
-  }
+  ]
 }

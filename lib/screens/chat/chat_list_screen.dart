@@ -5,6 +5,8 @@ import '../../core/design/app_design_system.dart';
 import '../../services/simplified_chat_service.dart';
 import '../../widgets/loading_skeleton.dart';
 import 'chat_screen.dart';
+import '../teacher/all_students_screen.dart';
+import 'select_teacher_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -76,6 +78,24 @@ class _ChatListScreenState extends State<ChatListScreen> {
         backgroundColor: Colors.white,
         elevation: 1,
       ),
+      floatingActionButton: _userRole != null
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => _userRole == 'teacher'
+                        ? const AllStudentsScreen()
+                        : const SelectTeacherScreen(),
+                  ),
+                );
+              },
+              backgroundColor: AppDesignSystem.primaryIndigo,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: const Text('New Message', style: TextStyle(color: Colors.white)),
+            )
+          : null,
       body: StreamBuilder<QuerySnapshot>(
         stream: _chatService.getUserChats(),
         builder: (context, snapshot) {
@@ -145,8 +165,8 @@ class _ChatListScreenState extends State<ChatListScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 48),
                             child: Text(
                               _userRole == 'student'
-                                  ? 'Your teachers can message you here'
-                                  : 'Start a conversation with your students',
+                                  ? 'No messages yet\n\nTap the button below to message your teachers!'
+                                  : 'No messages yet\n\nTap the button below to message your students!',
                               style: AppDesignSystem.bodyMedium.copyWith(
                                 color: AppDesignSystem.textTertiary,
                               ),

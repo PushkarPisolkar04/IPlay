@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
+import '../../core/services/notification_service.dart';
 
 class CreateAnnouncementScreen extends StatefulWidget {
   final bool isSchoolWide;
@@ -24,6 +25,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _messageController = TextEditingController();
+  final NotificationService _notificationService = NotificationService();
   bool _isSubmitting = false;
   String? _selectedClassroomId;
   List<Map<String, dynamic>> _classrooms = [];
@@ -115,7 +117,29 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
             .collection('announcements')
             .add(announcementData);
         
-        // print('Announcement created');
+        // Send notifications to all students in the school
+        final schoolDoc = await FirebaseFirestore.instance
+            .collection('schools')
+            .doc(schoolId)
+            .get();
+        
+        if (schoolDoc.exists) {
+          final studentIds = List<String>.from(schoolDoc.data()?['studentIds'] ?? []);
+          
+          if (studentIds.isNotEmpty) {
+            await _notificationService.sendToUsers(
+              userIds: studentIds,
+              title: '📢 ${_titleController.text.trim()}',
+              body: _messageController.text.trim().length > 100
+                  ? '${_messageController.text.trim().substring(0, 100)}...'
+                  : _messageController.text.trim(),
+              data: {
+                'type': 'announcement',
+                'schoolId': schoolId,
+              },
+            );
+          }
+        }
       } else {
         // Classroom announcement (for teachers)
         final classroomId = widget.classroomId ?? _selectedClassroomId;
@@ -123,13 +147,33 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         
         announcementData['classroomId'] = classroomId;
         
-        // print('Creating classroom announcement: $announcementData');
-        
         await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
         
-        // print('Classroom announcement created');
+        // Send notifications to all students in the classroom
+        final classroomDoc = await FirebaseFirestore.instance
+            .collection('classrooms')
+            .doc(classroomId)
+            .get();
+        
+        if (classroomDoc.exists) {
+          final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
+          
+          if (studentIds.isNotEmpty) {
+            await _notificationService.sendToUsers(
+              userIds: studentIds,
+              title: '📢 ${_titleController.text.trim()}',
+              body: _messageController.text.trim().length > 100
+                  ? '${_messageController.text.trim().substring(0, 100)}...'
+                  : _messageController.text.trim(),
+              data: {
+                'type': 'announcement',
+                'classroomId': classroomId,
+              },
+            );
+          }
+        }
       }
 
       if (mounted) {

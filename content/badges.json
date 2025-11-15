@@ -91,7 +91,7 @@
       "description": "Complete your first quiz",
       "category": "milestone",
       "rarity": "common",
-      "iconPath": "assets/badges/first_quiz.png",
+      "iconPath": "assets/badges/quiz_rookie.png",
       "xpBonus": 15,
       "unlockCondition": {
         "type": "quiz_complete",
@@ -171,7 +171,7 @@
       "description": "Complete your first daily challenge",
       "category": "milestone",
       "rarity": "common",
-      "iconPath": "assets/badges/challenge_acceptdd.png",
+      "iconPath": "assets/badges/first_challenge.png",
       "xpBonus": 20,
       "unlockCondition": {
         "type": "daily_challenge_complete",
@@ -347,7 +347,7 @@
       "description": "Login for 60 consecutive days",
       "category": "streak",
       "rarity": "epic",
-      "iconPath": "assets/badges/unstopable.png",
+      "iconPath": "assets/badges/unstoppable.png",
       "xpBonus": 300,
       "unlockCondition": {
         "type": "streak_days",
@@ -363,7 +363,7 @@
       "description": "Login for 100 consecutive days",
       "category": "streak",
       "rarity": "legendary",
-      "iconPath": "assets/badges/legendary_streak.png",
+      "iconPath": "assets/badges/leagendary_streak.png",
       "xpBonus": 500,
       "unlockCondition": {
         "type": "streak_days",
@@ -379,7 +379,7 @@
       "description": "Complete daily challenges for 7 days straight",
       "category": "streak",
       "rarity": "uncommon",
-      "iconPath": "assets/badges/challenge_streak_7.png",
+      "iconPath": "assets/badges/challenge_streak.png",
       "xpBonus": 75,
       "unlockCondition": {
         "type": "daily_challenge_streak",
@@ -395,7 +395,7 @@
       "description": "Complete daily challenges for 30 days straight",
       "category": "streak",
       "rarity": "epic",
-      "iconPath": "assets/badges/challenge_streak_30.png",
+      "iconPath": "assets/badges/challenge_master.png",
       "xpBonus": 300,
       "unlockCondition": {
         "type": "daily_challenge_streak",
@@ -523,7 +523,7 @@
       "description": "Play your first IPR game",
       "category": "game",
       "rarity": "common",
-      "iconPath": "assets/badges/first_game.png",
+      "iconPath": "assets/badges/game_starter.png",
       "xpBonus": 20,
       "unlockCondition": {
         "type": "games_played",
@@ -603,7 +603,7 @@
       "description": "Score 100% in Quiz Master game",
       "category": "game",
       "rarity": "rare",
-      "iconPath": "assets/badges/quiz_master_game.png",
+      "iconPath": "assets/badges/quiz_master_champion.png",
       "xpBonus": 75,
       "unlockCondition": {
         "type": "specific_game_perfect",
@@ -651,7 +651,7 @@
       "description": "Join your first classroom",
       "category": "social",
       "rarity": "common",
-      "iconPath": "❌",
+      "iconPath": "assets/badges/social_learner.png",
       "xpBonus": 25,
       "unlockCondition": {
         "type": "classroom_join",
@@ -666,7 +666,7 @@
       "description": "Rank #1 in your classroom leaderboard",
       "category": "social",
       "rarity": "rare",
-      "iconPath": "❌",
+      "iconPath": "assets/badges/class_champion.png",
       "xpBonus": 100,
       "unlockCondition": {
         "type": "leaderboard_rank",
@@ -764,7 +764,7 @@
       "description": "Complete a level in under 5 minutes",
       "category": "special",
       "rarity": "rare",
-      "iconPath": "❌",
+      "iconPath": "assets/badges/speed_runner.png",
       "xpBonus": 75,
       "unlockCondition": {
         "type": "speedrunner",
@@ -780,7 +780,7 @@
       "description": "Complete 5 levels between 10 PM - 6 AM",
       "category": "special",
       "rarity": "uncommon",
-      "iconPath": "❌",
+      "iconPath": "assets/badges/night_owl.png",
       "xpBonus": 50,
       "unlockCondition": {
         "type": "night_owl",
@@ -788,22 +788,6 @@
         "description": "Complete 5 levels at night"
       },
       "displayOrder": 49,
-      "isActive": true
-    },
-    {
-      "id": "weekend_warrior",
-      "name": "Weekend Warrior",
-      "description": "Complete 15 levels on weekends",
-      "category": "special",
-      "rarity": "uncommon",
-      "iconPath": "❌",
-      "xpBonus": 50,
-      "unlockCondition": {
-        "type": "weekend_warrior",
-        "count": 15,
-        "description": "Complete 15 levels on weekends"
-      },
-      "displayOrder": 50,
       "isActive": true
     }
   ]

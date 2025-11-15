@@ -3,6 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/progress_model.dart';
 import '../models/user_model.dart';
 import '../../services/sound_service.dart';
+import '../../services/streak_service.dart';
 import 'badge_service.dart';
 import 'offline_progress_manager.dart';
 import '../utils/debouncer.dart';
@@ -14,6 +15,7 @@ class ProgressService {
   final BadgeService _badgeService = BadgeService();
   final OfflineProgressManager _offlineManager = OfflineProgressManager.instance;
   final FirebaseBatchHelper _batchHelper = FirebaseBatchHelper();
+  final StreakService _streakService = StreakService();
   
   // Debouncer for progress updates (save every 30 seconds)
   final _progressDebouncer = Debouncer(delay: const Duration(seconds: 30));
@@ -205,8 +207,8 @@ class ProgressService {
       // Play XP gain sound
       SoundService.playXPGain();
 
-      // Update streak
-      await _updateStreak(userId);
+      // Update streak using StreakService
+      await _streakService.updateStreakOnActivity(userId);
       
       // Check for new badges (don't wait for this)
       _badgeService.checkAndAwardBadges(userId).then((newBadges) {
@@ -218,43 +220,6 @@ class ProgressService {
     } catch (e) {
       // print('Error completing level: $e');
       rethrow;
-    }
-  }
-
-  /// Update user's learning streak
-  Future<void> _updateStreak(String userId) async {
-    try {
-      final userDoc =
-          await _firestore.collection('users').doc(userId).get();
-      
-      if (!userDoc.exists) return;
-
-      final user = UserModel.fromMap(userDoc.data()!);
-      final now = DateTime.now();
-      final lastActive = user.lastActiveDate;
-
-      final hoursDiff = now.difference(lastActive).inHours;
-
-      int newStreak = user.currentStreak;
-
-      if (hoursDiff <= 48) {
-        // Within 48-hour grace period
-        if (now.day != lastActive.day) {
-          // New day, increment streak
-          newStreak = user.currentStreak + 1;
-        }
-        // Else: Same day, streak unchanged
-      } else {
-        // Streak broken (> 48 hours), reset to 1
-        newStreak = 1;
-      }
-
-      await _firestore.collection('users').doc(userId).update({
-        'currentStreak': newStreak,
-        'lastActiveDate': Timestamp.now(),
-      });
-    } catch (e) {
-      // print('Error updating streak: $e');
     }
   }
 

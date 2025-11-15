@@ -5,6 +5,8 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import 'student_detail_screen.dart';
+import '../../services/simplified_chat_service.dart';
+import '../chat/chat_screen.dart';
 
 class AllStudentsScreen extends StatefulWidget {
   const AllStudentsScreen({super.key});
@@ -161,6 +163,41 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _messageStudent(Map<String, dynamic> student) async {
+    try {
+      final chatService = SimplifiedChatService();
+      final teacherId = FirebaseAuth.instance.currentUser!.uid;
+      
+      // Create or get existing chat
+      final chatId = await chatService.createTeacherStudentChat(
+        teacherId: teacherId,
+        studentId: student['id'],
+      );
+      
+      if (!mounted) return;
+      
+      // Navigate to chat screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatScreen(
+            chatId: chatId,
+            otherUserName: student['name'],
+            otherUserAvatar: null,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error starting chat: ${e.toString()}'),
+          backgroundColor: AppDesignSystem.error,
+        ),
+      );
+    }
   }
 
   Future<void> _removeStudent(Map<String, dynamic> student) async {
@@ -445,9 +482,22 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                           child: OutlinedButton.icon(
                                             onPressed: () => _viewStudentDetails(student),
                                             icon: const Icon(Icons.visibility, size: 16),
-                                            label: const Text('View Details'),
+                                            label: const Text('View'),
                                             style: OutlinedButton.styleFrom(
                                               padding: const EdgeInsets.symmetric(vertical: 8),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: OutlinedButton.icon(
+                                            onPressed: () => _messageStudent(student),
+                                            icon: const Icon(Icons.message, size: 16),
+                                            label: const Text('Message'),
+                                            style: OutlinedButton.styleFrom(
+                                              padding: const EdgeInsets.symmetric(vertical: 8),
+                                              foregroundColor: AppDesignSystem.primaryIndigo,
+                                              side: BorderSide(color: AppDesignSystem.primaryIndigo),
                                             ),
                                           ),
                                         ),

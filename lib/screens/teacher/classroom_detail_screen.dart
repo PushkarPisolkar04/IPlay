@@ -13,6 +13,8 @@ import '../announcements/unified_announcements_screen.dart';
 import '../classroom/join_requests_screen.dart';
 import '../../core/services/join_request_service.dart';
 import '../../core/services/notification_service.dart';
+import '../../services/simplified_chat_service.dart';
+import '../chat/chat_screen.dart';
 
 class ClassroomDetailScreen extends StatefulWidget {
   final ClassroomModel classroom;
@@ -945,12 +947,66 @@ class _StudentCardState extends State<_StudentCard> {
                         ],
                       )
               else
-                IconButton(
-                  onPressed: () {
-                    // TODO: View student details
-                  },
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  color: AppDesignSystem.textSecondary,
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        // Start a chat with this student
+                        try {
+                          final chatService = SimplifiedChatService();
+                          final teacherId = FirebaseAuth.instance.currentUser!.uid;
+                          
+                          // Create or get existing chat
+                          final chatId = await chatService.createTeacherStudentChat(
+                            teacherId: teacherId,
+                            studentId: widget.studentId,
+                          );
+                          
+                          // Get student data for chat screen
+                          final studentDoc = await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(widget.studentId)
+                              .get();
+                          
+                          final studentData = studentDoc.data() as Map<String, dynamic>;
+                          final studentName = studentData['displayName'] ?? 'Student';
+                          final studentAvatar = studentData['avatarUrl'];
+                          
+                          if (!context.mounted) return;
+                          
+                          // Navigate to chat screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                chatId: chatId,
+                                otherUserName: studentName,
+                                otherUserAvatar: studentAvatar,
+                              ),
+                            ),
+                          );
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Error starting chat: ${e.toString()}'),
+                              backgroundColor: AppDesignSystem.error,
+                            ),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.message),
+                      color: AppDesignSystem.primaryIndigo,
+                      tooltip: 'Message',
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        // TODO: View student details
+                      },
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      color: AppDesignSystem.textSecondary,
+                    ),
+                  ],
                 ),
             ],
           ),

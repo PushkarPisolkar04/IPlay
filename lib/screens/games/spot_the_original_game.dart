@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
@@ -35,9 +37,40 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
     _loadRounds();
   }
 
-  void _loadRounds() {
-    // Generate 5 random rounds
-    _rounds = _generateRounds(5);
+  Future<void> _loadRounds() async {
+    // Load from JSON file
+    try {
+      final String jsonString = await rootBundle.loadString('content/games/spot_the_original.json');
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      final List<dynamic> productSets = jsonData['productSets'] ?? [];
+      
+      // Shuffle and select 5 random products
+      productSets.shuffle(Random());
+      final selectedProducts = productSets.take(5).toList();
+      
+      setState(() {
+        _rounds = selectedProducts.map((product) {
+          final images = product['images'] as List<dynamic>;
+          return GameRound(
+            type: product['productName'] as String,
+            question: 'Which is the original ${product['productName']}?',
+            options: images.map((img) => ImageOption(
+              icon: Icons.image,
+              label: img['label'] as String,
+              imagePath: img['url'] as String,
+            )).toList(),
+            correctIndex: images.indexWhere((img) => img['isOriginal'] == true),
+            explanation: product['educationalInfo']['identificationTips'][0] as String,
+          );
+        }).toList();
+      });
+    } catch (e) {
+      print('Error loading game data: $e');
+      // Fallback to empty rounds
+      setState(() {
+        _rounds = [];
+      });
+    }
   }
 
   void _startGame() {
@@ -247,9 +280,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
                       style: AppTextStyles.cardTitle,
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    _buildRuleItem('🎨', '5 rounds with different types'),
-                    _buildRuleItem('🖼️', '4 images per round (1 original, 3 copies)'),
-                    _buildRuleItem('🎯', 'Identify the original work'),
+                    _buildRuleItem('🎨', '5 rounds with different brands'),
+                    _buildRuleItem('🖼️', '2 images per round (1 original, 1 fake)'),
+                    _buildRuleItem('🎯', 'Identify the original product'),
                     _buildRuleItem('⭐', '15 XP per correct answer (max 75 XP)'),
                   ],
                 ),
@@ -362,18 +395,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
 
                     const SizedBox(height: AppSpacing.xl),
 
-                    // Image options in 2x2 grid
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: AppSpacing.md,
-                        mainAxisSpacing: AppSpacing.md,
-                        childAspectRatio: 1.0,
-                      ),
-                      itemCount: round.options.length,
-                      itemBuilder: (context, index) {
+                    // Image options in 1 row with 2 columns
+                    Row(
+                      children: List.generate(round.options.length, (index) {
                         final isSelected = _selectedAnswer == index;
                         final isCorrect = index == round.correctIndex;
                         
@@ -393,67 +417,84 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
                           borderWidth = 3;
                         }
 
-                        return GestureDetector(
-                          onTap: () => _selectAnswer(index),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: borderColor,
-                                width: borderWidth,
-                              ),
-                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                        return Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: index == 0 ? 0 : AppSpacing.sm,
+                              right: index == round.options.length - 1 ? 0 : AppSpacing.sm,
                             ),
-                            child: Stack(
-                              children: [
-                                // Image placeholder with icon
-                                Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        round.options[index].icon,
-                                        size: 48,
-                                        color: AppDesignSystem.textSecondary,
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                                        child: Text(
-                                          round.options[index].label,
-                                          style: AppTextStyles.bodySmall,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
+                            child: GestureDetector(
+                              onTap: () => _selectAnswer(index),
+                              child: Container(
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(
+                                    color: borderColor,
+                                    width: borderWidth,
                                   ),
+                                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
                                 ),
-                                
-                                // Result indicator
-                                if (_answerLocked && (isCorrect || (isSelected && !isCorrect)))
-                                  Positioned(
-                                    top: 8,
-                                    right: 8,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: isCorrect ? AppDesignSystem.success : Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        isCorrect ? Icons.check : Icons.close,
-                                        color: Colors.white,
-                                        size: 20,
+                                child: Stack(
+                                  children: [
+                                    // Image - Full size
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(AppSpacing.cardRadius - 2),
+                                      child: Image.asset(
+                                        round.options[index].imagePath,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          print('Error loading image: ${round.options[index].imagePath}');
+                                          return Container(
+                                            color: AppDesignSystem.backgroundGrey,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.image_not_supported,
+                                                  size: 64,
+                                                  color: AppDesignSystem.textSecondary,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  'Image not found',
+                                                  style: AppTextStyles.bodySmall,
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
-                                  ),
-                              ],
+                                    
+                                    // Result indicator
+                                    if (_answerLocked && (isCorrect || (isSelected && !isCorrect)))
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: isCorrect ? AppDesignSystem.success : Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            isCorrect ? Icons.check : Icons.close,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         );
-                      },
+                      }),
                     ),
 
                     if (_answerLocked) ...[
@@ -624,88 +665,6 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
     );
   }
 
-  // Generate game rounds
-  List<GameRound> _generateRounds(int count) {
-    final allRounds = [
-      // Art rounds
-      GameRound(
-        type: 'Artwork',
-        question: 'Which is the original painting?',
-        options: [
-          ImageOption(icon: Icons.palette, label: 'Mona Lisa (Original)'),
-          ImageOption(icon: Icons.palette_outlined, label: 'Mona Lisa Copy A'),
-          ImageOption(icon: Icons.palette_outlined, label: 'Mona Lisa Copy B'),
-          ImageOption(icon: Icons.palette_outlined, label: 'Mona Lisa Copy C'),
-        ],
-        correctIndex: 0,
-        explanation: 'The original Mona Lisa is protected by copyright and housed in the Louvre Museum.',
-      ),
-      GameRound(
-        type: 'Logo',
-        question: 'Which is the authentic trademark logo?',
-        options: [
-          ImageOption(icon: Icons.copyright, label: 'Nike Swoosh (Fake)'),
-          ImageOption(icon: Icons.copyright, label: 'Nike Swoosh (Original)'),
-          ImageOption(icon: Icons.copyright, label: 'Nike Swoosh (Copy)'),
-          ImageOption(icon: Icons.copyright, label: 'Nike Swoosh (Imitation)'),
-        ],
-        correctIndex: 1,
-        explanation: 'The Nike Swoosh is a registered trademark protected worldwide.',
-      ),
-      GameRound(
-        type: 'Design',
-        question: 'Which is the original product design?',
-        options: [
-          ImageOption(icon: Icons.phone_iphone, label: 'iPhone Design (Copy)'),
-          ImageOption(icon: Icons.phone_iphone, label: 'iPhone Design (Fake)'),
-          ImageOption(icon: Icons.phone_iphone, label: 'iPhone Design (Original)'),
-          ImageOption(icon: Icons.phone_iphone, label: 'iPhone Design (Clone)'),
-        ],
-        correctIndex: 2,
-        explanation: 'Apple\'s iPhone design is protected by industrial design rights.',
-      ),
-      GameRound(
-        type: 'Book Cover',
-        question: 'Which is the original book cover?',
-        options: [
-          ImageOption(icon: Icons.menu_book, label: 'Harry Potter (Pirated)'),
-          ImageOption(icon: Icons.menu_book, label: 'Harry Potter (Fake)'),
-          ImageOption(icon: Icons.menu_book, label: 'Harry Potter (Copy)'),
-          ImageOption(icon: Icons.menu_book, label: 'Harry Potter (Original)'),
-        ],
-        correctIndex: 3,
-        explanation: 'Original book covers are protected by copyright law.',
-      ),
-      GameRound(
-        type: 'Music Album',
-        question: 'Which is the authentic album cover?',
-        options: [
-          ImageOption(icon: Icons.album, label: 'Beatles Album (Original)'),
-          ImageOption(icon: Icons.album_outlined, label: 'Beatles Album (Bootleg)'),
-          ImageOption(icon: Icons.album_outlined, label: 'Beatles Album (Fake)'),
-          ImageOption(icon: Icons.album_outlined, label: 'Beatles Album (Copy)'),
-        ],
-        correctIndex: 0,
-        explanation: 'Album artwork is protected by copyright and trademark laws.',
-      ),
-      GameRound(
-        type: 'Movie Poster',
-        question: 'Which is the original movie poster?',
-        options: [
-          ImageOption(icon: Icons.movie, label: 'Titanic Poster (Fake)'),
-          ImageOption(icon: Icons.movie, label: 'Titanic Poster (Original)'),
-          ImageOption(icon: Icons.movie, label: 'Titanic Poster (Pirated)'),
-          ImageOption(icon: Icons.movie, label: 'Titanic Poster (Copy)'),
-        ],
-        correctIndex: 1,
-        explanation: 'Movie posters are protected by copyright as artistic works.',
-      ),
-    ];
-
-    // Shuffle and return requested count
-    allRounds.shuffle(Random());
-    return allRounds.take(count).toList();
-  }
 }
 
 class GameRound {
@@ -727,9 +686,11 @@ class GameRound {
 class ImageOption {
   final IconData icon;
   final String label;
+  final String imagePath;
 
   ImageOption({
     required this.icon,
     required this.label,
+    required this.imagePath,
   });
 }

@@ -4,11 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import '../models/daily_challenge_model.dart';
+import '../../services/streak_service.dart';
 
 /// Service for daily challenges (loads from local JSON)
 class DailyChallengeService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _uuid = const Uuid();
+  final StreakService _streakService = StreakService();
   
   List<Map<String, dynamic>>? _cachedChallenges;
 
@@ -150,10 +152,15 @@ class DailyChallengeService {
           _firestore.collection('users').doc(userId),
           {
             'totalXP': FieldValue.increment(xpEarned),
+            'lastActiveDate': Timestamp.now(),
+            'updatedAt': Timestamp.now(),
           },
         );
 
         await batch.commit();
+
+        // Update streak after awarding XP
+        await _streakService.updateStreakOnActivity(userId);
       } catch (e) {
         print('Error saving to Firestore: $e');
         // Continue even if Firestore fails - local save is enough

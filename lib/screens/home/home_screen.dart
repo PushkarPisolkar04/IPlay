@@ -18,7 +18,9 @@ import '../teacher/classroom_detail_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(int)? onNavigateToTab;
+  
+  const HomeScreen({super.key, this.onNavigateToTab});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -171,8 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final recommendations = <Map<String, dynamic>>[];
       final realms = await _contentService.getAllRealms();
       
-      // Show first 2 realms that user hasn't completed
-      for (final realm in realms.take(2)) {
+      // Show all realms that user hasn't completed (up to 3)
+      for (final realm in realms) {
         final realmProgress = _user!.progressSummary[realm.id];
         if (realmProgress == null || !realmProgress.completed) {
           recommendations.add({
@@ -181,11 +183,27 @@ class _HomeScreenState extends State<HomeScreen> {
             'levelId': realm.id,
             'color': realm.color,
           });
+          
+          // Stop after 3 recommendations
+          if (recommendations.length >= 3) break;
+        }
+      }
+      
+      // If all realms are completed, show the first 2 anyway
+      if (recommendations.isEmpty && realms.isNotEmpty) {
+        for (final realm in realms.take(2)) {
+          recommendations.add({
+            'title': realm.name,
+            'subtitle': 'Review • ${realm.totalLevels} levels',
+            'levelId': realm.id,
+            'color': realm.color,
+          });
         }
       }
       
       return recommendations;
     } catch (e) {
+      print('Error loading recommendations: $e');
       return [];
     }
   }
@@ -196,51 +214,187 @@ class _HomeScreenState extends State<HomeScreen> {
       
       final activities = <Map<String, dynamic>>[];
       
-      // Get recent badge unlocks
-      final badgeUnlocks = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .collection('badge_unlocks')
-          .orderBy('unlockedAt', descending: true)
-          .limit(3)
-          .get();
-      
-      for (final doc in badgeUnlocks.docs) {
-        final data = doc.data();
-        final badgeId = data['badgeId'];
-        final unlockedAt = (data['unlockedAt'] as Timestamp).toDate();
-        final timeAgo = _getTimeAgo(unlockedAt);
-        
-        // Get badge name
-        final badgeDoc = await FirebaseFirestore.instance
-            .collection('badges')
-            .doc(badgeId)
+      // Get recent progress updates (level completions) - WITHOUT orderBy to avoid index requirement
+      try {
+        final progressUpdates = await FirebaseFirestore.instance
+            .collection('progress')
+            .where('userId', isEqualTo: _user!.uid)
             .get();
         
-        if (badgeDoc.exists) {
-          activities.add({
-            'title': 'Badge Unlocked!',
-            'subtitle': badgeDoc.data()?['name'] ?? 'New Badge',
-            'time': timeAgo,
-            'icon': Icons.emoji_events,
-            'color': 0xFFF59E0B,
+        // Sort in memory by lastAccessedAt
+        final sortedDocs = progressUpdates.docs.toList()
+          ..sort((a, b) {
+            final aTime = (a.data()['lastAccessedAt'] as Timestamp?)?.toDate();
+            final bTime = (b.data()['lastAccessedAt'] as Timestamp?)?.toDate();
+            if (aTime == null || bTime == null) return 0;
+            return bTime.compareTo(aTime);
           });
+        
+        for (final doc in sortedDocs.take(3)) {
+          final data = doc.data();
+          final realmId = data['realmId'];
+          final lastAccessedAt = (data['lastAccessedAt'] as Timestamp?)?.toDate();
+          final completedLevels = List<int>.from(data['completedLevels'] ?? []);
+          
+          if (lastAccessedAt != null && completedLevels.isNotEmpty) {
+            final realms = await _contentService.getAllRealms();
+            final realm = realms.firstWhere(
+              (r) => r.id == realmId,
+              orElse: () => realms.first,
+            );
+            
+            activities.add({
+              'title': 'Level Completed!',
+              'subtitle': '${realm.name} - Level ${completedLevels.last}',
+              'time': _getTimeAgo(lastAccessedAt),
+              'icon': Icons.check_circle,
+              'color': 0xFF10B981,
+              'timestamp': lastAccessedAt,
+            });
+          }
         }
+      } catch (e) {
+        print('Error loading progress: $e');
       }
       
+      // Get recent game plays - WITHOUT orderBy to avoid index requirement
+      try {
+        final gameProgress = await FirebaseFirestore.instance
+            .collection('progress')
+            .doc(_user!.uid)
+            .collection('games')
+            .get();
+        
+        // Sort in memory by lastPlayedAt
+        final sortedDocs = gameProgress.docs.toList()
+          ..sort((a, b) {
+            final aTime = (a.data()['lastPlayedAt'] as Timestamp?)?.toDate();
+            final bTime = (b.data()['lastPlayedAt'] as Timestamp?)?.toDate();
+            if (aTime == null || bTime == null) return 0;
+            return bTime.compareTo(aTime);
+          });
+        
+        for (final doc in sortedDocs.take(3)) {
+          final data = doc.data();
+          final gameId = data['gameId'] as String?;
+          final lastPlayedAt = (data['lastPlayedAt'] as Timestamp?)?.toDate();
+          final highScore = data['highScore'] as int? ?? 0;
+          
+          if (lastPlayedAt != null && gameId != null) {
+            // Format game name from ID
+            final gameName = gameId.split('_').map((word) => 
+              word[0].toUpperCase() + word.substring(1)
+            ).join(' ');
+            
+            activities.add({
+              'title': 'Game Played!',
+              'subtitle': '$gameName • Score: $highScore',
+              'time': _getTimeAgo(lastPlayedAt),
+              'icon': Icons.videogame_asset,
+              'color': 0xFFEC4899,
+              'timestamp': lastPlayedAt,
+            });
+          }
+        }
+      } catch (e) {
+        print('Error loading games: $e');
+      }
+      
+      // Get recent badge unlocks - WITHOUT orderBy to avoid index requirement
+      try {
+        final badgeUnlocks = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('badge_unlocks')
+            .get();
+        
+        // Sort in memory by unlockedAt
+        final sortedDocs = badgeUnlocks.docs.toList()
+          ..sort((a, b) {
+            final aTime = (a.data()['unlockedAt'] as Timestamp?)?.toDate();
+            final bTime = (b.data()['unlockedAt'] as Timestamp?)?.toDate();
+            if (aTime == null || bTime == null) return 0;
+            return bTime.compareTo(aTime);
+          });
+        
+        for (final doc in sortedDocs.take(3)) {
+          final data = doc.data();
+          final badgeId = data['badgeId'];
+          final unlockedAt = (data['unlockedAt'] as Timestamp).toDate();
+          
+          final badgeDoc = await FirebaseFirestore.instance
+              .collection('badges')
+              .doc(badgeId)
+              .get();
+          
+          if (badgeDoc.exists) {
+            activities.add({
+              'title': 'Badge Unlocked!',
+              'subtitle': badgeDoc.data()?['name'] ?? 'New Badge',
+              'time': _getTimeAgo(unlockedAt),
+              'icon': Icons.emoji_events,
+              'color': 0xFFF59E0B,
+              'timestamp': unlockedAt,
+            });
+          }
+        }
+      } catch (e) {
+        print('Error loading badges: $e');
+      }
+      
+      // Get recent daily challenge attempts
+      try {
+        final challengeAttempts = await FirebaseFirestore.instance
+            .collection('daily_challenge_attempts')
+            .where('userId', isEqualTo: _user!.uid)
+            .orderBy('attemptedAt', descending: true)
+            .limit(3)
+            .get();
+        
+        for (final doc in challengeAttempts.docs) {
+          final data = doc.data();
+          final attemptedAt = (data['attemptedAt'] as Timestamp).toDate();
+          final score = data['score'] as int;
+          final xpEarned = data['xpEarned'] as int;
+          
+          activities.add({
+            'title': 'Daily Challenge',
+            'subtitle': 'Score: $score/5 • +$xpEarned XP',
+            'time': _getTimeAgo(attemptedAt),
+            'icon': Icons.calendar_today,
+            'color': 0xFF6366F1,
+            'timestamp': attemptedAt,
+          });
+        }
+      } catch (e) {
+        print('Error loading challenges: $e');
+      }
+      
+      // Sort all activities by timestamp (most recent first)
+      activities.sort((a, b) {
+        final aTime = a['timestamp'] as DateTime?;
+        final bTime = b['timestamp'] as DateTime?;
+        if (aTime == null || bTime == null) return 0;
+        return bTime.compareTo(aTime);
+      });
+      
+      // Take only the most recent 5 activities
+      final recentActivities = activities.take(5).toList();
+      
       // If no activities, show a welcome message
-      if (activities.isEmpty) {
-        activities.add({
+      if (recentActivities.isEmpty) {
+        return [{
           'title': 'Welcome!',
           'subtitle': 'Start learning to see your activity here',
           'time': 'Now',
           'icon': Icons.celebration,
           'color': 0xFF10B981,
-        });
+        }];
       }
       
-      return activities;
+      return recentActivities;
     } catch (e) {
+      print('Error loading recent activity: $e');
       return [];
     }
   }
@@ -819,23 +973,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Continue Learning',
                                 style: AppTextStyles.sectionHeader,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const LearnScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'View All',
-                                  style: AppTextStyles.bodyMedium.copyWith(
-                                    color: AppDesignSystem.primaryIndigo,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                           const SizedBox(height: AppSpacing.sm),
@@ -903,12 +1040,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => const LearnScreen(),
-                                        ),
-                                      );
+                                      // Navigate to Learn tab (index 1)
+                                      widget.onNavigateToTab?.call(1);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
@@ -946,7 +1079,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             mainAxisSpacing: 12,
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            childAspectRatio: 1.5,
+                            childAspectRatio: 1.6,
                             children: [
                               // Join Classroom
                               _buildActionCard(
@@ -1003,7 +1136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             future: _getRecommendedLevels(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                                final recommendations = snapshot.data!.take(2).toList();
+                                final recommendations = snapshot.data!;
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -1302,7 +1435,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -1322,7 +1455,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
@@ -1330,16 +1463,18 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Icon(
                 icon,
                 color: color,
-                size: 26,
+                size: 22,
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 3),
             Text(
               title,
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppDesignSystem.textPrimary,
+                fontSize: 12,
+                height: 1.2,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

@@ -6,6 +6,11 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import 'ipr_quiz_master_game.dart';
 import 'match_ipr_game.dart';
+import 'spot_the_original_game.dart';
+import 'gi_mapper_game.dart';
+import 'ip_defender_game.dart';
+import 'patent_detective_game.dart';
+import 'innovation_lab_game.dart';
 
 /// Play/Games Screen - All 7 Games
 class PlayScreen extends StatefulWidget {
@@ -167,10 +172,10 @@ class _PlayScreenState extends State<PlayScreen> {
                   
                   // Game 1: IP Quiz Master (Implemented)
                   _buildGameCard(
-                    title: 'IP Quiz Master',
+                    title: 'IPR Quiz Master',
                     description: 'Test your IPR knowledge in rapid-fire quiz',
-                    iconPath: 'assets/logos/logo.png',
-                    color: const Color(0xFF8B5CF6),
+                    iconPath: 'assets/logos/IPR_quiz_master.png',
+                    color: const Color(0xFF6366F1),
                     difficulty: 'Medium',
                     xpReward: '10-100 XP',
                     timeEstimate: '1-2 min',
@@ -189,8 +194,8 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'Match the IPR',
                     description: 'Memory card game matching IPR concepts',
-                    iconPath: 'assets/logos/logo.png',
-                    color: const Color(0xFF10B981),
+                    iconPath: 'assets/logos/match_the_IPR.png',
+                    color: const Color(0xFFEC4899),
                     difficulty: 'Easy',
                     xpReward: '60-100 XP',
                     timeEstimate: '2-5 min',
@@ -203,28 +208,24 @@ class _PlayScreenState extends State<PlayScreen> {
                     },
                   ),
                   
-                  const SizedBox(height: 24),
-                  
-                  Text(
-                    'Coming Soon',
-                    style: AppTextStyles.sectionHeader.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey[600],
-                    ),
-                  ),
                   const SizedBox(height: 16),
                   
                   // Game 3: Spot the Original
                   _buildGameCard(
                     title: 'Spot the Original',
                     description: 'Identify genuine IP from counterfeits',
-                    iconPath: 'assets/logos/logo.png',
+                    iconPath: 'assets/logos/spot_the_original.png',
                     color: const Color(0xFFF59E0B),
-                    difficulty: 'Hard',
+                    difficulty: 'Medium',
                     xpReward: '15-75 XP',
-                    timeEstimate: '3-5 min',
-                    isImplemented: false,
+                    timeEstimate: '2-3 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const SpotTheOriginalGame()),
+                      );
+                    },
                   ),
                   
                   const SizedBox(height: 16),
@@ -233,12 +234,18 @@ class _PlayScreenState extends State<PlayScreen> {
                   _buildGameCard(
                     title: 'IP Defender',
                     description: 'Defend your IP rights from infringement',
-                    iconPath: 'assets/logos/logo.png',
+                    iconPath: 'assets/logos/ip_defender.png',
                     color: const Color(0xFFEF4444),
-                    difficulty: 'Medium',
-                    xpReward: 'Up to 50 XP',
-                    timeEstimate: '3-5 min',
-                    isImplemented: false,
+                    difficulty: 'Hard',
+                    xpReward: 'Up to 500 XP',
+                    timeEstimate: '5-10 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const IPDefenderGame()),
+                      );
+                    },
                   ),
                   
                   const SizedBox(height: 16),
@@ -246,13 +253,19 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 5: GI Mapper
                   _buildGameCard(
                     title: 'GI Mapper',
-                    description: 'Drag GI products to correct locations on map',
-                    iconPath: 'assets/logos/logo.png',
-                    color: const Color(0xFF3B82F6),
+                    description: 'Match GI products to their states',
+                    iconPath: 'assets/logos/gi_mapper.png',
+                    color: const Color(0xFF10B981),
                     difficulty: 'Medium',
                     xpReward: '10-80 XP',
-                    timeEstimate: '2-4 min',
-                    isImplemented: false,
+                    timeEstimate: '3-5 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const GIMapperGame()),
+                      );
+                    },
                   ),
                   
                   const SizedBox(height: 16),
@@ -260,13 +273,19 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 6: Patent Detective
                   _buildGameCard(
                     title: 'Patent Detective',
-                    description: 'Solve patent investigation cases',
-                    iconPath: 'assets/logos/logo.png',
-                    color: const Color(0xFF6366F1),
-                    difficulty: 'Hard',
+                    description: 'Investigate patent cases and determine patentability',
+                    iconPath: 'assets/logos/patent_detective.png',
+                    color: const Color(0xFF8B5CF6),
+                    difficulty: 'Medium',
                     xpReward: '20-60 XP',
-                    timeEstimate: '5-8 min',
-                    isImplemented: false,
+                    timeEstimate: '3-5 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const PatentDetectiveGame()),
+                      );
+                    },
                   ),
                   
                   const SizedBox(height: 16),
@@ -274,13 +293,19 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 7: Innovation Lab
                   _buildGameCard(
                     title: 'Innovation Lab',
-                    description: 'Draw & simulate your own invention',
-                    iconPath: 'assets/logos/logo.png',
-                    color: const Color(0xFFEC4899),
-                    difficulty: 'Creative',
+                    description: 'Design your invention and learn IP protection',
+                    iconPath: 'assets/logos/innovation_lab.png',
+                    color: Colors.teal,
+                    difficulty: 'Easy',
                     xpReward: '100 XP',
-                    timeEstimate: '10-15 min',
-                    isImplemented: false,
+                    timeEstimate: '5-10 min',
+                    isImplemented: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const InnovationLabGame()),
+                      );
+                    },
                   ),
                 ],
                 ),
@@ -326,21 +351,28 @@ class _PlayScreenState extends State<PlayScreen> {
             child: Row(
               children: [
                 Container(
-                  width: 56,
-                  height: 56,
+                  width: 64,
+                  height: 64,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
                     child: Image.asset(
                       iconPath,
-                      width: 36,
-                      height: 36,
+                      fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return Icon(
                           Icons.games,
-                          size: 36,
+                          size: 40,
                           color: color,
                         );
                       },

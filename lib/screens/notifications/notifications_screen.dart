@@ -423,13 +423,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         Navigator.pushNamed(context, '/badges');
         break;
       case 'announcement':
-        if (data['classroomId'] != null) {
-          Navigator.pushNamed(
-            context,
-            '/classroom-detail',
-            arguments: {'classroomId': data['classroomId']},
-          );
-        }
+        // Navigate to announcements screen
+        Navigator.pushNamed(context, '/announcements');
         break;
       case 'assignment':
         if (data['assignmentId'] != null) {

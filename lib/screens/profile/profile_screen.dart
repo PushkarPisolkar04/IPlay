@@ -12,7 +12,6 @@ import '../../core/models/realm_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/progress_bar.dart';
-import '../../widgets/sync_status_widget.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../../services/bookmark_service.dart';
 
@@ -34,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _certificateCount = 0;
   int _bookmarkCount = 0;
   bool _isLoading = true;
-  
+
   // Stream subscriptions for proper disposal
   StreamSubscription<QuerySnapshot>? _bookmarkSubscription;
   StreamSubscription<DocumentSnapshot>? _userSubscription;
@@ -52,8 +51,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _setupBookmarkListener() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      // Listen to bookmark changes in real-time
-      _bookmarkSubscription = BookmarkService().getBookmarksStream().listen((snapshot) {
+      _bookmarkSubscription =
+          BookmarkService().getBookmarksStream().listen((snapshot) {
         if (mounted) {
           setState(() {
             _bookmarkCount = snapshot.docs.length;
@@ -85,8 +84,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _setupCertificateListener() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      // Listen to certificate changes in real-time
-      _certificateSubscription = _certificateService.watchUserCertificates(currentUser.uid).listen((certificates) {
+      _certificateSubscription = _certificateService
+          .watchUserCertificates(currentUser.uid)
+          .listen((certificates) {
         if (mounted) {
           setState(() {
             _certificateCount = certificates.length;
@@ -104,15 +104,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        
+
         if (doc.exists) {
           final userData = doc.data()!;
           setState(() {
             _user = UserModel.fromMap(userData);
             _progressSummary = userData['progressSummary'] ?? {};
           });
-          
-          // Load classroom and school info
+
           await _loadClassroomInfo(userData);
         }
       }
@@ -130,23 +129,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final classroomIds = userData['classroomIds'] as List?;
       if (classroomIds != null && classroomIds.isNotEmpty) {
         final classroomId = classroomIds.first;
-        
+
         final classroomDoc = await FirebaseFirestore.instance
             .collection('classrooms')
             .doc(classroomId)
             .get();
-        
+
         if (classroomDoc.exists) {
           _classroomInfo = classroomDoc.data()!;
-          
-          // Load school info if classroom has schoolId
+
           final schoolId = _classroomInfo!['schoolId'];
           if (schoolId != null) {
             final schoolDoc = await FirebaseFirestore.instance
                 .collection('schools')
                 .doc(schoolId)
                 .get();
-            
+
             if (schoolDoc.exists) {
               _schoolInfo = schoolDoc.data()!;
             }
@@ -157,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // print('Error loading classroom info: $e');
     }
   }
-  
+
   @override
   void dispose() {
     _bookmarkSubscription?.cancel();
@@ -166,15 +164,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  // Calculate user level from total XP
+  // ---------- Level / XP helpers ----------
   int _getUserLevel() {
     if (_user == null) return 1;
-    // Formula: level = floor(XP / 200) + 1
-    // E.g., 0-199 XP = Level 1, 200-399 = Level 2, etc.
     return (_user!.totalXP / 200).floor() + 1;
   }
 
-  // Calculate XP needed for next level
   int _getXPToNextLevel() {
     if (_user == null) return 200;
     final currentLevel = _getUserLevel();
@@ -182,7 +177,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return xpForNextLevel - _user!.totalXP;
   }
 
-  // Calculate progress towards next level
   double _getLevelProgress() {
     if (_user == null) return 0.0;
     final currentLevel = _getUserLevel();
@@ -213,86 +207,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: const Center(
-          child: Text('User not found'),
-        ),
+        body: const Center(child: Text('User not found')),
       );
     }
 
     final userLevel = _getUserLevel();
     final xpToNext = _getXPToNextLevel();
     final levelProgress = _getLevelProgress();
-    final realms = _contentService.getAllRealmsSync();
-    final String initials = _user!.displayName.split(' ')
-        .map((n) => n.isNotEmpty ? n[0] : '')
+    final String initials = _user!.displayName
+        .split(' ')
+        .where((n) => n.isNotEmpty)
         .take(2)
-        .join()
-        .toUpperCase();
+        .map((n) => n[0].toUpperCase())
+        .join();
+
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Profile'),
-        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: AppDesignSystem.primaryIndigo,
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
-          // Notification bell
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('notifications')
-                .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                .where('read', isEqualTo: false)
-                .snapshots(),
-            builder: (context, snapshot) {
-              final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
-              
-              return Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/notifications');
-                    },
-                  ),
-                  if (unreadCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: AppDesignSystem.error,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 2,
-                          ),
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 18,
-                          minHeight: 18,
-                        ),
-                        child: Center(
-                          child: Text(
-                            unreadCount > 99 ? '99+' : unreadCount.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-            },
+            icon: const Icon(Icons.settings, size: 28),
+            color: Colors.white,
+            onPressed: () => Navigator.pushNamed(context, '/settings'),
           ),
         ],
       ),
@@ -300,87 +245,391 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
         child: Column(
           children: [
-            // Profile header with gradient background
+            const SizedBox(height: AppSpacing.md),
+
+            // ---------- Profile Header ----------
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                    AppDesignSystem.primaryPink.withValues(alpha: 0.05),
-                  ],
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                  width: 1,
-                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
-                  // Large avatar
-                  AvatarWidget(
-                    initials: initials,
-                    size: 100,
-                    backgroundColor: AppDesignSystem.primaryPink,
-                    imageUrl: _user!.avatarUrl,
+                  // Avatar
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: AvatarWidget(
+                      initials: initials,
+                      size: 90,
+                      backgroundColor: AppDesignSystem.primaryPink,
+                      imageUrl: _user!.avatarUrl,
+                    ),
                   ),
-                  
-                  const SizedBox(height: 16),
-                  
+                  const SizedBox(height: 12),
+
                   // Name
                   Text(
                     _user!.displayName,
                     style: AppTextStyles.h2.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  
                   const SizedBox(height: 6),
-                  
-                  // Details
+
+                  // State badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      _user!.state,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppDesignSystem.primaryIndigo,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.location_on,
+                            size: 16, color: Colors.white),
+                        const SizedBox(width: 4),
+                        Text(
+                          _user!.state,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Level & XP
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Level $userLevel',
+                              style: AppTextStyles.h3.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.stars,
+                                      size: 16, color: Colors.amber),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${_user!.totalXP} XP',
+                                    style: AppTextStyles.bodyMedium.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        ProgressBar(
+                          progress: levelProgress,
+                          color: Colors.white,
+                          backgroundColor:
+                              Colors.white.withValues(alpha: 0.3),
+                          height: 6,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          '$xpToNext XP to Level ${userLevel + 1}',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // Classroom & School Info Card
+
+            const SizedBox(height: AppSpacing.md),
+
+            // ---------- Stats Row ----------
+            Row(
+              children: [
+                // Streak
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 8),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFF59E0B), Color(0xFFEF4444)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('🔥', style: TextStyle(fontSize: 20)),
+                        const SizedBox(height: 2),
+                        Text(
+                          '${_user!.currentStreak}',
+                          style: AppTextStyles.h3.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        Text(
+                          'Streak',
+                          style: AppTextStyles.caption.copyWith(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontSize: 9,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Badges
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Navigator.pushNamed(context, '/badges'),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFEC4899), Color(0xFFDB2777)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFEC4899).withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('🏅', style: TextStyle(fontSize: 20)),
+                          const SizedBox(height: 2),
+                          Text(
+                            '${_user!.badges.length}',
+                            style: AppTextStyles.h3.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Badges',
+                            style: AppTextStyles.caption.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 9,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Certificates
+                Expanded(
+                  child: InkWell(
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/certificates'),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('⭐', style: TextStyle(fontSize: 20)),
+                          const SizedBox(height: 2),
+                          Text(
+                            '$_certificateCount',
+                            style: AppTextStyles.h3.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Certs',
+                            style: AppTextStyles.caption.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 9,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Bookmarks
+                Expanded(
+                  child: InkWell(
+                    onTap: () => Navigator.pushNamed(context, '/bookmarks'),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF10B981), Color(0xFF059669)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('🔖', style: TextStyle(fontSize: 20)),
+                          const SizedBox(height: 2),
+                          Text(
+                            '$_bookmarkCount',
+                            style: AppTextStyles.h3.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          Text(
+                            'Marks',
+                            style: AppTextStyles.caption.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 9,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: AppSpacing.md),
+
+            // ---------- Classroom & School ----------
             if (_classroomInfo != null) ...[
-              CleanCard(
-                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(8),
+                            color:
+                                const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(
-                            Icons.school,
-                            color: Color(0xFF8B5CF6),
-                            size: 20,
-                          ),
+                          child: const Icon(Icons.school,
+                              color: Color(0xFF8B5CF6), size: 24),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -395,7 +644,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               Text(
                                 _classroomInfo!['name'] ?? '-',
-                                style: AppTextStyles.bodyMedium.copyWith(
+                                style: AppTextStyles.h4.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -405,22 +654,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     if (_schoolInfo != null) ...[
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       const Divider(),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(8),
+                              color:
+                                  const Color(0xFF10B981).withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
-                              Icons.business,
-                              color: Color(0xFF10B981),
-                              size: 20,
-                            ),
+                            child: const Icon(Icons.business,
+                                color: Color(0xFF10B981), size: 24),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -435,7 +682,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 Text(
                                   _schoolInfo!['name'] ?? '-',
-                                  style: AppTextStyles.bodyMedium.copyWith(
+                                  style: AppTextStyles.h4.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -450,140 +697,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
-            
-            // Sync Status Widget
-            const SyncStatusWidget(),
-            
-            // Stats cards row
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    icon: '🔥',
-                    value: '${_user!.currentStreak}',
-                    label: 'Streak',
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.cardSpacing),
-                Expanded(
-                  child: _StatCard(
-                    icon: '🏅',
-                    value: '${_user!.badges.length}',
-                    label: 'Badges',
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.cardSpacing),
-                Expanded(
-                  child: _StatCard(
-                    icon: '⭐',
-                    value: '$_certificateCount',
-                    label: 'Certs',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/certificates');
-                    },
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.cardSpacing),
-            
-            // Second row of stats
-            Row(
-              children: [
-                Expanded(
-                  child: _StatCard(
-                    icon: '🔖',
-                    value: '$_bookmarkCount',
-                    label: 'Bookmarks',
-                    onTap: () {
-                      Navigator.pushNamed(context, '/bookmarks');
-                    },
-                  ),
-                ),
-                const SizedBox(width: AppSpacing.cardSpacing),
-                Expanded(
-                  child: Container(), // Empty placeholder for symmetry
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // Level card
-            ColoredCard(
-              color: AppDesignSystem.primaryIndigo,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Level $userLevel',
-                        style: AppTextStyles.h3.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.stars,
-                              size: 16,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${_user!.totalXP} XP',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  ProgressBar(
-                    progress: levelProgress,
-                    color: Colors.white,
-                    backgroundColor: Colors.white.withValues(alpha: 0.3),
-                    height: 10,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '$xpToNext XP to Level ${userLevel + 1}',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // My Realms
+
+            const SizedBox(height: AppSpacing.md),
+
+            // ---------- My Realms ----------
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(
-                'My Realms',
-                style: AppTextStyles.sectionHeader,
-              ),
+              child: Text('My Realms', style: AppTextStyles.sectionHeader),
             ),
             const SizedBox(height: AppSpacing.sm),
-            
+
             FutureBuilder<List<RealmModel>>(
               future: _contentService.getAllRealms(),
               builder: (context, snapshot) {
@@ -597,18 +720,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   );
                 }
-                
+
                 final realms = snapshot.data!;
                 return CleanCard(
                   child: Column(
-                    children: realms.asMap().entries.map((entry) {
+                    children:
+                        realms.asMap().entries.map((entry) {
                       final index = entry.key;
                       final realm = entry.value;
                       final realmProgress = _progressSummary[realm.id];
-                      final progress = realmProgress != null && realmProgress is Map
-                          ? (realmProgress['levelsCompleted'] ?? 0) / (realmProgress['totalLevels'] ?? 1)
+                      final progress = realmProgress != null &&
+                              realmProgress is Map
+                          ? (realmProgress['levelsCompleted'] ?? 0) /
+                              (realmProgress['totalLevels'] ?? 1)
                           : 0.0;
-                      
+
                       return Column(
                         children: [
                           if (index > 0) const Divider(height: 24),
@@ -625,76 +751,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-            
+
             const SizedBox(height: AppSpacing.lg),
-            
-            // Learning Insights Button
+
+            // ---------- Role-specific cards ----------
             if (_user!.role == 'student') ...[
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/insights');
-                },
-                child: CleanCard(
-                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Icon(
-                              Icons.insights,
-                              size: 32,
-                              color: AppDesignSystem.primaryIndigo,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Learning Insights',
-                                style: AppTextStyles.cardTitle.copyWith(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'View your detailed analytics',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: AppDesignSystem.textSecondary,
-                        ),
-                      ],
+                onTap: () => Navigator.pushNamed(context, '/insights'),
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.insights,
+                              size: 32,
+                              color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Learning Insights',
+                              style: AppTextStyles.cardTitle.copyWith(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'View your detailed analytics',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: Colors.white.withValues(alpha: 0.9),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(Icons.arrow_forward_ios,
+                          size: 16, color: Colors.white),
+                    ],
                   ),
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
-            
-            // Teacher-specific section
+
             if (_user!.role == 'teacher') ...[
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/main');
-                },
+                onTap: () => Navigator.pushNamed(context, '/main'),
                 child: CleanCard(
                   color: AppDesignSystem.primaryGreen.withValues(alpha: 0.1),
                   child: Padding(
@@ -705,15 +835,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryGreen.withValues(alpha: 0.15),
+                            color: AppDesignSystem.primaryGreen
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Icon(
-                              Icons.dashboard,
-                              size: 32,
-                              color: AppDesignSystem.primaryGreen,
-                            ),
+                            child: Icon(Icons.dashboard,
+                                size: 32,
+                                color: AppDesignSystem.primaryGreen),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -725,6 +854,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 'Teacher Dashboard',
                                 style: AppTextStyles.cardTitle.copyWith(
                                   fontSize: 16,
+                                  color: AppDesignSystem.textPrimary,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -737,11 +867,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: AppDesignSystem.textSecondary,
-                        ),
+                        const Icon(Icons.arrow_forward_ios,
+                            size: 16, color: AppDesignSystem.textSecondary),
                       ],
                     ),
                   ),
@@ -749,15 +876,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
-            
-            // Principal-specific section
+
             if (_user!.role == 'principal') ...[
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/main');
-                },
+                onTap: () => Navigator.pushNamed(context, '/main'),
                 child: CleanCard(
-                  color: AppDesignSystem.secondaryPurple.withValues(alpha: 0.1),
+                  color:
+                      AppDesignSystem.secondaryPurple.withValues(alpha: 0.1),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     child: Row(
@@ -766,15 +891,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.secondaryPurple.withValues(alpha: 0.15),
+                            color: AppDesignSystem.secondaryPurple
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Icon(
-                              Icons.admin_panel_settings,
-                              size: 32,
-                              color: AppDesignSystem.secondaryPurple,
-                            ),
+                            child: Icon(Icons.admin_panel_settings,
+                                size: 32,
+                                color: AppDesignSystem.secondaryPurple),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -786,6 +910,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 'Principal Dashboard',
                                 style: AppTextStyles.cardTitle.copyWith(
                                   fontSize: 16,
+                                  color: AppDesignSystem.textPrimary,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -798,11 +923,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: AppDesignSystem.textSecondary,
-                        ),
+                        const Icon(Icons.arrow_forward_ios,
+                            size: 16, color: AppDesignSystem.textSecondary),
                       ],
                     ),
                   ),
@@ -810,118 +932,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: AppSpacing.lg),
             ],
-            
-            // Messages Section
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, '/chat-list');
-              },
-              child: CleanCard(
-                color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF3B82F6).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Stack(
-                          children: [
-                            const Center(
-                              child: Icon(
-                                Icons.chat_bubble_outline,
-                                size: 28,
-                                color: Color(0xFF3B82F6),
-                              ),
-                            ),
-                            StreamBuilder<QuerySnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('chats')
-                                  .where('participants', arrayContains: FirebaseAuth.instance.currentUser?.uid)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (!snapshot.hasData) return const SizedBox();
-                                
-                                int totalUnread = 0;
-                                for (var doc in snapshot.data!.docs) {
-                                  final data = doc.data() as Map<String, dynamic>;
-                                  final unreadCount = (data['unreadCount'] as Map<String, dynamic>?)?[FirebaseAuth.instance.currentUser?.uid] ?? 0;
-                                  totalUnread += unreadCount as int;
-                                }
-                                
-                                if (totalUnread == 0) return const SizedBox();
-                                
-                                return Positioned(
-                                  right: 4,
-                                  top: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: AppDesignSystem.error,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white, width: 2),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 18,
-                                      minHeight: 18,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        totalUnread > 9 ? '9+' : totalUnread.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Messages',
-                              style: AppTextStyles.cardTitle.copyWith(
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Chat with your teachers',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppDesignSystem.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: AppDesignSystem.textSecondary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // My Badges
+
+            // ---------- Badges ----------
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -930,9 +942,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: AppTextStyles.sectionHeader,
                 ),
                 TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/badges');
-                  },
+                  onPressed: () => Navigator.pushNamed(context, '/badges'),
                   child: Text(
                     'View All',
                     style: AppTextStyles.bodyMedium.copyWith(
@@ -944,13 +954,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
-            
-            // Badge grid with unlock dates
-            _BadgeGridWidget(userId: _user!.uid, unlockedBadges: _user!.badges),
-            
+
+            _BadgeGridWidget(
+                userId: _user!.uid, unlockedBadges: _user!.badges),
+
             const SizedBox(height: AppSpacing.lg),
-            
-            // Certificates
+
+            // ---------- Certificates ----------
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -960,9 +970,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 if (_certificateCount > 0)
                   TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/certificates');
-                    },
+                    onPressed: () =>
+                        Navigator.pushNamed(context, '/certificates'),
                     child: Text(
                       'View All',
                       style: AppTextStyles.bodyMedium.copyWith(
@@ -974,13 +983,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             const SizedBox(height: AppSpacing.sm),
-            
-            // Certificate preview or empty state
+
             if (_certificateCount > 0)
               InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/certificates');
-                },
+                onTap: () => Navigator.pushNamed(context, '/certificates'),
                 child: CleanCard(
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.md),
@@ -990,15 +996,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.15),
+                            color: AppDesignSystem.primaryIndigo
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Icon(
-                              Icons.workspace_premium,
-                              size: 32,
-                              color: AppDesignSystem.primaryIndigo,
-                            ),
+                            child: Icon(Icons.workspace_premium,
+                                size: 32,
+                                color: AppDesignSystem.primaryIndigo),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -1008,9 +1013,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Text(
                                 'View Your Certificates',
-                                style: AppTextStyles.cardTitle.copyWith(
-                                  fontSize: 16,
-                                ),
+                                style: AppTextStyles.cardTitle
+                                    .copyWith(fontSize: 16),
                               ),
                               const SizedBox(height: 4),
                               Text(
@@ -1022,11 +1026,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: AppDesignSystem.textSecondary,
-                        ),
+                        const Icon(Icons.arrow_forward_ios,
+                            size: 16, color: AppDesignSystem.textSecondary),
                       ],
                     ),
                   ),
@@ -1045,7 +1046,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-            
+
             const SizedBox(height: AppSpacing.xl),
           ],
         ),
@@ -1054,67 +1055,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 }
 
-/// Stat card
-class _StatCard extends StatelessWidget {
-  final String icon;
-  final String value;
-  final String label;
-  final VoidCallback? onTap;
-  
-  const _StatCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    this.onTap,
-  });
-  
-  @override
-  Widget build(BuildContext context) {
-    final card = CleanCard(
-      child: Column(
-        children: [
-          Text(
-            icon,
-            style: const TextStyle(fontSize: 32),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: AppTextStyles.h2,
-          ),
-          Text(
-            label,
-            style: AppTextStyles.bodySmall,
-          ),
-        ],
-      ),
-    );
-    
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: card,
-      );
-    }
-    return card;
-  }
-}
-
-/// Realm progress item
+// ---------------------------------------------------------------------
+// Realm progress item
+// ---------------------------------------------------------------------
 class _RealmProgress extends StatelessWidget {
-  final String icon; // Asset path
+  final String icon;
   final String title;
   final double progress;
   final Color color;
-  
+
   const _RealmProgress({
     required this.icon,
     required this.title,
     required this.progress,
     required this.color,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -1123,9 +1079,7 @@ class _RealmProgress extends StatelessWidget {
           icon,
           width: 24,
           height: 24,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.school, size: 24);
-          },
+          errorBuilder: (_, __, ___) => const Icon(Icons.school, size: 24),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -1134,9 +1088,8 @@ class _RealmProgress extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.bodyMedium
+                    .copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 6),
               ProgressBar(
@@ -1160,16 +1113,18 @@ class _RealmProgress extends StatelessWidget {
   }
 }
 
-/// Badge Grid Widget - Shows unlocked and locked badges
+// ---------------------------------------------------------------------
+// Badge Grid Widget
+// ---------------------------------------------------------------------
 class _BadgeGridWidget extends StatefulWidget {
   final String userId;
   final List<String> unlockedBadges;
-  
+
   const _BadgeGridWidget({
     required this.userId,
     required this.unlockedBadges,
   });
-  
+
   @override
   State<_BadgeGridWidget> createState() => _BadgeGridWidgetState();
 }
@@ -1178,40 +1133,41 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
   List<Map<String, dynamic>> _allBadges = [];
   final Map<String, DateTime> _badgeUnlockDates = {};
   bool _isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
     _loadBadges();
   }
-  
+
   Future<void> _loadBadges() async {
     try {
-      // Load all badge definitions
       final badgesSnapshot = await FirebaseFirestore.instance
           .collection('badges')
           .orderBy('displayOrder')
-          .limit(12) // Show first 12 badges
+          .limit(12)
           .get();
-      
+
       _allBadges = badgesSnapshot.docs.map((doc) {
         final data = doc.data();
         return {
           'id': doc.id,
           'name': data['name'] ?? 'Badge',
-          'iconPath': data['iconPath'] ?? data['icon'] ?? data['iconEmoji'] ?? 'assets/badges/default_badge.png',
+          'iconPath': data['iconPath'] ??
+              data['icon'] ??
+              data['iconEmoji'] ??
+              'assets/badges/default_badge.png',
           'description': data['description'] ?? '',
           'rarity': data['rarity'] ?? 'common',
         };
       }).toList();
-      
-      // Load unlock dates from user's badge_unlocks subcollection
+
       final unlocksSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.userId)
           .collection('badge_unlocks')
           .get();
-      
+
       for (var doc in unlocksSnapshot.docs) {
         final data = doc.data();
         final badgeId = data['badgeId'] as String?;
@@ -1220,33 +1176,28 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
           _badgeUnlockDates[badgeId] = unlockedAt;
         }
       }
-      
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+
+      if (mounted) setState(() => _isLoading = false);
     } catch (e) {
-      // print('Error loading badges: $e');
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
-  
+
   Color _getRarityColor(String rarity) {
     switch (rarity) {
       case 'legendary':
-        return const Color(0xFFFFD700); // Gold
+        return const Color(0xFFFFD700);
       case 'epic':
-        return const Color(0xFF9333EA); // Purple
+        return const Color(0xFF9333EA);
       case 'rare':
-        return const Color(0xFF3B82F6); // Blue
+        return const Color(0xFF3B82F6);
       case 'uncommon':
-        return const Color(0xFF10B981); // Green
+        return const Color(0xFF10B981);
       default:
-        return const Color(0xFF6B7280); // Gray
+        return const Color(0xFF6B7280);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -1257,7 +1208,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         ),
       );
     }
-    
+
     if (_allBadges.isEmpty) {
       return CleanCard(
         child: Center(
@@ -1272,7 +1223,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         ),
       );
     }
-    
+
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
@@ -1288,7 +1239,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         final badgeId = badge['id'];
         final isUnlocked = widget.unlockedBadges.contains(badgeId);
         final unlockDate = _badgeUnlockDates[badgeId];
-        
+
         return _BadgeItem(
           icon: badge['iconPath'],
           name: badge['name'],
@@ -1303,7 +1254,9 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
   }
 }
 
-/// Badge item with unlock status
+// ---------------------------------------------------------------------
+// Badge Item
+// ---------------------------------------------------------------------
 class _BadgeItem extends StatelessWidget {
   final String icon;
   final String name;
@@ -1312,7 +1265,7 @@ class _BadgeItem extends StatelessWidget {
   final String rarity;
   final String description;
   final Color rarityColor;
-  
+
   const _BadgeItem({
     required this.icon,
     required this.name,
@@ -1322,20 +1275,32 @@ class _BadgeItem extends StatelessWidget {
     required this.description,
     required this.rarityColor,
   });
-  
+
   String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Show badge details dialog
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (_) => AlertDialog(
             title: Text(name),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1347,32 +1312,28 @@ class _BadgeItem extends StatelessWidget {
                     width: 64,
                     height: 64,
                     color: isUnlocked ? null : Colors.grey,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.emoji_events, size: 64);
-                    },
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.emoji_events, size: 64),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(description),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: rarityColor.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        rarity.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: rarityColor,
-                        ),
-                      ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: rarityColor.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    rarity.toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: rarityColor,
                     ),
-                  ],
+                  ),
                 ),
                 if (isUnlocked && unlockDate != null) ...[
                   const SizedBox(height: 12),
@@ -1414,9 +1375,8 @@ class _BadgeItem extends StatelessWidget {
               width: 32,
               height: 32,
               color: isUnlocked ? null : Colors.grey,
-              errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.emoji_events, size: 32);
-              },
+              errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.emoji_events, size: 32),
             ),
             const SizedBox(height: 4),
             if (unlockDate != null && isUnlocked)
@@ -1431,11 +1391,7 @@ class _BadgeItem extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             if (!isUnlocked)
-              const Icon(
-                Icons.lock,
-                size: 12,
-                color: Color(0xFF9CA3AF),
-              ),
+              const Icon(Icons.lock, size: 12, color: Color(0xFF9CA3AF)),
           ],
         ),
       ),
