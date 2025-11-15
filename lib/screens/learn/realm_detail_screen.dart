@@ -122,6 +122,38 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     return _cachedTotalXP;
   }
   
+  Widget _buildCompactStat(IconData icon, String value, String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.white, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.white.withOpacity(0.85),
+          ),
+        ),
+      ],
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     final String title = widget.realm['title'] ?? 'Realm';
@@ -141,12 +173,62 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,
-        appBar: AppBar(
-          title: Text(title),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Gradient App Bar with back button
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      color,
+                      color.withOpacity(0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 20),
+                  child: Stack(
+                    children: [
+                      // Back button on the left
+                      Positioned(
+                        left: 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ),
+                      // Centered title
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            title,
+                            style: AppTextStyles.h2.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Expanded(child: ListSkeleton(itemCount: 5)),
+            ],
+          ),
         ),
-        body: const ListSkeleton(itemCount: 5),
       );
     }
 
@@ -157,100 +239,229 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
     
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Realm illustration placeholder
+            // Gradient App Bar with back button
             Container(
-              width: double.infinity,
-              height: 180,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                gradient: LinearGradient(
+                  colors: [
+                    color,
+                    color.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-              child: Icon(
-                Icons.menu_book_rounded,
-                size: 80,
-                color: color,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 20),
+                child: Stack(
+                  children: [
+                    // Back button on the left
+                    Positioned(
+                      left: 0,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    // Centered title
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          title,
+                          style: AppTextStyles.h2.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             
-            const SizedBox(height: AppSpacing.lg),
-            
-            // Progress card
-            CleanCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Your Progress',
-                    style: AppTextStyles.cardTitle,
-                  ),
-                  const SizedBox(height: 12),
-                  ProgressBar(progress: progress, height: 10),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Text(
-                        '$completedCount/${_levels.length} levels',
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      const SizedBox(width: 16),
-                      Text(
-                        '•',
-                        style: AppTextStyles.bodySmall,
-                      ),
-                      const SizedBox(width: 16),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.stars,
-                            size: 16,
-                            color: AppDesignSystem.primaryAmber,
+            // Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    
+                    // Realm hero card with icon and stats - compact version
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            color,
+                            color.withOpacity(0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withValues(alpha: 0.3),
+                            blurRadius: 15,
+                            offset: const Offset(0, 4),
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '$earnedXP/$totalXP XP',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              fontWeight: FontWeight.w600,
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          // Realm icon - smaller
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Image.asset(
+                              widget.realm['iconPath'] as String? ?? 'assets/icons/realm_default.png',
+                              width: 50,
+                              height: 50,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.school,
+                                  size: 50,
+                                  color: Colors.white,
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          
+                          // Stats - horizontal layout
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _buildCompactStat(
+                                      Icons.emoji_events,
+                                      '$completedCount/${_levels.length}',
+                                      'Levels',
+                                    ),
+                                    _buildCompactStat(
+                                      Icons.stars,
+                                      '$earnedXP',
+                                      'XP',
+                                    ),
+                                    _buildCompactStat(
+                                      Icons.trending_up,
+                                      '${(progress * 100).toInt()}%',
+                                      'Done',
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                // Progress bar
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: LinearProgressIndicator(
+                                    value: progress,
+                                    backgroundColor: Colors.white.withOpacity(0.3),
+                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                                    minHeight: 6,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                    ),
             
-            const SizedBox(height: AppSpacing.lg),
-            
-            // About section
+            // About section - inline with description if available
             if (description.isNotEmpty) ...[
-              Text(
-                'About',
-                style: AppTextStyles.sectionHeader,
-              ),
               const SizedBox(height: AppSpacing.sm),
-              Text(
-                description,
-                style: AppTextStyles.bodyMedium,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: color.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: color,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        description,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          height: 1.4,
+                          fontSize: 13,
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
             
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.md),
             
-            // Levels section
-            Text(
-              'Levels (${_levels.length})',
-              style: AppTextStyles.sectionHeader,
+            // Levels section header - compact
+            Row(
+              children: [
+                Icon(
+                  Icons.list_alt,
+                  color: color,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Levels',
+                  style: AppTextStyles.sectionHeader.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    '${_levels.length}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.sm),
             
@@ -316,6 +527,10 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
             }).toList()),
             
             const SizedBox(height: AppSpacing.xl),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -381,187 +596,313 @@ class _LevelItem extends StatelessWidget {
     final bool isCurrent = status == LevelStatus.current;
     final bool isCompleted = status == LevelStatus.completed;
     
-    return CleanCard(
-      color: isCurrent 
-          ? color.withValues(alpha: 0.05) 
-          : AppDesignSystem.backgroundLight,
-      onTap: isLocked ? null : onTap,
-      child: Opacity(
-        opacity: isLocked ? 0.6 : 1.0,
-        child: Row(
-          children: [
-            // Icon
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: isCompleted
-                    ? AppDesignSystem.success.withValues(alpha: 0.15)
-                    : isCurrent
-                        ? color.withValues(alpha: 0.15)
-                        : AppDesignSystem.backgroundGrey,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                isCompleted
-                    ? Icons.check_circle
-                    : isCurrent
-                        ? Icons.play_arrow
-                        : Icons.lock,
-                color: isCompleted
-                    ? AppDesignSystem.success
-                    : isCurrent
-                        ? color
-                        : AppDesignSystem.textTertiary,
-                size: 24,
-              ),
-            ),
-            
-            const SizedBox(width: 12),
-            
-            // Content
-            Expanded(
+    return Container(
+      decoration: BoxDecoration(
+        color: isCurrent 
+            ? color.withOpacity(0.08)
+            : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: isCurrent
+            ? Border.all(color: color, width: 2)
+            : Border.all(color: Colors.grey.shade200, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: isCurrent 
+                ? color.withOpacity(0.15)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: isCurrent ? 8 : 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLocked ? null : onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Opacity(
+            opacity: isLocked ? 0.6 : 1.0,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Text(
-                        'Level $levelNumber',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isCompleted
-                              ? AppDesignSystem.success
+                      // Icon
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          gradient: isCompleted
+                              ? LinearGradient(
+                                  colors: [
+                                    AppDesignSystem.success,
+                                    AppDesignSystem.success.withOpacity(0.8),
+                                  ],
+                                )
                               : isCurrent
-                                  ? color
-                                  : AppDesignSystem.textSecondary,
+                                  ? LinearGradient(
+                                      colors: [
+                                        color,
+                                        color.withOpacity(0.8),
+                                      ],
+                                    )
+                                  : null,
+                          color: isLocked ? AppDesignSystem.backgroundGrey : null,
+                          shape: BoxShape.circle,
+                          boxShadow: isCompleted || isCurrent
+                              ? [
+                                  BoxShadow(
+                                    color: (isCompleted ? AppDesignSystem.success : color)
+                                        .withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Icon(
+                          isCompleted
+                              ? Icons.check_circle
+                              : isCurrent
+                                  ? Icons.play_circle_filled
+                                  : Icons.lock,
+                          color: isCompleted || isCurrent
+                              ? Colors.white
+                              : AppDesignSystem.textTertiary,
+                          size: 22,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    title,
-                    style: AppTextStyles.cardTitle.copyWith(
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: [
-                      // Difficulty badge
-                      if (difficulty != null)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _getDifficultyColor(difficulty!).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            difficulty!,
-                            style: AppTextStyles.caption.copyWith(
-                              color: _getDifficultyColor(difficulty!),
-                              fontWeight: FontWeight.w600,
+            
+                      const SizedBox(width: 12),
+            
+                      // Content
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: isCompleted
+                                    ? AppDesignSystem.success.withOpacity(0.15)
+                                    : isCurrent
+                                        ? color.withOpacity(0.15)
+                                        : AppDesignSystem.backgroundGrey,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                'Level $levelNumber',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                  color: isCompleted
+                                      ? AppDesignSystem.success
+                                      : isCurrent
+                                          ? color
+                                          : AppDesignSystem.textSecondary,
+                                ),
+                              ),
                             ),
+                            if (isCurrent) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: color,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'CURRENT',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          title,
+                          style: AppTextStyles.cardTitle.copyWith(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      // Estimated time
-                      if (estimatedMinutes != null)
+                        const SizedBox(height: 8),
                         Row(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.access_time,
-                              size: 12,
-                              color: AppDesignSystem.textSecondary,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '$estimatedMinutes min',
-                              style: AppTextStyles.caption,
+                            // Difficulty badge
+                            if (difficulty != null)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 7,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _getDifficultyColor(difficulty!).withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  difficulty!,
+                                  style: AppTextStyles.caption.copyWith(
+                                    color: _getDifficultyColor(difficulty!),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ),
+                            if (difficulty != null) const SizedBox(width: 8),
+                            // Estimated time
+                            if (estimatedMinutes != null)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 13,
+                                    color: AppDesignSystem.textSecondary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '$estimatedMinutes min',
+                                    style: AppTextStyles.caption.copyWith(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            if (estimatedMinutes != null) const SizedBox(width: 8),
+                            // XP reward
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: isLocked
+                                    ? AppDesignSystem.backgroundGrey
+                                    : AppDesignSystem.primaryAmber.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.stars,
+                                    size: 13,
+                                    color: isLocked
+                                        ? AppDesignSystem.textTertiary
+                                        : AppDesignSystem.primaryAmber,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    isCompleted ? '$xp XP' : '+$xp XP',
+                                    style: AppTextStyles.caption.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 11,
+                                      color: isLocked
+                                          ? AppDesignSystem.textTertiary
+                                          : AppDesignSystem.primaryAmber,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      // XP reward
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.stars,
-                            size: 12,
-                            color: isLocked
-                                ? AppDesignSystem.textTertiary
-                                : AppDesignSystem.primaryAmber,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            isCompleted ? '$xp XP' : '+$xp XP',
-                            style: AppTextStyles.caption.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: isLocked
-                                  ? AppDesignSystem.textTertiary
-                                  : AppDesignSystem.primaryAmber,
+                        if (isCompleted) ...[
+                          const SizedBox(height: 6),
+                          Row(
+                            children: List.generate(
+                              5,
+                              (index) => Padding(
+                                padding: const EdgeInsets.only(right: 2),
+                                child: Icon(
+                                  index < stars ? Icons.star : Icons.star_border,
+                                  size: 14,
+                                  color: AppDesignSystem.primaryAmber,
+                                ),
+                              ),
                             ),
                           ),
                         ],
+                            if (isLocked) ...[
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.lock_outline,
+                                    size: 12,
+                                    color: AppDesignSystem.textTertiary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      'Complete Level ${levelNumber - 1} first',
+                                      style: AppTextStyles.caption.copyWith(
+                                        fontSize: 11,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                  if (isCompleted) ...[
-                    const SizedBox(height: 4),
-                    Row(
-                      children: List.generate(
-                        5,
-                        (index) => Icon(
-                          index < stars
-                              ? Icons.star
-                              : Icons.star_border,
-                          size: 14,
-                          color: AppDesignSystem.primaryAmber,
-                        ),
-                      ),
-                    ),
-                  ],
-                  if (isLocked) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      'Complete Level ${levelNumber - 1} first',
-                      style: AppTextStyles.caption,
-                    ),
-                  ],
+                  
+                  // Action button for current level - full width below
                   if (isCurrent) ...[
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 32,
-                      child: ElevatedButton(
-                        onPressed: onTap,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: color,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Start',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward, size: 14),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            color,
+                            color.withOpacity(0.8),
                           ],
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: onTap,
+                          borderRadius: BorderRadius.circular(8),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.play_arrow, size: 18, color: Colors.white),
+                                SizedBox(width: 6),
+                                Text(
+                                  'Start Level',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -569,7 +910,7 @@ class _LevelItem extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

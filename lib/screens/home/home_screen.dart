@@ -14,6 +14,7 @@ import '../../widgets/loading_skeleton.dart';
 import '../student/my_progress_screen.dart';
 import '../student/student_classroom_view_screen.dart';
 import '../learn/learn_screen.dart';
+import '../learn/realm_detail_screen.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
 
 /// Home Screen - Loads real user data from Firebase
@@ -146,6 +147,44 @@ class _HomeScreenState extends State<HomeScreen> {
     return _user!.displayName[0].toUpperCase();
   }
 
+  Future<int> _getStudentCount() async {
+    if (_classroomInfo == null) return 0;
+    
+    try {
+      final studentIds = (_classroomInfo!['studentIds'] as List?)?.cast<String>() ?? [];
+      final teacherId = _classroomInfo!['teacherId'] as String?;
+      final teacherIds = (_classroomInfo!['teacherIds'] as List?)?.cast<String>() ?? [];
+      
+      // Get all teacher IDs to exclude
+      final allTeacherIds = <String>{};
+      if (teacherId != null) allTeacherIds.add(teacherId);
+      allTeacherIds.addAll(teacherIds);
+      
+      // Filter out teacher IDs and verify users exist
+      int validStudentCount = 0;
+      
+      for (final studentId in studentIds) {
+        // Skip if this is a teacher ID
+        if (allTeacherIds.contains(studentId)) continue;
+        
+        // Verify the user exists and is a student
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(studentId)
+            .get();
+        
+        if (userDoc.exists && userDoc.data()?['role'] == 'student') {
+          validStudentCount++;
+        }
+      }
+      
+      return validStudentCount;
+    } catch (e) {
+      print('Error counting students: $e');
+      return 0;
+    }
+  }
+
   Future<int> _getUserRank(int userXP) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -180,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
           recommendations.add({
             'title': realm.name,
             'subtitle': 'Start learning • ${realm.totalLevels} levels',
-            'levelId': realm.id,
+            'realmId': realm.id,
             'color': realm.color,
           });
           
@@ -195,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
           recommendations.add({
             'title': realm.name,
             'subtitle': 'Review • ${realm.totalLevels} levels',
-            'levelId': realm.id,
+            'realmId': realm.id,
             'color': realm.color,
           });
         }
@@ -978,12 +1017,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   color: Colors.white.withValues(alpha: 0.9),
                                                 ),
                                               ),
-                                              Text(
-                                                '${(_classroomInfo!['studentIds'] as List?)?.length ?? 0}',
-                                                style: AppTextStyles.h3.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                              FutureBuilder<int>(
+                                                future: _getStudentCount(),
+                                                builder: (context, snapshot) {
+                                                  return Text(
+                                                    '${snapshot.data ?? 0}',
+                                                    style: AppTextStyles.h3.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  );
+                                                },
                                               ),
                                             ],
                                           ),
@@ -1203,12 +1247,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 title: Text(item['title']),
                                                 subtitle: Text(item['subtitle']),
                                                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                                onTap: () {
+                                                onTap: () async {
                                                   // Navigate to the specific realm
-                                                  Navigator.pushNamed(
+                                                  final realmId = item['realmId'];
+                                                  final realms = await _contentService.getAllRealms();
+                                                  final realm = realms.firstWhere((r) => r.id == realmId);
+                                                  
+                                                  Navigator.push(
                                                     context,
-                                                    '/realm',
-                                                    arguments: {'realmId': item['realmId']},
+                                                    MaterialPageRoute(
+                                                      builder: (context) => RealmDetailScreen(realm: realm.toMap()),
+                                                    ),
                                                   );
                                                 },
                                               ),
@@ -1287,8 +1336,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               TextButton(
                                 onPressed: () {
-                                  // Navigate to profile
-                                  Navigator.pushNamed(context, '/profile');
+                                  // Navigate to profile tab (index 4)
+                                  widget.onNavigateToTab?.call(4);
                                 },
                                 child: Text(
                                   'View Profile',
