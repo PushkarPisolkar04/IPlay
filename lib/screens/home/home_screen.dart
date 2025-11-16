@@ -358,24 +358,17 @@ class _HomeScreenState extends State<HomeScreen> {
         
         for (final doc in sortedDocs.take(3)) {
           final data = doc.data();
-          final badgeId = data['badgeId'];
+          final badgeName = data['badgeName'] ?? 'New Badge';
           final unlockedAt = (data['unlockedAt'] as Timestamp).toDate();
           
-          final badgeDoc = await FirebaseFirestore.instance
-              .collection('badges')
-              .doc(badgeId)
-              .get();
-          
-          if (badgeDoc.exists) {
-            activities.add({
-              'title': 'Badge Unlocked!',
-              'subtitle': badgeDoc.data()?['name'] ?? 'New Badge',
-              'time': _getTimeAgo(unlockedAt),
-              'icon': Icons.emoji_events,
-              'color': 0xFFF59E0B,
-              'timestamp': unlockedAt,
-            });
-          }
+          activities.add({
+            'title': 'Badge Unlocked!',
+            'subtitle': badgeName,
+            'time': _getTimeAgo(unlockedAt),
+            'icon': Icons.emoji_events,
+            'color': 0xFFF59E0B,
+            'timestamp': unlockedAt,
+          });
         }
       } catch (e) {
         print('Error loading badges: $e');
@@ -589,24 +582,50 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Text('🔥', style: TextStyle(fontSize: 24)),
-                                            const SizedBox(width: 8),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
+                                            // Fire icon with glow effect
+                                            Container(
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                gradient: const LinearGradient(
+                                                  colors: [Color(0xFFFF6B35), Color(0xFFF59E0B)],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                borderRadius: BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+                                                    blurRadius: 12,
+                                                    spreadRadius: 2,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: const Icon(
+                                                Icons.local_fire_department,
+                                                color: Colors.white,
+                                                size: 24,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            // Streak count with proper singular/plural
+                                            Row(
+                                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                                              textBaseline: TextBaseline.alphabetic,
                                               children: [
                                                 Text(
                                                   '${streamUser?.currentStreak ?? 0}',
                                                   style: const TextStyle(
-                                                    fontSize: 20,
+                                                    fontSize: 24,
                                                     fontWeight: FontWeight.bold,
-                                                    color: Color(0xFFF59E0B),
+                                                    color: Color(0xFFFF6B35),
                                                   ),
                                                 ),
-                                                const Text(
-                                                  'Day Streak',
-                                                  style: TextStyle(
-                                                    fontSize: 11,
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  (streamUser?.currentStreak ?? 0) == 1 ? 'day' : 'days',
+                                                  style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w600,
                                                     color: Color(0xFF6B7280),
                                                   ),
                                                 ),

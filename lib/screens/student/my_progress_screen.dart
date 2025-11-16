@@ -66,27 +66,27 @@ class _MyProgressScreenState extends State<MyProgressScreen>
           .where('totalXP', isGreaterThan: userXP)
           .get();
 
-      // Get user's progress
+      // Get user's progress (uses realm_ prefix format)
       final userProgress =
           userData['progressSummary'] as Map<String, dynamic>? ?? {};
 
-      // Define all available realms (6 realms)
+      // Define all available realms (6 realms) with realm_ prefix
       final allRealms = {
-        'patent': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-        'trademark': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-        'copyright': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-        'trade_secrets': {
-          'totalLevels': 8,
+        'realm_patent': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
+        'realm_trademark': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
+        'realm_copyright': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
+        'realm_trade_secrets': {
+          'totalLevels': 10,
           'levelsCompleted': 0,
           'completed': false
         },
-        'industrial_design': {
-          'totalLevels': 8,
+        'realm_industrial_design': {
+          'totalLevels': 10,
           'levelsCompleted': 0,
           'completed': false
         },
-        'geographical_indications': {
-          'totalLevels': 8,
+        'realm_geographical_indications': {
+          'totalLevels': 10,
           'levelsCompleted': 0,
           'completed': false
         },

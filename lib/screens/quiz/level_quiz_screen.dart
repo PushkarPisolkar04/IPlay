@@ -9,6 +9,7 @@ import '../../core/services/progress_service.dart';
 import '../../core/services/certificate_service.dart';
 import '../../core/services/xp_service.dart';
 import '../../core/services/content_service.dart';
+import '../../core/services/badge_service.dart';
 import '../../utils/haptic_feedback_util.dart';
 import '../../services/sound_service.dart';
 import '../../services/app_rating_service.dart';
@@ -31,6 +32,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   final ProgressService _progressService = ProgressService();
   final CertificateService _certificateService = CertificateService();
   final XPService _xpService = XPService();
+  final BadgeService _badgeService = BadgeService();
   final ContentService _contentService = ContentService();
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
@@ -129,7 +131,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         try {
-          await _progressService.completeLevel(
+          // Complete level and get newly unlocked badges
+          final newBadges = await _progressService.completeLevel(
             userId: user.uid,
             realmId: widget.level.realmId,
             levelNumber: widget.level.levelNumber,
@@ -138,10 +141,15 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             totalQuestions: widget.level.quiz.length,
           );
 
+          // Show badge animations if any badges were unlocked
+          if (newBadges.isNotEmpty && mounted) {
+            await _showBadgeAnimations(newBadges);
+          }
+
           // Check if realm is complete and generate certificate
           await _checkAndGenerateCertificate(user.uid);
         } catch (e) {
-          // print('Error saving progress: $e');
+          print('Error saving progress: $e');
         }
       }
     }
@@ -215,6 +223,25 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       }
     } catch (e) {
       // print('Error checking/generating certificate: $e');
+    }
+  }
+
+  /// Show badge animations for newly unlocked badges
+  Future<void> _showBadgeAnimations(List<String> badgeIds) async {
+    try {
+      // Get badge details for each badge ID
+      for (final badgeId in badgeIds) {
+        final badge = await _badgeService.getBadge(badgeId);
+        if (badge != null && mounted) {
+          // Show badge animation using the badge service
+          _badgeService.showBadgeAnimation(context, badge);
+          
+          // Wait a bit before showing next badge
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
+    } catch (e) {
+      print('Error showing badge animations: $e');
     }
   }
 

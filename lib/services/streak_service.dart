@@ -71,6 +71,11 @@ class StreakService {
   int _calculateNewStreak(DateTime lastActive, DateTime now, int currentStreak) {
     final hoursDiff = now.difference(lastActive).inHours;
 
+    // If this is the first activity (currentStreak is 0), start at 1
+    if (currentStreak == 0) {
+      return 1;
+    }
+
     if (hoursDiff <= 48) {
       // Within 48-hour grace period
       if (!_isSameDay(lastActive, now)) {

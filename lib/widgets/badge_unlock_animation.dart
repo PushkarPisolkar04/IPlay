@@ -160,9 +160,21 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
                               ],
                             ),
                             child: Center(
-                              child: Text(
-                                widget.badge.icon,
-                                style: const TextStyle(fontSize: 60),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  widget.badge.iconPath,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // Fallback to trophy icon if image not found
+                                    return const Icon(
+                                      Icons.emoji_events,
+                                      size: 60,
+                                      color: Colors.white,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),

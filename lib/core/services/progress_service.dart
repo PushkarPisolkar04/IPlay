@@ -6,6 +6,7 @@ import '../../services/sound_service.dart';
 import '../../services/streak_service.dart';
 import 'badge_service.dart';
 import 'offline_progress_manager.dart';
+import 'content_service.dart';
 import '../utils/debouncer.dart';
 import '../utils/firebase_batch_helper.dart';
 
@@ -16,6 +17,7 @@ class ProgressService {
   final OfflineProgressManager _offlineManager = OfflineProgressManager.instance;
   final FirebaseBatchHelper _batchHelper = FirebaseBatchHelper();
   final StreakService _streakService = StreakService();
+  final ContentService _contentService = ContentService();
   
   // Debouncer for progress updates (save every 30 seconds)
   final _progressDebouncer = Debouncer(delay: const Duration(seconds: 30));
@@ -78,7 +80,8 @@ class ProgressService {
   }
 
   /// Mark a level as completed and update progress
-  Future<void> completeLevel({
+  /// Returns list of newly unlocked badge IDs
+  Future<List<String>> completeLevel({
     required String userId,
     required String realmId,
     required int levelNumber,
@@ -112,7 +115,7 @@ class ProgressService {
         );
         
         // print('Progress saved offline: ${realmId}_level_$levelNumber, XP: $xpEarned');
-        return;
+        return []; // Return empty list when offline
       }
 
       final batch = _firestore.batch();
@@ -218,17 +221,21 @@ class ProgressService {
       if (userDoc.exists) {
         final userData = userDoc.data();
         final progressSummary = userData?['progressSummary'] ?? {};
-        final realmProgress = progressSummary[realmId] ?? {};
+        
+        // Use realmId as-is (e.g., 'realm_copyright')
+        final summaryKey = realmId;
+        final realmProgress = progressSummary[summaryKey] ?? {};
         
         // Use the count we calculated earlier
         int levelsCompletedCount = finalCompletedLevelsCount;
         
-        // Get total levels for this realm (you may want to pass this as parameter)
-        final totalLevels = realmProgress['totalLevels'] ?? 8; // Default to 8
+        // Get total levels from realm data (always use the correct value from content)
+        final realm = _contentService.getRealmById(realmId);
+        final totalLevels = realm?.totalLevels ?? 10; // Default to 10 if realm not found
         final xpEarnedSoFar = (realmProgress['xpEarned'] ?? 0) + xpEarned;
         final isCompleted = levelsCompletedCount >= totalLevels;
         
-        updateData['progressSummary.$realmId'] = {
+        updateData['progressSummary.$summaryKey'] = {
           'completed': isCompleted,
           'levelsCompleted': levelsCompletedCount,
           'totalLevels': totalLevels,
@@ -237,34 +244,65 @@ class ProgressService {
         };
       }
 
-      batch.update(userRef, updateData);
-
-      // If badge unlocked, add to user's badges
-      if (newBadge != null) {
-        batch.update(userRef, {
-          'badges': FieldValue.arrayUnion([newBadge]),
-        });
+      // Calculate and add streak to updateData BEFORE batch update
+      final currentStreak = userDoc.data()?['currentStreak'] ?? 0;
+      final lastActiveDate = (userDoc.data()?['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now();
+      final newStreak = _calculateStreak(lastActiveDate, DateTime.now(), currentStreak);
+      
+      if (newStreak != currentStreak) {
+        updateData['currentStreak'] = newStreak;
+        print('📈 Streak updated: $currentStreak → $newStreak');
       }
 
+      // Add badge if unlocked
+      if (newBadge != null) {
+        updateData['badges'] = FieldValue.arrayUnion([newBadge]);
+      }
+
+      // Single batch update with all data
+      batch.update(userRef, updateData);
+      
       // Commit all updates
       await batch.commit();
 
       // Play XP gain sound
       SoundService.playXPGain();
-
-      // Update streak using StreakService
-      await _streakService.updateStreakOnActivity(userId);
       
-      // Check for new badges (don't wait for this)
-      _badgeService.checkAndAwardBadges(userId).then((newBadges) {
-        if (newBadges.isNotEmpty) {
-          // print('New badges unlocked: $newBadges');
-          // Badge notification will be handled by the UI
-        }
-      });
+      // Check for new badges and return them
+      // Note: checkAndAwardBadges now handles notification creation internally
+      final newBadges = await _badgeService.checkAndAwardBadges(userId);
+      if (newBadges.isNotEmpty) {
+        print('✅ New badges unlocked: $newBadges');
+        
+        // Create badge_unlock entries for recent activity (don't wait)
+        Future.delayed(Duration.zero, () async {
+          for (final badgeId in newBadges) {
+            try {
+              final badge = await _badgeService.getBadge(badgeId);
+              if (badge != null) {
+                // Create badge_unlock entry for recent activity
+                await _firestore
+                    .collection('users')
+                    .doc(userId)
+                    .collection('badge_unlocks')
+                    .add({
+                  'badgeId': badge.id,
+                  'badgeName': badge.name,
+                  'badgeRarity': badge.rarity,
+                  'unlockedAt': Timestamp.now(),
+                });
+              }
+            } catch (e) {
+              print('Error creating badge activity: $e');
+            }
+          }
+        });
+      }
+      
+      return newBadges;
     } catch (e) {
-      // print('Error completing level: $e');
-      rethrow;
+      print('Error completing level: $e');
+      return []; // Return empty list on error
     }
   }
 
@@ -389,5 +427,35 @@ class ProgressService {
   Future<void> dispose() async {
     await flushPendingUpdates();
     _progressDebouncer.dispose();
+  }
+
+  /// Calculate the new streak value based on last activity and current streak
+  int _calculateStreak(DateTime lastActive, DateTime now, int currentStreak) {
+    final hoursDiff = now.difference(lastActive).inHours;
+
+    // If this is the first activity (currentStreak is 0), start at 1
+    if (currentStreak == 0) {
+      return 1;
+    }
+
+    if (hoursDiff <= 48) {
+      // Within 48-hour grace period
+      if (!_isSameDay(lastActive, now)) {
+        // New day, increment streak
+        return currentStreak + 1;
+      }
+      // Same day, streak unchanged
+      return currentStreak;
+    } else {
+      // Streak broken (> 48 hours), reset to 1
+      return 1;
+    }
+  }
+
+  /// Check if two dates are on the same day
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+           date1.month == date2.month &&
+           date1.day == date2.day;
   }
 }

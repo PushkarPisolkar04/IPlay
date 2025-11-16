@@ -67,16 +67,14 @@ class BadgeService {
   /// Get badge by ID
   Future<BadgeModel?> getBadge(String badgeId) async {
     try {
-      final doc = await _firestore
-          .collection('badges')
-          .doc(badgeId)
-          .get();
-
-      if (!doc.exists) return null;
-
-      return BadgeModel.fromFirestore(doc.data()!);
+      // Get from local JSON cache
+      final allBadges = await getAllBadges();
+      return allBadges.firstWhere(
+        (badge) => badge.id == badgeId,
+        orElse: () => throw Exception('Badge not found'),
+      );
     } catch (e) {
-      // print('Error getting badge: $e');
+      print('Error getting badge $badgeId: $e');
       return null;
     }
   }
@@ -150,6 +148,27 @@ class BadgeService {
           'badges': FieldValue.arrayUnion(newBadges),
         });
 
+        // Create notifications for newly earned badges
+        final batch = _firestore.batch();
+        for (final badge in newBadgeModels) {
+          final docRef = _firestore.collection('notifications').doc();
+          batch.set(docRef, {
+            'toUserId': userId,
+            'fromUserId': null,
+            'title': '🏆 Badge Earned!',
+            'body': 'You earned: ${badge.name}',
+            'data': {
+              'type': 'badge',
+              'badgeId': badge.id,
+              'badgeName': badge.name,
+              'badgeRarity': badge.rarity,
+            },
+            'read': false,
+            'sentAt': Timestamp.now(),
+          });
+        }
+        await batch.commit();
+
         // Play badge unlock sound
         SoundService.playBadgeUnlock();
 
@@ -186,46 +205,77 @@ class BadgeService {
     final value = badge.criteriaValue;
 
     switch (type) {
+      // XP-based badges
       case 'xp_threshold':
+      case 'xp_total':
         final requiredXP = value as int? ?? 0;
         return totalXP >= requiredXP;
 
+      // Streak-based badges
       case 'streak':
+      case 'streak_days':
         final requiredStreak = value as int? ?? 0;
         return streak >= requiredStreak;
 
+      // Realm completion badges
       case 'realm_complete':
-        final realmId = value as String?;
+        final realmId = badge.criteriaValue as String?;
         if (realmId == null) return false;
         return _isRealmCompleted(progressSummary, realmId);
 
       case 'all_realms_complete':
-        final requiredCount = value as int? ?? 6;
+        final requiredCount = badge.criteriaValue as int? ?? 6;
         return _countCompletedRealms(progressSummary) >= requiredCount;
 
+      // Level completion badges
       case 'levels_completed':
+      case 'levels_complete':
         final requiredLevels = value as int? ?? 0;
         return _getTotalLevelsCompleted(progressSummary) >= requiredLevels;
 
+      // Quiz badges
+      case 'quiz_complete':
+        final requiredCount = badge.criteriaValue as int? ?? 1;
+        return _getTotalLevelsCompleted(progressSummary) >= requiredCount; // Any level completion counts as quiz
+
+      case 'perfect_quiz':
+        final requiredCount = badge.criteriaValue as int? ?? 1;
+        return await _countPerfectQuizzes(userId) >= requiredCount;
+
+      // Social badges
       case 'classroom_join':
         return classroomIds.isNotEmpty;
 
-      case 'perfect_quiz':
-        final requiredCount = value as int? ?? 1;
-        return await _countPerfectQuizzes(userId) >= requiredCount;
-
       case 'assignment_complete':
-        final requiredCount = value as int? ?? 1;
+        final requiredCount = badge.criteriaValue as int? ?? 1;
         return await _countCompletedAssignments(userId) >= requiredCount;
 
+      // Daily challenge badges
       case 'daily_challenge_complete':
-        final requiredCount = value as int? ?? 1;
+        final requiredCount = badge.criteriaValue as int? ?? 1;
         return await _countCompletedDailyChallenges(userId) >= requiredCount;
 
+      case 'daily_challenge_streak':
+        // TODO: Implement daily challenge streak tracking
+        return false;
+
+      // Leaderboard badges
       case 'leaderboard_rank':
-        final maxRank = value as int? ?? 1;
+        final maxRank = badge.criteriaValue as int? ?? 1;
         return await _checkLeaderboardRank(userId, 'classroom', maxRank);
 
+      // Game badges
+      case 'games_played':
+      case 'unique_games_played':
+      case 'all_games_played':
+      case 'game_high_score':
+      case 'game_perfect_score':
+      case 'specific_game_perfect':
+      case 'total_game_plays':
+        // TODO: Implement game tracking
+        return false;
+
+      // Special badges
       case 'early_adopter':
         // Check if user joined within first month of app launch
         final userCreatedAt = (await _firestore.collection('users').doc(userId).get())
@@ -241,13 +291,15 @@ class BadgeService {
 
       case 'night_owl':
         // Check if user completed levels between 10 PM - 6 AM
-        return await _checkNightOwlActivity(userId);
+        final requiredCount = badge.criteriaValue as int? ?? 5;
+        return await _countNightOwlCompletions(userId) >= requiredCount;
 
       case 'weekend_warrior':
         // Check if user has 10+ completions on weekends
         return await _countWeekendCompletions(userId) >= 10;
       
       default:
+        print('⚠️ Unknown badge type: $type for badge ${badge.id}');
         return false;
     }
   }
@@ -255,7 +307,12 @@ class BadgeService {
   // Helper methods for badge condition checks
 
   bool _isRealmCompleted(Map<String, dynamic> progressSummary, String realmId) {
-    final realmProgress = progressSummary[realmId] as Map<String, dynamic>?;
+    // Try with realm_ prefix first (new format), then without (old format)
+    var realmProgress = progressSummary[realmId] as Map<String, dynamic>?;
+    if (realmProgress == null && !realmId.startsWith('realm_')) {
+      // Try with realm_ prefix
+      realmProgress = progressSummary['realm_$realmId'] as Map<String, dynamic>?;
+    }
     return realmProgress?['completed'] == true;
   }
 
@@ -334,22 +391,23 @@ class BadgeService {
     }
   }
 
-  Future<bool> _checkNightOwlActivity(String userId) async {
+  Future<int> _countNightOwlCompletions(String userId) async {
     final snapshot = await _firestore
         .collection('progress')
         .where('userId', isEqualTo: userId)
         .get();
 
+    int count = 0;
     for (final doc in snapshot.docs) {
       final completedAt = (doc.data()['completedAt'] as Timestamp?)?.toDate();
       if (completedAt != null) {
         final hour = completedAt.hour;
         if (hour >= 22 || hour < 6) {
-          return true;
+          count++;
         }
       }
     }
-    return false;
+    return count;
   }
 
   Future<int> _countWeekendCompletions(String userId) async {
