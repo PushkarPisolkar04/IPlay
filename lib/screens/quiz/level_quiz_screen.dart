@@ -767,8 +767,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context); // Back to level
-                            Navigator.pop(context); // Back to realm
+                            Navigator.pop(context, true); // Back to level with result
+                            Navigator.pop(context, true); // Back to realm with result
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppDesignSystem.primaryIndigo,

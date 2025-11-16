@@ -593,8 +593,8 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => LevelQuizScreen(
@@ -602,6 +602,11 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                             ),
                           ),
                         );
+                        
+                        // If quiz was completed, return true to trigger realm reload
+                        if (result == true && mounted) {
+                          Navigator.pop(context, true);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppDesignSystem.primaryIndigo,

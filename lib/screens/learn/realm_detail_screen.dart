@@ -31,6 +31,7 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
   
   List<LevelModel> _levels = [];
   Set<int> _completedLevels = {};
+  Map<int, int> _levelStars = {}; // Store star ratings for each level
   int _currentLevelNumber = 1;
   bool _isLoading = true;
   
@@ -56,9 +57,20 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
       if (user != null) {
         final progress = await _progressService.getRealmProgress(user.uid, realmId);
         if (progress != null) {
+          // Convert levelStars map to use int keys
+          final Map<int, int> starsMap = {};
+          progress.levelStars.forEach((key, value) {
+            // Extract level number from 'level_X' format
+            final levelNum = int.tryParse(key.replaceAll('level_', ''));
+            if (levelNum != null) {
+              starsMap[levelNum] = value;
+            }
+          });
+          
           setState(() {
             _levels = levels;
             _completedLevels = Set<int>.from(progress.completedLevels);
+            _levelStars = starsMap;
             _currentLevelNumber = progress.currentLevelNumber;
           });
         } else {
@@ -489,7 +501,7 @@ class _RealmDetailScreenState extends State<RealmDetailScreen> {
                   levelNumber: level.levelNumber,
                   title: level.name,
                   xp: level.xpReward,
-                  stars: _completedLevels.contains(level.levelNumber) ? 5 : 0, // TODO: Track actual stars
+                  stars: _levelStars[level.levelNumber] ?? 0, // Use actual star rating
                   status: status,
                   color: color,
                   difficulty: difficulty,

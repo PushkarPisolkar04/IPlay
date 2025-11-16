@@ -87,7 +87,11 @@ class ProgressService {
     required int totalQuestions,
     String? newBadge,
   }) async {
-    try {
+    // Calculate star rating based on quiz performance
+    // Each correct answer = 1 star (5 questions = 5 stars max)
+    int stars = quizScore.clamp(0, 5);
+    
+    try{
       // Check if device is online
       final connectivityResult = await Connectivity().checkConnectivity();
       final isOffline = connectivityResult.contains(ConnectivityResult.none);
@@ -122,14 +126,48 @@ class ProgressService {
 
       final progressDoc = await progressRef.get();
       
+      // Track completed levels count for later use
+      int finalCompletedLevelsCount = 0;
+      
       if (progressDoc.exists) {
         // Update existing progress
         final currentData = progressDoc.data()!;
-        final completedLevels = List<int>.from(currentData['completedLevels'] ?? []);
+        
+        // Safely parse completedLevels - handle both List and int types
+        List<int> completedLevels = [];
+        if (currentData.containsKey('completedLevels')) {
+          final levelsData = currentData['completedLevels'];
+          if (levelsData is List) {
+            completedLevels = List<int>.from(levelsData);
+          } else if (levelsData is int) {
+            // Old format: just a count, not a list - we'll rebuild it
+            print('⚠️ WARNING: completedLevels is int ($levelsData), converting to list format');
+            // We can't recover the exact levels, so we'll just add the current one
+            completedLevels = [];
+          }
+        }
+        
+        // Safely parse levelStars map
+        final Map<String, int> levelStars = {};
+        if (currentData.containsKey('levelStars') && currentData['levelStars'] is Map) {
+          final starsData = currentData['levelStars'] as Map;
+          starsData.forEach((key, value) {
+            if (value is int) {
+              levelStars[key.toString()] = value;
+            }
+          });
+        }
         
         // Add level to completed list if not already there
         if (!completedLevels.contains(levelNumber)) {
           completedLevels.add(levelNumber);
+        }
+        
+        // Store star rating for this level (update if better)
+        final levelKey = 'level_$levelNumber';
+        final existingStars = levelStars[levelKey] ?? 0;
+        if (stars > existingStars) {
+          levelStars[levelKey] = stars;
         }
         
         // Sort completed levels
@@ -138,8 +176,12 @@ class ProgressService {
         // Current level is the next uncompleted level
         final currentLevel = completedLevels.length + 1;
         
+        // Store count for later use
+        finalCompletedLevelsCount = completedLevels.length;
+        
         batch.update(progressRef, {
           'completedLevels': completedLevels,
+          'levelStars': levelStars,
           'currentLevelNumber': currentLevel,
           'xpEarned': FieldValue.increment(xpEarned),
           'lastAccessedAt': Timestamp.now(),
@@ -150,10 +192,15 @@ class ProgressService {
           'userId': userId,
           'realmId': realmId,
           'completedLevels': [levelNumber],
+          'levelStars': {'level_$levelNumber': stars},
           'currentLevelNumber': levelNumber + 1,
           'xpEarned': xpEarned,
           'lastAccessedAt': Timestamp.now(),
         };
+        
+        // Store count for later use
+        finalCompletedLevelsCount = 1;
+        
         batch.set(progressRef, newProgress);
       }
 
@@ -173,19 +220,17 @@ class ProgressService {
         final progressSummary = userData?['progressSummary'] ?? {};
         final realmProgress = progressSummary[realmId] ?? {};
         
-        final levelsCompleted = List<int>.from(realmProgress['levelsCompleted'] ?? []);
-        if (!levelsCompleted.contains(levelNumber)) {
-          levelsCompleted.add(levelNumber);
-        }
+        // Use the count we calculated earlier
+        int levelsCompletedCount = finalCompletedLevelsCount;
         
         // Get total levels for this realm (you may want to pass this as parameter)
         final totalLevels = realmProgress['totalLevels'] ?? 8; // Default to 8
         final xpEarnedSoFar = (realmProgress['xpEarned'] ?? 0) + xpEarned;
-        final isCompleted = levelsCompleted.length >= totalLevels;
+        final isCompleted = levelsCompletedCount >= totalLevels;
         
         updateData['progressSummary.$realmId'] = {
           'completed': isCompleted,
-          'levelsCompleted': levelsCompleted.length,
+          'levelsCompleted': levelsCompletedCount,
           'totalLevels': totalLevels,
           'xpEarned': xpEarnedSoFar,
           'lastAccessedAt': Timestamp.now(),
