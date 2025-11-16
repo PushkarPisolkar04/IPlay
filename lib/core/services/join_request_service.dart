@@ -133,29 +133,35 @@ class JoinRequestService {
         },
       );
 
-      // Get classroom's schoolId
+      // Get classroom's schoolId and schoolTag
       final classroomDoc = await _firestore
           .collection('classrooms')
           .doc(request.classroomId)
           .get();
       final schoolId = classroomDoc.data()?['schoolId'];
+      final schoolTag = classroomDoc.data()?['schoolTag'];
 
-      // Add student to classroom
+      // Add student to classroom and remove from pending
       batch.update(
         _firestore.collection('classrooms').doc(request.classroomId),
         {
           'studentIds': FieldValue.arrayUnion([request.studentId]),
+          'pendingStudentIds': FieldValue.arrayRemove([request.studentId]),
           'updatedAt': Timestamp.now(),
         },
       );
 
-      // Add classroom and schoolId to user's profile
+      // Add classroom, schoolId, and schoolTag to user's profile
       final updateData = {
         'classroomIds': FieldValue.arrayUnion([request.classroomId]),
         'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
+        'updatedAt': Timestamp.now(),
       };
       if (schoolId != null) {
         updateData['schoolId'] = schoolId;
+      }
+      if (schoolTag != null) {
+        updateData['schoolTag'] = schoolTag;
       }
       
       batch.update(
@@ -205,11 +211,20 @@ class JoinRequestService {
         },
       );
 
-      // Remove from user's pending requests
+      // Remove from classroom's pending list and user's pending requests
+      batch.update(
+        _firestore.collection('classrooms').doc(request.classroomId),
+        {
+          'pendingStudentIds': FieldValue.arrayRemove([request.studentId]),
+          'updatedAt': Timestamp.now(),
+        },
+      );
+      
       batch.update(
         _firestore.collection('users').doc(request.studentId),
         {
           'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
+          'updatedAt': Timestamp.now(),
         },
       );
 
@@ -247,11 +262,20 @@ class JoinRequestService {
       // Delete the join request
       batch.delete(_firestore.collection('join_requests').doc(requestId));
 
-      // Remove from user's pending requests
+      // Remove from classroom's pending list and user's pending requests
+      batch.update(
+        _firestore.collection('classrooms').doc(request.classroomId),
+        {
+          'pendingStudentIds': FieldValue.arrayRemove([studentId]),
+          'updatedAt': Timestamp.now(),
+        },
+      );
+      
       batch.update(
         _firestore.collection('users').doc(studentId),
         {
           'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
+          'updatedAt': Timestamp.now(),
         },
       );
 

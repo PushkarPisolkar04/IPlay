@@ -123,21 +123,31 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'studentId': user.uid,
           'studentName': studentName,
           'status': 'pending',
-          'reviewedBy': null,
-          'reviewNote': null,
+          'resolvedBy': null,
+          'rejectReason': null,
           'requestedAt': Timestamp.now(),
           'resolvedAt': null,
           'inviteSource': _inviteSource,
         });
 
-        // print('Join request created, adding to pendingStudentIds...');
+        // print('Join request created, adding to pendingStudentIds and pendingClassroomRequests...');
         
-        // Add student to pending list
+        // Add student to pending list in classroom
         await FirebaseFirestore.instance
             .collection('classrooms')
             .doc(classroomId)
             .update({
           'pendingStudentIds': FieldValue.arrayUnion([user.uid]),
+          'updatedAt': Timestamp.now(),
+        });
+
+        // Add classroom to student's pending requests
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'pendingClassroomRequests': FieldValue.arrayUnion([classroomId]),
+          'updatedAt': Timestamp.now(),
         });
 
         // print('Successfully added to pending list!');
@@ -153,6 +163,10 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       } else {
         // print('Direct join (no approval needed)...');
         
+        // Get classroom's schoolId and schoolTag to update student profile
+        final schoolId = _foundClassroom!['schoolId'];
+        final schoolTag = _foundClassroom!['schoolTag'];
+        
         // Direct join (no approval needed)
         await FirebaseFirestore.instance
             .collection('classrooms')
@@ -164,18 +178,24 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
 
         // print('Added to studentIds, updating user profile...');
 
-        // Get classroom's schoolId to update student profile
-        final schoolId = _foundClassroom!['schoolId'];
-
-        // Update student's profile with classroom and school
+        // Update student's profile with classroom, school, and schoolTag
+        final updateData = {
+          'classroomIds': FieldValue.arrayUnion([classroomId]),
+          'updatedAt': Timestamp.now(),
+        };
+        
+        if (schoolId != null) {
+          updateData['schoolId'] = schoolId;
+        }
+        
+        if (schoolTag != null) {
+          updateData['schoolTag'] = schoolTag;
+        }
+        
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
-            .update({
-          'classroomIds': FieldValue.arrayUnion([classroomId]),
-          if (schoolId != null) 'schoolId': schoolId,
-          'updatedAt': Timestamp.now(),
-        });
+            .update(updateData);
 
         // Track invite source in classroom analytics
         await FirebaseFirestore.instance

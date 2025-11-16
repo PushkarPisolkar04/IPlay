@@ -15,16 +15,28 @@ class MyProgressScreen extends StatefulWidget {
   State<MyProgressScreen> createState() => _MyProgressScreenState();
 }
 
-class _MyProgressScreenState extends State<MyProgressScreen> {
+class _MyProgressScreenState extends State<MyProgressScreen>
+    with AutomaticKeepAliveClientMixin {
   bool _isLoading = true;
   Map<String, dynamic>? _userData;
   Map<String, dynamic> _progressSummary = {};
   int _globalRank = 0;
 
   @override
+  bool get wantKeepAlive => false; // Don't keep state alive, always refresh
+
+  @override
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (mounted) {
+      _loadData();
+    }
   }
 
   Future<void> _loadData() async {
@@ -37,47 +49,67 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
           .doc(currentUser.uid)
           .get();
 
-      if (userDoc.exists) {
-        final userData = userDoc.data()!;
-        final userXP = userData['totalXP'] ?? 0;
+      if (!userDoc.exists) {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+        return;
+      }
 
-        // Calculate global rank
-        final higherXPUsers = await FirebaseFirestore.instance
-            .collection('users')
-            .where('role', isEqualTo: 'student')
-            .where('totalXP', isGreaterThan: userXP)
-            .get();
+      final userData = userDoc.data()!;
+      final userXP = userData['totalXP'] ?? 0;
 
-        // Get user's progress
-        final userProgress = userData['progressSummary'] as Map<String, dynamic>? ?? {};
+      // Calculate global rank
+      final higherXPUsers = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'student')
+          .where('totalXP', isGreaterThan: userXP)
+          .get();
 
-        // Define all available realms (6 realms)
-        final allRealms = {
-          'patent': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-          'trademark': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-          'copyright': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-          'trade_secrets': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-          'industrial_design': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-          'geographical_indications': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
-        };
+      // Get user's progress
+      final userProgress =
+          userData['progressSummary'] as Map<String, dynamic>? ?? {};
 
-        // Merge user progress with all realms
-        final mergedProgress = <String, dynamic>{};
-        allRealms.forEach((key, value) {
-          if (userProgress.containsKey(key)) {
-            mergedProgress[key] = userProgress[key];
-          } else {
-            mergedProgress[key] = value;
-          }
-        });
+      // Define all available realms (6 realms)
+      final allRealms = {
+        'patent': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
+        'trademark': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
+        'copyright': {'totalLevels': 8, 'levelsCompleted': 0, 'completed': false},
+        'trade_secrets': {
+          'totalLevels': 8,
+          'levelsCompleted': 0,
+          'completed': false
+        },
+        'industrial_design': {
+          'totalLevels': 8,
+          'levelsCompleted': 0,
+          'completed': false
+        },
+        'geographical_indications': {
+          'totalLevels': 8,
+          'levelsCompleted': 0,
+          'completed': false
+        },
+      };
 
-        // Add games from user progress
-        userProgress.forEach((key, value) {
-          if (_isGame(key)) {
-            mergedProgress[key] = value;
-          }
-        });
+      // Merge user progress with all realms
+      final mergedProgress = <String, dynamic>{};
+      allRealms.forEach((key, value) {
+        if (userProgress.containsKey(key)) {
+          mergedProgress[key] = userProgress[key];
+        } else {
+          mergedProgress[key] = value;
+        }
+      });
 
+      // Add games from user progress
+      userProgress.forEach((key, value) {
+        if (_isGame(key)) {
+          mergedProgress[key] = value;
+        }
+      });
+
+      if (mounted) {
         setState(() {
           _userData = userData;
           _progressSummary = mergedProgress;
@@ -118,6 +150,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
+
     if (_isLoading) {
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,
@@ -129,7 +163,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                   gradient: AppDesignSystem.gradientPrimary,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                   child: Row(
                     children: [
                       IconButton(
@@ -206,7 +241,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                 child: Row(
                   children: [
                     IconButton(
@@ -233,302 +269,312 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
 
             // Scrollable Content
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
+              child: RefreshIndicator(
+                onRefresh: _loadData,
+                color: AppDesignSystem.primaryIndigo,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
 
-                    // Level Card
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppDesignSystem.primaryIndigo,
-                            AppDesignSystem.secondaryPurple,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
+                      // Level Card
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppDesignSystem.primaryIndigo,
+                              AppDesignSystem.secondaryPurple,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _userData?['displayName'] ?? 'Student',
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Global Rank #$_globalRank',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white.withValues(alpha: 0.9),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.1),
-                                      blurRadius: 10,
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color:
+                                  AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                              blurRadius: 20,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'LVL',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: AppDesignSystem.primaryIndigo,
-                                          fontWeight: FontWeight.w600,
+                                      Text(
+                                        _userData?['displayName'] ?? 'Student',
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
                                         ),
                                       ),
+                                      const SizedBox(height: 4),
                                       Text(
-                                        '$level',
-                                        style: const TextStyle(
-                                          fontSize: 28,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppDesignSystem.primaryIndigo,
+                                        'Global Rank #$_globalRank',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white.withValues(alpha: 0.9),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Level $level Progress',
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.1),
+                                        blurRadius: 10,
                                       ),
-                                    ),
-                                    Text(
-                                      '$levelProgress / 100 XP',
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: LinearProgressIndicator(
-                                    value: levelProgress / 100,
-                                    backgroundColor: Colors.white.withValues(alpha: 0.3),
-                                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                                    minHeight: 10,
+                                    ],
                                   ),
-                                ),
-                                const SizedBox(height: 6),
-                                Text(
-                                  '$xpToNextLevel XP to Level ${level + 1}',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          'LVL',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: AppDesignSystem.primaryIndigo,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        Text(
+                                          '$level',
+                                          style: const TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppDesignSystem.primaryIndigo,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Level $level Progress',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        '$levelProgress / 100 XP',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: LinearProgressIndicator(
+                                      value: levelProgress / 100,
+                                      backgroundColor:
+                                          Colors.white.withValues(alpha: 0.3),
+                                      valueColor: const AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                      minHeight: 10,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    '$xpToNextLevel XP to Level ${level + 1}',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ), // ← CORRECTLY CLOSED
+
+                      const SizedBox(height: AppSpacing.lg),
+
+                      // Stats Grid
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              Icons.stars,
+                              '$totalXP',
+                              'Total XP',
+                              const Color(0xFFF59E0B),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              Icons.emoji_events,
+                              '$badges',
+                              'Badges',
+                              const Color(0xFFEC4899),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              Icons.bar_chart,
+                              '#$_globalRank',
+                              'Rank',
+                              const Color(0xFF6366F1),
+                            ),
                           ),
                         ],
                       ),
-                    ),
 
-                    const SizedBox(height: AppSpacing.lg),
+                      const SizedBox(height: AppSpacing.xl),
 
-                    // Stats Grid
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildStatCard(
-                            Icons.stars,
-                            '$totalXP',
-                            'Total XP',
-                            const Color(0xFFF59E0B),
+                      // Overall Progress
+                      Text('Overall Progress', style: AppTextStyles.sectionHeader),
+                      const SizedBox(height: AppSpacing.sm),
+                      CleanCard(
+                        child: Column(
+                          children: [
+                            _buildProgressRow(
+                              'Levels Completed',
+                              completedLevels,
+                              totalLevels > 0 ? totalLevels : 1,
+                              AppDesignSystem.primaryIndigo,
+                            ),
+                            const Divider(height: 24),
+                            _buildProgressRow(
+                              'Realms Completed',
+                              completedRealms,
+                              totalRealms > 0 ? totalRealms : 1,
+                              AppDesignSystem.success,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // No Progress Yet
+                      if (_progressSummary.isEmpty)
+                        CleanCard(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.school_outlined,
+                                  size: 48,
+                                  color: AppDesignSystem.textTertiary,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'No Progress Yet',
+                                  style: AppTextStyles.h3.copyWith(
+                                    color: AppDesignSystem.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Start learning to see your progress here!',
+                                  style: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppDesignSystem.textSecondary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildStatCard(
-                            Icons.emoji_events,
-                            '$badges',
-                            'Badges',
-                            const Color(0xFFEC4899),
-                          ),
+
+                      // Games Section
+                      if (_progressSummary.entries.any((e) => _isGame(e.key))) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.videogame_asset,
+                                color: AppDesignSystem.primaryIndigo, size: 22),
+                            const SizedBox(width: 8),
+                            Text('Games', style: AppTextStyles.sectionHeader),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildStatCard(
-                            Icons.bar_chart,
-                            '#$_globalRank',
-                            'Rank',
-                            const Color(0xFF6366F1),
-                          ),
+                        const SizedBox(height: AppSpacing.sm),
+                        GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: _getCardAspectRatio(context),
+                          children: _progressSummary.entries
+                              .where((entry) => _isGame(entry.key))
+                              .map((entry) => _buildGameCard(entry))
+                              .toList(),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                      ],
+
+                      // Realms Section
+                      if (_progressSummary.entries.any((e) => !_isGame(e.key))) ...[
+                        Row(
+                          children: [
+                            Icon(Icons.school,
+                                color: AppDesignSystem.primaryIndigo, size: 22),
+                            const SizedBox(width: 8),
+                            Text('Realms', style: AppTextStyles.sectionHeader),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        GridView.count(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: _getCardAspectRatio(context),
+                          children: _progressSummary.entries
+                              .where((entry) => !_isGame(entry.key))
+                              .map((entry) => _buildRealmCard(entry))
+                              .toList(),
                         ),
                       ],
-                    ),
 
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // Overall Progress
-                    Text('Overall Progress', style: AppTextStyles.sectionHeader),
-                    const SizedBox(height: AppSpacing.sm),
-                    CleanCard(
-                      child: Column(
-                        children: [
-                          _buildProgressRow(
-                            'Levels Completed',
-                            completedLevels,
-                            totalLevels > 0 ? totalLevels : 1,
-                            AppDesignSystem.primaryIndigo,
-                          ),
-                          const Divider(height: 24),
-                          _buildProgressRow(
-                            'Realms Completed',
-                            completedRealms,
-                            totalRealms > 0 ? totalRealms : 1,
-                            AppDesignSystem.success,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: AppSpacing.xl),
-
-                    // No Progress Yet
-                    if (_progressSummary.isEmpty)
-                      CleanCard(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.school_outlined,
-                                size: 48,
-                                color: AppDesignSystem.textTertiary,
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'No Progress Yet',
-                                style: AppTextStyles.h3.copyWith(
-                                  color: AppDesignSystem.textPrimary,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Start learning to see your progress here!',
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                    // Games Section
-                    if (_progressSummary.entries.any((e) => _isGame(e.key))) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.videogame_asset, color: AppDesignSystem.primaryIndigo, size: 22),
-                          const SizedBox(width: 8),
-                          Text('Games', style: AppTextStyles.sectionHeader),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: _getCardAspectRatio(context),
-                        children: _progressSummary.entries
-                            .where((entry) => _isGame(entry.key))
-                            .map((entry) => _buildGameCard(entry))
-                            .toList(),
-                      ),
-                      const SizedBox(height: AppSpacing.xl),
+                      const SizedBox(height: AppSpacing.xl + 20),
                     ],
-
-                    // Realms Section
-                    if (_progressSummary.entries.any((e) => !_isGame(e.key))) ...[
-                      Row(
-                        children: [
-                          Icon(Icons.school, color: AppDesignSystem.primaryIndigo, size: 22),
-                          const SizedBox(width: 8),
-                          Text('Realms', style: AppTextStyles.sectionHeader),
-                        ],
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: _getCardAspectRatio(context),
-                        children: _progressSummary.entries
-                            .where((entry) => !_isGame(entry.key))
-                            .map((entry) => _buildRealmCard(entry))
-                            .toList(),
-                      ),
-                    ],
-
-                    const SizedBox(height: AppSpacing.xl + 20), // Extra bottom padding
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -583,7 +629,9 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     child: Image.asset(
                       itemLogo,
                       fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.videogame_asset, color: Colors.white, size: 32),
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.videogame_asset,
+                              color: Colors.white, size: 32),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -591,7 +639,10 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       _formatRealmName(itemName),
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -600,17 +651,22 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.emoji_events, color: Colors.white, size: 13),
+                      const Icon(Icons.emoji_events,
+                          color: Colors.white, size: 13),
                       const SizedBox(width: 3),
                       Text(
                         '$highScore',
-                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ],
                   ),
                   Text(
                     'High Score',
-                    style: TextStyle(fontSize: 9, color: Colors.white.withValues(alpha: 0.9)),
+                    style: TextStyle(
+                        fontSize: 9, color: Colors.white.withValues(alpha: 0.9)),
                   ),
                 ],
               ),
@@ -667,7 +723,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     child: Image.asset(
                       itemLogo,
                       fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) => const Icon(Icons.school, color: Colors.white, size: 32),
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.school, color: Colors.white, size: 32),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -675,7 +732,10 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       _formatRealmName(itemName),
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -686,16 +746,22 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     children: [
                       Text(
                         '$levelsCompleted',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                       Text(
                         '/$totalLevels',
-                        style: TextStyle(fontSize: 12, color: Colors.white.withValues(alpha: 0.8)),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.8)),
                       ),
                       if (isCompleted)
                         const Padding(
                           padding: EdgeInsets.only(left: 3),
-                          child: Icon(Icons.check_circle, color: Colors.white, size: 13),
+                          child: Icon(Icons.check_circle,
+                              color: Colors.white, size: 13),
                         ),
                     ],
                   ),
@@ -705,7 +771,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
                     child: LinearProgressIndicator(
                       value: progress,
                       backgroundColor: Colors.white.withValues(alpha: 0.3),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.white),
                       minHeight: 5,
                     ),
                   ),
@@ -718,7 +785,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
     );
   }
 
-  Widget _buildStatCard(IconData icon, String value, String label, Color color) {
+  Widget _buildStatCard(
+      IconData icon, String value, String label, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -749,7 +817,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
           const SizedBox(height: 10),
           Text(
             value,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            style: const TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           const SizedBox(height: 4),
           Text(
@@ -765,7 +834,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
     );
   }
 
-  Widget _buildProgressRow(String label, int current, int total, Color color) {
+  Widget _buildProgressRow(
+      String label, int current, int total, Color color) {
     final progress = total > 0 ? current / total : 0.0;
     return Row(
       children: [
@@ -776,8 +846,14 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                  Text('$current / $total', style: TextStyle(fontSize: 14, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+                  Text(label,
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w600)),
+                  Text('$current / $total',
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -851,7 +927,8 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
 
     if (_isGame(itemName)) {
       if (nameLower.contains('trademark')) return const Color(0xFFEC4899);
-      if (nameLower.contains('ip') || nameLower.contains('defender')) return const Color(0xFF6366F1);
+      if (nameLower.contains('ip') || nameLower.contains('defender'))
+        return const Color(0xFF6366F1);
       if (nameLower.contains('patent')) return const Color(0xFF8B5CF6);
       if (nameLower.contains('spot')) return const Color(0xFFF59E0B);
       if (nameLower.contains('gi')) return const Color(0xFF14B8A6);
@@ -880,7 +957,7 @@ class _MyProgressScreenState extends State<MyProgressScreen> {
 
   String _formatRealmName(String name) {
     return name.split('_').map((word) =>
-      word[0].toUpperCase() + word.substring(1)
+      word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1)
     ).join(' ');
   }
 }

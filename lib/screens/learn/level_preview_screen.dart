@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/constants/app_spacing.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/models/realm_model.dart';
 import '../../core/services/content_service.dart';
 import '../../core/services/progress_service.dart';
+import '../../services/bookmark_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'level_detail_screen.dart';
 
@@ -26,11 +28,13 @@ class LevelPreviewScreen extends StatefulWidget {
 class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
   final ContentService _contentService = ContentService();
   final ProgressService _progressService = ProgressService();
+  final BookmarkService _bookmarkService = BookmarkService();
   
   LevelModel? _level;
   Map<String, dynamic>? _levelJson;
   bool _isLoading = true;
   bool _isCompleted = false;
+  bool _isBookmarked = false;
   List<String> _prerequisiteLevels = [];
   String? _errorMessage;
 
@@ -38,6 +42,54 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
   void initState() {
     super.initState();
     _loadLevelPreview();
+    _checkBookmarkStatus();
+  }
+
+  Future<void> _checkBookmarkStatus() async {
+    final isBookmarked = await _bookmarkService.isBookmarked(widget.levelId);
+    if (mounted) {
+      setState(() {
+        _isBookmarked = isBookmarked;
+      });
+    }
+  }
+
+  Future<void> _toggleBookmark() async {
+    if (_level == null) return;
+
+    try {
+      final newStatus = await _bookmarkService.toggleBookmark(
+        levelId: widget.levelId,
+        levelName: _level!.name,
+        realmId: widget.realmId,
+        realmName: AppConstants.realmNames[widget.realmId] ?? 'Unknown Realm',
+      );
+
+      if (mounted) {
+        setState(() {
+          _isBookmarked = newStatus;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              newStatus ? 'Bookmark added' : 'Bookmark removed',
+            ),
+            backgroundColor: AppDesignSystem.success,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _loadLevelPreview() async {
@@ -232,9 +284,39 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: Text('Level ${_level!.levelNumber}'),
-        backgroundColor: AppDesignSystem.primaryIndigo,
+        title: Text(
+          'Level ${_level!.levelNumber}',
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppDesignSystem.primaryIndigo,
+                AppDesignSystem.secondaryPurple,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            onPressed: _toggleBookmark,
+            icon: Icon(
+              _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+              color: Colors.white,
+            ),
+            tooltip: _isBookmarked ? 'Remove bookmark' : 'Add bookmark',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -246,8 +328,8 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppDesignSystem.primaryIndigo,
-                    AppDesignSystem.secondaryPurple,
+                    AppDesignSystem.secondaryBlue,
+                    AppDesignSystem.primaryGreen,
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

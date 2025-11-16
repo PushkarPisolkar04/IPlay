@@ -59,6 +59,9 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   void _selectAnswer(int optionIndex) {
     if (_showExplanation) return; // Don't allow changing answer after submission
 
+    // Play selection sound
+    SoundService.playButtonClick();
+    
     setState(() {
       _selectedAnswers[_currentQuestionIndex] = optionIndex;
     });
@@ -119,6 +122,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       HapticFeedbackUtil.xpGain();
       // Sound effect for level completion
       SoundService.playLevelComplete();
+      // Play celebration sound
+      SoundService.playSuccess();
 
       // Save progress if user is logged in
       final user = FirebaseAuth.instance.currentUser;
@@ -371,33 +376,74 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: Text('${widget.level.name} Quiz'),
-        backgroundColor: AppDesignSystem.primaryIndigo,
-        foregroundColor: Colors.white,
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: AppSpacing.md),
-              child: Text(
-                '${_currentQuestionIndex + 1}/${widget.level.quiz.length}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            // Gradient App Bar
+            Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF6366F1), // Indigo
+                    Color(0xFF8B5CF6), // Purple
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${widget.level.name} Quiz',
+                        style: AppTextStyles.h3.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${_currentQuestionIndex + 1}/${widget.level.quiz.length}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              ),
+            ),
+            
             // Progress bar
             LinearProgressIndicator(
               value: (_currentQuestionIndex + 1) / widget.level.quiz.length,
               backgroundColor: Colors.grey[300],
               valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+              minHeight: 4,
             ),
 
             // Question and Options
@@ -429,48 +475,74 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       final isCorrect = index == question.correctIndex;
                       
                       Color bgColor = Colors.white;
-                      Color borderColor = AppDesignSystem.backgroundGrey;
+                      Color borderColor = Colors.grey.shade300;
                       IconData? icon;
+                      Color? iconColor;
                       
                       if (_showExplanation) {
                         if (isCorrect) {
-                          bgColor = Colors.green.withValues(alpha: 0.1);
-                          borderColor = Colors.green;
-                          icon = Icons.check_circle;
+                          bgColor = AppDesignSystem.success.withValues(alpha: 0.15);
+                          borderColor = AppDesignSystem.success;
+                          icon = Icons.check_circle_rounded;
+                          iconColor = AppDesignSystem.success;
                         } else if (isSelected && !isCorrect) {
-                          bgColor = Colors.red.withValues(alpha: 0.1);
-                          borderColor = Colors.red;
-                          icon = Icons.cancel;
+                          bgColor = AppDesignSystem.error.withValues(alpha: 0.15);
+                          borderColor = AppDesignSystem.error;
+                          icon = Icons.cancel_rounded;
+                          iconColor = AppDesignSystem.error;
                         }
                       } else if (isSelected) {
-                        bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.1);
+                        bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.15);
                         borderColor = AppDesignSystem.primaryIndigo;
+                        icon = Icons.radio_button_checked;
+                        iconColor = AppDesignSystem.primaryIndigo;
+                      } else {
+                        icon = Icons.radio_button_unchecked;
+                        iconColor = Colors.grey.shade400;
                       }
 
-                      return GestureDetector(
-                        onTap: () => _selectAnswer(index),
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                          padding: const EdgeInsets.all(AppSpacing.md),
-                          decoration: BoxDecoration(
-                            color: bgColor,
-                            border: Border.all(color: borderColor, width: 2),
-                            borderRadius: BorderRadius.circular(AppSpacing.sm),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  question.options[index],
-                                  style: AppTextStyles.bodyMedium,
-                                ),
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () => _selectAnswer(index),
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: bgColor,
+                                border: Border.all(color: borderColor, width: 2),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: isSelected && !_showExplanation ? [
+                                  BoxShadow(
+                                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ] : null,
                               ),
-                              if (icon != null)
-                                Icon(
-                                  icon,
-                                  color: borderColor,
-                                ),
-                            ],
+                              child: Row(
+                                children: [
+                                  if (icon != null)
+                                    Icon(
+                                      icon,
+                                      color: iconColor,
+                                      size: 24,
+                                    ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      question.options[index],
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       );

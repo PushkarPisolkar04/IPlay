@@ -166,9 +166,11 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
   }
 
   Future<void> _loadFromModel(LevelModel level) async {
-    if (level.videoUrl != null) {
+    if (level.videoUrl != null && level.videoUrl!.isNotEmpty) {
+      print('📹 Video URL found: ${level.videoUrl}');
       final videoId = YoutubePlayer.convertUrlToId(level.videoUrl!);
-      if (videoId != null) {
+      print('📹 Extracted video ID: $videoId');
+      if (videoId != null && videoId.isNotEmpty) {
         _youtubeController = YoutubePlayerController(
           initialVideoId: videoId,
           flags: const YoutubePlayerFlags(
@@ -179,7 +181,12 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
         );
         
         _youtubeController!.addListener(_onVideoProgress);
+        print('✅ YouTube controller initialized');
+      } else {
+        print('❌ Could not extract video ID from URL');
       }
+    } else {
+      print('❌ No video URL found for this level');
     }
 
     setState(() {
@@ -369,9 +376,29 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: Text(_level!.name),
-        backgroundColor: AppDesignSystem.primaryIndigo,
+        title: Text(
+          _level!.name,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppDesignSystem.primaryIndigo,
+                AppDesignSystem.secondaryPurple,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           // Bookmark button
           IconButton(
@@ -393,7 +420,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
+              color: Colors.white.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -405,6 +432,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ],
