@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -7,7 +7,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/certificate_service.dart';
 import '../../core/models/certificate_model.dart';
-import '../../providers/auth_provider.dart';
 import '../../widgets/loading_skeleton.dart';
 import 'package:intl/intl.dart';
 
@@ -38,7 +37,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
     });
 
     try {
-      final userId = Provider.of<AuthProvider>(context, listen: false).currentUser?.uid;
+      final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) throw Exception('User not logged in');
 
       final certificates = await _certificateService.getUserCertificates(userId);
@@ -238,9 +237,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Certificates'),
+        title: const Text('My Certificates', style: TextStyle(color: Colors.white)),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _isLoading
           ? const GridSkeleton(itemCount: 6, crossAxisCount: 1)
@@ -338,22 +338,22 @@ class _CertificateCard extends StatelessWidget {
     required this.onShare,
   });
 
-  String _getRealmEmoji(String realmId) {
+  String _getRealmLogo(String realmId) {
     switch (realmId) {
       case 'realm_copyright':
-        return '©️';
+        return 'assets/logos/copyright_logo.png';
       case 'realm_trademark':
-        return '™️';
+        return 'assets/logos/trademark_logo.png';
       case 'realm_patent':
-        return '💡';
+        return 'assets/logos/patent_logo.png';
       case 'realm_design':
-        return '🎨';
+        return 'assets/logos/design_logo.png';
       case 'realm_gi':
-        return '🌍';
-      case 'realm_secrets':
-        return '🔒';
+        return 'assets/logos/gi_logo.png';
+      case 'realm_trade_secrets':
+        return 'assets/logos/trade_secrets_logo.png';
       default:
-        return '🏆';
+        return 'assets/logos/logo.png';
     }
   }
 
@@ -371,7 +371,7 @@ class _CertificateCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  // Emoji icon
+                  // Realm logo
                   Container(
                     width: 60,
                     height: 60,
@@ -379,10 +379,16 @@ class _CertificateCard extends StatelessWidget {
                       color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Center(
-                      child: Text(
-                        _getRealmEmoji(certificate.realmId),
-                        style: const TextStyle(fontSize: 32),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        _getRealmLogo(certificate.realmId),
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.workspace_premium,
+                          size: 32,
+                          color: AppDesignSystem.primaryIndigo,
+                        ),
                       ),
                     ),
                   ),
@@ -440,10 +446,14 @@ class _CertificateCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onDownload,
-                      icon: const Icon(Icons.download, size: 18),
-                      label: const Text('Download'),
+                      icon: const Icon(Icons.download, size: 16),
+                      label: const Text(
+                        'Download',
+                        style: TextStyle(fontSize: 13),
+                      ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                       ),
                     ),
                   ),
@@ -451,10 +461,14 @@ class _CertificateCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onShare,
-                      icon: const Icon(Icons.share, size: 18),
-                      label: const Text('Share'),
+                      icon: const Icon(Icons.share, size: 16),
+                      label: const Text(
+                        'Share',
+                        style: TextStyle(fontSize: 13),
+                      ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                       ),
                     ),
                   ),

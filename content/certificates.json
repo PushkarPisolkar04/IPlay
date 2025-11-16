@@ -1,63 +1,70 @@
 {
-  "version": "1.0.0",
-  "updatedAt": "2025-11-10T17:00:00Z",
-  "description": "Certificate templates for realm completion",
+  "version": "1.0.1",
+  "updatedAt": "2025-11-16T08:50:00Z",
+  "description": "Enhanced certificate templates with professional, fun, and visually stunning designs",
   "templates": [
     {
       "id": "realm_completion",
-      "name": "Realm Completion Certificate",
-      "description": "Awarded when a student completes all levels in a realm",
+      "name": "Realm Mastery Certificate",
+      "description": "Awarded upon completing all levels in a realm",
       "template": {
-        "title": "Certificate of Achievement",
-        "subtitle": "This is to certify that",
-        "bodyText": "has successfully completed the {realmName} and demonstrated mastery of {subject} concepts",
+        "title": "CERTIFICATE OF MASTERY",
+        "subtitle": "Intellectual Property Realm Completion",
+        "bodyText": "has conquered all challenges and mastered the realm",
         "footer": "IPlay - Intellectual Property Learning Platform",
         "signatureLabel": "Authorized by IPlay",
         "backgroundColor": "#FFFFFF",
-        "borderColor": "#6366F1",
-        "accentColor": "#EC4899",
+        "borderColor": "#FFD700",
+        "accentColor": "#FF6B35",
         "fontFamily": "Poppins",
         "includeQRCode": true,
         "includeSerialNumber": true,
         "includeDate": true,
-        "includeScore": false
+        "includeScore": false,
+        "designStyle": "modern_golden_ribbon"
       },
       "realms": {
         "realm_copyright": {
           "realmName": "Copyright Realm",
           "subject": "Copyright Law and Protection",
           "iconPath": "assets/logos/copyright_logo.png",
-          "color": "#FF6B35"
+          "color": "#FF6B35",
+          "accentColor": "#FFD700"
         },
         "realm_trademark": {
           "realmName": "Trademark Realm",
           "subject": "Trademark Law and Brand Protection",
           "iconPath": "assets/logos/trademark_logo.png",
-          "color": "#2196F3"
+          "color": "#2196F3",
+          "accentColor": "#FFD700"
         },
         "realm_patent": {
           "realmName": "Patent Realm",
           "subject": "Patent Law and Innovation Protection",
           "iconPath": "assets/logos/patent_logo.png",
-          "color": "#4CAF50"
+          "color": "#4CAF50",
+          "accentColor": "#FFD700"
         },
         "realm_design": {
           "realmName": "Industrial Design Realm",
           "subject": "Industrial Design Protection",
           "iconPath": "assets/logos/design_logo.png",
-          "color": "#E91E63"
+          "color": "#E91E63",
+          "accentColor": "#FFD700"
         },
         "realm_gi": {
           "realmName": "Geographical Indication Realm",
           "subject": "Geographical Indication Protection",
           "iconPath": "assets/logos/gi_logo.png",
-          "color": "#FFC107"
+          "color": "#FFC107",
+          "accentColor": "#8B4513"
         },
         "realm_trade_secrets": {
           "realmName": "Trade Secrets Realm",
           "subject": "Trade Secret Protection",
           "iconPath": "assets/logos/trade_secrets_logo.png",
-          "color": "#9C27B0"
+          "color": "#9C27B0",
+          "accentColor": "#FFD700"
         }
       }
     },
@@ -66,8 +73,8 @@
       "name": "IPR Champion Certificate",
       "description": "Awarded when a student completes all 6 realms",
       "template": {
-        "title": "IPR Champion Certificate",
-        "subtitle": "This is to certify that",
+        "title": "IPR CHAMPION CERTIFICATE",
+        "subtitle": "Master of All Realms",
         "bodyText": "has successfully completed all 6 Intellectual Property Rights realms and achieved mastery in Copyright, Trademark, Patent, Industrial Design, Geographical Indication, and Trade Secrets",
         "footer": "IPlay - Intellectual Property Learning Platform",
         "signatureLabel": "Authorized by IPlay",
@@ -78,7 +85,8 @@
         "includeQRCode": true,
         "includeSerialNumber": true,
         "includeDate": true,
-        "includeScore": true
+        "includeScore": true,
+        "designStyle": "epic_champion"
       }
     }
   ],

@@ -10,8 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Icons
   cupertino_icons: ^1.0.8
-  
+
   # Firebase - Stable versions compatible with Dart 3.8
   firebase_core: ^3.15.2
   firebase_auth: ^5.7.0
@@ -20,10 +21,10 @@ dependencies:
   firebase_crashlytics: ^4.2.0
   firebase_analytics: ^11.3.3
   google_sign_in: ^6.3.0
-  
+
   # State Management
   provider: ^6.1.2
-  
+
   # UI & Navigation
   go_router: ^14.8.1
   flutter_svg: ^2.0.10+1
@@ -35,12 +36,12 @@ dependencies:
   image_picker: ^1.1.2
   file_picker: ^8.1.4
   flutter_image_compress: ^2.3.0
-  
+
   # Local Storage & Offline
   shared_preferences: ^2.3.3
   sqflite: ^2.4.1
   path_provider: ^2.1.5
-  
+
   # Utilities
   intl: ^0.20.2
   uuid: ^4.5.1
@@ -51,13 +52,13 @@ dependencies:
   share_plus: ^10.1.2
   device_info_plus: ^11.2.0
   package_info_plus: ^8.1.2
-  
+
   # PDF & Certificates
   pdf: ^3.11.1
   printing: ^5.13.3
   qr_flutter: ^4.1.0
   mobile_scanner: ^5.2.3
-  
+
   # Animations
   lottie: ^3.3.1
   animations: ^2.0.11
@@ -66,23 +67,22 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   youtube_player_flutter: ^9.1.3
   flutter_markdown: ^0.7.7+1
-  
+
   # Charts
   fl_chart: ^0.69.0
-  
+
   # Rich Text Editor
   flutter_quill: ^11.5.0
-  
+
   # Audio
   audioplayers: ^6.1.0
-  
+
   # App Rating
   in_app_review: ^2.0.10
-  
+
   # Deep Linking
   app_links: ^6.3.2
 
-  path: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -91,10 +91,11 @@ dev_dependencies:
   test: any
   flutter_lints: ^5.0.0
   flutter_launcher_icons: ^0.14.4
+
 flutter:
   uses-material-design: true
 
-  # Assets - Only existing files
+  # Assets - Only valid, existing paths
   assets:
     - assets/icons/app_icon.png
     - assets/backgrounds/background1.png
@@ -116,6 +117,16 @@ flutter:
     - content/quizzes/
     - content/games/
     - content/daily_challenges.json
+
+  # Fonts - Correctly declared under one family
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-Italic.ttf
+          style: italic
 
 # App Icon Configuration
 flutter_launcher_icons:

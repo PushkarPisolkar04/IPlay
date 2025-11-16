@@ -220,9 +220,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Spot the Original'),
-        backgroundColor: AppDesignSystem.primaryPink,
+        title: const Text('Spot the Original', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFFF59E0B),
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -230,18 +231,32 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Game icon
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.search,
-                  size: 60,
-                  color: AppDesignSystem.primaryPink,
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  'assets/logos/spot_the_original.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.search,
+                      size: 60,
+                      color: AppDesignSystem.primaryPink,
+                    );
+                  },
                 ),
               ),
 
@@ -296,6 +311,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
                 onPressed: _startGame,
                 fullWidth: true,
                 icon: Icons.play_arrow,
+                color: const Color(0xFFF59E0B),
               ),
             ],
           ),

@@ -257,9 +257,10 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Match the IPR'),
+        title: const Text('Match the IPR', style: TextStyle(color: Colors.white)),
         backgroundColor: AppDesignSystem.primaryPink,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -267,18 +268,32 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Game icon
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppDesignSystem.primaryPink.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.grid_4x4,
-                  size: 60,
-                  color: AppDesignSystem.primaryPink,
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  'assets/logos/match_the_IPR.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.grid_4x4,
+                      size: 40,
+                      color: AppDesignSystem.primaryPink,
+                    );
+                  },
                 ),
               ),
 
@@ -333,6 +348,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
                 onPressed: _startGame,
                 fullWidth: true,
                 icon: Icons.play_arrow,
+                color: AppDesignSystem.primaryPink,
               ),
             ],
           ),

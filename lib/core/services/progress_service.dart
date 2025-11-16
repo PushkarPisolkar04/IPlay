@@ -132,6 +132,9 @@ class ProgressService {
       // Track completed levels count for later use
       int finalCompletedLevelsCount = 0;
       
+      // Track if this is a new completion (for XP awarding)
+      bool isNewCompletion = false;
+      
       if (progressDoc.exists) {
         // Update existing progress
         final currentData = progressDoc.data()!;
@@ -161,8 +164,11 @@ class ProgressService {
           });
         }
         
+        // Check if this is a new completion
+        isNewCompletion = !completedLevels.contains(levelNumber);
+        
         // Add level to completed list if not already there
-        if (!completedLevels.contains(levelNumber)) {
+        if (isNewCompletion) {
           completedLevels.add(levelNumber);
         }
         
@@ -182,13 +188,19 @@ class ProgressService {
         // Store count for later use
         finalCompletedLevelsCount = completedLevels.length;
         
-        batch.update(progressRef, {
+        // Only increment XP if this is a new completion
+        final updateMap = {
           'completedLevels': completedLevels,
           'levelStars': levelStars,
           'currentLevelNumber': currentLevel,
-          'xpEarned': FieldValue.increment(xpEarned),
           'lastAccessedAt': Timestamp.now(),
-        });
+        };
+        
+        if (isNewCompletion) {
+          updateMap['xpEarned'] = FieldValue.increment(xpEarned);
+        }
+        
+        batch.update(progressRef, updateMap);
       } else {
         // Create new progress document
         final newProgress = {
@@ -203,6 +215,7 @@ class ProgressService {
         
         // Store count for later use
         finalCompletedLevelsCount = 1;
+        isNewCompletion = true; // First time completing any level in this realm
         
         batch.set(progressRef, newProgress);
       }
@@ -212,10 +225,17 @@ class ProgressService {
       final userDoc = await userRef.get();
       
       Map<String, dynamic> updateData = {
-        'totalXP': FieldValue.increment(xpEarned),
         'lastActiveDate': Timestamp.now(),
         'updatedAt': Timestamp.now(),
       };
+      
+      // Only increment XP if this is a new completion
+      if (isNewCompletion) {
+        updateData['totalXP'] = FieldValue.increment(xpEarned);
+        print('✅ Awarding $xpEarned XP for first-time completion of level $levelNumber');
+      } else {
+        print('ℹ️ Level $levelNumber already completed - no XP awarded');
+      }
 
       // Update progressSummary in user document for quick access
       if (userDoc.exists) {
@@ -232,7 +252,9 @@ class ProgressService {
         // Get total levels from realm data (always use the correct value from content)
         final realm = _contentService.getRealmById(realmId);
         final totalLevels = realm?.totalLevels ?? 10; // Default to 10 if realm not found
-        final xpEarnedSoFar = (realmProgress['xpEarned'] ?? 0) + xpEarned;
+        
+        // Only add XP if this is a new completion
+        final xpEarnedSoFar = (realmProgress['xpEarned'] ?? 0) + (isNewCompletion ? xpEarned : 0);
         final isCompleted = levelsCompletedCount >= totalLevels;
         
         updateData['progressSummary.$summaryKey'] = {

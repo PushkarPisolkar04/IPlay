@@ -184,9 +184,10 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Patent Detective'),
+        title: const Text('Patent Detective', style: TextStyle(color: Colors.white)),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -194,18 +195,32 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Game icon
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.search,
-                  size: 60,
-                  color: AppDesignSystem.primaryIndigo,
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  'assets/logos/patent_detective.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.search,
+                      size: 60,
+                      color: AppDesignSystem.primaryIndigo,
+                    );
+                  },
                 ),
               ),
 
@@ -260,6 +275,7 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
                 onPressed: _startGame,
                 fullWidth: true,
                 icon: Icons.play_arrow,
+                color: AppDesignSystem.primaryIndigo,
               ),
             ],
           ),

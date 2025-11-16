@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/loading_skeleton.dart';
 
@@ -418,15 +419,23 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                               separatorBuilder: (context, index) => const SizedBox(height: 8),
                               itemBuilder: (context, index) {
                                 final student = _students[index];
+                                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                                final isCurrentUser = student['id'] == currentUserId;
+                                
                                 return Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    gradient: isCurrentUser
+                                        ? AppDesignSystem.gradientSuccess
+                                        : null,
+                                    color: isCurrentUser ? null : Colors.white,
                                     borderRadius: BorderRadius.circular(12),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.05),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                        color: isCurrentUser
+                                            ? AppDesignSystem.primaryGreen.withValues(alpha: 0.3)
+                                            : Colors.black.withValues(alpha: 0.05),
+                                        blurRadius: isCurrentUser ? 12 : 8,
+                                        offset: Offset(0, isCurrentUser ? 4 : 2),
                                       ),
                                     ],
                                   ),
@@ -434,7 +443,9 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                     leading: CircleAvatar(
                                       radius: 24,
-                                      backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                      backgroundColor: isCurrentUser
+                                          ? Colors.white.withValues(alpha: 0.3)
+                                          : AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                                       backgroundImage: student['avatarUrl'] != null
                                           ? (student['avatarUrl'].toString().startsWith('http')
                                               ? NetworkImage(student['avatarUrl'])
@@ -444,18 +455,43 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                           ? Text(
                                               student['displayName'][0].toUpperCase(),
                                               style: TextStyle(
-                                                color: AppDesignSystem.primaryIndigo,
+                                                color: isCurrentUser
+                                                    ? Colors.white
+                                                    : AppDesignSystem.primaryIndigo,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             )
                                           : null,
                                     ),
-                                    title: Text(
-                                      student['displayName'] ?? 'Student',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15,
-                                      ),
+                                    title: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            student['displayName'] ?? 'Student',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                              color: isCurrentUser ? Colors.white : Colors.black87,
+                                            ),
+                                          ),
+                                        ),
+                                        if (isCurrentUser)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white.withValues(alpha: 0.25),
+                                              borderRadius: BorderRadius.circular(12),
+                                            ),
+                                            child: const Text(
+                                              'You',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                     subtitle: student['totalXP'] != null
                                         ? Row(
@@ -463,13 +499,17 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                               Icon(
                                                 Icons.stars,
                                                 size: 14,
-                                                color: AppDesignSystem.primaryAmber,
+                                                color: isCurrentUser
+                                                    ? Colors.white.withValues(alpha: 0.9)
+                                                    : AppDesignSystem.primaryAmber,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 '${student['totalXP']} XP',
                                                 style: TextStyle(
-                                                  color: AppDesignSystem.textSecondary,
+                                                  color: isCurrentUser
+                                                      ? Colors.white.withValues(alpha: 0.85)
+                                                      : AppDesignSystem.textSecondary,
                                                   fontSize: 13,
                                                 ),
                                               ),

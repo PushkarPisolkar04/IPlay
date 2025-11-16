@@ -4,13 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
+import '../../models/game_progress_model.dart';
 import 'ipr_quiz_master_game.dart';
 import 'match_ipr_game.dart';
 import 'spot_the_original_game.dart';
 import 'gi_mapper_game.dart';
 import 'ip_defender_game.dart';
 import 'patent_detective_game.dart';
-import 'innovation_lab_game.dart';
+// import 'innovation_lab_game.dart'; // File not found
 
 /// Play/Games Screen - All 7 Games
 class PlayScreen extends StatefulWidget {
@@ -24,6 +25,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _isLoading = true;
   int _totalGameXP = 0;
   int _gamesPlayed = 0;
+  Map<String, int> _gameHighScores = {};
 
   @override
   void initState() {
@@ -55,6 +57,17 @@ class _PlayScreenState extends State<PlayScreen> {
         }
       }
 
+      // Load individual game high scores
+      final gameProgressDocs = await FirebaseFirestore.instance
+          .collection('game_progress')
+          .where('userId', isEqualTo: currentUser.uid)
+          .get();
+
+      for (final doc in gameProgressDocs.docs) {
+        final progress = GameProgress.fromMap(doc.data());
+        _gameHighScores[progress.gameId] = progress.highScore;
+      }
+
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -70,16 +83,83 @@ class _PlayScreenState extends State<PlayScreen> {
     await _loadGameData();
   }
 
+  Widget _buildStatChip(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: const Text('Play Games', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: _isLoading
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Gradient App Bar with stats
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+                child: Column(
+                  children: [
+                    // Title - centered
+                    Center(
+                      child: Text(
+                        'Play Games',
+                        style: AppTextStyles.h2.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // Stats chips - centered
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildStatChip(Icons.games, '$_gamesPlayed Played'),
+                        const SizedBox(width: 12),
+                        _buildStatChip(Icons.stars, '$_totalGameXP XP'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Body content
+            Expanded(
+              child:
+              _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
               onRefresh: _refreshData,
@@ -90,76 +170,7 @@ class _PlayScreenState extends State<PlayScreen> {
                 child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Stats card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFEC4899).withValues(alpha: 0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              const Icon(Icons.stars, color: Colors.white, size: 32),
-                              const SizedBox(height: 8),
-                              Text(
-                                '$_totalGameXP',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const Text(
-                                'Total XP',
-                                style: TextStyle(color: Colors.white, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 1,
-                          height: 60,
-                          color: Colors.white.withValues(alpha: 0.5),
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              const Icon(Icons.games, color: Colors.white, size: 32),
-                              const SizedBox(height: 8),
-                              Text(
-                                '$_gamesPlayed',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const Text(
-                                'Games Played',
-                                style: TextStyle(color: Colors.white, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 8),
                   
                   Text(
                     'Available Games',
@@ -180,15 +191,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '10-100 XP',
                     timeEstimate: '1-2 min',
                     isImplemented: true,
+                    gameId: 'quiz_master',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const IPRQuizMasterGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 2: Match the IPR (Implemented)
                   _buildGameCard(
@@ -200,15 +210,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '60-100 XP',
                     timeEstimate: '2-5 min',
                     isImplemented: true,
+                    gameId: 'match_ipr',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const MatchIPRGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 3: Spot the Original
                   _buildGameCard(
@@ -220,15 +229,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '15-75 XP',
                     timeEstimate: '2-3 min',
                     isImplemented: true,
+                    gameId: 'spot_original',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const SpotTheOriginalGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 4: IP Defender
                   _buildGameCard(
@@ -240,15 +248,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: 'Up to 500 XP',
                     timeEstimate: '5-10 min',
                     isImplemented: true,
+                    gameId: 'ip_defender',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const IPDefenderGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 5: GI Mapper
                   _buildGameCard(
@@ -260,15 +267,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '10-80 XP',
                     timeEstimate: '3-5 min',
                     isImplemented: true,
+                    gameId: 'gi_mapper',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const GIMapperGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 6: Patent Detective
                   _buildGameCard(
@@ -280,15 +286,14 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '20-60 XP',
                     timeEstimate: '3-5 min',
                     isImplemented: true,
+                    gameId: 'patent_detective',
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const PatentDetectiveGame()),
-                      );
+                      ).then((_) => _refreshData());
                     },
                   ),
-                  
-                  const SizedBox(height: 16),
                   
                   // Game 7: Innovation Lab
                   _buildGameCard(
@@ -300,10 +305,11 @@ class _PlayScreenState extends State<PlayScreen> {
                     xpReward: '100 XP',
                     timeEstimate: '5-10 min',
                     isImplemented: true,
+                    gameId: 'innovation_lab',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const InnovationLabGame()),
+                      // TODO: Add InnovationLabGame when file is created
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Coming soon!')),
                       );
                     },
                   ),
@@ -311,6 +317,10 @@ class _PlayScreenState extends State<PlayScreen> {
                 ),
               ),
             ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -323,131 +333,134 @@ class _PlayScreenState extends State<PlayScreen> {
     required String xpReward,
     required String timeEstimate,
     required bool isImplemented,
+    required String gameId,
     VoidCallback? onTap,
   }) {
+    final highScore = _gameHighScores[gameId] ?? 0;
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            color.withValues(alpha: 0.15),
-            color.withValues(alpha: 0.05),
+            color,
+            color.withOpacity(0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.25),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: isImplemented ? onTap : null,
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Row(
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isImplemented ? onTap : null,
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.25),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Image.asset(
                       iconPath,
-                      fit: BoxFit.contain,
+                      width: 48,
+                      height: 48,
                       errorBuilder: (context, error, stackTrace) {
-                        return Icon(
+                        return const Icon(
                           Icons.games,
-                          size: 40,
-                          color: color,
+                          size: 48,
+                          color: Colors.white,
                         );
                       },
                     ),
                   ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              title,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ),
-                          if (!isImplemented)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.orange[100],
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'Soon',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.orange[800],
-                                  fontWeight: FontWeight.bold,
+                            if (!isImplemented)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: const Text(
+                                  'Soon',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        description,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[700],
+                          ],
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 6),
-                      Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: [
-                          _buildInfoChip(difficulty, Icons.bar_chart, color),
-                          _buildInfoChip(xpReward, Icons.stars, color),
-                          _buildInfoChip(timeEstimate, Icons.access_time, color),
-                        ],
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          description,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 4,
+                          children: [
+                            _buildInfoChip(difficulty, Icons.bar_chart),
+                            _buildInfoChip(xpReward, Icons.stars),
+                            _buildInfoChip(timeEstimate, Icons.access_time),
+                            if (highScore > 0)
+                              _buildInfoChip('Best: $highScore', Icons.emoji_events),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                if (isImplemented) ...[
-                  const SizedBox(width: 8),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: color,
-                  ),
+                  if (isImplemented) ...[
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),
@@ -455,23 +468,23 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
-  Widget _buildInfoChip(String text, IconData icon, Color color) {
+  Widget _buildInfoChip(String text, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
+        color: Colors.white.withOpacity(0.25),
         borderRadius: BorderRadius.circular(5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 11, color: color),
+          Icon(icon, size: 11, color: Colors.white),
           const SizedBox(width: 3),
           Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
-              color: color,
+              color: Colors.white,
               fontWeight: FontWeight.w600,
             ),
           ),

@@ -275,29 +275,64 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: const Text('Leaderboard'),
-        backgroundColor: AppDesignSystem.backgroundWhite,
-        elevation: 0,
-        bottom: _tabs.length > 1
-            ? TabBar(
-                controller: _tabController,
-                labelColor: AppDesignSystem.primaryIndigo,
-                unselectedLabelColor: AppDesignSystem.textSecondary,
-                indicatorColor: AppDesignSystem.primaryIndigo,
-                isScrollable: _tabs.length > 4,
-                tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
-              )
-            : null,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Gradient App Bar
+            Container(
+              decoration: BoxDecoration(
+                gradient: AppDesignSystem.gradientPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+                    child: Center(
+                      child: Text(
+                        'Leaderboard',
+                        style: AppDesignSystem.h2.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (_tabs.length > 1)
+                    TabBar(
+                      controller: _tabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.white.withValues(alpha: 0.6),
+                      indicatorColor: Colors.white,
+                      indicatorWeight: 3,
+                      isScrollable: _tabs.length > 4,
+                      tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+                    ),
+                ],
+              ),
+            ),
+            
+            // Body
+            Expanded(
+              child:
+              _isLoading
+                  ? const ListSkeleton(itemCount: 5)
+                  : _tabs.length > 1
+                      ? TabBarView(
+                          controller: _tabController,
+                          children: _tabs.map((_) => _buildLeaderboardList()).toList(),
+                        )
+                      : _buildLeaderboardList(),
+            ),
+          ],
+        ),
       ),
-      body: _isLoading
-          ? const ListSkeleton(itemCount: 5)
-          : _tabs.length > 1
-              ? TabBarView(
-                  controller: _tabController,
-                  children: _tabs.map((_) => _buildLeaderboardList()).toList(),
-                )
-              : _buildLeaderboardList(),
     );
   }
 
@@ -344,91 +379,195 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
           final isCurrentUser = student['id'] == _currentUserId;
           
           return Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: CleanCard(
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    // Rank
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: _getRankColor(rank).withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$rank',
-                          style: AppDesignSystem.h4.copyWith(
-                            color: _getRankColor(rank),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              gradient: isCurrentUser
+                  ? AppDesignSystem.gradientSuccess
+                  : LinearGradient(
+                      colors: [
+                        Colors.white,
+                        AppDesignSystem.backgroundLight,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isCurrentUser
+                    ? Colors.transparent
+                    : AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: isCurrentUser
+                      ? AppDesignSystem.primaryGreen.withValues(alpha: 0.3)
+                      : AppDesignSystem.primaryIndigo.withValues(alpha: 0.08),
+                  blurRadius: isCurrentUser ? 12 : 8,
+                  offset: Offset(0, isCurrentUser ? 4 : 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                children: [
+                  // Rank with medal for top 3
+                  SizedBox(
+                    width: 36,
+                    child: Center(
+                      child: rank <= 3
+                          ? Text(
+                              _getRankMedal(rank),
+                              style: const TextStyle(fontSize: 28),
+                            )
+                          : Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: isCurrentUser
+                                    ? Colors.white.withValues(alpha: 0.3)
+                                    : AppDesignSystem.backgroundGrey,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$rank',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: isCurrentUser
+                                        ? Colors.white
+                                        : AppDesignSystem.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  
+                  // Avatar
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isCurrentUser
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.transparent,
+                        width: 2,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    
-                    // Avatar
-                    AvatarWidget(
+                    child: AvatarWidget(
                       imageUrl: student['avatarUrl'],
                       initials: _getInitials(student['displayName']),
                       size: 40,
                     ),
-                    const SizedBox(width: 12),
-                    
-                    // Name and details
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            student['displayName'] ?? 'Student',
-                            style: AppDesignSystem.bodyLarge.copyWith(
-                              fontWeight: isCurrentUser ? FontWeight.bold : FontWeight.w600,
-                              color: isCurrentUser ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
-                            ),
+                  ),
+                  const SizedBox(width: 8),
+                  
+                  // Name and details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          student['displayName'] ?? 'Student',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isCurrentUser ? Colors.white : AppDesignSystem.textPrimary,
                           ),
-                          if (student['schoolName'] != null)
-                            Text(
-                              student['schoolName'],
-                              style: AppDesignSystem.bodySmall,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (student['schoolName'] != null)
+                          Text(
+                            student['schoolName'],
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isCurrentUser
+                                  ? Colors.white.withValues(alpha: 0.85)
+                                  : AppDesignSystem.textSecondary,
                             ),
-                        ],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
+                    ),
+                  ),
+                  
+                  // You badge
+                  if (isCurrentUser) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        'You',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    
-                    // XP
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    const SizedBox(width: 8),
+                  ],
+                  
+                  // XP
+                  SizedBox(
+                    width: 85,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
+                        color: isCurrentUser
+                            ? Colors.white.withValues(alpha: 0.25)
+                            : AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('⭐', style: TextStyle(fontSize: 16)),
-                          const SizedBox(width: 4),
                           Text(
-                            '${student['totalXP'] ?? 0}',
-                            style: AppDesignSystem.bodyMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: AppDesignSystem.primaryAmber,
+                            '⭐',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: isCurrentUser ? Colors.white : null,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              '${student['totalXP'] ?? 0}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: isCurrentUser ? Colors.white : AppDesignSystem.primaryAmber,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  String _getRankMedal(int rank) {
+    if (rank == 1) return '🥇';
+    if (rank == 2) return '🥈';
+    if (rank == 3) return '🥉';
+    return '';
   }
 
   Color _getRankColor(int rank) {

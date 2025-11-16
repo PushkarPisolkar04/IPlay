@@ -7,8 +7,11 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/content_service.dart';
 import '../../core/services/certificate_service.dart';
+import '../../core/services/badge_service.dart';
 import '../../core/models/user_model.dart';
 import '../../core/models/realm_model.dart';
+import '../../core/models/certificate_model.dart';
+import '../../models/badge_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/progress_bar.dart';
@@ -528,7 +531,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           Text(
-                            'Certs',
+                            'Certificates',
                             style: AppTextStyles.caption.copyWith(
                               color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 9,
@@ -580,7 +583,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           Text(
-                            'Marks',
+                            'Bookmarks',
                             style: AppTextStyles.caption.copyWith(
                               color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 9,
@@ -601,12 +604,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // ---------- Classroom & School ----------
             if (_classroomInfo != null) ...[
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
                     width: 2,
                   ),
                   boxShadow: [
@@ -617,73 +620,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color:
-                                const Color(0xFF8B5CF6).withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.school,
-                              color: Color(0xFF8B5CF6), size: 24),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Classroom',
-                                style: AppTextStyles.caption.copyWith(
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                              ),
-                              Text(
-                                _classroomInfo!['name'] ?? '-',
-                                style: AppTextStyles.h4.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (_schoolInfo != null) ...[
-                      const SizedBox(height: 16),
-                      const Divider(),
-                      const SizedBox(height: 16),
+                  child: Column(
+                    children: [
                       Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color:
-                                  const Color(0xFF10B981).withValues(alpha: 0.1),
+                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.business,
-                                color: Color(0xFF10B981), size: 24),
+                            child: const Icon(Icons.school,
+                                color: AppDesignSystem.primaryIndigo, size: 24),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'School',
+                                  'Classroom',
                                   style: AppTextStyles.caption.copyWith(
                                     color: AppDesignSystem.textSecondary,
+                                    fontSize: 11,
                                   ),
                                 ),
+                                const SizedBox(height: 2),
                                 Text(
-                                  _schoolInfo!['name'] ?? '-',
+                                  _classroomInfo!['name'] ?? '-',
                                   style: AppTextStyles.h4.copyWith(
                                     fontWeight: FontWeight.bold,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ],
@@ -691,14 +658,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
+                      if (_schoolInfo != null) ...[
+                        const SizedBox(height: 16),
+                        const Divider(),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppDesignSystem.primaryGreen.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.business,
+                                  color: AppDesignSystem.primaryGreen, size: 24),
+                            ),
+                            const SizedBox(width: 14),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'School',
+                                    style: AppTextStyles.caption.copyWith(
+                                      color: AppDesignSystem.textSecondary,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    _schoolInfo!['name'] ?? '-',
+                                    style: AppTextStyles.h4.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.md),
             ],
 
-            const SizedBox(height: AppSpacing.md),
+
 
             // ---------- My Realms ----------
             Align(
@@ -711,18 +718,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
               future: _contentService.getAllRealms(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const CleanCard(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: CircularProgressIndicator(),
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                        width: 1.5,
                       ),
+                    ),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
                     ),
                   );
                 }
 
                 final realms = snapshot.data!;
-                return CleanCard(
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
                   child: Column(
                     children:
                         realms.asMap().entries.map((entry) {
@@ -754,73 +783,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: AppSpacing.lg),
 
-            // ---------- Role-specific cards ----------
-            if (_user!.role == 'student') ...[
-              InkWell(
-                onTap: () => Navigator.pushNamed(context, '/insights'),
-                child: Container(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF6366F1).withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.insights,
-                              size: 32,
-                              color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Learning Insights',
-                              style: AppTextStyles.cardTitle.copyWith(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'View your detailed analytics',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: Colors.white.withValues(alpha: 0.9),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.arrow_forward_ios,
-                          size: 16, color: Colors.white),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-            ],
+
 
             if (_user!.role == 'teacher') ...[
               InkWell(
@@ -985,64 +948,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: AppSpacing.sm),
 
             if (_certificateCount > 0)
-              InkWell(
-                onTap: () => Navigator.pushNamed(context, '/certificates'),
-                child: CleanCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryIndigo
-                                .withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Center(
-                            child: Icon(Icons.workspace_premium,
-                                size: 32,
-                                color: AppDesignSystem.primaryIndigo),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'View Your Certificates',
-                                style: AppTextStyles.cardTitle
-                                    .copyWith(fontSize: 16),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Tap to view, download, or share',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(Icons.arrow_forward_ios,
-                            size: 16, color: AppDesignSystem.textSecondary),
-                      ],
-                    ),
+              _CertificatePreviewWidget(userId: _user!.uid)
+            else
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    width: 1.5,
                   ),
                 ),
-              )
-            else
-              CleanCard(
                 child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Text(
-                      'No certificates yet. Complete realms to earn certificates!',
-                      style: AppTextStyles.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
+                  child: Text(
+                    'No certificates yet. Complete realms to earn certificates!',
+                    style: AppTextStyles.bodyMedium,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
@@ -1130,7 +1052,8 @@ class _BadgeGridWidget extends StatefulWidget {
 }
 
 class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
-  List<Map<String, dynamic>> _allBadges = [];
+  final BadgeService _badgeService = BadgeService();
+  List<BadgeModel> _allBadges = [];
   final Map<String, DateTime> _badgeUnlockDates = {};
   bool _isLoading = true;
 
@@ -1142,26 +1065,10 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
 
   Future<void> _loadBadges() async {
     try {
-      final badgesSnapshot = await FirebaseFirestore.instance
-          .collection('badges')
-          .orderBy('displayOrder')
-          .limit(12)
-          .get();
+      // Get all badges from JSON using BadgeService
+      final allBadgesFromService = await _badgeService.getAllBadges();
 
-      _allBadges = badgesSnapshot.docs.map((doc) {
-        final data = doc.data();
-        return {
-          'id': doc.id,
-          'name': data['name'] ?? 'Badge',
-          'iconPath': data['iconPath'] ??
-              data['icon'] ??
-              data['iconEmoji'] ??
-              'assets/badges/default_badge.png',
-          'description': data['description'] ?? '',
-          'rarity': data['rarity'] ?? 'common',
-        };
-      }).toList();
-
+      // Get unlock dates
       final unlocksSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.userId)
@@ -1177,8 +1084,14 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
         }
       }
 
+      // Filter to only show badges that user has unlocked
+      _allBadges = allBadgesFromService
+          .where((badge) => widget.unlockedBadges.contains(badge.id))
+          .toList();
+
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
+      print('Error loading badges: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -1210,44 +1123,51 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
     }
 
     if (_allBadges.isEmpty) {
-      return CleanCard(
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
+        ),
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Text(
-              'No badges yet. Complete levels to earn badges!',
-              style: AppTextStyles.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
+          child: Text(
+            'No badges yet. Complete levels to earn badges!',
+            style: AppTextStyles.bodyMedium,
+            textAlign: TextAlign.center,
           ),
         ),
       );
     }
 
+    // Show max 6 badges for preview (3 per row)
+    final badgesToShow = _allBadges.take(6).toList();
+    
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: AppSpacing.sm,
-        crossAxisSpacing: AppSpacing.sm,
-        childAspectRatio: 0.85,
+        crossAxisCount: 3,
+        mainAxisSpacing: AppSpacing.md,
+        crossAxisSpacing: AppSpacing.md,
+        childAspectRatio: 0.9,
       ),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: _allBadges.length,
+      itemCount: badgesToShow.length,
       itemBuilder: (context, index) {
-        final badge = _allBadges[index];
-        final badgeId = badge['id'];
-        final isUnlocked = widget.unlockedBadges.contains(badgeId);
-        final unlockDate = _badgeUnlockDates[badgeId];
+        final badge = badgesToShow[index];
+        final unlockDate = _badgeUnlockDates[badge.id];
 
         return _BadgeItem(
-          icon: badge['iconPath'],
-          name: badge['name'],
-          isUnlocked: isUnlocked,
+          icon: badge.iconPath,
+          name: badge.name,
+          isUnlocked: true,
           unlockDate: unlockDate,
-          rarity: badge['rarity'],
-          description: badge['description'],
-          rarityColor: _getRarityColor(badge['rarity']),
+          rarity: badge.rarity,
+          description: badge.description,
+          rarityColor: _getRarityColor(badge.rarity),
         );
       },
     );
@@ -1296,105 +1216,220 @@ class _BadgeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(name),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Image.asset(
-                    icon,
-                    width: 64,
-                    height: 64,
-                    color: isUnlocked ? null : Colors.grey,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.emoji_events, size: 64),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(description),
-                const SizedBox(height: 12),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: rarityColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    rarity.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: rarityColor,
-                    ),
-                  ),
-                ),
-                if (isUnlocked && unlockDate != null) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    'Unlocked: ${_formatDate(unlockDate!)}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-                if (!isUnlocked) ...[
-                  const SizedBox(height: 12),
-                  const Text(
-                    '🔒 Locked',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: rarityColor.withValues(alpha: 0.3),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-        );
-      },
-      child: CleanCard(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              icon,
-              width: 32,
-              height: 32,
-              color: isUnlocked ? null : Colors.grey,
-              errorBuilder: (_, __, ___) =>
-                  const Icon(Icons.emoji_events, size: 32),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Image.asset(
+                icon,
+                fit: BoxFit.contain,
+                color: isUnlocked ? null : Colors.grey,
+                errorBuilder: (_, __, ___) =>
+                    Icon(Icons.emoji_events, size: 48, color: rarityColor),
+              ),
             ),
-            const SizedBox(height: 4),
-            if (unlockDate != null && isUnlocked)
-              Text(
+          ),
+          if (unlockDate != null && isUnlocked)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
                 _formatDate(unlockDate!),
                 style: const TextStyle(
-                  fontSize: 8,
+                  fontSize: 9,
                   color: Color(0xFF6B7280),
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-            if (!isUnlocked)
-              const Icon(Icons.lock, size: 12, color: Color(0xFF9CA3AF)),
-          ],
-        ),
+            ),
+        ],
       ),
+    );
+  }
+}
+
+
+// ---------------------------------------------------------------------
+// Certificate Preview Widget
+// ---------------------------------------------------------------------
+class _CertificatePreviewWidget extends StatefulWidget {
+  final String userId;
+
+  const _CertificatePreviewWidget({required this.userId});
+
+  @override
+  State<_CertificatePreviewWidget> createState() => _CertificatePreviewWidgetState();
+}
+
+class _CertificatePreviewWidgetState extends State<_CertificatePreviewWidget> {
+  final CertificateService _certificateService = CertificateService();
+  List<CertificateModel> _certificates = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCertificates();
+  }
+
+  Future<void> _loadCertificates() async {
+    try {
+      final certificates = await _certificateService.getUserCertificates(widget.userId);
+      if (mounted) {
+        setState(() {
+          _certificates = certificates;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  String _getRealmLogo(String realmId) {
+    switch (realmId) {
+      case 'realm_copyright':
+        return 'assets/logos/copyright_logo.png';
+      case 'realm_trademark':
+        return 'assets/logos/trademark_logo.png';
+      case 'realm_patent':
+        return 'assets/logos/patent_logo.png';
+      case 'realm_design':
+        return 'assets/logos/design_logo.png';
+      case 'realm_gi':
+        return 'assets/logos/gi_logo.png';
+      case 'realm_trade_secrets':
+        return 'assets/logos/trade_secrets_logo.png';
+      default:
+        return 'assets/logos/logo.png';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // Show max 3 certificates
+    final certsToShow = _certificates.take(3).toList();
+
+    return Column(
+      children: [
+        ...certsToShow.map((cert) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: InkWell(
+            onTap: () => Navigator.pushNamed(context, '/certificates'),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  // Realm logo
+                  Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        _getRealmLogo(cert.realmId),
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.workspace_premium,
+                          size: 24,
+                          color: AppDesignSystem.primaryIndigo,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          cert.realmName,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          cert.certificateNumber,
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppDesignSystem.textSecondary,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios,
+                      size: 14, color: AppDesignSystem.textSecondary),
+                ],
+              ),
+            ),
+          ),
+        )),
+        if (_certificates.length > 3)
+          TextButton(
+            onPressed: () => Navigator.pushNamed(context, '/certificates'),
+            child: Text(
+              'View All ${_certificates.length} Certificates',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppDesignSystem.primaryIndigo,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

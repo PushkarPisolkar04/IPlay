@@ -256,9 +256,10 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('IP Defender'),
+        title: const Text('IP Defender', style: TextStyle(color: Colors.white)),
         backgroundColor: AppDesignSystem.error,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -266,18 +267,32 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Game icon
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: AppDesignSystem.error.withValues(alpha: 0.1),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppDesignSystem.error.withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.shield,
-                  size: 60,
-                  color: AppDesignSystem.error,
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  'assets/logos/ip_defender.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.shield,
+                      size: 60,
+                      color: AppDesignSystem.error,
+                    );
+                  },
                 ),
               ),
 
@@ -333,6 +348,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                 onPressed: _startGame,
                 fullWidth: true,
                 icon: Icons.play_arrow,
+                color: AppDesignSystem.error,
               ),
             ],
           ),

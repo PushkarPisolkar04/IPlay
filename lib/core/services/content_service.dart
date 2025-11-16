@@ -44,10 +44,26 @@ class ContentService {
 
   /// Get a specific realm by ID
   RealmModel? getRealmById(String realmId) {
-    return _cachedRealms?.firstWhere(
-      (r) => r.id == realmId,
-      orElse: () => _cachedRealms!.first,
-    );
+    // If realms not loaded yet, try to load synchronously from cache
+    if (_cachedRealms == null || _cachedRealms!.isEmpty) {
+      print('⚠️ Realms not loaded yet, attempting to load...');
+      // Return null and let caller handle async loading
+      return null;
+    }
+    
+    try {
+      return _cachedRealms!.firstWhere(
+        (r) => r.id == realmId,
+        orElse: () {
+          print('⚠️ Realm not found: $realmId');
+          print('Available realms: ${_cachedRealms!.map((r) => r.id).join(", ")}');
+          throw Exception('Realm not found');
+        },
+      );
+    } catch (e) {
+      print('Error finding realm: $e');
+      return null;
+    }
   }
 
   /// Get all levels for a specific realm from JSON

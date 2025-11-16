@@ -177,9 +177,10 @@ class _GIMapperGameState extends State<GIMapperGame> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('GI Mapper'),
-        backgroundColor: AppDesignSystem.primaryAmber,
+        title: const Text('GI Mapper', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF10B981),
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Padding(
@@ -187,18 +188,32 @@ class _GIMapperGameState extends State<GIMapperGame> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Game icon
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
-                  color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
+                  color: Colors.white,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.map,
-                  size: 60,
-                  color: AppDesignSystem.primaryAmber,
+                padding: const EdgeInsets.all(20),
+                child: Image.asset(
+                  'assets/logos/gi_mapper.png',
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.map,
+                      size: 60,
+                      color: AppDesignSystem.primaryAmber,
+                    );
+                  },
                 ),
               ),
 
@@ -253,6 +268,7 @@ class _GIMapperGameState extends State<GIMapperGame> {
                 onPressed: _startGame,
                 fullWidth: true,
                 icon: Icons.play_arrow,
+                color: const Color(0xFF10B981),
               ),
             ],
           ),

@@ -13,6 +13,7 @@ import '../../core/services/badge_service.dart';
 import '../../utils/haptic_feedback_util.dart';
 import '../../services/sound_service.dart';
 import '../../services/app_rating_service.dart';
+import '../../widgets/certificate_unlock_animation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Screen for taking a level quiz
@@ -162,9 +163,15 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   /// Check if realm is complete and generate certificate
   Future<void> _checkAndGenerateCertificate(String userId) async {
     try {
+      // Ensure realms are loaded first
+      await _contentService.getAllRealms();
+      
       // Get realm info
       final realm = _contentService.getRealmById(widget.level.realmId);
-      if (realm == null) return;
+      if (realm == null) {
+        print('⚠️ Realm not found: ${widget.level.realmId}');
+        return;
+      }
 
       // Get user's progress for this realm
       final userDoc = await FirebaseFirestore.instance
@@ -172,7 +179,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
           .doc(userId)
           .get();
 
-      if (!userDoc.exists) return;
+      if (!userDoc.exists) {
+        print('⚠️ User document not found: $userId');
+        return;
+      }
 
       final userData = userDoc.data()!;
       final progressSummary = userData['progressSummary'] as Map<String, dynamic>? ?? {};
@@ -181,8 +191,14 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       final levelsCompleted = realmProgress['levelsCompleted'] as int? ?? 0;
       final totalLevels = realm.totalLevels;
 
+      print('📊 Realm Progress Check:');
+      print('   Realm: ${realm.name} (${widget.level.realmId})');
+      print('   Levels Completed: $levelsCompleted / $totalLevels');
+
       // Check if all levels are completed
       if (levelsCompleted >= totalLevels) {
+        print('✅ All levels completed! Checking for existing certificate...');
+        
         // Check if certificate already exists
         final existingCert = await _certificateService.getUserRealmCertificate(
           userId: userId,
@@ -190,11 +206,15 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
         );
 
         if (existingCert == null) {
+          print('🎓 Generating new certificate for ${realm.name}...');
+          
           // Generate certificate
-          await _certificateService.generateRealmCertificate(
+          final certificate = await _certificateService.generateRealmCertificate(
             realmId: widget.level.realmId,
             realmName: realm.name,
           );
+
+          print('✅ Certificate generated successfully!');
 
           // Award realm completion bonus XP
           final bonusXP = await _xpService.awardRealmCompletionBonus(
@@ -215,14 +235,18 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
           // Track realm completion for app rating
           await AppRatingService.incrementRealmsCompleted();
 
-          // Show certificate celebration dialog
+          // Show certificate celebration animation
           if (mounted) {
-            _showCertificateDialog(null, realm.name);
+            _showCertificateAnimation(certificate.certificateNumber, realm.name);
           }
+        } else {
+          print('ℹ️ Certificate already exists for this realm');
         }
+      } else {
+        print('ℹ️ Realm not yet complete. Need ${totalLevels - levelsCompleted} more level(s)');
       }
     } catch (e) {
-      // print('Error checking/generating certificate: $e');
+      print('❌ Error checking/generating certificate: $e');
     }
   }
 
@@ -243,6 +267,21 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     } catch (e) {
       print('Error showing badge animations: $e');
     }
+  }
+
+  /// Show certificate celebration animation
+  void _showCertificateAnimation(String certificateNumber, String realmName) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => CertificateUnlockAnimation(
+        realmName: realmName,
+        certificateNumber: certificateNumber,
+        onDismiss: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
   }
 
   /// Show certificate celebration dialog

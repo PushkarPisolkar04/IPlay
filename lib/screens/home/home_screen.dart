@@ -402,6 +402,33 @@ class _HomeScreenState extends State<HomeScreen> {
         print('Error loading challenges: $e');
       }
       
+      // Get recent certificates earned
+      try {
+        final certificates = await FirebaseFirestore.instance
+            .collection('certificates')
+            .where('userId', isEqualTo: _user!.uid)
+            .orderBy('issuedAt', descending: true)
+            .limit(3)
+            .get();
+        
+        for (final doc in certificates.docs) {
+          final data = doc.data();
+          final issuedAt = (data['issuedAt'] as Timestamp).toDate();
+          final realmName = data['realmName'] as String? ?? 'Realm';
+          
+          activities.add({
+            'title': '🎓 Certificate Earned!',
+            'subtitle': realmName,
+            'time': _getTimeAgo(issuedAt),
+            'icon': Icons.workspace_premium,
+            'color': 0xFFFFA500,
+            'timestamp': issuedAt,
+          });
+        }
+      } catch (e) {
+        print('Error loading certificates: $e');
+      }
+      
       // Sort all activities by timestamp (most recent first)
       activities.sort((a, b) {
         final aTime = a['timestamp'] as DateTime?;

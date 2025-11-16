@@ -21,7 +21,6 @@ import 'screens/learn/level_detail_screen.dart';
 import 'screens/games/play_screen.dart';
 import 'screens/profile/badges_screen.dart';
 import 'screens/profile/profile_screen.dart';
-import 'screens/profile/insights_screen.dart';
 import 'screens/profile/bookmarks_screen.dart';
 import 'screens/certificates/certificates_screen.dart';
 import 'screens/settings/settings_screen.dart';
@@ -216,8 +215,6 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (_) => const BookmarksScreen());
             case '/profile':
               return MaterialPageRoute(builder: (_) => const ProfileScreen());
-            case '/insights':
-              return MaterialPageRoute(builder: (_) => const InsightsScreen());
             case '/settings':
               return MaterialPageRoute(builder: (_) => const SettingsScreen());
             case '/create-classroom':

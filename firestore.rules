@@ -183,8 +183,7 @@ service cloud.firestore {
       
       // Games subcollection - allow users to read/write their own game progress
       match /games/{gameId} {
-        allow read, write: if isSignedIn() && 
-          request.auth.uid == progressId;
+        allow read, write: if isSignedIn();
       }
     }
     
@@ -341,14 +340,29 @@ service cloud.firestore {
       allow delete: if false;
     }
     
-    // Certificates Collection (Cloud Functions only)
+    // Certificates Collection
     match /certificates/{certificateId} {
       allow read: if isSignedIn() && (
         request.auth.uid == resource.data.userId ||
         isTeacher() ||
         isPrincipal()
       );
-      allow write: if false; // Only Cloud Functions can create/update certificates
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+      allow delete: if isPrincipal();
+    }
+    
+    // Counters Collection (for certificate numbering)
+    match /counters/{counterId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    
+    // Recent Activities Collection
+    match /recent_activities/{activityId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
     }
     
     // Daily Challenges Collection
