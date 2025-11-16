@@ -41,6 +41,7 @@ class _PlayScreenState extends State<PlayScreen> {
         return;
       }
 
+      // Load total game XP from user document
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
@@ -48,31 +49,37 @@ class _PlayScreenState extends State<PlayScreen> {
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
-        
         final gameProgress = userData['gameProgress'] as Map<String, dynamic>?;
         
         if (gameProgress != null) {
           _totalGameXP = (gameProgress['totalXP'] as num?)?.toInt() ?? 0;
-          _gamesPlayed = (gameProgress['gamesPlayed'] as num?)?.toInt() ?? 0;
         }
       }
 
-      // Load individual game high scores
+      // Load individual game high scores from game_progress collection
       final gameProgressDocs = await FirebaseFirestore.instance
           .collection('game_progress')
           .where('userId', isEqualTo: currentUser.uid)
           .get();
 
       for (final doc in gameProgressDocs.docs) {
-        final progress = GameProgress.fromMap(doc.data());
-        _gameHighScores[progress.gameId] = progress.highScore;
+        final data = doc.data();
+        final gameId = data['gameId'] as String?;
+        final highScore = (data['highScore'] as num?)?.toInt() ?? 0;
+        
+        if (gameId != null) {
+          _gameHighScores[gameId] = highScore;
+        }
       }
+      
+      // Count unique games played
+      _gamesPlayed = _gameHighScores.length;
 
       if (mounted) {
         setState(() => _isLoading = false);
       }
     } catch (e) {
-      // print('Error loading game data: $e');
+      print('Error loading game data: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }

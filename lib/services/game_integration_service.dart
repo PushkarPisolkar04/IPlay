@@ -123,11 +123,10 @@ class GameIntegrationService {
     }
 
     try {
+      // Save to game_progress collection with composite document ID
       final progressRef = _firestore
-          .collection(AppConstants.collectionProgress)
-          .doc(_currentUserId)
-          .collection('games')
-          .doc(gameId);
+          .collection('game_progress')
+          .doc('${_currentUserId}__$gameId');
 
       // Get existing progress
       final existingDoc = await progressRef.get();
@@ -147,6 +146,7 @@ class GameIntegrationService {
         'userId': _currentUserId,
         'gamesPlayed': gamesPlayed,
         'highScore': score > highScore ? score : highScore,
+        'lastScore': score,
         'averageScore': averageScore.round(),
         'totalScore': totalScore,
         'totalTimeSpent': totalTimeSpent,
@@ -171,10 +171,8 @@ class GameIntegrationService {
 
     try {
       final progressDoc = await _firestore
-          .collection(AppConstants.collectionProgress)
-          .doc(_currentUserId)
-          .collection('games')
-          .doc(gameId)
+          .collection('game_progress')
+          .doc('${_currentUserId}__$gameId')
           .get();
 
       if (!progressDoc.exists) {
@@ -195,15 +193,18 @@ class GameIntegrationService {
 
     try {
       final progressSnapshot = await _firestore
-          .collection(AppConstants.collectionProgress)
-          .doc(_currentUserId)
-          .collection('games')
+          .collection('game_progress')
+          .where('userId', isEqualTo: _currentUserId)
           .get();
 
       final Map<String, GameProgress> progressMap = {};
       
       for (final doc in progressSnapshot.docs) {
-        progressMap[doc.id] = GameProgress.fromMap(doc.data());
+        final data = doc.data();
+        final gameId = data['gameId'] as String?;
+        if (gameId != null) {
+          progressMap[gameId] = GameProgress.fromMap(data);
+        }
       }
 
       return progressMap;

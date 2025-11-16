@@ -187,6 +187,31 @@ service cloud.firestore {
       }
     }
     
+    // Game Progress Collection - Separate collection for game-specific progress
+    match /game_progress/{progressId} {
+      // Allow list queries for authenticated users (returns empty if no docs match)
+      // This allows querying even when collection is empty
+      allow list: if isSignedIn();
+      
+      // Users can read their own game progress documents
+      allow get: if isSignedIn() && (
+        resource == null || 
+        request.auth.uid == resource.data.userId
+      );
+      
+      // Teachers and principals can read student game progress
+      allow read: if isTeacher() || isPrincipal();
+      
+      // Users can create their own game progress
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      
+      // Users can update their own game progress
+      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+      
+      // Users can delete their own game progress
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.userId;
+    }
+    
     // Badges Collection (Read-only)
     match /badges/{badgeId} {
       allow read: if isAuthenticated();

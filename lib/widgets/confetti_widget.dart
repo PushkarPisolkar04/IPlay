@@ -49,13 +49,31 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
         rotationSpeed: (_random.nextDouble() - 0.5) * 4,
       ));
     }
+    
+    // Start animation if show is true
+    if (widget.show) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _controller.forward();
+        }
+      });
+    }
   }
 
   @override
   void didUpdateWidget(ConfettiWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.show && !oldWidget.show) {
-      _controller.forward(from: 0);
+      _controller.reset();
+      _controller.forward();
+    }
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.show && !_controller.isAnimating) {
+      _controller.forward();
     }
   }
 
@@ -86,12 +104,19 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return CustomPaint(
-          painter: ConfettiPainter(
-            particles: _particles,
-            progress: _controller.value,
-          ),
-          size: Size.infinite,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return CustomPaint(
+              painter: ConfettiPainter(
+                particles: _particles,
+                progress: _controller.value,
+              ),
+              size: Size(
+                constraints.maxWidth.isFinite ? constraints.maxWidth : 0,
+                constraints.maxHeight.isFinite ? constraints.maxHeight : 0,
+              ),
+            );
+          },
         );
       },
     );

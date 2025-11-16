@@ -125,64 +125,62 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
     if (user != null) {
       try {
         final xpEarned = _score * 15;
+        final gameId = 'spot_original';
         
-        // Save to progress
-        await _progressService.completeLevel(
-          userId: user.uid,
-          realmId: 'game_spot_original',
-          levelNumber: 1,
-          xpEarned: xpEarned,
-          quizScore: _score,
-          totalQuestions: _rounds.length,
-        );
-        
-        // Save detailed game history
-        await FirebaseFirestore.instance
-            .collection('progress')
-            .doc('${user.uid}__game_spot_original')
-            .set({
-          'userId': user.uid,
-          'contentId': 'game_spot_original',
-          'contentType': 'game',
-          'status': 'completed',
-          'xpEarned': xpEarned,
-          'highScore': _score,
-          'accuracy': (_score / _rounds.length * 100).round(),
-          'attemptsCount': FieldValue.increment(1),
-          'lastAttemptAt': Timestamp.now(),
-          'completedAt': Timestamp.now(),
-        }, SetOptions(merge: true));
-        
-        // Update user's gameProgress
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
+        // Get current high score from game_progress collection
+        final gameProgressDoc = await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
             .get();
         
-        final currentGameProgress = userDoc.data()?['gameProgress'] as Map<String, dynamic>? ?? {};
-        final currentScores = currentGameProgress['scores'] as Map<String, dynamic>? ?? {};
-        final currentBestScore = currentScores['spot_original'] as int? ?? 0;
+        final currentData = gameProgressDoc.data();
+        final currentHighScore = currentData?['highScore'] as int? ?? 0;
+        final currentGamesPlayed = currentData?['gamesPlayed'] as int? ?? 0;
+        final currentTotalScore = currentData?['totalScore'] as int? ?? 0;
         
+        final newHighScore = _score > currentHighScore ? _score : currentHighScore;
+        final newGamesPlayed = currentGamesPlayed + 1;
+        final newTotalScore = currentTotalScore + _score;
+        final newAverageScore = (newTotalScore / newGamesPlayed).round();
+        
+        // Save to game_progress collection
+        await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
+            .set({
+          'userId': user.uid,
+          'gameId': gameId,
+          'gamesPlayed': newGamesPlayed,
+          'highScore': newHighScore,
+          'lastScore': _score,
+          'totalScore': newTotalScore,
+          'averageScore': newAverageScore,
+          'totalTimeSpent': 0,
+          'completed': true,
+          'lastPlayedAt': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
+        }, SetOptions(merge: true));
+        
+        // Update user's totalXP
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .set({
+          'totalXP': FieldValue.increment(xpEarned),
+          'lastActiveDate': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
           'gameProgress': {
             'totalXP': FieldValue.increment(xpEarned),
-            'gamesPlayed': FieldValue.increment(1),
-            'scores': {
-              'spot_original': _score > currentBestScore ? _score : currentBestScore,
-            },
             'lastPlayedAt': Timestamp.now(),
           },
         }, SetOptions(merge: true));
         
-        // print('✅ Game score saved: $_score, XP earned: $xpEarned');
-        
         // Track game completion for app rating
         await AppRatingService.incrementGamesPlayed();
+        
+        print('✅ Game score saved: $_score, XP earned: $xpEarned, High score: $newHighScore');
       } catch (e) {
-        // print('❌ Error saving game score: $e');
+        print('❌ Error saving game score: $e');
       }
     }
   }

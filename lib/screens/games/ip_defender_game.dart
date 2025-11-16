@@ -170,54 +170,51 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
       try {
         final xpEarned = _score;
         
-        // Save to progress
-        await _progressService.completeLevel(
-          userId: user.uid,
-          realmId: 'game_ip_defender',
-          levelNumber: 1,
-          xpEarned: xpEarned,
-          quizScore: _infringersDefeated,
-          totalQuestions: _infringersDefeated + _assetsStolen,
-        );
-        
-        // Save detailed game history
-        await FirebaseFirestore.instance
-            .collection('progress')
-            .doc('${user.uid}__game_ip_defender')
-            .set({
-          'userId': user.uid,
-          'contentId': 'game_ip_defender',
-          'contentType': 'game',
-          'status': 'completed',
-          'xpEarned': xpEarned,
-          'highScore': _score,
-          'infringersDefeated': _infringersDefeated,
-          'wavesCompleted': _currentWave,
-          'attemptsCount': FieldValue.increment(1),
-          'lastAttemptAt': Timestamp.now(),
-          'completedAt': Timestamp.now(),
-        }, SetOptions(merge: true));
-        
-        // Update user's gameProgress
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
+        // Get current high score from game_progress collection
+        final gameId = 'ip_defender';
+        final gameProgressDoc = await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
             .get();
         
-        final currentGameProgress = userDoc.data()?['gameProgress'] as Map<String, dynamic>? ?? {};
-        final currentScores = currentGameProgress['scores'] as Map<String, dynamic>? ?? {};
-        final currentBestScore = currentScores['ip_defender'] as int? ?? 0;
+        final currentData = gameProgressDoc.data();
+        final currentHighScore = currentData?['highScore'] as int? ?? 0;
+        final currentGamesPlayed = currentData?['gamesPlayed'] as int? ?? 0;
+        final currentTotalScore = currentData?['totalScore'] as int? ?? 0;
         
+        final newHighScore = _score > currentHighScore ? _score : currentHighScore;
+        final newGamesPlayed = currentGamesPlayed + 1;
+        final newTotalScore = currentTotalScore + _score;
+        final newAverageScore = (newTotalScore / newGamesPlayed).round();
+        
+        // Save to game_progress collection
+        await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
+            .set({
+          'userId': user.uid,
+          'gameId': gameId,
+          'gamesPlayed': newGamesPlayed,
+          'highScore': newHighScore,
+          'lastScore': _score,
+          'totalScore': newTotalScore,
+          'averageScore': newAverageScore,
+          'totalTimeSpent': 0,
+          'completed': true,
+          'lastPlayedAt': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
+        }, SetOptions(merge: true));
+        
+        // Update user's totalXP
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .set({
+          'totalXP': FieldValue.increment(xpEarned),
+          'lastActiveDate': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
           'gameProgress': {
             'totalXP': FieldValue.increment(xpEarned),
-            'gamesPlayed': FieldValue.increment(1),
-            'scores': {
-              'ip_defender': _score > currentBestScore ? _score : currentBestScore,
-            },
             'lastPlayedAt': Timestamp.now(),
           },
         }, SetOptions(merge: true));

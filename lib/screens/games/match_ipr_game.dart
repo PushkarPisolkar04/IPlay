@@ -156,67 +156,58 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
         // Calculate score (lower time + fewer moves = higher score)
         final score = (1000 - (_timeElapsed * 5) - (_moves * 10)).clamp(0, 1000);
         
-        // Save to progress (XP + summary)
-        await _progressService.completeLevel(
-          userId: user.uid,
-          realmId: 'game_match_ipr',
-          levelNumber: 1,
-          xpEarned: xpEarned,
-          quizScore: 100,
-          totalQuestions: 1,
-        );
-        
-        // Save detailed game history
-        final docRef = FirebaseFirestore.instance
-            .collection('progress')
-            .doc('${user.uid}__game_match_ipr');
-        
-        final existingDoc = await docRef.get();
-        final currentHighScore = existingDoc.data()?['highScore'] ?? 0;
-        
-        await docRef.set({
-          'userId': user.uid,
-          'contentId': 'game_match_ipr',
-          'contentType': 'game',
-          'status': 'completed',
-          'xpEarned': xpEarned,
-          'highScore': score > currentHighScore ? score : currentHighScore,
-          'lastScore': score,
-          'lastTime': _timeElapsed,
-          'lastMoves': _moves,
-          'attemptsCount': FieldValue.increment(1),
-          'timeSpentSeconds': _timeElapsed,
-          'lastAttemptAt': Timestamp.now(),
-          'completedAt': Timestamp.now(),
-        }, SetOptions(merge: true));
-        
-        // Update user's gameProgress field
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
+        // Get current high score from game_progress collection
+        final gameId = 'match_ipr';
+        final gameProgressDoc = await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
             .get();
         
-        final currentGameProgress = userDoc.data()?['gameProgress'] as Map<String, dynamic>? ?? {};
-        final currentScores = currentGameProgress['scores'] as Map<String, dynamic>? ?? {};
-        final currentBestScore = currentScores['match_ipr'] as int? ?? 0;
+        final currentData = gameProgressDoc.data();
+        final currentHighScore = currentData?['highScore'] as int? ?? 0;
+        final currentGamesPlayed = currentData?['gamesPlayed'] as int? ?? 0;
+        final currentTotalScore = currentData?['totalScore'] as int? ?? 0;
         
+        final newHighScore = score > currentHighScore ? score : currentHighScore;
+        final newGamesPlayed = currentGamesPlayed + 1;
+        final newTotalScore = currentTotalScore + score;
+        final newAverageScore = (newTotalScore / newGamesPlayed).round();
+        
+        // Save to game_progress collection
+        await FirebaseFirestore.instance
+            .collection('game_progress')
+            .doc('${user.uid}__$gameId')
+            .set({
+          'userId': user.uid,
+          'gameId': gameId,
+          'gamesPlayed': newGamesPlayed,
+          'highScore': newHighScore,
+          'lastScore': score,
+          'totalScore': newTotalScore,
+          'averageScore': newAverageScore,
+          'totalTimeSpent': FieldValue.increment(_timeElapsed),
+          'completed': true,
+          'lastPlayedAt': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
+        }, SetOptions(merge: true));
+        
+        // Update user's totalXP
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .set({
+          'totalXP': FieldValue.increment(xpEarned),
+          'lastActiveDate': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
           'gameProgress': {
             'totalXP': FieldValue.increment(xpEarned),
-            'gamesPlayed': FieldValue.increment(1),
-            'scores': {
-              'match_ipr': score > currentBestScore ? score : currentBestScore,
-            },
             'lastPlayedAt': Timestamp.now(),
           },
         }, SetOptions(merge: true));
         
-        // print('✅ Game score saved: $score, XP earned: $xpEarned');
+        print('✅ Game score saved: $score, XP earned: $xpEarned, High score: $newHighScore');
       } catch (e) {
-        // print('❌ Error saving game score: $e');
+        print('❌ Error saving game score: $e');
       }
     }
   }

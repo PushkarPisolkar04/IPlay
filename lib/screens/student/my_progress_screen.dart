@@ -118,12 +118,26 @@ class _MyProgressScreenState extends State<MyProgressScreen>
         }
       });
 
-      // Add games from user progress
-      userProgress.forEach((key, value) {
-        if (_isGame(key)) {
-          mergedProgress[key] = value;
+      // Load games from game_progress collection
+      final gameProgressDocs = await FirebaseFirestore.instance
+          .collection('game_progress')
+          .where('userId', isEqualTo: targetUserId)
+          .get();
+      
+      for (final doc in gameProgressDocs.docs) {
+        final data = doc.data();
+        final gameId = data['gameId'] as String?;
+        if (gameId != null) {
+          // Format game data to match expected structure
+          mergedProgress['game_$gameId'] = {
+            'highScore': data['highScore'] ?? 0,
+            'gamesPlayed': data['gamesPlayed'] ?? 0,
+            'averageScore': data['averageScore'] ?? 0,
+            'lastPlayedAt': data['lastPlayedAt'],
+            'completed': data['completed'] ?? false,
+          };
         }
-      });
+      }
 
       // Load badges
       _earnedBadgeIds = List<String>.from(userData['badges'] ?? []);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:confetti/confetti.dart';
 import 'dart:async';
 import 'dart:math';
 import '../../core/design/app_design_system.dart';
@@ -10,7 +11,6 @@ import '../../services/game_content_service.dart';
 import '../../services/game_integration_service.dart';
 import '../../models/trademark_match_model.dart';
 import '../../widgets/primary_button.dart';
-import '../../widgets/confetti_widget.dart';
 
 /// Trademark Match - Memory Card Flip Game
 class MatchIPRMemoryGame extends StatefulWidget {
@@ -23,6 +23,9 @@ class MatchIPRMemoryGame extends StatefulWidget {
 class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProviderStateMixin {
   final ProgressService _progressService = ProgressService();
   final GameContentService _gameService = GameContentService();
+  final ConfettiController _confettiController = ConfettiController(
+    duration: const Duration(seconds: 3),
+  );
   
   TrademarkMatchGame? _gameData;
   bool _loading = true;
@@ -39,8 +42,7 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
   Timer? _timer;
   bool _gameStarted = false;
   bool _gameEnded = false;
-  bool _showConfetti = false;
-
+  
   @override
   void initState() {
     super.initState();
@@ -65,6 +67,7 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
   @override
   void dispose() {
     _timer?.cancel();
+    _confettiController.dispose();
     super.dispose();
   }
 
@@ -112,7 +115,6 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
     setState(() {
       _gameStarted = true;
       _timeElapsed = 0;
-      _showConfetti = false;
     });
     _initializeGame();
     _startTimer();
@@ -193,11 +195,11 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
     _timer?.cancel();
     
     setState(() {
-      _showConfetti = true;
       _gameEnded = true;
     });
     
-
+    // Trigger confetti
+    _confettiController.play();
     
     _saveScore();
   }
@@ -249,7 +251,6 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
     setState(() {
       _gameEnded = false;
       _gameStarted = false;
-      _showConfetti = false;
     });
   }
 
@@ -420,32 +421,26 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
           ),
         ),
         child: SafeArea(
-          child: Stack(
+          child: Column(
             children: [
-              Column(
-                children: [
-                  _buildScoreBoard(),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: gridSize,
-                          crossAxisSpacing: AppSpacing.sm,
-                          mainAxisSpacing: AppSpacing.sm,
-                          childAspectRatio: 0.75,
-                        ),
-                        itemCount: _cards.length,
-                        itemBuilder: (context, index) {
-                          return _buildMemoryCard(index);
-                        },
-                      ),
+              _buildScoreBoard(),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: gridSize,
+                      crossAxisSpacing: AppSpacing.sm,
+                      mainAxisSpacing: AppSpacing.sm,
+                      childAspectRatio: 0.75,
                     ),
+                    itemCount: _cards.length,
+                    itemBuilder: (context, index) {
+                      return _buildMemoryCard(index);
+                    },
                   ),
-                ],
+                ),
               ),
-              if (_showConfetti)
-                Positioned.fill(child: ConfettiWidget(show: _showConfetti)),
             ],
           ),
         ),
@@ -578,96 +573,194 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
   Widget _buildResultScreen() {
     final perfectMoves = _cards.length ~/ 2;
     final isPerfect = _moves == perfectMoves;
+    final accuracy = (_cards.length ~/ 2) / _moves * 100;
     
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Game Complete'),
+        title: const Text('Game Over'),
         backgroundColor: AppDesignSystem.primaryPink,
         foregroundColor: Colors.white,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: AppDesignSystem.success.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.emoji_events, size: 60, color: AppDesignSystem.success),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Text(isPerfect ? 'Perfect Match!' : 'Well Done!', style: AppTextStyles.h1),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                'You matched all trademarks!',
-                style: AppTextStyles.bodyLarge.copyWith(color: AppDesignSystem.textSecondary),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                decoration: BoxDecoration(
-                  color: AppDesignSystem.backgroundGrey,
-                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                ),
+      body: Stack(
+        children: [
+          // Main content
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xl),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildStatRow('Time', '${_timeElapsed}s'),
-                    const Divider(height: 24),
-                    _buildStatRow('Moves', '$_moves'),
-                    const Divider(height: 24),
-                    _buildStatRow('Score', '$_score pts'),
-                    if (isPerfect) ...[
-                      const Divider(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    const SizedBox(height: AppSpacing.xl),
+                    
+                    // Trophy Icon
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: AppDesignSystem.success.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.emoji_events, size: 60, color: AppDesignSystem.success),
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.xl),
+                    
+                    // Title
+                    Text(
+                      isPerfect ? 'Perfect Match!' : 'Great Job!',
+                      style: AppTextStyles.h1.copyWith(
+                        color: isPerfect ? Colors.amber : AppDesignSystem.success,
+                      ),
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.sm),
+                    
+                    // Subtitle
+                    Text(
+                      'You matched all ${_cards.length ~/ 2} pairs!',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: AppDesignSystem.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.xl),
+                    
+                    // Stats Card
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                        boxShadow: AppDesignSystem.shadowMD,
+                      ),
+                      child: Column(
                         children: [
-                          const Icon(Icons.star, color: Colors.amber, size: 20),
-                          const SizedBox(width: 8),
-                          Text('Perfect Game!', style: AppTextStyles.cardTitle.copyWith(color: Colors.amber)),
+                          _buildStatRow('Score', '${_cards.length ~/ 2}/${_cards.length ~/ 2}'),
+                          const Divider(height: 24),
+                          _buildStatRow('Accuracy', '${accuracy.toStringAsFixed(0)}%'),
+                          const Divider(height: 24),
+                          _buildStatRow('XP Earned', '+${_gameData?.xpReward ?? 0} XP', isHighlight: true),
                         ],
                       ),
-                    ],
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.md),
+                    
+                    // Perfect game badge
+                    if (isPerfect)
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.elasticOut,
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale: value,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.md,
+                                vertical: AppSpacing.sm,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.amber.withValues(alpha: 0.3), width: 2),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.amber.withValues(alpha: 0.3 * value),
+                                    blurRadius: 20 * value,
+                                    spreadRadius: 5 * value,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.star, color: Colors.amber, size: 24),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Perfect Game!',
+                                    style: AppTextStyles.h4.copyWith(color: Colors.amber),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    
+                    const SizedBox(height: AppSpacing.xl),
+                    
+                    // Buttons
+                    PrimaryButton(
+                      text: 'Play Again',
+                      onPressed: _restartGame,
+                      fullWidth: true,
+                      icon: Icons.refresh,
+                    ),
+                    
+                    const SizedBox(height: AppSpacing.md),
+                    
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        side: BorderSide(color: AppDesignSystem.primaryPink, width: 2),
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'Back to Games',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: AppDesignSystem.primaryPink),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.xl),
-              PrimaryButton(
-                text: 'Play Again',
-                onPressed: _restartGame,
-                fullWidth: true,
-                icon: Icons.refresh,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              OutlinedButton(
-                onPressed: () => Navigator.pop(context),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                ),
-                child: const SizedBox(
-                  width: double.infinity,
-                  child: Text('Back to Games', textAlign: TextAlign.center),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          
+          // Confetti overlay - positioned at top of stack
+          Positioned.fill(
+            child: IgnorePointer(
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                particleDrag: 0.05,
+                emissionFrequency: 0.05,
+                numberOfParticles: 50,
+                gravity: 0.1,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildStatRow(String label, String value) {
+  Widget _buildStatRow(String label, String value, {bool isHighlight = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: AppTextStyles.bodyMedium),
-        Text(value, style: AppTextStyles.h3.copyWith(fontSize: 16)),
+        Text(
+          label,
+          style: AppTextStyles.bodyMedium.copyWith(
+            color: AppDesignSystem.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Text(
+          value,
+          style: AppTextStyles.h3.copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isHighlight ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
+          ),
+        ),
       ],
     );
   }

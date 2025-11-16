@@ -1,6 +1,7 @@
   import 'package:flutter/material.dart';
   import 'package:firebase_auth/firebase_auth.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
+  import 'package:confetti/confetti.dart';
   import 'dart:async';
   import 'dart:math';
   import '../../core/design/app_design_system.dart';
@@ -19,6 +20,9 @@
 
   class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
     final ProgressService _progressService = ProgressService();
+    final ConfettiController _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
     
     int _currentQuestionIndex = 0;
     int _score = 0;
@@ -39,6 +43,7 @@
     @override
     void dispose() {
       _timer?.cancel();
+      _confettiController.dispose();
       super.dispose();
     }
 
@@ -103,11 +108,17 @@
 
     void _endGame() {
       _timer?.cancel();
-
       
       setState(() {
         _gameEnded = true;
       });
+      
+      // Trigger confetti if passed
+      final percentage = (_score / _questions.length * 100).round();
+      if (percentage >= 60) {
+        _confettiController.play();
+      }
+      
       _saveScore();
     }
 
@@ -116,61 +127,72 @@
       if (user != null) {
         try {
           final xpEarned = _score * 10;
+          final gameId = 'quiz_master';
           
-          // Save to progress (XP + summary)
-          await _progressService.completeLevel(
-            userId: user.uid,
-            realmId: 'game_quiz_master',
-            levelNumber: 1,
-            xpEarned: xpEarned,
-            quizScore: _score,
-            totalQuestions: _questions.length,
-          );
-          
-          // Save detailed game history
-          await FirebaseFirestore.instance
-              .collection('progress')
-              .doc('${user.uid}__game_quiz_master')
-              .set({
-            'userId': user.uid,
-            'contentId': 'game_quiz_master',
-            'contentType': 'game',
-            'status': 'completed',
-            'xpEarned': xpEarned,
-            'highScore': _score,
-            'accuracy': (_score / _questions.length * 100).round(),
-            'attemptsCount': FieldValue.increment(1),
-            'lastAttemptAt': Timestamp.now(),
-            'completedAt': Timestamp.now(),
-          }, SetOptions(merge: true));
-          
-          // Update user's gameProgress field
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
+          // Get current high score from game_progress collection
+          final gameProgressDoc = await FirebaseFirestore.instance
+              .collection('game_progress')
+              .doc('${user.uid}__$gameId')
               .get();
           
-          final currentGameProgress = userDoc.data()?['gameProgress'] as Map<String, dynamic>? ?? {};
-          final currentScores = currentGameProgress['scores'] as Map<String, dynamic>? ?? {};
-          final currentBestScore = currentScores['quiz_master'] as int? ?? 0;
+          final currentHighScore = gameProgressDoc.exists 
+              ? (gameProgressDoc.data()?['highScore'] as int? ?? 0)
+              : 0;
+          final newHighScore = _score > currentHighScore ? _score : currentHighScore;
           
+          // Save to game_progress collection
+          await FirebaseFirestore.instance
+              .collection('game_progress')
+              .doc('${user.uid}__$gameId')
+              .set({
+            'userId': user.uid,
+            'gameId': gameId,
+            'gamesPlayed': FieldValue.increment(1),
+            'highScore': newHighScore,
+            'lastScore': _score,
+            'totalScore': FieldValue.increment(_score),
+            'averageScore': 0, // Will be calculated
+            'totalTimeSpent': FieldValue.increment(60 - _timeLeft),
+            'completed': true,
+            'lastPlayedAt': Timestamp.now(),
+            'updatedAt': Timestamp.now(),
+          }, SetOptions(merge: true));
+          
+          // Calculate average score
+          final updatedDoc = await FirebaseFirestore.instance
+              .collection('game_progress')
+              .doc('${user.uid}__$gameId')
+              .get();
+          
+          if (updatedDoc.exists) {
+            final data = updatedDoc.data()!;
+            final totalScore = data['totalScore'] as int;
+            final gamesPlayed = data['gamesPlayed'] as int;
+            final averageScore = (totalScore / gamesPlayed).round();
+            
+            await FirebaseFirestore.instance
+                .collection('game_progress')
+                .doc('${user.uid}__$gameId')
+                .update({'averageScore': averageScore});
+          }
+          
+          // Update user's totalXP
           await FirebaseFirestore.instance
               .collection('users')
               .doc(user.uid)
               .set({
+            'totalXP': FieldValue.increment(xpEarned),
+            'lastActiveDate': Timestamp.now(),
+            'updatedAt': Timestamp.now(),
             'gameProgress': {
               'totalXP': FieldValue.increment(xpEarned),
-              'gamesPlayed': FieldValue.increment(1),
-              'scores': {
-                'quiz_master': _score > currentBestScore ? _score : currentBestScore,
-              },
               'lastPlayedAt': Timestamp.now(),
             },
           }, SetOptions(merge: true));
           
-          // print('✅ Game score saved: $_score, XP earned: $xpEarned');
+          print('✅ Game score saved: $_score, XP earned: $xpEarned, High score: $newHighScore');
         } catch (e) {
-          // print('❌ Error saving game score: $e');
+          print('❌ Error saving game score: $e');
         }
       }
     }
@@ -507,98 +529,126 @@
           backgroundColor: AppDesignSystem.primaryIndigo,
           foregroundColor: Colors.white,
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Result icon
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: passed ? AppDesignSystem.success.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    passed ? Icons.emoji_events : Icons.refresh,
-                    size: 60,
-                    color: passed ? AppDesignSystem.success : Colors.orange,
-                  ),
-                ),
-
-                const SizedBox(height: AppSpacing.xl),
-
-                Text(
-                  passed ? 'Great Job!' : 'Good Try!',
-                  style: AppTextStyles.h1,
-                ),
-
-                const SizedBox(height: AppSpacing.md),
-
-                Text(
-                  'You answered $_score out of ${_questions.length} questions correctly',
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppDesignSystem.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: AppSpacing.xl),
-
-                // Stats
-                Container(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  decoration: BoxDecoration(
-                    color: AppDesignSystem.backgroundGrey,
-                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                  ),
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.xl),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildStatRow('Score', '$_score/${_questions.length}'),
-                      const Divider(height: 24),
-                      _buildStatRow('Accuracy', '$percentage%'),
-                      const Divider(height: 24),
-                      _buildStatRow('XP Earned', '+$xpEarned XP', isHighlight: true),
+                      const SizedBox(height: AppSpacing.xl),
+                      
+                      // Result icon
+                      Container(
+                        width: 120,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: passed ? AppDesignSystem.success.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          passed ? Icons.emoji_events : Icons.refresh,
+                          size: 60,
+                          color: passed ? AppDesignSystem.success : Colors.orange,
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      Text(
+                        passed ? 'Great Job!' : 'Good Try!',
+                        style: AppTextStyles.h1.copyWith(
+                          color: passed ? AppDesignSystem.success : Colors.orange,
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.md),
+
+                      Text(
+                        'You answered $_score out of ${_questions.length} questions correctly',
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // Stats Card - WHITE BACKGROUND
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                          boxShadow: AppDesignSystem.shadowMD,
+                        ),
+                        child: Column(
+                          children: [
+                            _buildStatRow('Score', '$_score/${_questions.length}'),
+                            const Divider(height: 24),
+                            _buildStatRow('Accuracy', '$percentage%'),
+                            const Divider(height: 24),
+                            _buildStatRow('XP Earned', '+$xpEarned XP', isHighlight: true),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // Buttons
+                      PrimaryButton(
+                        text: 'Play Again',
+                        onPressed: _restartGame,
+                        fullWidth: true,
+                        icon: Icons.refresh,
+                        color: AppDesignSystem.primaryIndigo,
+                      ),
+
+                      const SizedBox(height: AppSpacing.md),
+
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                          side: BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                          ),
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            'Back to Games',
+                            style: TextStyle(color: AppDesignSystem.primaryIndigo),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: AppSpacing.xl),
-
-                // Buttons
-                PrimaryButton(
-                  text: 'Play Again',
-                  onPressed: _restartGame,
-                  fullWidth: true,
-                  icon: Icons.refresh,
-                ),
-
-                const SizedBox(height: AppSpacing.md),
-
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                    ),
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'Back to Games',
-                      style: AppTextStyles.button,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+            
+            // Confetti overlay - positioned at top of stack
+            if (passed)
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: ConfettiWidget(
+                    confettiController: _confettiController,
+                    blastDirectionality: BlastDirectionality.explosive,
+                    particleDrag: 0.05,
+                    emissionFrequency: 0.05,
+                    numberOfParticles: 50,
+                    gravity: 0.1,
+                  ),
+                ),
+              ),
+          ],
         ),
       );
     }
@@ -624,11 +674,14 @@
             label,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppDesignSystem.textSecondary,
+              fontWeight: FontWeight.w500,
             ),
           ),
           Text(
             value,
             style: AppTextStyles.h3.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
               color: isHighlight ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
             ),
           ),
