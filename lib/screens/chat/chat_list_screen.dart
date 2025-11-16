@@ -5,8 +5,8 @@ import '../../core/design/app_design_system.dart';
 import '../../services/simplified_chat_service.dart';
 import '../../widgets/loading_skeleton.dart';
 import 'chat_screen.dart';
-import '../teacher/all_students_screen.dart';
 import 'select_teacher_screen.dart';
+import 'select_student_screen.dart';
 
 class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
@@ -201,6 +201,61 @@ class _ChatListScreenState extends State<ChatListScreen> {
             );
           }
 
+          // Filter chats to only show those with messages
+          final chatsWithMessages = chats.where((chat) {
+            final chatData = chat.data() as Map<String, dynamic>;
+            final lastMessage = chatData['lastMessage'] as String? ?? '';
+            return lastMessage.isNotEmpty;
+          }).toList();
+
+          if (chatsWithMessages.isEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {});
+              },
+              color: AppDesignSystem.primaryIndigo,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height - 200,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.chat_bubble_outline,
+                            size: 80,
+                            color: AppDesignSystem.textTertiary,
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            'No messages yet',
+                            style: AppDesignSystem.h4.copyWith(
+                              color: AppDesignSystem.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 48),
+                            child: Text(
+                              _userRole == 'student'
+                                  ? 'Tap the button below to message your teachers!'
+                                  : 'Tap the button below to message your students!',
+                              style: AppDesignSystem.bodyMedium.copyWith(
+                                color: AppDesignSystem.textTertiary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
           return RefreshIndicator(
             onRefresh: () async {
               // Force refresh by rebuilding
@@ -208,11 +263,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
             },
             color: AppDesignSystem.primaryIndigo,
             child: ListView.separated(
-            itemCount: chats.length,
+            itemCount: chatsWithMessages.length,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
-              final chat = chats[index].data() as Map<String, dynamic>;
-              final chatId = chats[index].id;
+              final chat = chatsWithMessages[index].data() as Map<String, dynamic>;
+              final chatId = chatsWithMessages[index].id;
               final participants = List<String>.from(chat['participants'] ?? []);
               final otherUserId = participants.firstWhere(
                 (id) => id != currentUserId,
@@ -279,15 +334,17 @@ class _ChatListScreenState extends State<ChatListScreen> {
                     ),
                     title: Text(
                       userName,
-                      style: AppDesignSystem.bodyMedium.copyWith(
-                        fontWeight: unreadCount > 0 ? FontWeight.bold : FontWeight.normal,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: unreadCount > 0 ? FontWeight.bold : FontWeight.w600,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     subtitle: Text(
                       lastMessage.isEmpty ? 'No messages yet' : lastMessage,
-                      style: AppDesignSystem.bodySmall.copyWith(
+                      style: TextStyle(
+                        fontSize: 14,
                         color: unreadCount > 0
                             ? AppDesignSystem.textPrimary
                             : AppDesignSystem.textSecondary,
@@ -342,7 +399,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => _userRole == 'teacher'
-                        ? const AllStudentsScreen()
+                        ? const SelectStudentScreen()
                         : const SelectTeacherScreen(),
                   ),
                 );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/services/notification_service.dart';
 import '../../widgets/loading_skeleton.dart';
@@ -14,6 +15,32 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   final NotificationService _notificationService = NotificationService();
   String _selectedFilter = 'all';
+  String? _userRole;
+  bool _isLoadingRole = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      if (userDoc.exists && mounted) {
+        setState(() {
+          _userRole = userDoc.data()?['role'];
+          _isLoadingRole = false;
+        });
+      }
+    } else {
+      setState(() => _isLoadingRole = false);
+    }
+  }
 
   final Map<String, IconData> _notificationIcons = {
     'badge': Icons.emoji_events,
@@ -121,7 +148,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               ),
             ),
-            // Filter chips with icons
+            // Filter chips with icons - different for teachers and students
             Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -131,13 +158,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   children: [
                     _buildFilterChip('all', 'All', Icons.notifications_active),
                     const SizedBox(width: 10),
-                    _buildFilterChip('badge', 'Badges', Icons.emoji_events),
-                    const SizedBox(width: 10),
-                    _buildFilterChip('announcement', 'Announcements', Icons.campaign),
-                    const SizedBox(width: 10),
-                    _buildFilterChip('message', 'Messages', Icons.message),
-                    const SizedBox(width: 10),
-                    _buildFilterChip('certificate', 'Certificates', Icons.workspace_premium),
+                    if (_userRole == 'teacher') ...[
+                      _buildFilterChip('join_request', 'Join Requests', Icons.person_add),
+                      const SizedBox(width: 10),
+                      _buildFilterChip('announcement', 'Announcements', Icons.campaign),
+                      const SizedBox(width: 10),
+                      _buildFilterChip('message', 'Messages', Icons.message),
+                    ] else ...[
+                      _buildFilterChip('badge', 'Badges', Icons.emoji_events),
+                      const SizedBox(width: 10),
+                      _buildFilterChip('announcement', 'Announcements', Icons.campaign),
+                      const SizedBox(width: 10),
+                      _buildFilterChip('message', 'Messages', Icons.message),
+                      const SizedBox(width: 10),
+                      _buildFilterChip('certificate', 'Certificates', Icons.workspace_premium),
+                    ],
                   ],
                 ),
               ),

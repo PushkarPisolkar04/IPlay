@@ -17,7 +17,7 @@ class UnifiedAnnouncementsScreen extends StatefulWidget {
 class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _announcements = [];
-  
+
   // User info
   String? _currentUserId;
   String? _userRole;
@@ -35,27 +35,27 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
 
   Future<void> _loadAnnouncements() async {
     setState(() => _isLoading = true);
-    
+
     try {
       _currentUserId = FirebaseAuth.instance.currentUser?.uid;
-      
+
       // Get user info
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(_currentUserId)
           .get();
-      
+
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         _userRole = userData['role'];
         _isPrincipal = userData['isPrincipal'] ?? false;
         _userSchoolId = userData['schoolId'];
-        
+
         final classroomIds = userData['classroomIds'] as List?;
         if (classroomIds != null) {
           _userClassroomIds = classroomIds.cast<String>();
         }
-        
+
         // For teachers, get their classrooms
         if (_userRole == 'teacher') {
           final classroomsSnapshot = await FirebaseFirestore.instance
@@ -64,13 +64,13 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
               .get();
           _teacherClassroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
         }
-        
+
         // Determine if user can create announcements
         _canCreate = _userRole == 'teacher' || _isPrincipal;
       }
-      
+
       _announcements = [];
-      
+
       // Load announcements based on role
       if (_userRole == 'student') {
         await _loadStudentAnnouncements();
@@ -79,7 +79,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
       } else if (_isPrincipal) {
         await _loadPrincipalAnnouncements();
       }
-      
+
       // Sort by date
       _announcements.sort((a, b) {
         final aTime = a['createdAt'] as Timestamp?;
@@ -87,7 +87,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
         if (aTime == null || bTime == null) return 0;
         return bTime.compareTo(aTime);
       });
-      
+
       setState(() => _isLoading = false);
     } catch (e) {
       // print('Error loading announcements: $e');
@@ -104,12 +104,12 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           .orderBy('createdAt', descending: true)
           .limit(50)
           .get();
-      
+
       for (var doc in classroomQuery.docs) {
         await _addAnnouncementWithAuthor(doc);
       }
     }
-    
+
     // Load school-wide announcements
     if (_userSchoolId != null) {
       final schoolQuery = await FirebaseFirestore.instance
@@ -119,7 +119,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           .orderBy('createdAt', descending: true)
           .limit(50)
           .get();
-      
+
       for (var doc in schoolQuery.docs) {
         if (!_announcements.any((a) => a['id'] == doc.id)) {
           await _addAnnouncementWithAuthor(doc);
@@ -137,12 +137,12 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           .orderBy('createdAt', descending: true)
           .limit(50)
           .get();
-      
+
       for (var doc in classroomQuery.docs) {
         await _addAnnouncementWithAuthor(doc);
       }
     }
-    
+
     // Load school-wide announcements
     if (_userSchoolId != null) {
       final schoolQuery = await FirebaseFirestore.instance
@@ -152,7 +152,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           .orderBy('createdAt', descending: true)
           .limit(50)
           .get();
-      
+
       for (var doc in schoolQuery.docs) {
         if (!_announcements.any((a) => a['id'] == doc.id)) {
           await _addAnnouncementWithAuthor(doc);
@@ -170,7 +170,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           .orderBy('createdAt', descending: true)
           .limit(100)
           .get();
-      
+
       for (var doc in schoolQuery.docs) {
         await _addAnnouncementWithAuthor(doc);
       }
@@ -179,7 +179,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
 
   Future<void> _addAnnouncementWithAuthor(QueryDocumentSnapshot doc) async {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     // Get author name
     String authorName = 'Unknown';
     String authorRole = 'User';
@@ -193,7 +193,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
         authorRole = authorDoc.data()?['role'] ?? 'User';
       }
     }
-    
+
     _announcements.add({
       'id': doc.id,
       'authorName': authorName,
@@ -228,7 +228,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
             .collection('announcements')
             .doc(announcementId)
             .delete();
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Announcement deleted')),
@@ -322,7 +322,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
   bool _canEditAnnouncement(Map<String, dynamic> announcement) {
     // Principals can edit/delete any announcement in their school
     if (_isPrincipal) return true;
-    
+
     // Teachers can only edit/delete their own announcements
     return announcement['authorId'] == _currentUserId;
   }
@@ -331,208 +331,288 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: const Text('Announcements'),
-        backgroundColor: AppDesignSystem.backgroundWhite,
-        elevation: 0,
-        actions: [
-          if (_canCreate)
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateAnnouncementScreen(
-                      schoolId: _userSchoolId,
-                    ),
-                  ),
-                );
-                _loadAnnouncements();
-              },
+      body: Column(
+        children: [
+          // App bar matching student style
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppDesignSystem.gradientPrimary,
+              boxShadow: [
+                BoxShadow(
+                  color: AppDesignSystem.primaryIndigo.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _announcements.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.campaign_outlined,
-                        size: 64,
-                        color: AppDesignSystem.textTertiary,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No announcements yet',
-                        style: AppDesignSystem.h3.copyWith(
-                          color: AppDesignSystem.textSecondary,
-                        ),
-                      ),
-                      if (_canCreate) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          'Tap + to create one',
-                          style: AppDesignSystem.bodyMedium.copyWith(
-                            color: AppDesignSystem.textTertiary,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Expanded(
+                      child: Center(
+                        child: Text(
+                          'Announcements',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadAnnouncements,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _announcements.length,
-                    itemBuilder: (context, index) {
-                      final announcement = _announcements[index];
-                      final isSchoolWide = announcement['isSchoolWide'] ?? false;
-                      final canEdit = _canEditAnnouncement(announcement);
-                      
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        child: CleanCard(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Header
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Icon(
-                                        Icons.campaign,
-                                        color: AppDesignSystem.primaryIndigo,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            announcement['title'] ?? 'Untitled',
-                                            style: AppDesignSystem.h4,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                announcement['authorRole'] == 'principal'
-                                                    ? Icons.admin_panel_settings
-                                                    : Icons.person,
-                                                size: 12,
-                                                color: AppDesignSystem.textSecondary,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
-                                                style: AppDesignSystem.bodySmall,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                      ),
+                    ),
+                    if (_canCreate)
+                      IconButton(
+                        icon: const Icon(Icons.add_circle, color: Colors.white, size: 28),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateAnnouncementScreen(
+                                schoolId: _userSchoolId,
+                              ),
+                            ),
+                          );
+                          _loadAnnouncements();
+                        },
+                      )
+                    else
+                      const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator(color: AppDesignSystem.primaryIndigo))
+                : _announcements.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppDesignSystem.primaryIndigo.withOpacity(0.1),
+                                    const Color(0xFF8B5CF6).withOpacity(0.1),
                                   ],
                                 ),
-                                
-                                if (isSchoolWide) ...[
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.amber.withValues(alpha: 0.2),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(color: Colors.amber.withValues(alpha: 0.5)),
-                                    ),
-                                    child: const Row(
-                                      mainAxisSize: MainAxisSize.min,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.campaign_outlined,
+                                size: 64,
+                                color: AppDesignSystem.primaryIndigo.withOpacity(0.5),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'No announcements yet',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: AppDesignSystem.textSecondary,
+                              ),
+                            ),
+                            if (_canCreate) ...[
+                              const SizedBox(height: 8),
+                              const Text(
+                                'Tap + to create one',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: AppDesignSystem.textTertiary,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: _loadAnnouncements,
+                        color: AppDesignSystem.primaryIndigo,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _announcements.length,
+                          itemBuilder: (context, index) {
+                            final announcement = _announcements[index];
+                            final isSchoolWide = announcement['isSchoolWide'] ?? false;
+                            final canEdit = _canEditAnnouncement(announcement);
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Header
+                                    Row(
                                       children: [
-                                        Icon(Icons.school, size: 12, color: Colors.orange),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          'School-Wide',
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.orange,
+                                        Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [
+                                                AppDesignSystem.primaryIndigo.withOpacity(0.1),
+                                                const Color(0xFF8B5CF6).withOpacity(0.1),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: const Icon(
+                                            Icons.campaign,
+                                            color: AppDesignSystem.primaryIndigo,
+                                            size: 22,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                announcement['title'] ?? 'Untitled',
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppDesignSystem.textPrimary,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    announcement['authorRole'] == 'principal'
+                                                        ? Icons.admin_panel_settings
+                                                        : Icons.person,
+                                                    size: 14,
+                                                    color: AppDesignSystem.textSecondary,
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Flexible(
+                                                    child: Text(
+                                                      '${announcement['authorName']} • ${_formatDate(announcement['createdAt'])}',
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        color: AppDesignSystem.textSecondary,
+                                                      ),
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                                
-                                const SizedBox(height: 12),
-                                
-                                // Message
-                                Text(
-                                  announcement['message'] ?? '',
-                                  style: AppDesignSystem.bodyMedium,
-                                ),
-                                
-                                // Actions (only for own announcements)
-                                if (canEdit) ...[
-                                  const SizedBox(height: 16),
-                                  const Divider(),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton.icon(
-                                        onPressed: () => _editAnnouncement(announcement),
-                                        icon: const Icon(Icons.edit, size: 16),
-                                        label: const Text('Edit'),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: AppDesignSystem.primaryIndigo,
+
+                                    if (isSchoolWide) ...[
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.amber.withOpacity(0.2),
+                                          borderRadius: BorderRadius.circular(6),
+                                          border: Border.all(color: Colors.amber.withOpacity(0.5)),
                                         ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      TextButton.icon(
-                                        onPressed: () => _deleteAnnouncement(
-                                          announcement['id'],
-                                          announcement['title'] ?? 'this announcement',
-                                        ),
-                                        icon: const Icon(Icons.delete, size: 16),
-                                        label: const Text('Delete'),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Colors.red,
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.school, size: 12, color: Colors.orange),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'School-Wide',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.orange,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
+
+                                    const SizedBox(height: 12),
+
+                                    // Message
+                                    Text(
+                                      announcement['message'] ?? '',
+                                      style: AppDesignSystem.bodyMedium,
+                                    ),
+
+                                    // Actions (only for own announcements)
+                                    if (canEdit) ...[
+                                      const SizedBox(height: 16),
+                                      const Divider(),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          TextButton.icon(
+                                            onPressed: () => _editAnnouncement(announcement),
+                                            icon: const Icon(Icons.edit, size: 16),
+                                            label: const Text('Edit'),
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: AppDesignSystem.primaryIndigo,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          TextButton.icon(
+                                            onPressed: () => _deleteAnnouncement(
+                                              announcement['id'],
+                                              announcement['title'] ?? 'this announcement',
+                                            ),
+                                            icon: const Icon(Icons.delete, size: 16),
+                                            label: const Text('Delete'),
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
+          ),
+        ],
+      ),
     );
   }
 
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return '';
-    
+
     try {
       final date = (timestamp as Timestamp).toDate();
       final now = DateTime.now();
       final difference = now.difference(date);
-      
+
       if (difference.inDays == 0) {
         if (difference.inHours == 0) {
           return '${difference.inMinutes}m ago';

@@ -111,27 +111,70 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Join Requests'),
-            Text(
-              widget.classroomName,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+      backgroundColor: AppDesignSystem.backgroundLight,
+      body: Column(
+        children: [
+          // App bar matching student style
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppDesignSystem.gradientPrimary,
+              boxShadow: [
+                BoxShadow(
+                  color: AppDesignSystem.primaryIndigo.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-          ],
-        ),
-        backgroundColor: AppDesignSystem.primaryIndigo,
-        foregroundColor: Colors.white,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Join Requests',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (widget.classroomName.isNotEmpty)
+                            Text(
+                              widget.classroomName,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontSize: 14,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator(color: AppDesignSystem.primaryIndigo))
+                : _error != null
+                    ? _buildErrorState()
+                    : _pendingRequests.isEmpty
+                        ? _buildEmptyState()
+                        : _buildRequestsList(),
+          ),
+        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? _buildErrorState()
-              : _pendingRequests.isEmpty
-                  ? _buildEmptyState()
-                  : _buildRequestsList(),
     );
   }
 
@@ -167,21 +210,38 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.inbox_outlined,
-              size: 80,
-              color: AppDesignSystem.textSecondary,
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppDesignSystem.primaryIndigo.withOpacity(0.1),
+                    const Color(0xFF8B5CF6).withOpacity(0.1),
+                  ],
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.inbox_outlined,
+                size: 64,
+                color: AppDesignSystem.primaryIndigo.withOpacity(0.5),
+              ),
             ),
-            const SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'No Pending Requests',
-              style: AppTextStyles.h1,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'All join requests have been processed.',
-              style: AppTextStyles.bodyMedium.copyWith(
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
                 color: AppDesignSystem.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'All join requests have been processed.',
+              style: TextStyle(
+                fontSize: 14,
+                color: AppDesignSystem.textTertiary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -220,8 +280,19 @@ class _RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -229,12 +300,35 @@ class _RequestCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                // Avatar
-                CircleAvatar(
-                  backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                  child: Text(
-                    request.studentName[0].toUpperCase(),
-                    style: AppTextStyles.h3.copyWith(color: AppDesignSystem.primaryIndigo),
+                // Avatar with gradient
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppDesignSystem.primaryIndigo,
+                        const Color(0xFF8B5CF6),
+                      ],
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppDesignSystem.primaryIndigo.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      request.studentName[0].toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -246,7 +340,11 @@ class _RequestCard extends StatelessWidget {
                     children: [
                       Text(
                         request.studentName,
-                        style: AppTextStyles.h3,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: AppDesignSystem.textPrimary,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(

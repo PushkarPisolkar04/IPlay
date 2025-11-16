@@ -9,7 +9,7 @@ class CreateAnnouncementScreen extends StatefulWidget {
   final bool isSchoolWide;
   final String? classroomId;
   final String? schoolId;
-  
+
   const CreateAnnouncementScreen({
     super.key,
     this.isSchoolWide = false,
@@ -51,18 +51,23 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
 
       setState(() {
         _classrooms = classroomsSnapshot.docs.map((doc) {
+          final data = doc.data();
+          final name = data['name'] ?? 'Unnamed';
+          final grade = data['grade'] ?? '';
           return {
             'id': doc.id,
-            'name': doc.data()['name'] ?? 'Unnamed',
+            'name': grade.isNotEmpty ? '$name $grade' : name,
           };
         }).toList();
-        
+
         if (_classrooms.isNotEmpty && _selectedClassroomId == null) {
           _selectedClassroomId = _classrooms[0]['id'];
         }
       });
+      
+      print('Loaded ${_classrooms.length} classrooms');
     } catch (e) {
-      // print('Error loading classrooms: $e');
+      print('Error loading classrooms: $e');
     }
   }
 
@@ -92,7 +97,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
 
       final userData = userDoc.data()!;
       final isPrincipal = userData['isPrincipal'] == true;
-      
+
       // Create announcement
       final announcementData = {
         'title': _titleController.text.trim(),
@@ -108,28 +113,26 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         // School-wide announcement
         final schoolId = userData['principalOfSchool'];
         if (schoolId == null) throw Exception('Principal not associated with a school');
-        
+
         announcementData['schoolId'] = schoolId;
-        
-        // print('Creating announcement: $announcementData');
-        
+
         await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
-        
+
         // Send notifications to all students in the school
         final schoolDoc = await FirebaseFirestore.instance
             .collection('schools')
             .doc(schoolId)
             .get();
-        
+
         if (schoolDoc.exists) {
           final studentIds = List<String>.from(schoolDoc.data()?['studentIds'] ?? []);
-          
+
           if (studentIds.isNotEmpty) {
             await _notificationService.sendToUsers(
               userIds: studentIds,
-              title: '📢 ${_titleController.text.trim()}',
+              title: 'School Announcement: ${_titleController.text.trim()}',
               body: _messageController.text.trim().length > 100
                   ? '${_messageController.text.trim().substring(0, 100)}...'
                   : _messageController.text.trim(),
@@ -144,26 +147,26 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         // Classroom announcement (for teachers)
         final classroomId = widget.classroomId ?? _selectedClassroomId;
         if (classroomId == null) throw Exception('No classroom specified');
-        
+
         announcementData['classroomId'] = classroomId;
-        
+
         await FirebaseFirestore.instance
             .collection('announcements')
             .add(announcementData);
-        
+
         // Send notifications to all students in the classroom
         final classroomDoc = await FirebaseFirestore.instance
             .collection('classrooms')
             .doc(classroomId)
             .get();
-        
+
         if (classroomDoc.exists) {
           final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
-          
+
           if (studentIds.isNotEmpty) {
             await _notificationService.sendToUsers(
               userIds: studentIds,
-              title: '📢 ${_titleController.text.trim()}',
+              title: 'Classroom Announcement: ${_titleController.text.trim()}',
               body: _messageController.text.trim().length > 100
                   ? '${_messageController.text.trim().substring(0, 100)}...'
                   : _messageController.text.trim(),
@@ -206,204 +209,209 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: Text(widget.isSchoolWide ? 'School Announcement' : 'Classroom Announcement'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CleanCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            widget.isSchoolWide ? Icons.school : Icons.class_,
-                            color: AppDesignSystem.primaryIndigo,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            widget.isSchoolWide ? 'Post to Entire School' : 'Post to Classroom',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        widget.isSchoolWide
-                            ? 'This announcement will be visible to all students and teachers in your school.'
-                            : 'This announcement will be visible to all students in your classroom.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
+      body: Column(
+        children: [
+          // App bar
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppDesignSystem.gradientPrimary,
+              boxShadow: [
+                BoxShadow(
+                  color: AppDesignSystem.primaryIndigo.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
-              ),
-              const SizedBox(height: 16),
-              
-              // Classroom Selector for Teachers
-              if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
-                CleanCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Select Classroom',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        DropdownButtonFormField<String>(
-                          value: _selectedClassroomId,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          ),
-                          items: _classrooms.map((classroom) {
-                            return DropdownMenuItem<String>(
-                              value: classroom['id'],
-                              child: Text(classroom['name']),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedClassroomId = value;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a classroom';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
+              ],
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                  ),
-                ),
-              if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
-                const SizedBox(height: 16),
-              
-              CleanCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Title',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          hintText: 'e.g., Important Update',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          widget.isSchoolWide ? 'School Announcement' : 'New Announcement',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a title';
-                          }
-                          return null;
-                        },
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Message',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _messageController,
-                        decoration: InputDecoration(
-                          hintText: 'Write your announcement here...',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        maxLines: 8,
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a message';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 48),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _isSubmitting ? null : _postAnnouncement,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppDesignSystem.primaryIndigo,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: _isSubmitting
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : const Text(
-                        'Post Announcement',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-              ),
-            ],
+            ),
           ),
-        ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+
+                    // Classroom Selector for Teachers
+                    if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                      CleanCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Select Classroom',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              DropdownButtonFormField<String>(
+                                value: _selectedClassroomId,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.grey[100],
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                ),
+                                items: _classrooms.map((classroom) {
+                                  return DropdownMenuItem<String>(
+                                    value: classroom['id'],
+                                    child: Text(classroom['name']),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedClassroomId = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select a classroom';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                      const SizedBox(height: 16),
+
+                    CleanCard(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Title',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _titleController,
+                              decoration: InputDecoration(
+                                hintText: 'e.g., Important Update',
+                                filled: true,
+                                fillColor: Colors.grey[100],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter a title';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Message',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _messageController,
+                              decoration: InputDecoration(
+                                hintText: 'Write your announcement here...',
+                                filled: true,
+                                fillColor: Colors.grey[100],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                              ),
+                              maxLines: 8,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter a message';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _isSubmitting ? null : _postAnnouncement,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppDesignSystem.primaryIndigo,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Post Announcement',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

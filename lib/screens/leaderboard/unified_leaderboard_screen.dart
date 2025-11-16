@@ -66,6 +66,18 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         final classroomIds = userData['classroomIds'] as List?;
         if (classroomIds != null && classroomIds.isNotEmpty) {
           _userClassroomId = classroomIds.first;
+          
+          // If student doesn't have schoolId, get it from their classroom
+          if (_userSchoolId == null && _userRole == 'student') {
+            final classroomDoc = await FirebaseFirestore.instance
+                .collection('classrooms')
+                .doc(_userClassroomId)
+                .get();
+            
+            if (classroomDoc.exists) {
+              _userSchoolId = classroomDoc.data()?['schoolId'];
+            }
+          }
         }
         
         // For teachers, get all their classrooms
@@ -177,11 +189,13 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .where('role', isEqualTo: 'student')
         .get();
     
-    // Sort by totalXP in descending order
-    final studentsList = studentsSnapshot.docs.map((doc) => {
-      'id': doc.id,
-      ...doc.data(),
-    }).toList();
+    // Filter out deleted users and sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs
+        .where((doc) => doc.data()['isDeleted'] != true)
+        .map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        }).toList();
     
     studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
     
@@ -197,10 +211,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .where('role', isEqualTo: 'student')
         .get();
     
-    // Filter students who are in teacher's classrooms and sort by XP
+    // Filter students who are in teacher's classrooms, not deleted, and sort by XP
     final studentsList = studentsSnapshot.docs
         .where((doc) {
-          final studentClassrooms = doc.data()['classroomIds'] as List?;
+          final data = doc.data();
+          final isDeleted = data['isDeleted'] == true;
+          if (isDeleted) return false;
+          
+          final studentClassrooms = data['classroomIds'] as List?;
           return studentClassrooms?.any((id) => _teacherClassroomIds.contains(id)) ?? false;
         })
         .map((doc) => {
@@ -217,17 +235,44 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   Future<void> _loadSchoolLeaderboard() async {
     if (_userSchoolId == null) return;
     
+    // First, get all classrooms in this school
+    final classroomsSnapshot = await FirebaseFirestore.instance
+        .collection('classrooms')
+        .where('schoolId', isEqualTo: _userSchoolId)
+        .get();
+    
+    final schoolClassroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
+    
+    if (schoolClassroomIds.isEmpty) {
+      _students = [];
+      return;
+    }
+    
+    // Get all students
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('schoolId', isEqualTo: _userSchoolId)
         .where('role', isEqualTo: 'student')
         .get();
     
-    // Sort by totalXP in descending order
-    final studentsList = studentsSnapshot.docs.map((doc) => {
-      'id': doc.id,
-      ...doc.data(),
-    }).toList();
+    // Filter students who are in school classrooms or have schoolId, not deleted, and sort by XP
+    final studentsList = studentsSnapshot.docs
+        .where((doc) {
+          final data = doc.data();
+          final isDeleted = data['isDeleted'] == true;
+          if (isDeleted) return false;
+          
+          // Check if student has schoolId directly
+          if (data['schoolId'] == _userSchoolId) return true;
+          
+          // Check if student is in any classroom of this school
+          final studentClassrooms = data['classroomIds'] as List?;
+          return studentClassrooms?.any((id) => schoolClassroomIds.contains(id)) ?? false;
+        })
+        .map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        })
+        .toList();
     
     studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
     
@@ -243,11 +288,13 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .where('role', isEqualTo: 'student')
         .get();
     
-    // Sort by totalXP in descending order
-    final studentsList = studentsSnapshot.docs.map((doc) => {
-      'id': doc.id,
-      ...doc.data(),
-    }).toList();
+    // Filter out deleted users and sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs
+        .where((doc) => doc.data()['isDeleted'] != true)
+        .map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        }).toList();
     
     studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
     
@@ -260,11 +307,13 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .where('role', isEqualTo: 'student')
         .get();
     
-    // Sort by totalXP in descending order
-    final studentsList = studentsSnapshot.docs.map((doc) => {
-      'id': doc.id,
-      ...doc.data(),
-    }).toList();
+    // Filter out deleted users and sort by totalXP in descending order
+    final studentsList = studentsSnapshot.docs
+        .where((doc) => doc.data()['isDeleted'] != true)
+        .map((doc) => {
+          'id': doc.id,
+          ...doc.data(),
+        }).toList();
     
     studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
     
@@ -293,15 +342,30 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                    child: Center(
-                      child: Text(
-                        'Leaderboard',
-                        style: AppDesignSystem.h2.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                    child: Row(
+                      children: [
+                        // Show back button only if this screen was pushed (not in bottom nav)
+                        if (ModalRoute.of(context)?.canPop ?? false)
+                          IconButton(
+                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        else
+                          const SizedBox(width: 48),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              'Leaderboard',
+                              style: AppDesignSystem.h2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 48),
+                      ],
                     ),
                   ),
                   if (_tabs.length > 1)

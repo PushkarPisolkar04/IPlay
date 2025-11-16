@@ -340,99 +340,75 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppDesignSystem.backgroundLight,
-      body: CustomScrollView(
-        slivers: [
-          // Gradient Header
-          SliverToBoxAdapter(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      body: Column(
+        children: [
+          // App bar matching student style
+          Container(
+            decoration: BoxDecoration(
+              gradient: AppDesignSystem.gradientPrimary,
+              boxShadow: [
+                BoxShadow(
+                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-              ),
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ),
-                      const Center(
+              ],
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const Expanded(
+                      child: Center(
                         child: Text(
                           'Create Classroom',
                           style: TextStyle(
+                            color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 48), // Balance the back button
+                  ],
                 ),
               ),
             ),
           ),
-
+          
           // Form Content
-          SliverPadding(
-            padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-              CleanCard(
-                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                child: Row(
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.school,
-                      color: AppDesignSystem.primaryIndigo,
-                      size: 32,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Create a classroom to manage your students and track their progress!',
-                        style: AppTextStyles.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: AppSpacing.xl),
+                    const SizedBox(height: 8),
               
               // School Affiliation Toggle
-              Text(
+              const Text(
                 'Classroom Type',
-                style: AppTextStyles.sectionHeader,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 8),
               
               CleanCard(
                 child: Column(
                   children: [
                     RadioListTile<bool>(
-                      title: Text('Independent', style: AppTextStyles.cardTitle),
-                      subtitle: Text(
+                      title: const Text('Independent', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      subtitle: const Text(
                         'Not affiliated with any school',
-                        style: AppTextStyles.bodySmall.copyWith(color: AppDesignSystem.textSecondary),
+                        style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
                       ),
                       value: true,
                       groupValue: _isIndependent,
@@ -444,13 +420,15 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                         });
                       },
                       activeColor: AppDesignSystem.primaryIndigo,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
                     ),
                     const Divider(height: 1),
                     RadioListTile<bool>(
-                      title: Text('Under School', style: AppTextStyles.cardTitle),
-                      subtitle: Text(
+                      title: const Text('Under School', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                      subtitle: const Text(
                         'Part of a school system',
-                        style: AppTextStyles.bodySmall.copyWith(color: AppDesignSystem.textSecondary),
+                        style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
                       ),
                       value: false,
                       groupValue: _isIndependent,
@@ -458,6 +436,8 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                         setState(() => _isIndependent = value!);
                       },
                       activeColor: AppDesignSystem.primaryIndigo,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
                     ),
                   ],
                 ),
@@ -465,19 +445,34 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
               
               // School Selection (if under school)
               if (!_isIndependent) ...[
-                const SizedBox(height: AppSpacing.lg),
-                Text(
+                const SizedBox(height: 16),
+                const Text(
                   'Find School',
-                  style: AppTextStyles.sectionHeader,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: 12),
                 
                 if (_selectedSchoolName != null)
-                  CleanCard(
-                    color: AppDesignSystem.success.withValues(alpha: 0.1),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: Row(
                       children: [
-                        const Icon(Icons.check_circle, color: AppDesignSystem.success),
+                        const Icon(Icons.check_circle, color: Colors.white, size: 24),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
@@ -485,19 +480,25 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                             children: [
                               Text(
                                 'Selected School',
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppDesignSystem.textSecondary,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.white.withValues(alpha: 0.9),
                                 ),
                               ),
+                              const SizedBox(height: 2),
                               Text(
                                 _selectedSchoolName!,
-                                style: AppTextStyles.cardTitle,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ],
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close),
+                          icon: const Icon(Icons.close, color: Colors.white),
                           onPressed: () {
                             setState(() {
                               _selectedSchoolId = null;
@@ -543,14 +544,14 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 ],
               ],
               
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 20),
               
-              Text(
+              const Text(
                 'Classroom Details',
-                style: AppTextStyles.sectionHeader,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 12),
               
               TextFormField(
                 controller: _nameController,
@@ -567,7 +568,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 },
               ),
               
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 16),
               
               TextFormField(
                 controller: _gradeController,
@@ -584,7 +585,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 },
               ),
               
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 16),
               
               TextFormField(
                 controller: _subjectController,
@@ -595,24 +596,24 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 ),
               ),
               
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: 20),
               
-              Text(
-                'Settings',
-                style: AppTextStyles.sectionHeader,
+              const Text(
+                'Classroom Access',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 12),
               
               CleanCard(
                 child: SwitchListTile(
-                  title: Text(
-                    'Require Approval',
-                    style: AppTextStyles.cardTitle,
+                  title: const Text(
+                    'Locked Classroom',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                  subtitle: Text(
+                  subtitle: const Text(
                     'Students need your approval before joining',
-                    style: AppTextStyles.bodySmall,
+                    style: TextStyle(fontSize: 14),
                   ),
                   value: _requiresApproval,
                   onChanged: (value) {
@@ -622,7 +623,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 ),
               ),
               
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 24),
               
               PrimaryButton(
                 text: _isLoading ? 'Creating...' : 'Create Classroom',
@@ -630,22 +631,22 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                 fullWidth: true,
               ),
               
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 12),
               
-              Center(
+              const Center(
                 child: Text(
                   'A unique join code will be generated',
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppDesignSystem.textSecondary,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF9CA3AF),
                   ),
                 ),
               ),
               
-              const SizedBox(height: AppSpacing.xl),
-                    ],
-                  ),
+              const SizedBox(height: 24),
+                  ],
                 ),
-              ]),
+              ),
             ),
           ),
         ],
