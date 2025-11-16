@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
-import '../utils/accessibility_helper.dart';
 
 /// AchievementBadge - Displays badge with locked/unlocked state
 /// Shows unlock date if unlocked, grayscale when locked
@@ -24,24 +23,12 @@ class AchievementBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final semanticLabel = AccessibilityHelper.badgeLabel(
-      name,
-      unlocked: unlocked,
-    );
-
-    return Semantics(
-      label: semanticLabel,
-      hint: description,
-      button: onTap != null,
-      enabled: onTap != null,
-      onTap: onTap,
-      child: ExcludeSemantics(
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            borderRadius: AppDesignSystem.borderRadiusMD,
-            child: Container(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppDesignSystem.borderRadiusMD,
+        child: Container(
           decoration: AppDesignSystem.solidDecoration(
             color: AppDesignSystem.backgroundWhite,
             borderRadius: AppDesignSystem.borderRadiusMD,
@@ -134,8 +121,6 @@ class AchievementBadge extends StatelessWidget {
                 ),
               ],
             ],
-          ),
-        ),
           ),
         ),
       ),

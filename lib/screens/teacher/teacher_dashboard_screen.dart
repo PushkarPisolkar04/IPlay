@@ -17,8 +17,6 @@ import '../leaderboard/unified_leaderboard_screen.dart';
 import 'create_classroom_screen.dart';
 import 'classroom_detail_screen.dart';
 import 'all_students_screen.dart';
-import 'student_progress_screen.dart';
-import 'quiz_performance_screen.dart';
 import 'generate_report_screen.dart';
 import '../announcements/unified_announcements_screen.dart';
 import 'create_announcement_screen.dart';
@@ -631,176 +629,61 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                       ),
                       const SizedBox(height: 16),
                       
-                      // Stats Grid with gradient cards - matching student style
+                      // Stats Grid with white cards and colored icons
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFFEC4899), Color(0xFFDB2777)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFFEC4899).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: InkWell(
-                                onTap: () => widget.onNavigate(1),
-                                borderRadius: BorderRadius.circular(16),
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.class_, color: Colors.white, size: 28),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      _totalClassrooms.toString(),
-                                      style: AppDesignSystem.h2.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Classes',
-                                      style: AppDesignSystem.bodySmall.copyWith(
-                                        color: Colors.white.withValues(alpha: 0.9),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            child: _buildStatCard(
+                              icon: Icons.class_,
+                              value: _totalClassrooms.toString(),
+                              title: 'Classes',
+                              subtitle: 'Total classrooms',
+                              color: const Color(0xFFEC4899),
+                              onTap: () => widget.onNavigate(1),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF6366F1).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
+                            child: _buildStatCard(
+                              icon: Icons.people,
+                              value: _totalStudents.toString(),
+                              title: 'Students',
+                              subtitle: 'Total students',
+                              color: const Color(0xFF6366F1),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AllStudentsScreen(),
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  const Icon(Icons.people, color: Colors.white, size: 28),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _totalStudents.toString(),
-                                    style: AppDesignSystem.h2.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Students',
-                                    style: AppDesignSystem.bodySmall.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  const Icon(Icons.trending_up, color: Colors.white, size: 28),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _totalStudents > 0 
-                                        ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
-                                        : '0%',
-                                    style: AppDesignSystem.h2.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Active Rate',
-                                    style: AppDesignSystem.bodySmall.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: _buildStatCard(
+                              icon: Icons.trending_up,
+                              value: _totalStudents > 0 
+                                  ? '${((_activeStudents / _totalStudents) * 100).toStringAsFixed(0)}%'
+                                  : '0%',
+                              title: 'Active Rate',
+                              subtitle: 'Last 7 days',
+                              color: const Color(0xFFFBBF24),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  const Icon(Icons.stars, color: Colors.white, size: 28),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _avgClassXP.toStringAsFixed(0),
-                                    style: AppDesignSystem.h2.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Avg XP',
-                                    style: AppDesignSystem.bodySmall.copyWith(
-                                      color: Colors.white.withValues(alpha: 0.9),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: _buildStatCard(
+                              icon: Icons.stars,
+                              value: _avgClassXP.toStringAsFixed(0),
+                              title: 'Avg XP',
+                              subtitle: 'Per student',
+                              color: const Color(0xFF8B5CF6),
                             ),
                           ),
                         ],
@@ -818,12 +701,15 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                       ),
                       const SizedBox(height: 16),
 
+                      // Row 1: Create Class & Reports
                       Row(
                         children: [
                           Expanded(
-                            child: AppButton.primary(
+                            child: _buildColoredActionButton(
+                              context: context,
                               text: 'Create Class',
                               icon: Icons.add_box,
+                              color: const Color(0xFF6366F1),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -834,30 +720,13 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                               },
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppButton.secondary(
-                              text: 'Announce',
-                              icon: Icons.campaign,
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CreateAnnouncementScreen(),
-                                  ),
-                                ).then((_) => _loadData());
-                              },
-                            ),
-                          ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: AppButton.outline(
+                            child: _buildColoredActionButton(
+                              context: context,
                               text: 'Reports',
                               icon: Icons.assessment,
+                              color: const Color(0xFFEF4444),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -870,561 +739,201 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 12),
+                      
+                      // Row 2: Announcement & Students
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildColoredActionButton(
+                              context: context,
+                              text: 'Announcement',
+                              icon: Icons.campaign,
+                              color: const Color(0xFF8B5CF6),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const UnifiedAnnouncementsScreen(),
+                                  ),
+                                ).then((_) => _loadData());
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildColoredActionButton(
+                              context: context,
+                              text: 'Students',
+                              icon: Icons.people,
+                              color: const Color(0xFF3B82F6),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AllStudentsScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      
+                      // Row 3: Leaderboard (full width)
+                      _buildColoredActionButton(
+                        context: context,
+                        text: 'Leaderboard',
+                        icon: Icons.leaderboard,
+                        color: const Color(0xFFF59E0B),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UnifiedLeaderboardScreen(),
+                            ),
+                          );
+                        },
+                      ),
 
                       const SizedBox(height: 24),
 
-                      // Pending Join Requests Section
-                      Text(
-                        'Pending Join Requests',
-                        style: AppDesignSystem.h4.copyWith(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      
+                      // Pending Join Requests Section - Only show if there are requests
                       StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection('join_requests')
                             .where('status', isEqualTo: 'pending')
-                            .orderBy('requestedAt', descending: true)
-                            .limit(5)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-
-                          final requests = snapshot.data!.docs;
-
-                          if (requests.isEmpty) {
-                            return CleanCard(
-                              child: Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Center(
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle_outline,
-                                        size: 48,
-                                        color: Colors.grey[400],
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        'No pending requests',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-
-                          return Column(
-                            children: requests.map((doc) {
-                              final request = JoinRequestModel.fromFirestore(
-                                doc.data() as Map<String, dynamic>,
-                              );
-                              
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: _PendingRequestCard(
-                                  request: request,
-                                  onApproved: _loadData,
-                                  onRejected: _loadData,
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Recent Activity Feed
-                      Text(
-                        'Recent Activity',
-                        style: AppDesignSystem.h4,
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('progress')
-                            .orderBy('completedAt', descending: true)
                             .limit(10)
                             .snapshots(),
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Center(child: CircularProgressIndicator());
+                          // Don't show anything while loading
+                          if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+                            return const SizedBox.shrink();
                           }
 
-                          final activities = snapshot.data!.docs;
+                          // Don't show anything on error
+                          if (snapshot.hasError) {
+                            return const SizedBox.shrink();
+                          }
 
-                          if (activities.isEmpty) {
-                            return CleanCard(
-                              child: Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Center(
-                                  child: Text(
-                                    'No recent activity',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
+                          var requests = snapshot.data?.docs ?? [];
+
+                          // Don't show section if no requests
+                          if (requests.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+
+                          // Sort by requestedAt in memory (newest first)
+                          requests.sort((a, b) {
+                            try {
+                              final aData = a.data() as Map<String, dynamic>;
+                              final bData = b.data() as Map<String, dynamic>;
+                              final aTime = aData['requestedAt'] as Timestamp?;
+                              final bTime = bData['requestedAt'] as Timestamp?;
+                              if (aTime == null || bTime == null) return 0;
+                              return bTime.compareTo(aTime);
+                            } catch (e) {
+                              return 0;
+                            }
+                          });
+
+                          // Take only first 5
+                          final displayRequests = requests.take(5).toList();
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Pending Join Requests',
+                                style: AppDesignSystem.h4.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          }
-
-                          return CleanCard(
-                            child: ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: activities.length > 5 ? 5 : activities.length,
-                              separatorBuilder: (context, index) => const Divider(height: 1),
-                              itemBuilder: (context, index) {
-                                final activity = activities[index].data() as Map<String, dynamic>;
-                                return _ActivityTile(activity: activity);
-                              },
-                            ),
+                              const SizedBox(height: 16),
+                              ...displayRequests.map((doc) {
+                                try {
+                                  final request = JoinRequestModel.fromFirestore(
+                                    doc.data() as Map<String, dynamic>,
+                                  );
+                                  
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _PendingRequestCard(
+                                      request: request,
+                                      onApproved: _loadData,
+                                      onRejected: _loadData,
+                                    ),
+                                  );
+                                } catch (e) {
+                                  return const SizedBox.shrink();
+                                }
+                              }).toList(),
+                              const SizedBox(height: 24),
+                            ],
                           );
                         },
                       ),
-
-                      const SizedBox(height: 24),
-
-                      // Performance Insights placeholder
-                      Text(
-                        'Performance Insights',
-                        style: AppDesignSystem.h4,
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          gradient: AppDesignSystem.gradientPrimary,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: AppDesignSystem.shadowMD,
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(
-                              Icons.insights,
-                              color: Colors.white,
-                              size: 48,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Coming Soon',
-                              style: AppDesignSystem.h4.copyWith(color: Colors.white),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Detailed analytics and insights',
-                              style: AppDesignSystem.bodySmall.copyWith(
-                                color: Colors.white.withValues(alpha: 0.9),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Legacy action - keeping for compatibility
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CreateClassroomScreen(),
-                            ),
-                          ).then((_) => _loadData());
-                        },
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                                color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-                        ),
-                              child: Icon(Icons.add_box, color: AppDesignSystem.primaryPink, size: 20),
-                      ),
-                      const SizedBox(width: 12),
-                            const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-              children: [
-                                  Text(
-                                    'Create Classroom',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Set up a new class',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-              ],
-            ),
-          ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // View All Announcements
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const UnifiedAnnouncementsScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.campaign, color: Color(0xFF8B5CF6), size: 20),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Announcements',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'View & create announcements',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // All Students
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AllStudentsScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-                                color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.people, color: Color(0xFF3B82F6), size: 20),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-      child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-        children: [
-                                  Text(
-                                    'All Students',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'View all student summary',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-                            ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-          ],
-        ),
-      ),
-                      const SizedBox(height: 10),
-
-                      // View Leaderboards
-                      CleanCard(
-                        onTap: () async {
-                          try {
-                            final user = FirebaseAuth.instance.currentUser;
-                            if (user == null) return;
-                            
-                            if (mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const UnifiedLeaderboardScreen(),
-                                  ),
-                                );
-        }
-    } catch (e) {
-                            // Error handling
-                          }
-                        },
-                        child: Row(
-          children: [
-            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.leaderboard, color: Color(0xFFF59E0B), size: 20),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-              children: [
-                                  Text(
-                                    'View Leaderboards',
-                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'School, Class, State & Country',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Student Progress
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                              builder: (context) => const StudentProgressScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF06B6D4).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.trending_up, color: Color(0xFF06B6D4), size: 20),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                                    'Student Progress',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'Track student progress',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  ),
-                            ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                ],
-              ),
-            ),
-                      const SizedBox(height: 10),
-
-                      // Quiz Performance
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const QuizPerformanceScreen(),
-                            ),
-                          );
-                        },
-                        child: Row(
-                        children: [
-                        Container(
-                              padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                                color: const Color(0xFFEC4899).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.quiz, color: Color(0xFFEC4899), size: 20),
-                            ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                        Text(
-                                    'Quiz Performance',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  Text(
-                                    'View quiz results',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                            ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Generate Report
-                      CleanCard(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                              builder: (context) => const GenerateReportScreen(),
-                                  ),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  Container(
-                              padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                                    ),
-                              child: const Icon(Icons.description, color: Color(0xFFEF4444), size: 20),
-                                  ),
-                            const SizedBox(width: 12),
-                            const Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                            Text(
-                                    'Generate Report',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                              Text(
-                                    'Create PDF reports',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-                                ],
-                              ),
-                            ),
-
-                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildColoredActionButton({
+    required BuildContext context,
+    required String text,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    // Create a lighter shade for gradient
+    final lightColor = Color.lerp(color, Colors.white, 0.2)!;
+    
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [color, lightColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -1438,52 +947,54 @@ class _TeacherOverviewTabState extends State<_TeacherOverviewTab> {
     required String subtitle,
     VoidCallback? onTap,
   }) {
-    return CleanCard(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-            Container(
-                  padding: const EdgeInsets.all(8),
+    final lightColor = Color.lerp(color, Colors.white, 0.3)!;
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, color: color, size: 20),
-                ),
-                  Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
-                  ),
-                  ),
-                ],
-              ),
-            const Spacer(),
+        gradient: LinearGradient(
+          colors: [color, lightColor],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+              size: 32,
+            ),
+            const SizedBox(height: 8),
             Text(
-              title,
+              value,
               style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
+              title,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -1678,43 +1189,36 @@ class _TeacherClassroomsTab extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      // Grade and number in one row
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Grade ',
+                                            style: const TextStyle(
+                                              fontSize: 17,
+                                              color: Color(0xFF1F2937),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            classroom['grade'] ?? 'N/A',
+                                            style: const TextStyle(
+                                              fontSize: 17,
+                                              color: Color(0xFF1F2937),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 6),
                                       // Class name
                                       Text(
                                         classroom['name'] ?? 'Unnamed Class',
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                          color: Color(0xFF6B7280),
                                         ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      // Grade and Section in one row
-                                      Row(
-                                        children: [
-                                          Text(
-                                            classroom['grade'] ?? 'No grade',
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Color(0xFF6B7280),
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          if (classroom['section'] != null) ...[
-                                            const Text(
-                                              ' • ',
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                color: Color(0xFF6B7280),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Sec ${classroom['section']}',
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                color: Color(0xFF6B7280),
-                                              ),
-                                            ),
-                                          ],
-                                        ],
                                       ),
                                       const SizedBox(height: 6),
                                       // Student count
@@ -2244,50 +1748,54 @@ class _TeacherAnalyticsTabState extends State<_TeacherAnalyticsTab> {
   }
 
   Widget _buildAnalyticsCard(String title, String value, IconData icon, Color color) {
-    return CleanCard(
-      child: Container(
-                          padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, color: color, size: 20),
-                ),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ],
+    final lightColor = Color.lerp(color, Colors.white, 0.3)!;
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [color, lightColor],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white,
+            size: 32,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }
@@ -2429,13 +1937,13 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
 
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .get();
-        
-        if (userDoc.exists) {
-          _user = UserModel.fromMap(userDoc.data()!);
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+      
+      if (userDoc.exists) {
+        _user = UserModel.fromMap(userDoc.data()!);
         _schoolId = userDoc.data()!['schoolId'] as String?;
 
         if (_schoolId != null) {
@@ -2451,53 +1959,67 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
         }
       }
 
-      // Get stats
-        final classroomsSnapshot = await FirebaseFirestore.instance
-            .collection('classrooms')
-            .where('teacherId', isEqualTo: currentUser.uid)
-            .get();
-        
-        _totalClassrooms = classroomsSnapshot.docs.length;
-        
-      int totalStudentsCount = 0;
+      // Get classrooms
+      final classroomsSnapshot = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: currentUser.uid)
+          .get();
+      
+      _totalClassrooms = classroomsSnapshot.docs.length;
+      
+      // Count unique students across all classrooms
+      Set<String> uniqueStudentIds = {};
       for (var classroomDoc in classroomsSnapshot.docs) {
         final classroomData = classroomDoc.data();
-        final studentIds = List<String>.from(classroomData['studentIds'] ?? []);
-        
-        // Count only active (non-deleted) students
-        for (String studentId in studentIds) {
-          try {
-            final studentDoc = await FirebaseFirestore.instance
-                .collection('users')
-                .doc(studentId)
-                .get();
+        final studentIds = (classroomData['studentIds'] as List?)?.cast<String>() ?? [];
+        uniqueStudentIds.addAll(studentIds);
+      }
+      
+      // Verify students exist and are not deleted
+      int validStudentCount = 0;
+      for (String studentId in uniqueStudentIds) {
+        try {
+          final studentDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          
+          if (studentDoc.exists) {
+            final studentData = studentDoc.data() as Map<String, dynamic>;
+            final role = studentData['role'] as String?;
+            final isDeleted = studentData['isDeleted'] == true;
             
-            if (studentDoc.exists) {
-              final studentData = studentDoc.data() as Map<String, dynamic>;
-              final isDeleted = studentData['isDeleted'] == true;
-              if (!isDeleted) {
-                totalStudentsCount++;
-              }
+            if (role == 'student' && !isDeleted) {
+              validStudentCount++;
             }
-          } catch (e) {
-            // Skip this student if there's an error
-            continue;
           }
+        } catch (e) {
+          continue;
         }
       }
-      _totalStudents = totalStudentsCount;
+      _totalStudents = validStudentCount;
 
       if (mounted) {
         setState(() => _isLoading = false);
       }
     } catch (e) {
+      print('Error loading teacher profile data: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }
     }
   }
+  
+  String _getInitials() {
+    if (_user == null) return 'T';
+    final names = _user!.displayName.split(' ');
+    if (names.length >= 2) {
+      return '${names[0][0]}${names[1][0]}'.toUpperCase();
+    }
+    return _user!.displayName[0].toUpperCase();
+  }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return Scaffold(
@@ -2507,33 +2029,30 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // Header skeleton
                 LoadingSkeleton(
-                  height: 120,
-                  borderRadius: BorderRadius.circular(16),
+                  height: 200,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                const SizedBox(height: 24),
-                // Stats skeleton
+                const SizedBox(height: 16),
                 Row(
                   children: List.generate(
-                    2,
+                    3,
                     (index) => Expanded(
                       child: Padding(
                         padding: EdgeInsets.only(
-                          left: index == 0 ? 0 : 6,
-                          right: index == 1 ? 0 : 6,
+                          left: index == 0 ? 0 : 8,
+                          right: index == 2 ? 0 : 8,
                         ),
                         child: LoadingSkeleton(
-                          height: 80,
+                          height: 100,
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                // List skeleton
-                const ListSkeleton(itemCount: 3),
+                const SizedBox(height: 16),
+                const ListSkeleton(itemCount: 2),
               ],
             ),
           ),
@@ -2542,300 +2061,228 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            // Compact Header with gradient
-            SliverToBoxAdapter(
-              child: Container(
-      decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFFEF4444), Color(0xFFF87171)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
+      backgroundColor: AppDesignSystem.backgroundLight,
+      appBar: AppBar(
+        title: const Text('Profile', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFEF4444),
+        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: const Icon(Icons.settings, size: 24),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                ).then((_) => _loadData());
+              },
+            ),
+          ),
+        ],
       ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            // Profile Header
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-                padding: const EdgeInsets.fromLTRB(20, 14, 20, 18), // Reduced padding
-          child: Column(
-            children: [
-                    Stack(
-                      alignment: Alignment.center,
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 3),
+                    ),
+                    child: AvatarWidget(
+                      initials: _getInitials(),
+                      size: 90,
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
+                      imageUrl: _user?.avatarUrl,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    _user?.displayName ?? 'Teacher',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    _user?.email ?? '',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Center(
-                          child: Text(
-                            'Profile',
-                            style: TextStyle(
-                              fontSize: 22, // Reduced from 24
-                              fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            icon: const Icon(Icons.settings, color: Colors.white, size: 22),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const SettingsScreen()),
-                              ).then((_) => _loadData());
-                            },
+                        Icon(Icons.school, size: 18, color: Colors.white),
+                        SizedBox(width: 6),
+                        Text(
+                          'Teacher',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 14), // Reduced from 16
-                    // Profile Card
-                  Container(
-                      padding: const EdgeInsets.all(14), // Reduced from 16
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.08),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-                      child: Row(
-                        children: [
-                          AvatarWidget(
-                            imageUrl: _user?.avatarUrl,
-                            initials: (_user?.displayName != null && _user!.displayName.isNotEmpty)
-                                ? _user!.displayName.substring(0, 1).toUpperCase()
-                                : 'T',
-                            size: 56, // Reduced from 60
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                                Text(
-                                  _user?.displayName ?? 'Teacher',
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  _user?.email ?? '',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                if (_schoolName != null) ...[
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _schoolName!,
-                        style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey[500],
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                                const SizedBox(height: 6),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFEF4444),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    'Teacher',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11,
-                      ),
-                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Stats Overview
-            SliverPadding(
-      padding: const EdgeInsets.all(20),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const Text(
-                    'Teaching Stats',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F2937),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CleanCard(
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
-      child: Column(
-        children: [
-                                const Icon(Icons.class_, color: Color(0xFFEF4444), size: 28),
-                                const SizedBox(height: 8),
-          Text(
-                                  _totalClassrooms.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 24,
-              fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1F2937),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-                                  'Classes',
-                                  style: TextStyle(
-              fontSize: 13,
-                                    color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
+            const SizedBox(height: 16),
+            // Stats Row
+            Row(
+              children: [
                 Expanded(
-                        child: CleanCard(
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
-                  child: Column(
-                    children: [
-                                const Icon(Icons.people, color: Color(0xFF3B82F6), size: 28),
-                                const SizedBox(height: 8),
-                      Text(
-                                  _totalStudents.toString(),
-                        style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1F2937),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                                  'Students',
-                                  style: TextStyle(
-                          fontSize: 13,
-                                    color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
+                  child: _buildStatCard(
+                    icon: Icons.class_,
+                    value: _totalClassrooms.toString(),
+                    label: 'Classes',
+                    color: const Color(0xFFEC4899),
                   ),
                 ),
-                        ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    icon: Icons.people,
+                    value: _totalStudents.toString(),
+                    label: 'Students',
+                    color: const Color(0xFF6366F1),
+                  ),
                 ),
               ],
             ),
+            const SizedBox(height: 20),
 
-                  const SizedBox(height: 24),
-
-                  // School Information (if teacher is part of a school)
-                  if (_schoolData != null) ...[
-                    const Text(
-                      'School Information',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1F2937),
+            // School Information (Only once!)
+            if (_schoolData != null) ...[
+              const Text(
+                'School Information',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1F2937),
+                ),
+              ),
+              const SizedBox(height: 12),
+              CleanCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoRow(Icons.school, 'School Name', _schoolData!['name'] ?? 'N/A'),
+                      const Divider(height: 24),
+                      _buildInfoRow(
+                        Icons.location_on,
+                        'Location',
+                        '${_schoolData!['city'] ?? 'N/A'}, ${_schoolData!['state'] ?? 'N/A'}',
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    CleanCard(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                            _buildInfoRow(Icons.school, 'School Name', _schoolData!['name'] ?? 'N/A'),
-                            const Divider(height: 24),
-                            _buildInfoRow(Icons.location_on, 'Location', 
-                                '${_schoolData!['city'] ?? 'N/A'}, ${_schoolData!['state'] ?? 'N/A'}'),
-                            const Divider(height: 24),
-                            _buildInfoRow(Icons.qr_code, 'School Code', _schoolData!['schoolCode'] ?? 'N/A'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
-                  // Logout Button
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Logout'),
-                          content: const Text('Are you sure you want to logout?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Cancel'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-
-                      if (confirm == true && mounted) {
-                        await FirebaseAuth.instance.signOut();
-                        if (mounted) {
-                          Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.logout),
-                    label: const Text('Logout'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                ]),
-                          ),
-                        ),
+                      const Divider(height: 24),
+                      _buildInfoRow(Icons.qr_code, 'School Code', _schoolData!['schoolCode'] ?? 'N/A'),
                     ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ],
         ),
       ),
     );
   }
+
+  // Helper: Stat Card
+  Widget _buildStatCard({
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [color, Color.lerp(color, Colors.white, 0.3)!],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 28),
+          const SizedBox(height: 8),
+          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.white)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFFEF4444), size: 20),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              const SizedBox(height: 2),
+              Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1F2937))),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
 
   Widget _buildQuickLinkCard(String title, IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
@@ -2901,7 +2348,6 @@ class _TeacherProfileTabState extends State<_TeacherProfileTab> {
       ],
     );
   }
-}
 
 
 // =================================================================

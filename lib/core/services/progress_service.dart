@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/progress_model.dart';
 import '../models/user_model.dart';
-import '../../services/sound_service.dart';
 import '../../services/streak_service.dart';
 import 'badge_service.dart';
 import 'offline_progress_manager.dart';
@@ -287,8 +286,7 @@ class ProgressService {
       // Commit all updates
       await batch.commit();
 
-      // Play XP gain sound
-      SoundService.playXPGain();
+
       
       // Check for new badges and return them
       // Note: checkAndAwardBadges now handles notification creation internally

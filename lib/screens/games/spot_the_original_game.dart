@@ -9,7 +9,6 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
 import '../../services/app_rating_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// Spot the Original - Identify the original work among copies
@@ -94,11 +93,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
       setState(() {
         _score++;
       });
-      // Haptic feedback for correct answer
-      HapticFeedbackUtil.correctAnswer();
+
     } else {
-      // Haptic feedback for incorrect answer
-      HapticFeedbackUtil.incorrectAnswer();
+
     }
 
     // Move to next round after delay
@@ -119,8 +116,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> {
     setState(() {
       _gameEnded = true;
     });
-    // Haptic feedback for XP gain
-    HapticFeedbackUtil.xpGain();
+
     _saveScore();
   }
 

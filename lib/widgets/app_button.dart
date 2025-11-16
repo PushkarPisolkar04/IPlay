@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
-import '../utils/accessibility_helper.dart';
 
 /// AppButton - Reusable button widget with 5 types
 /// Types: primary, secondary, accent, outline, text
@@ -161,15 +160,7 @@ class AppButton extends StatelessWidget {
         break;
     }
 
-    // Add Semantics wrapper for accessibility
-    return AccessibilityHelper.withSemantics(
-      label: AccessibilityHelper.buttonLabel(text, isLoading: isLoading),
-      hint: onPressed == null ? 'Button is disabled' : null,
-      button: true,
-      enabled: onPressed != null && !isLoading,
-      onTap: onPressed,
-      child: accessibleButton,
-    );
+    return accessibleButton;
   }
 
   Widget _buildGradientButton(

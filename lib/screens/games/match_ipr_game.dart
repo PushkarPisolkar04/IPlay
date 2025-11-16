@@ -7,7 +7,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// Match the IPR - Memory card matching game
@@ -88,8 +87,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
   void _flipCard(int index) {
     if (_isChecking || _flippedIndices.contains(index) || _gameEnded) return;
 
-    // Haptic feedback on card flip
-    HapticFeedbackUtil.lightImpact();
+
 
     setState(() {
       _flippedIndices.add(index);
@@ -106,8 +104,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
       if (firstCard.id == secondCard.id) {
         // Match found!
-        // Haptic feedback for correct match
-        HapticFeedbackUtil.correctAnswer();
+
         
         setState(() {
           _matchesFound++;
@@ -121,8 +118,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
         _isChecking = false;
       } else {
         // No match - flip back after delay
-        // Haptic feedback for incorrect match
-        HapticFeedbackUtil.incorrectAnswer();
+
         
         Future.delayed(const Duration(milliseconds: 1000), () {
           if (mounted) {
@@ -140,8 +136,7 @@ class _MatchIPRGameState extends State<MatchIPRGame> {
 
   void _endGame() {
     _timer?.cancel();
-    // Haptic feedback for XP gain
-    HapticFeedbackUtil.xpGain();
+
     
     setState(() {
       _gameEnded = true;

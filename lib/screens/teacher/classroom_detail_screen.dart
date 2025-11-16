@@ -1483,21 +1483,6 @@ class _StudentCardState extends State<_StudentCard> {
                         child: const Icon(Icons.message, color: AppDesignSystem.primaryIndigo, size:29),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () {
-                        // TODO: View student details
-                      },
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppDesignSystem.textSecondary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(Icons.arrow_forward_ios, color: AppDesignSystem.textSecondary, size: 16),
-                      ),
-                    ),
                   ],
                 ),
             ],

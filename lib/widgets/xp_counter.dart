@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
-import '../utils/accessibility_helper.dart';
 
 /// Animated XP Counter Widget
 /// Shows XP with animation when value changes
@@ -61,24 +60,17 @@ class _XPCounterState extends State<XPCounter> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: AccessibilityHelper.xpLabel(widget.xp),
-      value: '${widget.xp}',
-      liveRegion: true, // Announce changes to screen readers
-      child: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return ExcludeSemantics(
-            child: Text(
-              '${_animation.value}',
-              style: widget.textStyle ?? AppDesignSystem.h3.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppDesignSystem.primaryAmber,
-              ),
-            ),
-          );
-        },
-      ),
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Text(
+          '${_animation.value}',
+          style: widget.textStyle ?? AppDesignSystem.h3.copyWith(
+            fontWeight: FontWeight.bold,
+            color: AppDesignSystem.primaryAmber,
+          ),
+        );
+      },
     );
   }
 }

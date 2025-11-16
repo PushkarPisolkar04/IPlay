@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
-import '../utils/accessibility_helper.dart';
 
 /// StreakIndicator - Displays flame icon with streak count
 /// Animated flame when active, gray flame when inactive
@@ -88,16 +87,7 @@ class _StreakIndicatorState extends State<StreakIndicator>
           fontWeight: FontWeight.w600,
         );
 
-    final semanticLabel = AccessibilityHelper.streakLabel(
-      widget.currentStreak,
-      isActive: widget.isActive,
-    );
-
-    return Semantics(
-      label: semanticLabel,
-      value: '${widget.currentStreak}',
-      child: ExcludeSemantics(
-        child: Container(
+    return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDesignSystem.spacingMD,
         vertical: AppDesignSystem.spacingSM,
@@ -181,8 +171,6 @@ class _StreakIndicatorState extends State<StreakIndicator>
             ),
           ],
         ],
-      ),
-        ),
       ),
     );
   }

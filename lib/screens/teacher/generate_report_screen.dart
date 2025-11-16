@@ -237,7 +237,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -269,7 +269,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
           Container(
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
               ),
               borderRadius: BorderRadius.circular(10),
             ),
@@ -319,7 +319,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+            colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -364,7 +364,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+            colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
           ),
           borderRadius: BorderRadius.circular(12),
         ),
@@ -521,10 +521,10 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(icon, size: 18, color: const Color(0xFFEF4444)),
+              child: Icon(icon, size: 18, color: const Color(0xFF8B5CF6)),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -566,7 +566,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -737,12 +737,12 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                             height: 56,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                                colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                               ),
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFFEF4444).withValues(alpha: 0.4),
+                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -802,7 +802,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         decoration: BoxDecoration(
           gradient: isSelected
               ? const LinearGradient(
-                  colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                 )
               : null,
           color: isSelected ? null : Colors.white,
@@ -814,7 +814,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -873,7 +873,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                                 padding: const EdgeInsets.only(bottom: 12),
                                 child: CleanCard(
                                   color: isSelected 
-                                      ? const Color(0xFFEF4444).withValues(alpha: 0.1)
+                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
                                       : Colors.white,
                                   onTap: () {
                                     setState(() {
@@ -889,12 +889,12 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                                           height: 54,
                                           decoration: BoxDecoration(
                                             gradient: const LinearGradient(
-                                              colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                                              colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                                             ),
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                                                color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                                                 blurRadius: 8,
                                                 offset: const Offset(0, 4),
                                               ),
@@ -939,7 +939,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                                           Container(
                                             padding: const EdgeInsets.all(8),
                                             decoration: const BoxDecoration(
-                                              color: Color(0xFFEF4444),
+                                              color: Color(0xFF8B5CF6),
                                               shape: BoxShape.circle,
                                             ),
                                             child: const Icon(
@@ -994,7 +994,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         padding: const EdgeInsets.only(bottom: 12),
         child: CleanCard(
           color: isSelected 
-              ? const Color(0xFFEF4444).withValues(alpha: 0.1)
+              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
               : Colors.white,
           onTap: () {
             setState(() {
@@ -1010,12 +1010,12 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                   height: 54,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFEF4444), Color(0xFFF87171)],
+                      colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                        color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -1057,7 +1057,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: const BoxDecoration(
-                      color: Color(0xFFEF4444),
+                      color: Color(0xFF8B5CF6),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
-import 'student_detail_screen.dart';
+import '../student/my_progress_screen.dart';
 import '../../services/simplified_chat_service.dart';
 import '../chat/chat_screen.dart';
 
@@ -17,18 +17,20 @@ class AllStudentsScreen extends StatefulWidget {
 
 class _AllStudentsScreenState extends State<AllStudentsScreen> {
   final List<Map<String, dynamic>> _students = [];
+  final List<Map<String, dynamic>> _classrooms = [];
   bool _isLoading = true;
   String _sortBy = 'xp'; // xp, name, completion
+  String? _selectedClassroomId; // null means "All Classrooms"
 
   @override
   void initState() {
     super.initState();
-    _loadAllStudents();
+    _loadClassrooms();
   }
 
-  Future<void> _loadAllStudents() async {
+  Future<void> _loadClassrooms() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
@@ -39,18 +41,66 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           .where('teacherId', isEqualTo: currentUser.uid)
           .get();
 
-      Set<String> allStudentIds = {};
-      Map<String, String> studentClassrooms = {};
+      _classrooms.clear();
+      _classrooms.add({'id': null, 'name': 'All Classrooms'}); // Add "All" option
 
-      // Collect all unique student IDs
+      for (var doc in classroomsSnapshot.docs) {
+        _classrooms.add({
+          'id': doc.id,
+          'name': doc.data()['name'] ?? 'Unnamed Classroom',
+        });
+      }
+
+      await _loadStudents();
+    } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _loadStudents() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) return;
+
+      // Get classrooms based on filter
+      Query classroomsQuery = FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('teacherId', isEqualTo: currentUser.uid);
+
+      final classroomsSnapshot = await classroomsQuery.get();
+
+      Set<String> allStudentIds = {};
+      Map<String, List<String>> studentClassrooms = {}; // Changed to List to handle multiple classrooms
+      Map<String, String> studentClassroomIds = {};
+
+      // Collect student IDs based on selected classroom
       for (var classroomDoc in classroomsSnapshot.docs) {
-        final classroomData = classroomDoc.data();
-        final studentIds = List<String>.from(classroomData['studentIds'] ?? []);
-        final classroomName = classroomData['name'] as String;
-        
+        final classroomId = classroomDoc.id;
+
+        // Skip if filtering by classroom and this isn't the selected one
+        if (_selectedClassroomId != null && classroomId != _selectedClassroomId) {
+          continue;
+        }
+
+        final classroomData = classroomDoc.data() as Map<String, dynamic>;
+        final studentIds = List<String>.from(classroomData['studentIds'] as List? ?? []);
+        final classroomName = classroomData['name'] as String? ?? 'Unknown';
+
         for (String studentId in studentIds) {
-          allStudentIds.add(studentId);
-          studentClassrooms[studentId] = classroomName;
+          allStudentIds.add(studentId); // Set ensures uniqueness
+          
+          // Add classroom to student's list of classrooms
+          if (!studentClassrooms.containsKey(studentId)) {
+            studentClassrooms[studentId] = [];
+          }
+          studentClassrooms[studentId]!.add(classroomName);
+          
+          // Store first classroom ID for reference
+          if (!studentClassroomIds.containsKey(studentId)) {
+            studentClassroomIds[studentId] = classroomId;
+          }
         }
       }
 
@@ -67,6 +117,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
 
         final userData = userDoc.data()!;
 
+        // Skip deleted users
+        if (userData['isDeleted'] == true) continue;
+
         // Get progress
         final progressSnapshot = await FirebaseFirestore.instance
             .collection('progress')
@@ -79,29 +132,38 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
             .toList();
 
         int completedLevels = completedDocs.length;
-        int totalLevels = 36; // 6 realms × 6 levels average
+        int totalLevels = 60; // 6 realms × 10 levels each
 
         // Calculate grades
         int totalScore = 0;
         int quizCount = 0;
         for (var doc in completedDocs) {
-          if (doc.data()['accuracy'] != null) {
-            totalScore += (doc.data()['accuracy'] as int);
+          final accuracy = doc.data()['accuracy'];
+          if (accuracy is int) {
+            totalScore += accuracy;
             quizCount++;
           }
         }
-        
+
         double avgScore = quizCount > 0 ? totalScore / quizCount : 0;
         String grade = _calculateGrade(avgScore);
-        
+
         // Completion rate
         double completionRate = (completedLevels / totalLevels * 100).clamp(0, 100);
 
+        // Format classroom names
+        final classroomsList = studentClassrooms[studentId] ?? ['Unknown'];
+        final classroomDisplay = classroomsList.length > 1 
+            ? '${classroomsList.length} classes' 
+            : classroomsList.first;
+        
         _students.add({
           'id': studentId,
           'name': userData['displayName'] ?? 'Unknown',
           'email': userData['email'] ?? '',
-          'classroom': studentClassrooms[studentId] ?? 'Unknown',
+          'classroom': classroomDisplay,
+          'classrooms': classroomsList, // Store full list
+          'classroomId': studentClassroomIds[studentId],
           'totalXP': userData['totalXP'] ?? 0,
           'completedLevels': completedLevels,
           'totalLevels': totalLevels,
@@ -117,7 +179,6 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
 
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
-      // print('Error loading students: $e');
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -153,11 +214,10 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
   }
 
   Future<void> _viewStudentDetails(Map<String, dynamic> student) async {
-    // Navigate to student detail screen
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StudentDetailScreen(
+        builder: (context) => MyProgressScreen(
           studentId: student['id'],
           studentName: student['name'],
         ),
@@ -169,16 +229,14 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     try {
       final chatService = SimplifiedChatService();
       final teacherId = FirebaseAuth.instance.currentUser!.uid;
-      
-      // Create or get existing chat
+
       final chatId = await chatService.createTeacherStudentChat(
         teacherId: teacherId,
         studentId: student['id'],
       );
-      
+
       if (!mounted) return;
-      
-      // Navigate to chat screen
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -223,29 +281,20 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     if (confirmed != true) return;
 
     try {
-      // Get student's classrooms
-      final studentDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(student['id'])
-          .get();
-      
-      if (!studentDoc.exists) return;
-      
-      final classroomIds = List<String>.from(studentDoc.data()?['classroomIds'] ?? []);
-      
-      // Find which classroom this student is in (under current teacher)
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
-      
+
       final classroomsSnapshot = await FirebaseFirestore.instance
           .collection('classrooms')
           .where('teacherId', isEqualTo: currentUser.uid)
           .get();
-      
+
       for (var classroomDoc in classroomsSnapshot.docs) {
         final classroomId = classroomDoc.id;
-        if (classroomIds.contains(classroomId)) {
-          // Remove student from this classroom
+        final data = classroomDoc.data() as Map<String, dynamic>;
+        final studentIds = List<String>.from(data['studentIds'] as List? ?? []);
+
+        if (studentIds.contains(student['id'])) {
           await FirebaseFirestore.instance
               .collection('classrooms')
               .doc(classroomId)
@@ -253,8 +302,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
             'studentIds': FieldValue.arrayRemove([student['id']]),
             'updatedAt': Timestamp.now(),
           });
-          
-          // Remove classroom from student's classroomIds
+
           await FirebaseFirestore.instance
               .collection('users')
               .doc(student['id'])
@@ -274,11 +322,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         ),
       );
 
-      // Reload students list
-      _loadAllStudents();
+      _loadStudents(); // Fixed: was _loadAllStudents()
     } catch (e) {
       if (!mounted) return;
-      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
@@ -292,276 +338,345 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      body: Column(
-        children: [
-          // Header
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [AppDesignSystem.success, AppDesignSystem.success.withValues(alpha: 0.7)],
-              ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    const SizedBox(width: 8),
-                    const Expanded(
-                      child: Text(
-                        'All Students Summary',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Purple Gradient Header
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Icon(Icons.people, color: Colors.white70, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${_students.length} Students',
-                      style: const TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Sort Options
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                const Text('Sort by:', style: TextStyle(fontWeight: FontWeight.w600)),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
+              ),
+              child: Column(
+                children: [
+                  // App Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                     child: Row(
                       children: [
-                        _buildSortChip('Total XP', 'xp'),
-                        const SizedBox(width: 8),
-                        _buildSortChip('Name', 'name'),
-                        const SizedBox(width: 8),
-                        _buildSortChip('Completion', 'completion'),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const Expanded(
+                          child: Center(
+                            child: Text(
+                              'All Students',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 48),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
 
-          // Students List
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _students.isEmpty
-                    ? const Center(child: Text('No students found'))
-                    : RefreshIndicator(
-                        onRefresh: _loadAllStudents,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          itemCount: _students.length,
-                          itemBuilder: (context, index) {
-                            final student = _students[index];
-                            
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: CleanCard(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Student Info
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            gradient: AppDesignSystem.gradientPrimary,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              student['name'][0].toUpperCase(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(student['name'], style: AppTextStyles.cardTitle),
-                                              Text(student['classroom'], style: AppTextStyles.bodySmall),
-                                            ],
-                                          ),
-                                        ),
-                                        // Grade Badge
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: _getGradeColor(student['grade']),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            student['grade'],
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    const SizedBox(height: 12),
-                                    const Divider(),
-                                    const SizedBox(height: 12),
-                                    
-                                    // Stats Grid
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        _buildMiniStat(
-                                          Icons.stars,
-                                          '${student['totalXP']}',
-                                          'XP',
-                                          AppDesignSystem.primaryAmber,
-                                        ),
-                                        _buildMiniStat(
-                                          Icons.check_circle,
-                                          '${student['completedLevels']}/${student['totalLevels']}',
-                                          'Levels',
-                                          AppDesignSystem.success,
-                                        ),
-                                        _buildMiniStat(
-                                          Icons.school,
-                                          '${student['avgScore'].toStringAsFixed(0)}%',
-                                          'Avg Score',
-                                          AppDesignSystem.primaryIndigo,
-                                        ),
-                                        _buildMiniStat(
-                                          Icons.emoji_events,
-                                          '${student['badges']}',
-                                          'Badges',
-                                          AppDesignSystem.warning,
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    const SizedBox(height: 12),
-                                    
-                                    // Action Buttons
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: OutlinedButton.icon(
-                                            onPressed: () => _viewStudentDetails(student),
-                                            icon: const Icon(Icons.visibility, size: 16),
-                                            label: const Text('View'),
-                                            style: OutlinedButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(vertical: 8),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: OutlinedButton.icon(
-                                            onPressed: () => _messageStudent(student),
-                                            icon: const Icon(Icons.message, size: 16),
-                                            label: const Text('Message'),
-                                            style: OutlinedButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(vertical: 8),
-                                              foregroundColor: AppDesignSystem.primaryIndigo,
-                                              side: BorderSide(color: AppDesignSystem.primaryIndigo),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: OutlinedButton.icon(
-                                            onPressed: () => _removeStudent(student),
-                                            icon: const Icon(Icons.remove_circle_outline, size: 16),
-                                            label: const Text('Remove'),
-                                            style: OutlinedButton.styleFrom(
-                                              padding: const EdgeInsets.symmetric(vertical: 8),
-                                              foregroundColor: AppDesignSystem.error,
-                                              side: BorderSide(color: AppDesignSystem.error),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    const SizedBox(height: 12),
-                                    
-                                    // Completion Progress Bar
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Course Completion',
-                                              style: AppTextStyles.bodySmall.copyWith(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            Text(
-                                              '${student['completionRate'].toStringAsFixed(0)}%',
-                                              style: AppTextStyles.bodySmall.copyWith(
-                                                color: AppDesignSystem.success,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 8),
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(8),
-                                          child: LinearProgressIndicator(
-                                            value: student['completionRate'] / 100,
-                                            minHeight: 8,
-                                            backgroundColor: AppDesignSystem.backgroundWhite,
-                                            valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.success),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                  // Student Count
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.people, color: Colors.white70, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${_students.length} ${_students.length == 1 ? 'Student' : 'Students'}',
+                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Classroom Filter - Vertical Tabs
+                  if (_classrooms.length > 1)
+                    Container(
+                      height: 50,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: _classrooms.length,
+                        itemBuilder: (context, index) {
+                          final classroom = _classrooms[index];
+                          final isSelected = _selectedClassroomId == classroom['id'];
+
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedClassroomId = classroom['id'];
+                                });
+                                _loadStudents();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(25),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(isSelected ? 1.0 : 0.3),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Text(
+                                  classroom['name'],
+                                  style: TextStyle(
+                                    color: isSelected ? const Color(0xFF8B5CF6) : Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
                       ),
-          ),
-        ],
+                    ),
+                ],
+              ),
+            ),
+
+            // Sort Options
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  const Text('Sort by:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildSortChip('Total XP', 'xp'),
+                          const SizedBox(width: 8),
+                          _buildSortChip('Name', 'name'),
+                          const SizedBox(width: 8),
+                          _buildSortChip('Completion', 'completion'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Students List
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator(color: Color(0xFF8B5CF6)))
+                  : _students.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.people_outline, size: 64, color: Colors.grey[300]),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No students found',
+                                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: _loadStudents,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                            itemCount: _students.length,
+                            itemBuilder: (context, index) {
+                              final student = _students[index];
+
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: CleanCard(
+                                  padding: const EdgeInsets.all(14),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Student Info
+                                      Row(
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              gradient: AppDesignSystem.gradientPrimary,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                student['name'][0].toUpperCase(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(student['name'], style: AppTextStyles.cardTitle),
+                                                Text(student['classroom'], style: AppTextStyles.bodySmall),
+                                              ],
+                                            ),
+                                          ),
+                                          // Grade Badge
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: _getGradeColor(student['grade']),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              student['grade'],
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 12),
+                                      const Divider(),
+                                      const SizedBox(height: 12),
+
+                                      // Stats Grid
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          _buildMiniStat(
+                                            Icons.stars,
+                                            '${student['totalXP']}',
+                                            'XP',
+                                            AppDesignSystem.primaryAmber,
+                                          ),
+                                          _buildMiniStat(
+                                            Icons.check_circle,
+                                            '${student['completedLevels']}/${student['totalLevels']}',
+                                            'Levels',
+                                            AppDesignSystem.success,
+                                          ),
+                                          _buildMiniStat(
+                                            Icons.school,
+                                            '${student['avgScore'].toStringAsFixed(0)}%',
+                                            'Avg Score',
+                                            AppDesignSystem.primaryIndigo,
+                                          ),
+                                          _buildMiniStat(
+                                            Icons.emoji_events,
+                                            '${student['badges']}',
+                                            'Badges',
+                                            AppDesignSystem.warning,
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 12),
+
+                                      // Action Buttons
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: OutlinedButton.icon(
+                                              onPressed: () => _viewStudentDetails(student),
+                                              icon: const Icon(Icons.visibility, size: 18),
+                                              label: const Text('View', style: TextStyle(fontSize: 13)),
+                                              style: OutlinedButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: OutlinedButton.icon(
+                                              onPressed: () => _messageStudent(student),
+                                              icon: const Icon(Icons.message, size: 18),
+                                              label: const Text('Message', style: TextStyle(fontSize: 13)),
+                                              style: OutlinedButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                foregroundColor: AppDesignSystem.primaryIndigo,
+                                                side: BorderSide(color: AppDesignSystem.primaryIndigo),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: OutlinedButton.icon(
+                                              onPressed: () => _removeStudent(student),
+                                              icon: const Icon(Icons.remove_circle_outline, size: 18),
+                                              label: const Text('Remove', style: TextStyle(fontSize: 13)),
+                                              style: OutlinedButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                foregroundColor: AppDesignSystem.error,
+                                                side: BorderSide(color: AppDesignSystem.error),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      const SizedBox(height: 16),
+
+                                      // Completion Progress Bar
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Course Completion',
+                                                style: AppTextStyles.bodySmall.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${student['completionRate'].toStringAsFixed(0)}%',
+                                                style: AppTextStyles.bodySmall.copyWith(
+                                                  color: AppDesignSystem.success,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(8),
+                                            child: LinearProgressIndicator(
+                                              value: student['completionRate'] / 100,
+                                              minHeight: 8,
+                                              backgroundColor: AppDesignSystem.backgroundWhite,
+                                              valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.success),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -576,16 +691,25 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppDesignSystem.primaryIndigo : Colors.white,
+          color: isSelected ? const Color(0xFF8B5CF6) : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppDesignSystem.primaryIndigo),
+          border: Border.all(color: const Color(0xFF8B5CF6), width: 1.5),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppDesignSystem.primaryIndigo,
+            color: isSelected ? Colors.white : const Color(0xFF8B5CF6),
             fontWeight: FontWeight.w600,
             fontSize: 12,
           ),
@@ -618,4 +742,3 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     );
   }
 }
-

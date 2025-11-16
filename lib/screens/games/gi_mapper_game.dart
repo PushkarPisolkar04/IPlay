@@ -5,7 +5,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// GI Mapper - Drag GI products to their correct states on India map
@@ -56,14 +55,7 @@ class _GIMapperGameState extends State<GIMapperGame> {
       }
     }
     
-    // Haptic feedback based on score
-    if (correctCount >= 6) {
-      HapticFeedbackUtil.success();
-    } else if (correctCount >= 4) {
-      HapticFeedbackUtil.mediumImpact();
-    } else {
-      HapticFeedbackUtil.lightImpact();
-    }
+
     
     setState(() {
       _score = correctCount;
@@ -77,8 +69,6 @@ class _GIMapperGameState extends State<GIMapperGame> {
   }
 
   void _endGame() {
-    // Haptic feedback for XP gain
-    HapticFeedbackUtil.xpGain();
     
     setState(() {
       _gameEnded = true;

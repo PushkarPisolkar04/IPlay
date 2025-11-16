@@ -6,10 +6,20 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../core/services/badge_service.dart';
+import '../../models/badge_model.dart';
 
 /// My Progress Screen - Student's self-view of their progress
+/// Can also be used by teachers to view a specific student's progress
 class MyProgressScreen extends StatefulWidget {
-  const MyProgressScreen({super.key});
+  final String? studentId; // Optional: if provided, shows that student's progress
+  final String? studentName; // Optional: student name for title
+  
+  const MyProgressScreen({
+    super.key,
+    this.studentId,
+    this.studentName,
+  });
 
   @override
   State<MyProgressScreen> createState() => _MyProgressScreenState();
@@ -21,6 +31,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   Map<String, dynamic>? _userData;
   Map<String, dynamic> _progressSummary = {};
   int _globalRank = 0;
+  bool _isViewingOtherStudent = false;
+  final BadgeService _badgeService = BadgeService();
+  List<BadgeModel> _allBadges = [];
+  List<String> _earnedBadgeIds = [];
 
   @override
   bool get wantKeepAlive => false; // Don't keep state alive, always refresh
@@ -28,6 +42,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   @override
   void initState() {
     super.initState();
+    _isViewingOtherStudent = widget.studentId != null;
     _loadData();
   }
 
@@ -41,12 +56,13 @@ class _MyProgressScreenState extends State<MyProgressScreen>
 
   Future<void> _loadData() async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) return;
+      // Use provided studentId or current user's ID
+      final targetUserId = widget.studentId ?? FirebaseAuth.instance.currentUser?.uid;
+      if (targetUserId == null) return;
 
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .doc(currentUser.uid)
+          .doc(targetUserId)
           .get();
 
       if (!userDoc.exists) {
@@ -108,6 +124,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
           mergedProgress[key] = value;
         }
       });
+
+      // Load badges
+      _earnedBadgeIds = List<String>.from(userData['badges'] ?? []);
+      _allBadges = await _badgeService.getAllBadges();
 
       if (mounted) {
         setState(() {
@@ -171,11 +191,13 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                         icon: const Icon(Icons.arrow_back, color: Colors.white),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Center(
                           child: Text(
-                            'My Progress',
-                            style: TextStyle(
+                            _isViewingOtherStudent 
+                                ? '${widget.studentName ?? 'Student'} Progress'
+                                : 'My Progress',
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -249,11 +271,13 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Center(
                         child: Text(
-                          'My Progress',
-                          style: TextStyle(
+                          _isViewingOtherStudent 
+                              ? '${widget.studentName ?? 'Student'} Progress'
+                              : 'My Progress',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
@@ -464,6 +488,31 @@ class _MyProgressScreenState extends State<MyProgressScreen>
 
                       const SizedBox(height: AppSpacing.xl),
 
+                      // Badges Section - Show all badges
+                      if ((_userData?['badges'] as List?)?.isNotEmpty ?? false) ...[
+                        Row(
+                          children: [
+                            const Icon(Icons.emoji_events, color: Color(0xFFEC4899), size: 22),
+                            const SizedBox(width: 8),
+                            Text('Badges Earned', style: AppTextStyles.sectionHeader),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        CleanCard(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Wrap(
+                              spacing: 12,
+                              runSpacing: 12,
+                              children: ((_userData?['badges'] as List?) ?? [])
+                                  .map((badge) => _buildBadgePreview(badge))
+                                  .toList(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                      ],
+
                       // Overall Progress
                       Text('Overall Progress', style: AppTextStyles.sectionHeader),
                       const SizedBox(height: AppSpacing.sm),
@@ -521,7 +570,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                           ),
                         ),
 
-                      // Games Section
+                      // Games Section - Only show if games exist
                       if (_progressSummary.entries.any((e) => _isGame(e.key))) ...[
                         Row(
                           children: [
@@ -547,30 +596,28 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                         const SizedBox(height: AppSpacing.xl),
                       ],
 
-                      // Realms Section
-                      if (_progressSummary.entries.any((e) => !_isGame(e.key))) ...[
-                        Row(
-                          children: [
-                            Icon(Icons.school,
-                                color: AppDesignSystem.primaryIndigo, size: 22),
-                            const SizedBox(width: 8),
-                            Text('Realms', style: AppTextStyles.sectionHeader),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: _getCardAspectRatio(context),
-                          children: _progressSummary.entries
-                              .where((entry) => !_isGame(entry.key))
-                              .map((entry) => _buildRealmCard(entry))
-                              .toList(),
-                        ),
-                      ],
+                      // Realms Section - Always show (core learning content)
+                      Row(
+                        children: [
+                          Icon(Icons.school,
+                              color: AppDesignSystem.primaryIndigo, size: 22),
+                          const SizedBox(width: 8),
+                          Text('Realms', style: AppTextStyles.sectionHeader),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: _getCardAspectRatio(context),
+                        children: _progressSummary.entries
+                            .where((entry) => !_isGame(entry.key))
+                            .map((entry) => _buildRealmCard(entry))
+                            .toList(),
+                      ),
 
                       const SizedBox(height: AppSpacing.xl + 20),
                     ],
@@ -832,6 +879,151 @@ class _MyProgressScreenState extends State<MyProgressScreen>
         ],
       ),
     );
+  }
+
+  Widget _buildBadgePreview(dynamic badge) {
+    // Badge is stored as just the ID string in user's badges array
+    final badgeId = badge is String ? badge : (badge['id'] ?? badge.toString());
+    
+    // Find the actual badge data from loaded badges
+    final badgeData = _allBadges.firstWhere(
+      (b) => b.id == badgeId,
+      orElse: () => BadgeModel(
+        id: badgeId,
+        name: badgeId.replaceAll('_', ' ').split(' ').map((w) => w.isEmpty ? '' : w[0].toUpperCase() + w.substring(1)).join(' '),
+        description: '',
+        iconPath: 'assets/badges/$badgeId.png',
+        category: 'milestone',
+        xpBonus: 0,
+        rarity: 'common',
+      ),
+    );
+    
+    final badgeColor = _getRarityColor(badgeData.rarity);
+    
+    return Container(
+      width: 70,
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: badgeColor, width: 2.5),
+              boxShadow: [
+                BoxShadow(
+                  color: badgeColor.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Image.asset(
+                badgeData.iconPath,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => Icon(
+                  Icons.emoji_events,
+                  color: badgeColor,
+                  size: 28,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            badgeData.name,
+            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Color _getRarityColor(String rarity) {
+    return switch (rarity.toLowerCase()) {
+      'legendary' => const Color(0xFFFFD700),
+      'epic' => const Color(0xFF9333EA),
+      'rare' => const Color(0xFF3B82F6),
+      'uncommon' => const Color(0xFF10B981),
+      _ => const Color(0xFF6B7280),
+    };
+  }
+
+  IconData _getBadgeIcon(String badgeId) {
+    final idLower = badgeId.toLowerCase();
+    
+    // Specific badge mappings
+    if (idLower == 'perfect_start') return Icons.rocket_launch;
+    if (idLower == 'first_challenge') return Icons.flag;
+    if (idLower == 'social_learner') return Icons.people;
+    if (idLower == 'early_adopter') return Icons.access_time;
+    if (idLower == 'night_owl') return Icons.nightlight_round;
+    if (idLower == 'first_step' || idLower == 'first_steps') return Icons.directions_walk;
+    if (idLower == 'level_explorer') return Icons.explore;
+    if (idLower == 'first_quiz') return Icons.quiz;
+    if (idLower == 'xp_collector') return Icons.stars;
+    if (idLower == 'xp_master') return Icons.military_tech;
+    if (idLower == 'xp_legend') return Icons.workspace_premium;
+    if (idLower == 'copyright_master') return Icons.copyright;
+    
+    // General patterns
+    if (idLower.contains('streak')) return Icons.local_fire_department;
+    if (idLower.contains('master')) return Icons.school;
+    if (idLower.contains('champion')) return Icons.emoji_events;
+    if (idLower.contains('explorer')) return Icons.explore;
+    if (idLower.contains('genius')) return Icons.psychology;
+    if (idLower.contains('star')) return Icons.star;
+    if (idLower.contains('first')) return Icons.looks_one;
+    if (idLower.contains('quiz')) return Icons.quiz;
+    if (idLower.contains('xp')) return Icons.stars;
+    if (idLower.contains('social')) return Icons.people;
+    if (idLower.contains('night')) return Icons.nightlight_round;
+    if (idLower.contains('copyright')) return Icons.copyright;
+    if (idLower.contains('patent')) return Icons.lightbulb;
+    if (idLower.contains('trademark')) return Icons.verified;
+    
+    return Icons.emoji_events;
+  }
+
+  Color _getBadgeColor(String badgeId) {
+    final idLower = badgeId.toLowerCase();
+    
+    // XP badges - Gold/Amber
+    if (idLower.contains('xp')) return const Color(0xFFFBBF24);
+    
+    // Streak badges - Orange/Fire
+    if (idLower.contains('streak')) return const Color(0xFFF59E0B);
+    
+    // Master/Champion badges - Purple
+    if (idLower.contains('master') || idLower.contains('champion')) return const Color(0xFF8B5CF6);
+    
+    // Explorer badges - Cyan
+    if (idLower.contains('explorer')) return const Color(0xFF06B6D4);
+    
+    // Social/People badges - Pink
+    if (idLower.contains('social') || idLower.contains('genius')) return const Color(0xFFEC4899);
+    
+    // First/Start badges - Green
+    if (idLower.contains('first') || idLower.contains('start') || idLower.contains('step')) return const Color(0xFF10B981);
+    
+    // Quiz badges - Red
+    if (idLower.contains('quiz')) return const Color(0xFFEF4444);
+    
+    // Night/Time badges - Indigo
+    if (idLower.contains('night') || idLower.contains('owl') || idLower.contains('early')) return const Color(0xFF6366F1);
+    
+    // Copyright/Legal badges - Purple
+    if (idLower.contains('copyright') || idLower.contains('patent') || idLower.contains('trademark')) return const Color(0xFF8B5CF6);
+    
+    // Default - Blue
+    return const Color(0xFF6366F1);
   }
 
   Widget _buildProgressRow(

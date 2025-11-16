@@ -4,7 +4,7 @@ import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/loading_skeleton.dart';
-import '../teacher/student_detail_screen.dart';
+import '../student/my_progress_screen.dart';
 
 /// All Students Screen for Principal
 /// Displays all students across all classrooms in the school
@@ -183,13 +183,16 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('All Students'),
+        title: const Text(
+          'All Students',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFF6B46C1),
-        foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Colors.white),
             onPressed: _loadData,
           ),
         ],
@@ -438,7 +441,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StudentDetailScreen(
+              builder: (context) => MyProgressScreen(
                 studentId: student['id'],
                 studentName: student['name'],
               ),

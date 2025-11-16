@@ -35,8 +35,6 @@ import 'screens/onboarding/student_tutorial_screen.dart';
 import 'screens/onboarding/teacher_tutorial_screen.dart';
 import 'screens/announcements/unified_announcements_screen.dart';
 import 'core/models/realm_model.dart';
-import 'utils/haptic_feedback_util.dart';
-import 'services/sound_service.dart';
 import 'services/deep_link_service.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
@@ -49,12 +47,6 @@ void main() async {
   
   // Initialize crash recovery and Crashlytics
   await CrashRecoveryService.initialize();
-  
-  // Initialize haptic feedback settings
-  await HapticFeedbackUtil.initialize();
-  
-  // Initialize sound service
-  await SoundService.initialize();
   
   // Set preferred orientations (quick, non-blocking)
   SystemChrome.setPreferredOrientations([

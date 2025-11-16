@@ -10,8 +10,6 @@ import '../../core/services/certificate_service.dart';
 import '../../core/services/xp_service.dart';
 import '../../core/services/content_service.dart';
 import '../../core/services/badge_service.dart';
-import '../../utils/haptic_feedback_util.dart';
-import '../../services/sound_service.dart';
 import '../../services/app_rating_service.dart';
 import '../../widgets/certificate_unlock_animation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -62,8 +60,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   void _selectAnswer(int optionIndex) {
     if (_showExplanation) return; // Don't allow changing answer after submission
 
-    // Play selection sound
-    SoundService.playButtonClick();
+
     
     setState(() {
       _selectedAnswers[_currentQuestionIndex] = optionIndex;
@@ -88,15 +85,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
     if (isCorrect) {
       _score++;
-      // Haptic feedback for correct answer
-      HapticFeedbackUtil.correctAnswer();
-      // Sound effect for correct answer
-      SoundService.playCorrectAnswer();
     } else {
-      // Haptic feedback for incorrect answer
-      HapticFeedbackUtil.incorrectAnswer();
-      // Sound effect for incorrect answer
-      SoundService.playIncorrectAnswer();
+      // Incorrect answer
     }
 
     setState(() {
@@ -121,12 +111,6 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
     if (passed) {
       _confettiController.play();
-      // Haptic feedback for XP gain
-      HapticFeedbackUtil.xpGain();
-      // Sound effect for level completion
-      SoundService.playLevelComplete();
-      // Play celebration sound
-      SoundService.playSuccess();
 
       // Save progress if user is logged in
       final user = FirebaseAuth.instance.currentUser;
@@ -229,8 +213,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             _bonusXP = bonusXP;
           });
 
-          // Haptic feedback for badge/certificate unlock
-          HapticFeedbackUtil.badgeUnlock();
+
 
           // Track realm completion for app rating
           await AppRatingService.incrementRealmsCompleted();

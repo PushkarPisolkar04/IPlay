@@ -7,7 +7,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// IP Defender - Tap infringers to protect your IP assets
@@ -122,8 +121,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
   }
 
   void _tapInfringer(Infringer infringer) {
-    // Haptic feedback for successful tap
-    HapticFeedbackUtil.lightImpact();
+
     
     setState(() {
       _infringers.remove(infringer);
@@ -158,8 +156,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     _spawnTimer?.cancel();
     _moveTimer?.cancel();
     
-    // Haptic feedback for XP gain
-    HapticFeedbackUtil.xpGain();
+
     
     setState(() {
       _gameEnded = true;

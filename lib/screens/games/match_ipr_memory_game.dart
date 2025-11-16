@@ -6,8 +6,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
-import '../../services/sound_service.dart';
 import '../../services/game_content_service.dart';
 import '../../services/game_integration_service.dart';
 import '../../models/trademark_match_model.dart';
@@ -139,7 +137,7 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
       _flippedIndices.add(index);
     });
 
-    HapticFeedbackUtil.lightImpact();
+
 
     if (_flippedIndices.length == 2) {
       _moves++;
@@ -162,8 +160,7 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
         _score += 10;
       });
 
-      HapticFeedbackUtil.correctAnswer();
-      SoundService.playCorrectAnswer();
+
 
       // Check if game is complete
       if (_matchedIndices.length == _cards.length) {
@@ -181,8 +178,6 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
       });
     } else {
       // No match
-      HapticFeedbackUtil.incorrectAnswer();
-      SoundService.playIncorrectAnswer();
 
       // Flip cards back after delay
       Future.delayed(const Duration(milliseconds: 1000), () {
@@ -202,8 +197,7 @@ class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProv
       _gameEnded = true;
     });
     
-    HapticFeedbackUtil.xpGain();
-    SoundService.playXPGain();
+
     
     _saveScore();
   }

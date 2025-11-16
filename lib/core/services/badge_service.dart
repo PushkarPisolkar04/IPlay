@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/badge_model.dart';
-import '../../services/sound_service.dart';
 import 'badge_animation_queue.dart';
 import '../utils/rank_monitor.dart';
 
@@ -169,8 +168,7 @@ class BadgeService {
         }
         await batch.commit();
 
-        // Play badge unlock sound
-        SoundService.playBadgeUnlock();
+
 
         // Queue badge animations if context provided
         if (context != null && newBadgeModels.isNotEmpty) {

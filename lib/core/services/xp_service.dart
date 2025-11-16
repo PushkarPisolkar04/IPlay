@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../services/sound_service.dart';
 import 'leaderboard_service.dart';
 
 /// XP Service - Handles all XP calculations and rewards
@@ -104,8 +103,6 @@ class XPService {
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
           'lastActiveDate': Timestamp.now(),
         });
-        // Play XP gain sound
-        SoundService.playXPGain();
         return FIRST_LOGIN_BONUS;
       }
 
@@ -119,8 +116,6 @@ class XPService {
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
           'lastActiveDate': Timestamp.now(),
         });
-        // Play XP gain sound
-        SoundService.playXPGain();
         return FIRST_LOGIN_BONUS;
       }
 
@@ -157,8 +152,6 @@ class XPService {
             'totalXP': FieldValue.increment(SEVEN_DAY_STREAK_BONUS),
             'lastStreakBonusAt': Timestamp.now(),
           });
-          // Play XP gain sound
-          SoundService.playXPGain();
           return SEVEN_DAY_STREAK_BONUS;
         }
       }
@@ -201,8 +194,6 @@ class XPService {
           'totalXP': FieldValue.increment(REALM_COMPLETION_BONUS),
           'progressSummary.$realmId.completionBonusAwarded': true,
         });
-        // Play XP gain sound
-        SoundService.playXPGain();
         return REALM_COMPLETION_BONUS;
       }
 

@@ -7,7 +7,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 import '../../services/game_content_service.dart';
 import '../../services/game_integration_service.dart';
@@ -221,7 +220,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
       if (_towerToPlace != null) {
         // Try to place tower
         if (_engine!.placeTower(_towerToPlace!, gridPos)) {
-          HapticFeedbackUtil.lightImpact();
           _towerToPlace = null;
         }
       } else {
@@ -231,7 +229,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
           if (tower.gridPosition.x == gridPos.x &&
               tower.gridPosition.y == gridPos.y) {
             _selectedTower = tower;
-            HapticFeedbackUtil.lightImpact();
             break;
           }
         }
@@ -425,7 +422,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                         setState(() {
                           _currentLevelIndex = index;
                         });
-                        HapticFeedbackUtil.lightImpact();
                       },
                       child: Container(
                         width: 70,
@@ -551,7 +547,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                 setState(() {
                   _engine!.startNextWave();
                 });
-                HapticFeedbackUtil.lightImpact();
               },
               icon: const Icon(Icons.play_arrow, size: 16),
               label: const Text('Start Wave'),
@@ -621,7 +616,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                             _towerToPlace = tower;
                             _selectedTower = null;
                           });
-                          HapticFeedbackUtil.lightImpact();
                         }
                       : null,
                   child: Container(
@@ -716,7 +710,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                               setState(() {
                                 _engine!.upgradeTower(tower);
                               });
-                              HapticFeedbackUtil.lightImpact();
                             }
                           : null,
                       icon: const Icon(Icons.upgrade, size: 16),
@@ -737,7 +730,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                         _engine!.sellTower(tower);
                         _selectedTower = null;
                       });
-                      HapticFeedbackUtil.lightImpact();
                     },
                     icon: const Icon(Icons.sell, size: 16),
                     label: const Text('Sell'),
@@ -878,7 +870,6 @@ class _IPDefenderTDScreenState extends State<IPDefenderTDScreen>
                       _towerToPlace = null;
                       _lastFrameTime = Duration.zero;
                     });
-                    HapticFeedbackUtil.lightImpact();
                     // Auto-start next level after a short delay
                     Future.delayed(const Duration(milliseconds: 500), () {
                       if (mounted) _startGame();

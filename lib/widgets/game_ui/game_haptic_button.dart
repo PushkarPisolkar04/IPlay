@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/theme/game_colors.dart';
-import '../../utils/haptic_feedback_util.dart';
 
 /// Game button with automatic haptic feedback
 /// Provides visual and haptic feedback on tap
@@ -63,7 +62,6 @@ class _GameHapticButtonState extends State<GameHapticButton>
     if (!widget.isDisabled && widget.onPressed != null) {
       setState(() => _isPressed = true);
       _controller.forward();
-      HapticFeedbackUtil.buttonTap();
     }
   }
 
@@ -185,10 +183,7 @@ class GameHapticIconButton extends StatelessWidget {
       color: color ?? AppDesignSystem.textPrimary,
       onPressed: onPressed == null
           ? null
-          : () {
-              HapticFeedbackUtil.buttonTap();
-              onPressed!();
-            },
+          : onPressed,
     );
 
     if (tooltip != null) {
@@ -250,7 +245,6 @@ class _GameHapticFABState extends State<GameHapticFAB>
 
   void _handleTap() {
     if (widget.onPressed != null) {
-      HapticFeedbackUtil.buttonTap();
       _controller.forward().then((_) => _controller.reverse());
       widget.onPressed!();
     }

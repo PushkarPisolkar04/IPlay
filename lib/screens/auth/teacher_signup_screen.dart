@@ -263,16 +263,26 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
         });
       } else {
         // If joining existing school, create a join request for principal approval
-      await FirebaseFirestore.instance
-          .collection('teacher_join_requests')
-          .add({
-        'teacherId': user.uid,
-        'teacherName': _nameController.text.trim(),
-        'teacherEmail': user.email,
-        'schoolId': schoolId,
-        'status': 'pending', // pending, approved, rejected
-        'createdAt': Timestamp.now(),
-      });
+        await FirebaseFirestore.instance
+            .collection('teacher_join_requests')
+            .add({
+          'teacherId': user.uid,
+          'teacherName': _nameController.text.trim(),
+          'teacherEmail': user.email,
+          'schoolId': schoolId,
+          'status': 'pending', // pending, approved, rejected
+          'createdAt': Timestamp.now(),
+        });
+        
+        // Add pending status to user document
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'pendingSchoolId': schoolId,
+          'schoolId': null, // Don't set schoolId until approved
+          'schoolTag': null, // Don't set schoolTag until approved
+        });
       }
     
 

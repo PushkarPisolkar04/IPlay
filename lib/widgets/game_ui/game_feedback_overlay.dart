@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/theme/game_colors.dart';
 import '../game_ui/game_particle_effect.dart';
-import '../../utils/haptic_feedback_util.dart';
 
 /// FeedbackOverlay widget with particle effects
 /// Shows visual feedback for correct/incorrect answers
@@ -56,12 +55,7 @@ class _GameFeedbackOverlayState extends State<GameFeedbackOverlay>
 
     _controller.forward();
 
-    // Trigger haptic feedback
-    if (widget.isCorrect) {
-      HapticFeedbackUtil.correctAnswer();
-    } else {
-      HapticFeedbackUtil.incorrectAnswer();
-    }
+
 
     // Auto-dismiss after duration
     Future.delayed(widget.duration, () {

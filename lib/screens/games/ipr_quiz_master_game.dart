@@ -7,7 +7,6 @@
   import '../../core/constants/app_spacing.dart';
   import '../../core/constants/app_text_styles.dart';
   import '../../core/services/progress_service.dart';
-  import '../../utils/haptic_feedback_util.dart';
   import '../../widgets/primary_button.dart';
 
   /// IPR Quiz Master - Rapid-fire 10 question quiz game
@@ -83,11 +82,9 @@
         setState(() {
           _score++;
         });
-        // Haptic feedback for correct answer
-        HapticFeedbackUtil.correctAnswer();
+
       } else {
-        // Haptic feedback for incorrect answer
-        HapticFeedbackUtil.incorrectAnswer();
+
       }
 
       // Move to next question after brief delay
@@ -106,8 +103,7 @@
 
     void _endGame() {
       _timer?.cancel();
-      // Haptic feedback for XP gain
-      HapticFeedbackUtil.xpGain();
+
       
       setState(() {
         _gameEnded = true;

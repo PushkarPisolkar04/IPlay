@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/design/app_design_system.dart';
 import '../core/constants/app_spacing.dart';
-import '../utils/haptic_feedback_util.dart';
-import '../services/sound_service.dart';
 
 /// ActionCard - Unified action card widget for dashboard quick actions
 /// Can be displayed as a list item or grid item
@@ -65,11 +63,7 @@ class ActionCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () async {
-            HapticFeedbackUtil.lightImpact();
-            SoundService.playButtonClick();
-            onTap();
-          },
+          onTap: onTap,
           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -200,11 +194,7 @@ class FeaturedActionCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () async {
-            HapticFeedbackUtil.lightImpact();
-            SoundService.playButtonClick();
-            onTap();
-          },
+          onTap: onTap,
           borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),

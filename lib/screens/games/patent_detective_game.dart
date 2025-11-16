@@ -6,7 +6,6 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/progress_service.dart';
-import '../../utils/haptic_feedback_util.dart';
 import '../../widgets/primary_button.dart';
 
 /// Patent Detective - Investigate patent cases and determine patentability
@@ -60,11 +59,9 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
       setState(() {
         _score++;
       });
-      // Haptic feedback for correct answer
-      HapticFeedbackUtil.correctAnswer();
+
     } else {
-      // Haptic feedback for incorrect answer
-      HapticFeedbackUtil.incorrectAnswer();
+
     }
 
     // Move to next case after delay
@@ -82,8 +79,7 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
   }
 
   void _endGame() {
-    // Haptic feedback for XP gain
-    HapticFeedbackUtil.xpGain();
+
     
     setState(() {
       _gameEnded = true;
