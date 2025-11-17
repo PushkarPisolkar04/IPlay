@@ -582,40 +582,34 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                   ],
                   
                   // XP
-                  SizedBox(
-                    width: 85,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isCurrentUser
-                            ? Colors.white.withValues(alpha: 0.25)
-                            : AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '⭐',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: isCurrentUser ? Colors.white : null,
-                            ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isCurrentUser
+                          ? Colors.white.withValues(alpha: 0.25)
+                          : AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '⭐',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: isCurrentUser ? Colors.white : null,
                           ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              '${student['totalXP'] ?? 0}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: isCurrentUser ? Colors.white : AppDesignSystem.primaryAmber,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          _formatXP(student['totalXP'] ?? 0),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: isCurrentUser ? Colors.white : AppDesignSystem.primaryAmber,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -625,6 +619,21 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         },
       ),
     );
+  }
+
+  String _formatXP(int xp) {
+    if (xp >= 1000000) {
+      final value = xp / 1000000;
+      return value >= 10 
+          ? '${value.toStringAsFixed(0)}M' 
+          : '${value.toStringAsFixed(1)}M';
+    } else if (xp >= 1000) {
+      final value = xp / 1000;
+      return value >= 10 
+          ? '${value.toStringAsFixed(0)}K' 
+          : '${value.toStringAsFixed(1)}K';
+    }
+    return xp.toString();
   }
 
   String _getRankMedal(int rank) {

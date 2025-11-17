@@ -1,1479 +1,1451 @@
 {
   "id": "patent_detective",
   "name": "Patent Detective",
-  "description": "Solve patent mysteries using clues and deduction",
-  "summary": "Put on your detective hat! Read clues about mysterious objects and deduce which patented invention they describe. Use your brain to crack the case!",
-  "iconPath": "assets/games/patent_detective.png",
+  "description": "Solve IP crime cases by investigating suspects and examining evidence",
+  "summary": "Put on your detective hat and solve IP crimes! Investigate patent theft, trademark fraud, and infringement cases. Interview suspects, examine evidence, and crack the case!",
+  "iconPath": "assets/logos/patent_detective.png",
   "color": "0xFF00BCD4",
-  "difficulty": "hard",
-  "gameType": "deduction",
-  "xpReward": 85,
-  "estimatedMinutes": 10,
-  "casesPerGame": 10,
+  "difficulty": "medium",
+  "gameType": "investigation",
+  "xpReward": 100,
+  "estimatedMinutes": 12,
+  "casesPerGame": 1,
   "randomSelection": true,
   "allowRetry": true,
-  "version": "1.0.0",
-  "updatedAt": "2025-11-12T00:00:00Z",
+  "version": "2.0.0",
+  "updatedAt": "2025-11-17T00:00:00Z",
   "rewards": {
-    "completion": 85,
-    "perfectScore": 170,
-    "firstTime": 105,
-    "highScore": 210
+    "completion": 100,
+    "perfectScore": 200,
+    "firstTime": 150,
+    "highScore": 250
   },
   "leaderboard": {
     "enabled": true,
-    "scope": ["classroom", "school", "global"]
+    "scope": [
+      "classroom",
+      "school",
+      "global"
+    ]
   },
   "cases": [
     {
       "id": "case_001",
-      "caseNumber": "Case #001",
-      "category": "Office Equipment",
+      "caseNumber": "CASE #001",
+      "title": "The Midnight Patent",
+      "category": "Patent Theft",
       "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: This object is found in almost every office",
-        "🔍 Clue 2: It was invented in 1998 by two designers",
-        "🔍 Clue 3: It uses mesh material instead of foam padding",
-        "🔍 Clue 4: It's designed to support you for 8+ hours a day",
-        "🔍 Clue 5: The patent is for a 'pellicle suspension system'"
-      ],
+      "points": 100,
+      "timeLimit": 600,
+      "story": "A frantic call comes in at midnight. Dr. Sarah Chen, a robotics engineer, claims her revolutionary AI-powered prosthetic limb design has been stolen.\n\nThree days ago, MegaTech Industries filed a patent for an identical invention. But Dr. Chen says she showed them her prototype 6 months ago during a partnership meeting.\n\nMegaTech's CEO denies everything. Someone is lying.\n\nYour mission: Uncover the truth.",
       "suspects": [
-        "Ergonomic Office Chair",
-        "Standing Desk",
-        "Office Lamp",
-        "Filing Cabinet"
+        {
+          "id": "suspect_1",
+          "name": "Dr. Sarah Chen",
+          "role": "Independent Inventor",
+          "avatar": "👩‍🔬",
+          "statement": "I spent 3 years developing this technology in my garage lab. Last September, MegaTech invited me to discuss a partnership. I signed an NDA and showed them everything - my prototypes, my code, my neural interface design.\n\nTwo weeks later, they ghosted me. No calls returned. Then I see THEIR patent filing with MY exact design! They stole it!",
+          "keyClaims": [
+            "Developed invention over 3 years",
+            "Met with MegaTech on Sept 12, 2023",
+            "Signed NDA before showing prototype",
+            "MegaTech stopped responding after meeting"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "James Park",
+          "role": "MegaTech CEO",
+          "avatar": "👔",
+          "statement": "This is absurd. Our R&D team has been working on prosthetic technology for 5 years. Yes, we met with Dr. Chen, but her design was primitive compared to ours.\n\nWe were considering acquiring her company, but her tech wasn't compatible with our systems. Our patent is based on work our team started in 2019. We have lab notebooks to prove it.",
+          "keyClaims": [
+            "MegaTech R&D started in 2019",
+            "Dr. Chen's design was 'primitive'",
+            "Meeting was about potential acquisition",
+            "Have documentation of their own development"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Dr. Lisa Wong",
+          "role": "MegaTech Lead Engineer",
+          "avatar": "👩‍💻",
+          "statement": "I've led the prosthetics team for 4 years. After the meeting with Dr. Chen, James asked me to 'explore similar approaches.' I thought it was strange timing...\n\nOur patent filing happened very quickly after that meeting. Usually our approval process takes months, but this was fast-tracked. I... I'm not comfortable with how this went down.",
+          "keyClaims": [
+            "Works at MegaTech for 4 years",
+            "CEO asked to 'explore similar approaches' after Chen meeting",
+            "Patent filing was unusually fast-tracked",
+            "Seems uncomfortable about the situation"
+          ]
+        }
       ],
-      "correctIndex": 0,
-      "patentInfo": {
-        "patentNumber": "US5853221A",
-        "inventor": "William Stumpf & Don Chadwick",
-        "year": 1998,
-        "title": "Ergonomic Office Chair (Aeron Chair)",
-        "innovation": "Revolutionary mesh seating that provides support without foam padding, allowing air circulation and reducing heat buildup during long sitting sessions."
-      },
-      "explanation": "The Aeron Chair's pellicle suspension system was revolutionary because it eliminated traditional foam padding while providing superior support and breathability."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "NDA Document",
+          "icon": "📄",
+          "type": "document",
+          "description": "Non-Disclosure Agreement signed September 12, 2023",
+          "content": "Date: September 12, 2023\nParties: Dr. Sarah Chen & MegaTech Industries\n\n'All disclosed information, including prototypes, designs, and technical specifications, shall remain confidential and proprietary to the disclosing party.'\n\nSigned by:\n✍️ Dr. Sarah Chen\n✍️ James Park (CEO, MegaTech)",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Lab Notebook",
+          "icon": "📓",
+          "type": "document",
+          "description": "Dr. Chen's research notebook from 2021-2023",
+          "content": "Entries from 2021-2023 showing detailed sketches of neural interface design. All entries are dated and witnessed by colleagues at her university lab.\n\nKey entry (March 2022): 'Breakthrough! Neural interface successfully reads motor cortex signals with 94% accuracy.'",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Patent Application",
+          "icon": "📋",
+          "type": "document",
+          "description": "MegaTech's patent filing dated March 7, 2024",
+          "content": "Filed: March 7, 2024\nInventor: Dr. Lisa Wong\nAssignee: MegaTech Industries\n\nThe neural interface design is identical to Dr. Chen's sketches from her lab notebook. Filed 6 months after the meeting with Dr. Chen.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Prior Work Documents",
+          "icon": "💼",
+          "type": "document",
+          "description": "MegaTech's R&D records from 2019-2022",
+          "content": "General prosthetics research from 2019-2022. Shows work on mechanical prosthetics and basic motor control.\n\nNO mention of neural interface technology. The design approach is completely different from what was filed in the patent.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_5",
+          "name": "Email Chain",
+          "icon": "📧",
+          "type": "document",
+          "description": "Internal MegaTech email dated September 20, 2023",
+          "content": "From: James Park\nTo: Dr. Lisa Wong\nDate: September 20, 2023\n\n'Fast-track the neural interface project. Use the approach from last week's meeting. File patent ASAP. This could be huge for Q4.'\n\nSent 8 days after the meeting with Dr. Chen.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_6",
+          "name": "Meeting Log",
+          "icon": "🎥",
+          "type": "document",
+          "description": "Security sign-in log from September 12, 2023",
+          "content": "MegaTech Building Security Log\nDate: September 12, 2023\n\nVisitor: Dr. Sarah Chen\nTime In: 2:00 PM\nTime Out: 4:30 PM\nMeeting Attendees: James Park, Dr. Lisa Wong, Legal Team\nNotes: Visitor brought prototype case (logged by security)",
+          "importance": "medium"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Who developed the neural interface technology first?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Dr. Chen's lab notebook shows development from 2021-2023, while MegaTech's prior work shows no neural interface research."
+        },
+        {
+          "question": "What proves MegaTech saw Dr. Chen's design?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "The NDA document and meeting log confirm MegaTech saw Chen's prototype during the September 12 meeting."
+        },
+        {
+          "question": "What proves MegaTech copied the design?",
+          "correctEvidenceId": "evidence_5",
+          "explanation": "James Park's email ordering the team to 'use the approach from last week's meeting' proves they copied Chen's design."
+        },
+        {
+          "question": "Did MegaTech have this technology before meeting Chen?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "MegaTech's prior work documents show no neural interface technology before the meeting with Dr. Chen."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Dr. Chen is lying - MegaTech developed it independently",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "MegaTech stole the invention after the NDA meeting",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "Both parties developed similar technology coincidentally",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_d",
+          "text": "Dr. Wong acted alone without company knowledge",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "MegaTech stole Dr. Chen's invention",
+        "explanation": "After Dr. Sarah Chen showed her neural interface design to MegaTech under NDA, CEO James Park saw an opportunity. Instead of partnering with her, he instructed his team to replicate her design and file a patent first.\n\nThe email evidence proves James Park ordered the fast-tracked patent based on 'last week's meeting.' MegaTech's prior work showed no neural interface technology - they only started after seeing Dr. Chen's prototype.",
+        "legalOutcome": [
+          "MegaTech's patent is INVALID (stolen invention)",
+          "Dr. Chen's patent is VALID (true inventor)",
+          "MegaTech violated the NDA agreement",
+          "Dr. Chen can sue for damages and theft of trade secrets"
+        ],
+        "ipLesson": "NDAs protect confidential information, but document everything! Dr. Chen's dated lab notebooks proved she was the original inventor. Always keep detailed records of your invention process with dates and witnesses."
+      }
     },
     {
       "id": "case_002",
-      "caseNumber": "Case #002",
-      "category": "Computing",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1970 by Douglas Engelbart",
-        "🔍 Clue 2: It has two perpendicular wheels inside",
-        "🔍 Clue 3: You move it on a flat surface to control something",
-        "🔍 Clue 4: Modern versions use optical sensors instead of wheels",
-        "🔍 Clue 5: It's called an 'X-Y position indicator'"
-      ],
-      "suspects": [
-        "Keyboard",
-        "Computer Mouse",
-        "Trackpad",
-        "Joystick"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US3541541A",
-        "inventor": "Douglas Engelbart",
-        "year": 1970,
-        "title": "Computer Mouse",
-        "innovation": "First computer mouse using two perpendicular wheels to track 2D movement, revolutionizing how humans interact with computers."
-      },
-      "explanation": "Engelbart's mouse used two wheels at right angles to track movement in X and Y directions, creating the foundation for modern computer interaction."
-    },
-    {
-      "id": "case_003",
-      "caseNumber": "Case #003",
-      "category": "Lighting",
+      "caseNumber": "CASE #002",
+      "title": "The Copycat Logo",
+      "category": "Trademark Fraud",
       "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1962 by Nick Holonyak Jr.",
-        "🔍 Clue 2: It uses semiconductor technology",
-        "🔍 Clue 3: It's extremely energy-efficient compared to old bulbs",
-        "🔍 Clue 4: It emits visible light when current passes through",
-        "🔍 Clue 5: The patent is for a 'light-emitting diode'"
-      ],
+      "points": 120,
+      "timeLimit": 600,
+      "story": "Maya's Organic Café has been serving the community for 8 years with their distinctive green leaf logo. Last month, a new café called 'Maya's Natural Foods' opened across the street.\n\nTheir logo? Almost identical - same green leaf, similar font, same color scheme. Customers are confused, and Maya's business is suffering.\n\nThe new café owner claims it's just a coincidence. But Maya suspects trademark infringement.\n\nYour mission: Determine if this is trademark fraud.",
       "suspects": [
-        "Fluorescent Tube",
-        "Incandescent Bulb",
-        "LED Lamp",
-        "Halogen Light"
+        {
+          "id": "suspect_1",
+          "name": "Maya Rodriguez",
+          "role": "Original Café Owner",
+          "avatar": "👩‍🍳",
+          "statement": "I opened Maya's Organic Café in 2016. I designed the logo myself - a green leaf with our name in a specific font. I registered the trademark in 2017.\n\nNow this new place opens with almost the same logo! Customers keep coming to my café thinking we're the same business. Some even complain about the other café's service to me! This is hurting my reputation and sales.",
+          "keyClaims": [
+            "Opened café in 2016",
+            "Registered trademark in 2017",
+            "Logo is original design",
+            "Experiencing customer confusion"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "David Chen",
+          "role": "New Café Owner",
+          "avatar": "👨‍💼",
+          "statement": "I just opened Maya's Natural Foods last month. My daughter's name is Maya, so I named it after her. The leaf logo represents natural, organic food - it's a common symbol!\n\nI had no idea about the other café until after I opened. It's just a coincidence. Besides, my café focuses on takeout while hers is dine-in. We're different businesses.",
+          "keyClaims": [
+            "Named café after his daughter Maya",
+            "Claims leaf logo is common symbol",
+            "Says he didn't know about original café",
+            "Claims businesses are different (takeout vs dine-in)"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Jennifer Lee",
+          "role": "Graphic Designer",
+          "avatar": "🎨",
+          "statement": "David hired me to design his café logo in January. He specifically asked for a 'green leaf design with the name Maya's in a clean font.'\n\nWhen I showed him initial concepts, he kept saying 'make it more like the successful organic café downtown.' I thought he meant the style, not copying someone specific. Now I realize he meant Maya's Organic Café...",
+          "keyClaims": [
+            "Hired by David in January 2024",
+            "David requested specific green leaf design",
+            "David said 'make it like the successful café downtown'",
+            "Designer now realizes David meant to copy"
+          ]
+        }
       ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US3293513A",
-        "inventor": "Nick Holonyak Jr.",
-        "year": 1962,
-        "title": "LED (Light-Emitting Diode)",
-        "innovation": "First practical visible LED, revolutionizing lighting technology and eventually replacing incandescent bulbs worldwide."
-      },
-      "explanation": "Holonyak created the first practical visible LED, which has now replaced traditional bulbs in most applications due to efficiency and longevity."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Original Trademark",
+          "icon": "®️",
+          "type": "document",
+          "description": "Maya Rodriguez's trademark registration from 2017",
+          "content": "Trademark Registration\nRegistered: March 15, 2017\nOwner: Maya Rodriguez\nMark: 'Maya's Organic Café' with green leaf design\nClass: Restaurant services\nStatus: Active and in use",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Logo Comparison",
+          "icon": "🔍",
+          "type": "visual",
+          "description": "Side-by-side comparison of both logos",
+          "content": "Original (2017): Green leaf with 'Maya's Organic Café' in Montserrat font\nNew (2024): Green leaf with 'Maya's Natural Foods' in similar font\n\nSimilarities:\n- Identical green color (#2ECC71)\n- Same leaf shape and orientation\n- Nearly identical font style\n- Same layout (leaf above text)",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Design Brief Email",
+          "icon": "📧",
+          "type": "document",
+          "description": "Email from David to designer Jennifer",
+          "content": "From: David Chen\nTo: Jennifer Lee\nDate: January 10, 2024\n\n'Hi Jennifer, I need a logo for my new café. I want something like Maya's Organic Café downtown - they're really successful. Green leaf, clean font, professional look. Can you make something similar?'",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Customer Complaints",
+          "icon": "💬",
+          "type": "document",
+          "description": "Social media posts showing customer confusion",
+          "content": "Multiple social media posts:\n\n'Went to Maya's today but the food was different? Did they change the menu?' - Posted at new location\n\n'Maya's has a new location across town! Same logo!' - Incorrect assumption\n\n'Why does Maya's have two locations with different menus?' - Confused customer",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_5",
+          "name": "Location Map",
+          "icon": "🗺️",
+          "type": "visual",
+          "description": "Map showing both café locations",
+          "content": "Both cafés are located on the same street, only 200 meters apart. They serve the same geographic market and customer base.\n\nBoth offer organic food and beverages. The services overlap significantly despite David's claim of being 'different businesses.'",
+          "importance": "medium"
+        },
+        {
+          "id": "evidence_6",
+          "name": "Designer's Notes",
+          "icon": "📝",
+          "type": "document",
+          "description": "Jennifer's design revision notes",
+          "content": "Design Revision Notes - January 2024\n\nRevision 1: Client said 'leaf needs to be more like the downtown café'\nRevision 2: Client said 'font should match the successful one'\nRevision 3: Client said 'perfect, this is exactly what I wanted'\n\nNote to self: Client seems to be copying existing café design.",
+          "importance": "high"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Who has the legal trademark rights?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "Maya Rodriguez registered her trademark in 2017, giving her exclusive rights to use the mark for restaurant services."
+        },
+        {
+          "question": "Is there likelihood of customer confusion?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "Multiple social media posts show customers are confused between the two cafés, thinking they're the same business."
+        },
+        {
+          "question": "Did David intentionally copy the logo?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "David's email explicitly asks the designer to make something 'like Maya's Organic Café downtown,' proving intentional copying."
+        },
+        {
+          "question": "Are the businesses in the same market?",
+          "correctEvidenceId": "evidence_5",
+          "explanation": "Both cafés are on the same street serving the same geographic market with overlapping services (organic food and beverages)."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "No infringement - it's just a coincidence",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "Trademark infringement - David intentionally copied",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "No infringement - businesses are different enough",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_d",
+          "text": "Designer is responsible, not David",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "Trademark Infringement - David intentionally copied",
+        "explanation": "David Chen deliberately copied Maya Rodriguez's registered trademark. The email evidence proves he specifically instructed his designer to create something 'like Maya's Organic Café downtown.'\n\nThe logos are nearly identical in color, design, and layout. Both businesses operate in the same geographic market selling similar products. Customer confusion is documented through social media posts.\n\nDavid's claim of 'coincidence' is contradicted by his own email instructions to the designer.",
+        "legalOutcome": [
+          "David's logo infringes Maya's registered trademark",
+          "David must cease using the infringing logo immediately",
+          "David must rebrand with a distinctly different logo",
+          "Maya can sue for damages and lost profits",
+          "David may face additional penalties for willful infringement"
+        ],
+        "ipLesson": "Trademark law protects consumers from confusion and protects businesses from unfair competition. When marks are confusingly similar and used in the same market, it's infringement. Always conduct a trademark search before choosing a business name and logo. Intentional copying can result in higher damages."
+      }
+    },
+      {
+      "id": "case_003",
+      "caseNumber": "CASE #003",
+      "title": "The Vanishing Algorithm",
+      "category": "Trade Secret Leak",
+      "difficulty": "hard",
+      "points": 150,
+      "timeLimit": 900,
+      "story": "NeuraSoft Inc. has developed a breakthrough compression algorithm capable of reducing file sizes by 70% with zero quality loss.\n\nLast week, a competitor called HyperZip suddenly launched a product using the same technique — down to identical variable names in the code.\n\nNeuraSoft believes someone leaked their source code.\n\nYour mission: Uncover how the trade secret was stolen.",
+      "suspects": [
+        {
+          "id": "suspect_1",
+          "name": "Evan Brooks",
+          "role": "Lead Developer at NeuraSoft",
+          "avatar": "👨‍💻",
+          "statement": "I've worked at NeuraSoft for 5 years. I would *never* leak our code. Yes, I took my laptop home that weekend, but only because of deadlines.\n\nSomeone else must have accessed the repository. Maybe a break-in or a hack?",
+          "keyClaims": [
+            "Took work laptop home",
+            "Claims loyalty",
+            "Suggests hacking as possibility",
+            "Worked on algorithm core"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Marina Flores",
+          "role": "Former NeuraSoft Intern",
+          "avatar": "👩‍🎓",
+          "statement": "I left NeuraSoft months before the final algorithm was finished. I never had access to the complete codebase.\n\nHyperZip did contact me about a job, but I declined. I didn't share anything — I swear.",
+          "keyClaims": [
+            "Claims no access to final algorithm",
+            "Was approached by HyperZip",
+            "Denied job offer",
+            "Says she left early"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Leo Carter",
+          "role": "HyperZip CTO",
+          "avatar": "🧔",
+          "statement": "HyperZip's tech is entirely our own. Compression research is competitive — similar solutions arise.\n\nAny resemblance is purely coincidental.",
+          "keyClaims": [
+            "Claims independent development",
+            "Says similarities are coincidence",
+            "Denies access to NeuraSoft code",
+            "Defensive tone"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Git Access Log",
+          "icon": "📁",
+          "type": "document",
+          "description": "Repository access log showing unusual activity",
+          "content": "Access Log - October 14, 2024\n\nUser: EvanBrooks\nAccess Time: 2:13 AM\nAction: Full repository download\nLocation: Unknown IP (London, UK)\n\nNote: Evan was in California at the time.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Email From HyperZip",
+          "icon": "📧",
+          "type": "document",
+          "description": "Recruitment email sent to former intern Marina",
+          "content": "From: careers@hyperzip.com\nTo: marina.flores\n\n'We are particularly interested in candidates with experience on NeuraSoft's FileShrink algorithms. Any insights into their approach would be extremely valuable.'",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Source Code Comparison",
+          "icon": "💻",
+          "type": "document",
+          "description": "Side-by-side comparison of NeuraSoft and HyperZip code",
+          "content": "Identical variable names detected:\n- bufferOptimizeLevel\n- c_losslessFlag\n- deltaMapThreshold\n\nAlgorithm structure is 95% identical.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Security Report",
+          "icon": "🛑",
+          "type": "document",
+          "description": "IT security report from NeuraSoft",
+          "content": "October 14, 2024: Suspicious login detected under EvanBrooks account.\n\nIP traced to HyperZip corporate office in London.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_5",
+          "name": "Laptop Metadata",
+          "icon": "💾",
+          "type": "document",
+          "description": "Evan's work laptop forensic analysis",
+          "content": "No signs of code copying or external device usage.\n\nActivity logs confirm Evan was asleep during the unauthorized access.",
+          "importance": "medium"
+        },
+        {
+          "id": "evidence_6",
+          "name": "Internal Chat Leak",
+          "icon": "💬",
+          "type": "document",
+          "description": "HyperZip internal chat obtained by anonymous whistleblower",
+          "content": "CTO Leo Carter: 'We got the full repo — integrate everything before they notice.'\nTimestamp: October 15, 2024",
+          "importance": "critical"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Who accessed the code repository?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "The security report shows the login came from HyperZip's office, not Evan."
+        },
+        {
+          "question": "Did HyperZip obtain NeuraSoft's code illegally?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "The code comparison shows 95% similarity, proving copying."
+        },
+        {
+          "question": "Was Evan responsible for the leak?",
+          "correctEvidenceId": "evidence_5",
+          "explanation": "Forensic analysis proves Evan's laptop was not used."
+        },
+        {
+          "question": "Did HyperZip knowingly use stolen data?",
+          "correctEvidenceId": "evidence_6",
+          "explanation": "The internal chat reveals they knowingly integrated stolen code."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Evan leaked the algorithm himself",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "HyperZip hacked NeuraSoft and stole the code",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "Marina leaked the trade secrets",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_d",
+          "text": "Both companies coincidentally made similar algorithms",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "HyperZip hacked NeuraSoft and stole the code",
+        "explanation": "Evidence shows HyperZip used Evan's credentials to illegally access NeuraSoft's repository. The IP address matches HyperZip's office, and internal chats confirm they intentionally integrated the stolen code.\n\nEvan was framed, and Marina had no access to the final algorithm.",
+        "legalOutcome": [
+          "HyperZip faces criminal charges for cyber intrusion",
+          "NeuraSoft's trade secrets legally protected",
+          "HyperZip must cease product sales using stolen code",
+          "Damages and injunctions likely"
+        ],
+        "ipLesson": "Trade secrets require strong digital protection. Access logs, IP tracking, and forensic analysis can expose digital theft even when hackers use stolen credentials."
+      }
     },
     {
       "id": "case_004",
-      "caseNumber": "Case #004",
-      "category": "Office Supplies",
+      "caseNumber": "CASE #004",
+      "title": "The Stolen Fashion Sketchbook",
+      "category": "Copyright Infringement",
       "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented accidentally in 1977 by Spencer Silver and Art Fry",
-        "🔍 Clue 2: They stick to surfaces but can be removed easily",
-        "🔍 Clue 3: The adhesive is 'low-tack' and reusable",
-        "🔍 Clue 4: They're usually small, square, and yellow",
-        "🔍 Clue 5: Perfect for leaving reminders on your desk"
-      ],
+      "points": 80,
+      "timeLimit": 500,
+      "story": "A young designer claims her fashion sketches were stolen and used by a major clothing brand. Last month, the brand released a new clothing line identical to drawings from her sketchbook.\n\nYour job is to find out who copied whom.",
       "suspects": [
-        "Tape Dispenser",
-        "Sticky Notes (Post-it)",
-        "Glue Stick",
-        "Paper Clips"
+        {
+          "id": "suspect_1",
+          "name": "Lila Harper",
+          "role": "Independent Fashion Designer",
+          "avatar": "👗",
+          "statement": "I posted a few sketch previews online, but never the full designs. I met with TrendLine's recruiter in March and showed them my entire sketchbook.\n\nTwo weeks later, they stopped responding — and now the designs are on shelves!",
+          "keyClaims": [
+            "Met TrendLine recruiter",
+            "Showed sketchbook in person",
+            "Only partial sketches were public",
+            "Claims full designs were copied"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Hannah Cole",
+          "role": "TrendLine Recruiter",
+          "avatar": "💼",
+          "statement": "I meet dozens of designers every month. Yes, Lila showed me her sketches, but we decided not to move forward. Our new clothing line was already in development.",
+          "keyClaims": [
+            "Claims designs were already in development",
+            "Saw Lila's sketchbook",
+            "Says timing is coincidental",
+            "Denies sharing sketches internally"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Mark Rivers",
+          "role": "TrendLine Lead Designer",
+          "avatar": "🎨",
+          "statement": "I've never seen Lila's sketches. All our concepts were original and created within the team. Fashion trends overlap — similarities happen.",
+          "keyClaims": [
+            "Claims no knowledge of Lila's work",
+            "Says design overlap is natural",
+            "Denies copying",
+            "Claims originality"
+          ]
+        }
       ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US4166152A",
-        "inventor": "Spencer Silver & Art Fry",
-        "year": 1977,
-        "title": "Sticky Notes (Post-it Notes)",
-        "innovation": "Low-tack reusable pressure-sensitive adhesive that doesn't damage surfaces, allowing notes to be repositioned multiple times."
-      },
-      "explanation": "The unique adhesive allows Post-it notes to stick temporarily and be repositioned without leaving residue or damaging surfaces."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Sketchbook Photos",
+          "icon": "📓",
+          "type": "visual",
+          "description": "Photos from Lila's dated sketchbook",
+          "content": "Sketchbook contains timestamped designs from January–March 2024.\n\nKey sketches are identical to TrendLine's product line.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Product Catalog",
+          "icon": "🛍️",
+          "type": "visual",
+          "description": "TrendLine's Summer Collection 2024",
+          "content": "Side-by-side comparison shows identical shapes, patterns, and stitching lines.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Recruitment Meeting Log",
+          "icon": "📅",
+          "type": "document",
+          "description": "Log of Lila’s meeting with TrendLine",
+          "content": "Meeting Date: March 8, 2024\nAttendees: Lila Harper, Hannah Cole\nNotes: Lila presented full sketchbook for review.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Design Team Timeline",
+          "icon": "📝",
+          "type": "document",
+          "description": "TrendLine internal design timeline",
+          "content": "Summer 2024 designs started April 2024 — one month after the meeting.\n\nNo earlier drafts exist.",
+          "importance": "critical"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Who created the designs first?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "The dated sketchbook clearly predates TrendLine’s collection."
+        },
+        {
+          "question": "Did TrendLine see the original designs?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Meeting logs confirm they reviewed Lila’s full sketchbook."
+        },
+        {
+          "question": "Did TrendLine already have designs before meeting?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "Their design process started after the meeting, proving copying."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Lila copied TrendLine’s designs",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "TrendLine copied Lila’s sketchbook",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "Both designers coincidentally created similar work",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "TrendLine copied Lila’s sketchbook",
+        "explanation": "TrendLine's internal timeline proves they only started designing after seeing Lila’s work. The similarities are too exact to be coincidence.",
+        "legalOutcome": [
+          "TrendLine's line infringes Lila’s copyright",
+          "TrendLine must pull products from sale",
+          "Lila may receive damages"
+        ],
+        "ipLesson": "Always date your creative work. Timestamped originals are strong copyright evidence."
+      }
     },
     {
       "id": "case_005",
-      "caseNumber": "Case #005",
-      "category": "Office Tools",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Patented in 1867 by George McGill",
-        "🔍 Clue 2: It binds papers together permanently",
-        "🔍 Clue 3: Uses small metal fasteners",
-        "🔍 Clue 4: Requires a single pressing motion to operate",
-        "🔍 Clue 5: The fasteners are stored in a strip inside"
-      ],
+      "caseNumber": "CASE #005",
+      "title": "The Silent Microchip",
+      "category": "Patent Infringement",
+      "difficulty": "medium",
+      "points": 120,
+      "timeLimit": 700,
+      "story": "A startup claims a large electronics company copied its patented noise-canceling microchip. The big corporation denies it, saying they developed their own version independently.",
       "suspects": [
-        "Paper Clip",
-        "Hole Punch",
-        "Stapler",
-        "Binder Clip"
+        {
+          "id": "suspect_1",
+          "name": "Jacob Lin",
+          "role": "Startup Founder",
+          "avatar": "🧑‍🔧",
+          "statement": "We patented our design in 2021. Our chip uses a dual-wave cancellation method that no one else uses.\n\nI showed it to MegaSound during partnership talks. A year later, they released an identical chip.",
+          "keyClaims": [
+            "Patent from 2021",
+            "Dual-wave design is unique",
+            "Met MegaSound earlier",
+            "Claims copying"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Rebecca Shah",
+          "role": "MegaSound R&D Lead",
+          "avatar": "👩‍🔬",
+          "statement": "Our chip is completely different. We've been researching noise reduction since 2018. Any similarities reflect industry standards.",
+          "keyClaims": [
+            "Claims independent R&D",
+            "Says similarities are standard",
+            "Denies seeing startup tech",
+            "Claims long timeline"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Alan Pierce",
+          "role": "MegaSound Executive",
+          "avatar": "👔",
+          "statement": "Yes, we met Jacob, but only for business evaluation. We never accessed his schematics. It’s unfair to accuse us without proof.",
+          "keyClaims": [
+            "Acknowledges meeting",
+            "Claims no access to schematics",
+            "Defensive tone",
+            "Denies wrongdoing"
+          ]
+        }
       ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US67665A",
-        "inventor": "George McGill",
-        "year": 1867,
-        "title": "Stapler",
-        "innovation": "First practical stapler that could bind papers with one motion, using a strip of pre-formed metal staples."
-      },
-      "explanation": "McGill's single-stroke stapler mechanism made binding papers quick and easy, becoming a standard office tool."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Patent Diagram",
+          "icon": "📘",
+          "type": "document",
+          "description": "Jacob's original 2021 patent filing",
+          "content": "Shows dual-wave cancellation nodes uniquely arranged in a triangular formation.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "MegaSound Chip Analysis",
+          "icon": "🔬",
+          "type": "visual",
+          "description": "Technical teardown of MegaSound device",
+          "content": "Internal structure matches the triangular node design from Jacob’s patent.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Meeting Transcript",
+          "icon": "📄",
+          "type": "document",
+          "description": "Internal notes from startup–MegaSound meeting",
+          "content": "Transcript shows MegaSound reviewed the microchip diagrams.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "MegaSound R&D History",
+          "icon": "📚",
+          "type": "document",
+          "description": "Records from 2018–2020",
+          "content": "MegaSound focused on acoustic hardware, not microchips. No record of noise-canceling tech pre-2022.",
+          "importance": "high"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Which design came first?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "Jacob’s 2021 patent predates MegaSound’s chip."
+        },
+        {
+          "question": "Did MegaSound have access to the design?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "The transcript proves MegaSound reviewed the schematics."
+        },
+        {
+          "question": "Does MegaSound’s chip copy patented features?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Teardown reveals identical structures."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "MegaSound independently invented the chip",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "MegaSound copied Jacob’s patented design",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "The similarities are industry standard",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "MegaSound copied Jacob’s patented design",
+        "explanation": "MegaSound gained access to Jacob’s schematics during partnership talks, and their chip matches his patented structure exactly.",
+        "legalOutcome": [
+          "MegaSound liable for patent infringement",
+          "Startup eligible for damages",
+          "MegaSound forced to redesign"
+        ],
+        "ipLesson": "Never share schematics without proper legal protections."
+      }
     },
     {
       "id": "case_006",
-      "caseNumber": "Case #006",
-      "category": "Kitchen Appliances",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Discovered accidentally in 1950 by Percy Spencer",
-        "🔍 Clue 2: He was working on radar technology when he made the discovery",
-        "🔍 Clue 3: It heats food using electromagnetic radiation",
-        "🔍 Clue 4: A chocolate bar melted in his pocket, leading to the invention",
-        "🔍 Clue 5: It can heat food in minutes without an open flame"
-      ],
+      "caseNumber": "CASE #006",
+      "title": "The Counterfeit Sneakers",
+      "category": "Counterfeit Goods",
+      "difficulty": "easy",
+      "points": 100,
+      "timeLimit": 550,
+      "story": "A luxury shoe brand discovers counterfeit versions of its new sneaker model being sold online. The knockoffs are nearly identical, raising suspicion of an internal leak.",
       "suspects": [
-        "Toaster Oven",
-        "Microwave Oven",
-        "Convection Oven",
-        "Electric Stove"
+        {
+          "id": "suspect_1",
+          "name": "Adrian Lowe",
+          "role": "Warehouse Manager",
+          "avatar": "📦",
+          "statement": "I oversee shipments but have no access to design files. Anyone blaming me is guessing.",
+          "keyClaims": [
+            "No access to designs",
+            "Only manages shipments",
+            "Denies involvement",
+            "Defensive tone"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Sasha Kim",
+          "role": "Junior Designer",
+          "avatar": "🎨",
+          "statement": "I worked on the sneaker, but my drafts weren’t finalized. I did take some sketches home, but only to study them.",
+          "keyClaims": [
+            "Admits taking sketches home",
+            "Says drafts were incomplete",
+            "Claims no sharing",
+            "Worked on designs"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Carlos Diaz",
+          "role": "Online Seller",
+          "avatar": "🛒",
+          "statement": "I buy sneakers from a supplier in another country. I didn’t know they were counterfeit. They looked real to me!",
+          "keyClaims": [
+            "Claims ignorance",
+            "Says he bought from supplier",
+            "Denies intentional sale",
+            "Says sneakers looked real"
+          ]
+        }
       ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2495429A",
-        "inventor": "Percy Spencer",
-        "year": 1950,
-        "title": "Microwave Oven",
-        "innovation": "Discovered microwave cooking accidentally while working on radar magnetrons, revolutionizing food preparation."
-      },
-      "explanation": "Spencer noticed a chocolate bar melted in his pocket while working with magnetrons, leading to the invention of the microwave oven."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Official Design Blueprint",
+          "icon": "📘",
+          "type": "document",
+          "description": "Blueprint detailing unique stitching pattern",
+          "content": "Shows a hidden triangular stitch only visible on close inspection.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Counterfeit Shoe Photos",
+          "icon": "📸",
+          "type": "visual",
+          "description": "Images of shoes Carlos sold",
+          "content": "Counterfeit shoes contain the same hidden triangular stitch — a detail not shown in public teasers.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Sasha's Home Folder",
+          "icon": "🗂️",
+          "type": "document",
+          "description": "Company audit discovered copied sketches on Sasha’s home laptop",
+          "content": "Sketches include the hidden stitch pattern.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Supplier Invoice",
+          "icon": "🧾",
+          "type": "document",
+          "description": "Carlos’s supplier records",
+          "content": "Supplier specializes in counterfeit goods. Multiple prior investigations.",
+          "importance": "medium"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Did the counterfeiters have access to the hidden stitch design?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Counterfeit shoes used a non-public design element."
+        },
+        {
+          "question": "Who took design files outside the company?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Sasha had complete sketches on her personal laptop."
+        },
+        {
+          "question": "Did Carlos knowingly sell counterfeits?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "His supplier is a known counterfeit source."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Sasha leaked the designs leading to counterfeits",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_b",
+          "text": "Adrian is responsible",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_c",
+          "text": "Carlos intentionally made the counterfeits",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "Sasha leaked the designs",
+        "explanation": "Sasha took complete sketches home and those included non-public details, enabling counterfeiters to create near-perfect replicas.",
+        "legalOutcome": [
+          "Designer violated confidentiality",
+          "Supplier faces investigation",
+          "Brand can sue for damages"
+        ],
+        "ipLesson": "Even small design leaks can enable counterfeits. Protect proprietary sketches."
+      }
     },
     {
       "id": "case_007",
-      "caseNumber": "Case #007",
-      "category": "Cookware",
+      "caseNumber": "CASE #007",
+      "title": "The Duplicate App",
+      "category": "Copyright Infringement",
       "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented accidentally in 1941 by Roy Plunkett",
-        "🔍 Clue 2: He was researching refrigerants when he discovered it",
-        "🔍 Clue 3: The coating prevents food from sticking during cooking",
-        "🔍 Clue 4: The material is called PTFE (polytetrafluoroethylene)",
-        "🔍 Clue 5: Brand name rhymes with 'nylon'"
-      ],
+      "points": 110,
+      "timeLimit": 650,
+      "story": "A small developer finds an app identical to his on the app store—same UI, same features, even the same bugs. He suspects the code was stolen.",
       "suspects": [
-        "Cast Iron Pan",
-        "Ceramic Cookware",
-        "Non-Stick Pan (Teflon)",
-        "Stainless Steel Pan"
+        {
+          "id": "suspect_1",
+          "name": "Oliver Reed",
+          "role": "Indie App Developer",
+          "avatar": "👨‍💻",
+          "statement": "I built my productivity app alone over two years. Suddenly, another app appears with the same animations and even the same rare crash.\n\nThis can’t be coincidence.",
+          "keyClaims": [
+            "2 years of solo development",
+            "Claims identical features",
+            "Mentions same rare crash",
+            "Asserts copying"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Nora Patel",
+          "role": "Freelancer",
+          "avatar": "🧑‍🎨",
+          "statement": "I helped Oliver briefly with UI advice, but I never touched his code. I work for various clients — but none involved copying.",
+          "keyClaims": [
+            "Claims advisory role only",
+            "No access to backend code",
+            "Denies involvement",
+            "Multiple clients"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "ByteWorks LLC",
+          "role": "App Studio",
+          "avatar": "🏢",
+          "statement": "We created our app from scratch. Productivity apps often share similar layouts. We reject the allegation entirely.",
+          "keyClaims": [
+            "Claims independent creation",
+            "Says features are common",
+            "Denies seeing Oliver’s app",
+            "Corporate tone"
+          ]
+        }
       ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US2230654A",
-        "inventor": "Roy Plunkett",
-        "year": 1941,
-        "title": "Non-Stick Coating (Teflon)",
-        "innovation": "Accidentally discovered PTFE while researching refrigerants, creating the first non-stick coating for cookware."
-      },
-      "explanation": "Plunkett accidentally discovered Teflon while researching refrigerants, and it became the world's first non-stick coating."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "GitHub Commit History",
+          "icon": "📁",
+          "type": "document",
+          "description": "Oliver’s development history",
+          "content": "Shows two years of commits with original code development.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Binary Code Comparison",
+          "icon": "🖥️",
+          "type": "document",
+          "description": "Reverse engineering comparison",
+          "content": "ByteWorks app contains multiple identical function names with same typos.\n\nExample: 'calulateProductivity()'",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Error Log",
+          "icon": "🐞",
+          "type": "document",
+          "description": "Both apps show the same rare crash bug",
+          "content": "Bug triggered by opening settings rapidly.\n\nBug matches line-for-line in logs.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Consulting Contract",
+          "icon": "📄",
+          "type": "document",
+          "description": "Proof of Nora's contract scope",
+          "content": "Specifically states she only provided UI mockup consultation.",
+          "importance": "medium"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Were the apps independently created?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Identical function names and typos show code copying."
+        },
+        {
+          "question": "Did Nora have access to core code?",
+          "correctEvidenceId": "evidence_4",
+          "explanation": "Her contract limits her to UI mockups only."
+        },
+        {
+          "question": "Are the apps identical beyond UI?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Identical rare bug proves shared code source."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "ByteWorks stole Oliver’s code",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_b",
+          "text": "Nora copied files for a client",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_c",
+          "text": "It’s all coincidence",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "ByteWorks stole Oliver’s code",
+        "explanation": "ByteWorks' app contains identical typos and bugs, which is impossible without copying. Nora had no access beyond UI advice.",
+        "legalOutcome": [
+          "ByteWorks faces copyright infringement claims",
+          "App may be removed from stores",
+          "Oliver eligible for damages"
+        ],
+        "ipLesson": "Unique errors and typos can be powerful evidence of software copying."
+      }
     },
     {
       "id": "case_008",
-      "caseNumber": "Case #008",
-      "category": "Kitchen Appliances",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Patented in 1952 by Arthur Leslie Large",
-        "🔍 Clue 2: It boils water for tea or coffee",
-        "🔍 Clue 3: Has an automatic shut-off when water boils",
-        "🔍 Clue 4: Plugs into electricity instead of using a stove",
-        "🔍 Clue 5: The thermostat prevents it from boiling dry"
-      ],
+      "caseNumber": "CASE #008",
+      "title": "The Miracle Supplement",
+      "category": "Trademark Fraud",
+      "difficulty": "hard",
+      "points": 160,
+      "timeLimit": 850,
+      "story": "A wellness company claims that a rival brand is using a confusingly similar name and packaging for their new supplement — creating mass customer confusion.",
       "suspects": [
-        "Coffee Maker",
-        "Electric Kettle",
-        "Tea Pot",
-        "Water Heater"
+        {
+          "id": "suspect_1",
+          "name": "Alicia Voss",
+          "role": "Founder of VitalPure",
+          "avatar": "🧪",
+          "statement": "We’ve been selling VitalPure since 2019. Now this new company launches 'VitaPure' with nearly identical bottles.\n\nCustomers think it’s us.",
+          "keyClaims": [
+            "Original brand owner",
+            "Claims customer confusion",
+            "Brand active since 2019",
+            "Claims copycat packaging"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Greg Dalton",
+          "role": "Owner of VitaPure",
+          "avatar": "🧔",
+          "statement": "Our name is different. Health brands use similar words. Our packaging uses a green leaf because it's natural. That’s normal.",
+          "keyClaims": [
+            "Claims coincidence",
+            "Says natural brands look similar",
+            "Denies copying",
+            "Defensive"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Clara Mills",
+          "role": "Marketing Consultant",
+          "avatar": "📈",
+          "statement": "Greg asked me to make packaging that looked like 'that successful health bottle.' I thought he meant general styles, not a specific brand!",
+          "keyClaims": [
+            "Claims misunderstanding",
+            "Says Greg gave vague instructions",
+            "Worked on final design",
+            "Hints at copying"
+          ]
+        }
       ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2585252A",
-        "inventor": "Arthur Leslie Large",
-        "year": 1952,
-        "title": "Electric Kettle",
-        "innovation": "First kettle with automatic shut-off thermostat when water boils, making it safe and energy-efficient."
-      },
-      "explanation": "The automatic shut-off thermostat prevents the kettle from boiling dry, making it much safer than stovetop kettles."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Original Trademark Papers",
+          "icon": "📄",
+          "type": "document",
+          "description": "VitalPure trademark registered in 2020",
+          "content": "VitalPure™ — registered trademark for vitamin supplements.\nStatus: Active.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Packaging Comparison",
+          "icon": "📦",
+          "type": "visual",
+          "description": "Side-by-side product packaging images",
+          "content": "Both bottles:\n- White matte finish\n- Green leaf logo in upper corner\n- Blue stripe border\n- Nearly identical font",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Internal Marketing Email",
+          "icon": "📧",
+          "type": "document",
+          "description": "Email from Greg to Clara",
+          "content": "Greg: 'Make it resemble VitalPure — customers trust that brand. But change just enough to avoid legal issues.'",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Customer Survey",
+          "icon": "📝",
+          "type": "document",
+          "description": "Survey showing confusion",
+          "content": "38% of customers believed VitaPure was a VitalPure sub-brand.",
+          "importance": "high"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Does VitalPure have trademark protection?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "VitalPure's trademark is active since 2020."
+        },
+        {
+          "question": "Is packaging confusingly similar?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Near-identical packaging creates confusion."
+        },
+        {
+          "question": "Was copying intentional?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Email explicitly states intent to resemble VitalPure."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "No infringement — they look different enough",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "Trademark infringement — VitaPure intentionally copied",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "Packaging similarities are coincidence",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "VitaPure intentionally copied VitalPure’s branding",
+        "explanation": "Greg’s email confirms intent to mimic the brand. Combined with high customer confusion, this is classic trademark infringement.",
+        "legalOutcome": [
+          "VitaPure forced to rebrand",
+          "Damages owed to VitalPure",
+          "Possible injunctions"
+        ],
+        "ipLesson": "Intentional copying leads to severe penalties in trademark law."
+      }
     },
     {
       "id": "case_009",
-      "caseNumber": "Case #009",
-      "category": "Kitchen Tools",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Patented in 1868 by William Lyman",
-        "🔍 Clue 2: It has a rotating cutting wheel",
-        "🔍 Clue 3: Used to open metal food containers",
-        "🔍 Clue 4: The design is still used today",
-        "🔍 Clue 5: It cuts around the rim of cylindrical containers"
-      ],
+      "caseNumber": "CASE #009",
+      "title": "The Ghost Inventor",
+      "category": "Inventor Dispute",
+      "difficulty": "hard",
+      "points": 150,
+      "timeLimit": 900,
+      "story": "Two engineers claim to be the true inventor of a new solar coating technology. Only one name can legally appear on the patent.",
       "suspects": [
-        "Bottle Opener",
-        "Can Opener",
-        "Jar Opener",
-        "Cork Screw"
+        {
+          "id": "suspect_1",
+          "name": "Dr. Felix Stone",
+          "role": "Senior Engineer",
+          "avatar": "🧪",
+          "statement": "I led the development. I created the polymer mixture formula myself. The whole idea began in my lab notebook.",
+          "keyClaims": [
+            "Claims invention credit",
+            "Says idea came from his notebook",
+            "Senior role",
+            "Claims leadership"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Nadine Hart",
+          "role": "Junior Engineer",
+          "avatar": "👩‍🔬",
+          "statement": "Felix started it, sure. But I tweaked the formula to make it actually work. Without my adjustments, it was useless.",
+          "keyClaims": [
+            "Acknowledges Felix’s original idea",
+            "Says her tweaks were essential",
+            "Claims co-inventorship",
+            "Highlights improvements"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "CEO Martin Hale",
+          "role": "Company Founder",
+          "avatar": "👔",
+          "statement": "From a business standpoint, naming Felix alone is simpler. He’s senior. But I don’t know the technical details.",
+          "keyClaims": [
+            "Prefers a single inventor",
+            "Not technically involved",
+            "Political motive",
+            "No direct knowledge"
+          ]
+        }
       ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US80577A",
-        "inventor": "William Lyman",
-        "year": 1868,
-        "title": "Rotary Can Opener",
-        "innovation": "First practical rotary can opener with cutting wheel design still used today."
-      },
-      "explanation": "Lyman's rotary design with a cutting wheel became the standard for can openers and is still used over 150 years later."
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Felix’s Lab Notebook",
+          "icon": "📓",
+          "type": "document",
+          "description": "Notebook with early mixture formulas",
+          "content": "Shows initial formula attempts from 2022.\n\nFails stability tests.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Nadine’s Experiment Log",
+          "icon": "📘",
+          "type": "document",
+          "description": "Logbook showing improvements",
+          "content": "February 2023 entry: Nadine adds stabilizing polymer, resulting in 300% efficiency increase.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Final Patent Draft",
+          "icon": "📄",
+          "type": "document",
+          "description": "Patent draft filed by company",
+          "content": "Final version of formula includes Nadine’s stabilizing agent.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "Meeting Notes",
+          "icon": "📝",
+          "type": "document",
+          "description": "Internal meeting notes",
+          "content": "CEO suggests only naming Felix to avoid 'complications.'",
+          "importance": "medium"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Who created the original concept?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "Felix’s early formulas prove initial invention."
+        },
+        {
+          "question": "Whose work made the invention functional?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Nadine’s stabilizing agent is what enables the final working formula."
+        },
+        {
+          "question": "Which formula is used in the patent?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Final formula includes Nadine’s improvements."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Felix is the sole inventor",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "Nadine is the sole inventor",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_c",
+          "text": "Both Felix and Nadine are co-inventors",
+          "isCorrect": true
+        }
+      ],
+      "solution": {
+        "verdict": "Both Felix and Nadine are co-inventors",
+        "explanation": "Felix devised the original concept, but Nadine’s contributions were essential to the final working invention. Patent law requires naming *all* inventors who contributed to the claims.",
+        "legalOutcome": [
+          "Patent must list both as co-inventors",
+          "CEO cannot exclude contributors",
+          "Improper inventorship could invalidate patent"
+        ],
+        "ipLesson": "Inventorship is about contribution to the claims — not job titles."
+      }
     },
     {
       "id": "case_010",
-      "caseNumber": "Case #010",
-      "category": "Kitchen Appliances",
+      "caseNumber": "CASE #010",
+      "title": "The Missing Film Footage",
+      "category": "Copyright Infringement",
       "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1886 by Josephine Cochrane",
-        "🔍 Clue 2: She was frustrated with servants breaking her fine china",
-        "🔍 Clue 3: It uses water jets to clean items",
-        "🔍 Clue 4: Built into kitchen cabinets in modern homes",
-        "🔍 Clue 5: Saves time by cleaning dishes automatically"
-      ],
+      "points": 120,
+      "timeLimit": 700,
+      "story": "A documentary filmmaker discovers that another studio used her original drone footage in their film without permission.",
       "suspects": [
-        "Washing Machine",
-        "Dishwasher",
-        "Garbage Disposal",
-        "Food Processor"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US355139A",
-        "inventor": "Josephine Cochrane",
-        "year": 1886,
-        "title": "Dishwasher",
-        "innovation": "First practical dishwasher using water pressure to clean dishes, invented by a woman frustrated with broken china."
-      },
-      "explanation": "Cochrane invented the dishwasher after servants kept breaking her fine china, creating the first practical automatic dish cleaning machine."
-    },
-    {
-      "id": "case_011",
-      "caseNumber": "Case #011",
-      "category": "Kitchen Appliances",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1922 by Stephen Poplawski",
-        "🔍 Clue 2: Originally designed for making soda fountain drinks",
-        "🔍 Clue 3: Has spinning blades at the bottom",
-        "🔍 Clue 4: Can puree, mix, and crush ingredients",
-        "🔍 Clue 5: Perfect for making smoothies"
-      ],
-      "suspects": [
-        "Food Processor",
-        "Mixer",
-        "Blender",
-        "Juicer"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US2109501A",
-        "inventor": "Stephen Poplawski",
-        "year": 1922,
-        "title": "Blender",
-        "innovation": "First blender designed for making soda fountain drinks, with rotating blades for mixing and pureeing."
-      },
-      "explanation": "Poplawski invented the blender for soda fountains, and it evolved into the kitchen appliance we use for smoothies today."
-    },
-    {
-      "id": "case_012",
-      "caseNumber": "Case #012",
-      "category": "Home Entertainment",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1927 by Philo Farnsworth",
-        "🔍 Clue 2: Uses a cathode ray tube in early versions",
-        "🔍 Clue 3: First fully electronic system for broadcasting",
-        "🔍 Clue 4: Displays moving pictures with sound",
-        "🔍 Clue 5: Found in almost every living room"
-      ],
-      "suspects": [
-        "Radio",
-        "Television",
-        "Projector",
-        "Monitor"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2141059A",
-        "inventor": "Philo Farnsworth",
-        "year": 1927,
-        "title": "Electronic Television",
-        "innovation": "First fully electronic television system using cathode ray tube, replacing mechanical TV systems."
-      },
-      "explanation": "Farnsworth's electronic television replaced mechanical systems, enabling modern TV broadcasting and entertainment."
-    },
-    {
-      "id": "case_013",
-      "caseNumber": "Case #013",
-      "category": "Home Electronics",
-      "difficulty": "hard",
-      "points": 25,
-      "clues": [
-        "🔍 Clue 1: Invented in 1956 by Robert Adler",
-        "🔍 Clue 2: The first wireless version used ultrasonic frequencies",
-        "🔍 Clue 3: Called 'Zenith Space Command'",
-        "🔍 Clue 4: Modern versions use infrared light",
-        "🔍 Clue 5: Controls TV from across the room"
-      ],
-      "suspects": [
-        "TV Antenna",
-        "Remote Control",
-        "Cable Box",
-        "Game Controller"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2817798A",
-        "inventor": "Robert Adler",
-        "year": 1956,
-        "title": "Wireless TV Remote Control",
-        "innovation": "First wireless TV remote using ultrasonic frequencies that humans couldn't hear (Zenith Space Command)."
-      },
-      "explanation": "The Space Command remote used ultrasonic sound waves to control the TV wirelessly, revolutionizing home entertainment."
-    },
-    {
-      "id": "case_014",
-      "caseNumber": "Case #014",
-      "category": "Home Appliances",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1901 by Hubert Cecil Booth",
-        "🔍 Clue 2: Uses suction instead of blowing",
-        "🔍 Clue 3: First powered version for cleaning floors",
-        "🔍 Clue 4: Removes dirt and dust from carpets",
-        "🔍 Clue 5: Modern versions can be robotic"
-      ],
-      "suspects": [
-        "Broom",
-        "Mop",
-        "Vacuum Cleaner",
-        "Carpet Sweeper"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US634042A",
-        "inventor": "Hubert Cecil Booth",
-        "year": 1901,
-        "title": "Vacuum Cleaner",
-        "innovation": "First powered vacuum cleaner using suction instead of blowing, revolutionizing floor cleaning."
-      },
-      "explanation": "Booth's vacuum cleaner was revolutionary because it used suction to remove dirt, unlike earlier devices that just blew dust around."
-    },
-    {
-      "id": "case_015",
-      "caseNumber": "Case #015",
-      "category": "Climate Control",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1906 by Willis Carrier",
-        "🔍 Clue 2: Controls both temperature and humidity",
-        "🔍 Clue 3: Originally designed for a printing plant",
-        "🔍 Clue 4: Makes hot summers bearable",
-        "🔍 Clue 5: Called 'Apparatus for treating air'"
-      ],
-      "suspects": [
-        "Heater",
-        "Fan",
-        "Air Conditioner",
-        "Dehumidifier"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US808897A",
-        "inventor": "Willis Carrier",
-        "year": 1906,
-        "title": "Air Conditioner",
-        "innovation": "First modern air conditioning system controlling both temperature and humidity, not just cooling."
-      },
-      "explanation": "Carrier's system was revolutionary because it controlled humidity as well as temperature, solving problems in printing and manufacturing."
-    },
-    {
-      "id": "case_016",
-      "caseNumber": "Case #016",
-      "category": "Home Comfort",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1887 by Philip Diehl",
-        "🔍 Clue 2: He adapted a sewing machine motor",
-        "🔍 Clue 3: Attached to the ceiling",
-        "🔍 Clue 4: Has rotating blades that circulate air",
-        "🔍 Clue 5: Helps cool rooms without air conditioning"
-      ],
-      "suspects": [
-        "Ceiling Fan",
-        "Table Fan",
-        "Exhaust Fan",
-        "Ventilator"
-      ],
-      "correctIndex": 0,
-      "patentInfo": {
-        "patentNumber": "US374588A",
-        "inventor": "Philip Diehl",
-        "year": 1887,
-        "title": "Electric Ceiling Fan",
-        "innovation": "Adapted sewing machine motor to create first electric ceiling fan for home use."
-      },
-      "explanation": "Diehl cleverly adapted a sewing machine motor to create the first electric ceiling fan, making homes more comfortable."
-    },
-    {
-      "id": "case_017",
-      "caseNumber": "Case #017",
-      "category": "Furniture",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Patented in 1952 by Edward Knabusch & Edwin Shoemaker",
-        "🔍 Clue 2: It's a type of chair that changes position",
-        "🔍 Clue 3: Has a lever-operated footrest",
-        "🔍 Clue 4: The backrest tilts back for comfort",
-        "🔍 Clue 5: Brand name starts with 'La-Z'"
-      ],
-      "suspects": [
-        "Office Chair",
-        "Rocking Chair",
-        "Recliner",
-        "Bean Bag"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US2582809A",
-        "inventor": "Edward Knabusch & Edwin Shoemaker",
-        "year": 1952,
-        "title": "Reclining Chair (La-Z-Boy)",
-        "innovation": "La-Z-Boy recliner with lever-operated footrest and backrest mechanism for ultimate comfort."
-      },
-      "explanation": "The La-Z-Boy recliner's mechanism allows users to adjust position easily, making it perfect for relaxation."
-    },
-    {
-      "id": "case_018",
-      "caseNumber": "Case #018",
-      "category": "Writing Instruments",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1943 by László Bíró",
-        "🔍 Clue 2: Uses a rotating ball bearing",
-        "🔍 Clue 3: The ink is viscous and quick-drying",
-        "🔍 Clue 4: Doesn't need to be dipped in ink",
-        "🔍 Clue 5: Most common writing tool today"
-      ],
-      "suspects": [
-        "Fountain Pen",
-        "Ballpoint Pen",
-        "Marker",
-        "Pencil"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2390636A",
-        "inventor": "László Bíró",
-        "year": 1943,
-        "title": "Ballpoint Pen",
-        "innovation": "First practical ballpoint pen using viscous ink and rotating ball bearing for reliable writing."
-      },
-      "explanation": "Bíró used newspaper ink (which dried quickly) and a rotating ball bearing to create a reliable, leak-free pen."
-    },
-    {
-      "id": "case_019",
-      "caseNumber": "Case #019",
-      "category": "Classroom Equipment",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1970 by Martin Heit",
-        "🔍 Clue 2: Has a melamine surface",
-        "🔍 Clue 3: Replaced chalkboards in classrooms",
-        "🔍 Clue 4: Write with special markers and erase easily",
-        "🔍 Clue 5: No chalk dust!"
-      ],
-      "suspects": [
-        "Chalkboard",
-        "Whiteboard",
-        "Smart Board",
-        "Bulletin Board"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US3503135A",
-        "inventor": "Martin Heit",
-        "year": 1970,
-        "title": "Dry-Erase Whiteboard",
-        "innovation": "First practical dry-erase board with melamine surface, replacing dusty chalkboards."
-      },
-      "explanation": "The whiteboard's melamine surface allows easy writing and erasing without chalk dust, revolutionizing classrooms."
-    },
-    {
-      "id": "case_020",
-      "caseNumber": "Case #020",
-      "category": "Electronics",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1967 by Jack Kilby at Texas Instruments",
-        "🔍 Clue 2: Uses integrated circuits",
-        "🔍 Clue 3: First portable electronic version",
-        "🔍 Clue 4: Performs mathematical calculations",
-        "🔍 Clue 5: Replaced mechanical adding machines"
-      ],
-      "suspects": [
-        "Abacus",
-        "Calculator",
-        "Computer",
-        "Cash Register"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US3863060A",
-        "inventor": "Jack Kilby (Texas Instruments)",
-        "year": 1967,
-        "title": "Handheld Electronic Calculator",
-        "innovation": "First portable electronic calculator using integrated circuits, making calculations accessible to everyone."
-      },
-      "explanation": "Integrated circuits made calculators small and affordable enough for personal use, replacing bulky mechanical calculators."
-    },
-    {
-      "id": "case_021",
-      "caseNumber": "Case #021",
-      "category": "School Supplies",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented by Friedrich Soennecken in 1886",
-        "🔍 Clue 2: Has metal rings that open and close",
-        "🔍 Clue 3: Holds loose papers together",
-        "🔍 Clue 4: Papers can be added or removed easily",
-        "🔍 Clue 5: Usually has three rings"
-      ],
-      "suspects": [
-        "Folder",
-        "Notebook",
-        "Three-Ring Binder",
-        "Clipboard"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US3171193A",
-        "inventor": "Friedrich Soennecken",
-        "year": 1886,
-        "title": "Ring Binder",
-        "innovation": "First practical ring binder mechanism for organizing loose papers that can be added or removed."
-      },
-      "explanation": "The ring binder mechanism allows papers to be organized, added, or removed easily, making it perfect for students."
-    },
-    {
-      "id": "case_022",
-      "caseNumber": "Case #022",
-      "category": "School Tools",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Patented in 1897 by John Lee Love",
-        "🔍 Clue 2: Has a rotating blade mechanism",
-        "🔍 Clue 3: Makes pencils sharp for writing",
-        "🔍 Clue 4: First portable version",
-        "🔍 Clue 5: Shavings collect inside"
-      ],
-      "suspects": [
-        "Eraser",
-        "Pencil Sharpener",
-        "Knife",
-        "Scissors"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US147735A",
-        "inventor": "John Lee Love",
-        "year": 1897,
-        "title": "Portable Pencil Sharpener",
-        "innovation": "First portable pencil sharpener with rotating blade mechanism and shavings container."
-      },
-      "explanation": "Love's portable design with a shavings container made pencil sharpening convenient anywhere, not just at a desk."
-    },
-    {
-      "id": "case_023",
-      "caseNumber": "Case #023",
-      "category": "School Equipment",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1960 by Roger Appeldorn",
-        "🔍 Clue 2: Uses a Fresnel lens",
-        "🔍 Clue 3: Projects images onto a screen",
-        "🔍 Clue 4: Teachers place transparencies on it",
-        "🔍 Clue 5: Was common before digital projectors"
-      ],
-      "suspects": [
-        "Slide Projector",
-        "Overhead Projector",
-        "Film Projector",
-        "Document Camera"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2959105A",
-        "inventor": "Roger Appeldorn",
-        "year": 1960,
-        "title": "Overhead Projector",
-        "innovation": "Compact overhead projector design with Fresnel lens for classroom use."
-      },
-      "explanation": "The overhead projector allowed teachers to write on transparencies while facing students, improving classroom interaction."
-    },
-    {
-      "id": "case_024",
-      "caseNumber": "Case #024",
-      "category": "Writing Tools",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Patented in 1858 by Hymen Lipman",
-        "🔍 Clue 2: Made of rubber",
-        "🔍 Clue 3: Removes pencil marks from paper",
-        "🔍 Clue 4: Often attached to pencil ends",
-        "🔍 Clue 5: Usually pink in color"
-      ],
-      "suspects": [
-        "Correction Fluid",
-        "Eraser",
-        "Sandpaper",
-        "Tape"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US19783A",
-        "inventor": "Hymen Lipman",
-        "year": 1858,
-        "title": "Pencil with Attached Eraser",
-        "innovation": "First patent for attaching rubber eraser to pencil end, making corrections convenient."
-      },
-      "explanation": "Lipman's idea of attaching an eraser to a pencil made corrections easy and became the standard design."
-    },
-    {
-      "id": "case_025",
-      "caseNumber": "Case #025",
-      "category": "Medical Devices",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1816 by René Laennec",
-        "🔍 Clue 2: Acoustic medical device",
-        "🔍 Clue 3: Doctors use it to listen to hearts and lungs",
-        "🔍 Clue 4: Has earpieces and a chest piece",
-        "🔍 Clue 5: Allows auscultation without direct contact"
-      ],
-      "suspects": [
-        "Thermometer",
-        "Blood Pressure Cuff",
-        "Stethoscope",
-        "Otoscope"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US3232",
-        "inventor": "René Laennec",
-        "year": 1816,
-        "title": "Stethoscope",
-        "innovation": "First stethoscope allowing doctors to listen to internal body sounds without direct contact."
-      },
-      "explanation": "Laennec invented the stethoscope to listen to patients' hearts and lungs modestly, revolutionizing medical diagnosis."
-    },
-    {
-      "id": "case_026",
-      "caseNumber": "Case #026",
-      "category": "Medical Equipment",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1891 by Samuel Siegfried Karl Ritter von Basch",
-        "🔍 Clue 2: Has an inflatable cuff",
-        "🔍 Clue 3: Measures blood pressure non-invasively",
-        "🔍 Clue 4: Called a sphygmomanometer",
-        "🔍 Clue 5: Shows systolic and diastolic readings"
-      ],
-      "suspects": [
-        "Heart Rate Monitor",
-        "Blood Pressure Monitor",
-        "Pulse Oximeter",
-        "ECG Machine"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US469299A",
-        "inventor": "Samuel Siegfried Karl Ritter von Basch",
-        "year": 1891,
-        "title": "Blood Pressure Monitor (Sphygmomanometer)",
-        "innovation": "First practical device for non-invasive blood pressure measurement using inflatable cuff."
-      },
-      "explanation": "The sphygmomanometer allows doctors to measure blood pressure without surgery, becoming essential for diagnosis."
-    },
-    {
-      "id": "case_027",
-      "caseNumber": "Case #027",
-      "category": "Medical Technology",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1961 by Theodore Hannes Benzinger",
-        "🔍 Clue 2: Uses infrared technology",
-        "🔍 Clue 3: Measures body temperature without contact",
-        "🔍 Clue 4: Quick reading in seconds",
-        "🔍 Clue 5: Often used in ear or forehead"
-      ],
-      "suspects": [
-        "Mercury Thermometer",
-        "Infrared Thermometer",
-        "Oral Thermometer",
-        "Temperature Strip"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2982132A",
-        "inventor": "Theodore Hannes Benzinger",
-        "year": 1961,
-        "title": "Infrared Thermometer",
-        "innovation": "First infrared thermometer for quick, non-invasive temperature reading by detecting thermal radiation."
-      },
-      "explanation": "Infrared thermometers measure temperature by detecting thermal radiation, eliminating the need for contact."
-    },
-    {
-      "id": "case_028",
-      "caseNumber": "Case #028",
-      "category": "Hospital Equipment",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1914 by Willis Dew Gatch",
-        "🔍 Clue 2: Has adjustable head and knee sections",
-        "🔍 Clue 3: Helps patients sit up or elevate legs",
-        "🔍 Clue 4: Found in every hospital room",
-        "🔍 Clue 5: Can be raised or lowered"
-      ],
-      "suspects": [
-        "Wheelchair",
-        "Stretcher",
-        "Hospital Bed",
-        "Examination Table"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US1089665A",
-        "inventor": "Willis Dew Gatch",
-        "year": 1914,
-        "title": "Adjustable Hospital Bed",
-        "innovation": "First hospital bed with adjustable head and knee sections for patient comfort and medical care."
-      },
-      "explanation": "The Gatch bed's adjustable sections help patients breathe easier, reduce swelling, and improve comfort during recovery."
-    },
-    {
-      "id": "case_029",
-      "caseNumber": "Case #029",
-      "category": "Automotive Safety",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1953 by John Hetrick",
-        "🔍 Clue 2: Inflates rapidly during a collision",
-        "🔍 Clue 3: Uses compressed air or gas",
-        "🔍 Clue 4: Protects occupants from impact",
-        "🔍 Clue 5: Hidden in steering wheel and dashboard"
-      ],
-      "suspects": [
-        "Seatbelt",
-        "Airbag",
-        "Crumple Zone",
-        "Roll Cage"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US5071161A",
-        "inventor": "John Hetrick",
-        "year": 1953,
-        "title": "Automotive Airbag",
-        "innovation": "First automotive airbag using compressed air for crash protection, saving countless lives."
-      },
-      "explanation": "Hetrick's airbag system uses sensors to detect crashes and rapidly inflates to cushion occupants from impact."
-    },
-    {
-      "id": "case_030",
-      "caseNumber": "Case #030",
-      "category": "Vehicle Safety",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1959 by Nils Bohlin",
-        "🔍 Clue 2: Three-point design",
-        "🔍 Clue 3: Crosses chest and lap",
-        "🔍 Clue 4: Now standard in all vehicles",
-        "🔍 Clue 5: Volvo made the patent free to save lives"
-      ],
-      "suspects": [
-        "Lap Belt",
-        "Three-Point Seatbelt",
-        "Harness",
-        "Child Safety Seat"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US3043625A",
-        "inventor": "Nils Bohlin",
-        "year": 1959,
-        "title": "Three-Point Seatbelt",
-        "innovation": "First three-point seatbelt design distributing crash forces across stronger body parts, now standard worldwide."
-      },
-      "explanation": "Bohlin's three-point design distributes crash forces across the chest and pelvis, saving millions of lives."
-    },
-    {
-      "id": "case_031",
-      "caseNumber": "Case #031",
-      "category": "Transportation",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1911 by Elmer Berger",
-        "🔍 Clue 2: Helps drivers see behind them",
-        "🔍 Clue 3: Hangs from the ceiling inside vehicles",
-        "🔍 Clue 4: Can be adjusted for different viewing angles",
-        "🔍 Clue 5: Essential for safe lane changes"
-      ],
-      "suspects": [
-        "Side Mirror",
-        "Rearview Mirror",
-        "Backup Camera",
-        "Dashboard Display"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1,178,740",
-        "inventor": "Elmer Berger",
-        "year": 1911,
-        "title": "Automobile Rearview Mirror",
-        "innovation": "First rearview mirror designed specifically for automobiles, improving driver safety."
-      },
-      "explanation": "Berger invented the rearview mirror after witnessing a car accident, making it easier for drivers to see behind them."
-    },
-    {
-      "id": "case_032",
-      "caseNumber": "Case #032",
-      "category": "Transportation",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1974 by Roger Easton",
-        "🔍 Clue 2: Uses satellite signals for positioning",
-        "🔍 Clue 3: Shows maps and directions",
-        "🔍 Clue 4: Originally developed for military use",
-        "🔍 Clue 5: Stands for Global Positioning System"
-      ],
-      "suspects": [
-        "Compass",
-        "GPS Navigation",
-        "Radar",
-        "Speedometer"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US5311195A",
-        "inventor": "Roger Easton",
-        "year": 1974,
-        "title": "GPS Navigation System",
-        "innovation": "GPS technology for civilian navigation using satellite signals, revolutionizing travel."
-      },
-      "explanation": "GPS uses satellites to pinpoint location anywhere on Earth, making navigation easy and accurate."
-    },
-    {
-      "id": "case_033",
-      "caseNumber": "Case #033",
-      "category": "Transportation",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1991 by Chrysler",
-        "🔍 Clue 2: Holds beverages in vehicles",
-        "🔍 Clue 3: First built-in version was retractable",
-        "🔍 Clue 4: Located in center console",
-        "🔍 Clue 5: Has circular openings"
-      ],
-      "suspects": [
-        "Glove Box",
-        "Door Pocket",
-        "Cup Holder",
-        "Armrest Storage"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US4988082A",
-        "inventor": "Chrysler Team",
-        "year": 1991,
-        "title": "Retractable Cup Holder",
-        "innovation": "First built-in retractable cup holders in vehicles, now a standard feature."
-      },
-      "explanation": "Before built-in cup holders, drivers had to use aftermarket accessories or hold drinks while driving."
-    },
-    {
-      "id": "case_034",
-      "caseNumber": "Case #034",
-      "category": "Home Appliances",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1930 by Albert Einstein and Leo Szilard",
-        "🔍 Clue 2: Keeps food cold and fresh",
-        "🔍 Clue 3: Einstein's version had no moving parts",
-        "🔍 Clue 4: Large kitchen appliance",
-        "🔍 Clue 5: Has a door you open frequently"
-      ],
-      "suspects": [
-        "Freezer",
-        "Refrigerator",
-        "Cooler",
-        "Ice Box"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1781541A",
-        "inventor": "Albert Einstein & Leo Szilard",
-        "year": 1930,
-        "title": "Einstein Refrigerator",
-        "innovation": "Absorption refrigerator with no moving parts, requiring only a heat source."
-      },
-      "explanation": "Einstein's refrigerator design was revolutionary because it required no electricity, only a heat source."
-    },
-    {
-      "id": "case_035",
-      "caseNumber": "Case #035",
-      "category": "Bedroom",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1787 by Levi Hutchins",
-        "🔍 Clue 2: Wakes you up at a set time",
-        "🔍 Clue 3: Makes a loud sound or music",
-        "🔍 Clue 4: Usually on nightstand",
-        "🔍 Clue 5: Shows the time"
-      ],
-      "suspects": [
-        "Radio",
-        "Alarm Clock",
-        "Timer",
-        "Watch"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US183725A",
-        "inventor": "Levi Hutchins",
-        "year": 1787,
-        "title": "Mechanical Alarm Clock",
-        "innovation": "First mechanical alarm clock to wake people at a set time automatically."
-      },
-      "explanation": "Hutchins invented the alarm clock because he needed to wake up at 4 AM for work every day."
-    },
-    {
-      "id": "case_036",
-      "caseNumber": "Case #036",
-      "category": "Bedroom",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1936 by Sidney Russell",
-        "🔍 Clue 2: Keeps you warm in bed",
-        "🔍 Clue 3: Plugs into electrical outlet",
-        "🔍 Clue 4: Has automatic temperature control",
-        "🔍 Clue 5: Heating wires woven into fabric"
-      ],
-      "suspects": [
-        "Heated Mattress Pad",
-        "Electric Blanket",
-        "Space Heater",
-        "Hot Water Bottle"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US2097046A",
-        "inventor": "Sidney Russell",
-        "year": 1936,
-        "title": "Electric Blanket",
-        "innovation": "First safe electric blanket with automatic temperature control to prevent overheating."
-      },
-      "explanation": "The automatic temperature control made electric blankets safe to use throughout the night."
-    },
-    {
-      "id": "case_037",
-      "caseNumber": "Case #037",
-      "category": "Bedroom",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Developed by NASA in 1966",
-        "🔍 Clue 2: Made from viscoelastic polyurethane foam",
-        "🔍 Clue 3: Conforms to body shape",
-        "🔍 Clue 4: Originally for aircraft cushions",
-        "🔍 Clue 5: Now used in pillows and mattresses"
-      ],
-      "suspects": [
-        "Down Pillow",
-        "Memory Foam Pillow",
-        "Latex Pillow",
-        "Feather Pillow"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US3585356A",
-        "inventor": "NASA",
-        "year": 1966,
-        "title": "Memory Foam (Temper Foam)",
-        "innovation": "Viscoelastic foam that conforms to body shape and returns to original form."
-      },
-      "explanation": "NASA developed memory foam to cushion astronauts during takeoff, and it's now used in consumer products."
-    },
-    {
-      "id": "case_038",
-      "caseNumber": "Case #038",
-      "category": "Lighting",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1879 by Thomas Edison",
-        "🔍 Clue 2: Provides light when electricity flows through",
-        "🔍 Clue 3: Has a glass bulb",
-        "🔍 Clue 4: Contains a filament that glows",
-        "🔍 Clue 5: First practical electric light"
-      ],
-      "suspects": [
-        "Candle",
-        "Incandescent Light Bulb",
-        "Gas Lamp",
-        "Oil Lamp"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US223898A",
-        "inventor": "Thomas Edison",
-        "year": 1879,
-        "title": "Incandescent Electric Lamp",
-        "innovation": "First practical incandescent light bulb for home use, lasting over 1,200 hours."
-      },
-      "explanation": "Edison's bulb was the first practical electric light that could last long enough for home use."
-    },
-    {
-      "id": "case_039",
-      "caseNumber": "Case #039",
-      "category": "Garden",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1830 by Edwin Budding",
-        "🔍 Clue 2: Cuts grass to uniform height",
-        "🔍 Clue 3: Has rotating blades",
-        "🔍 Clue 4: Can be push or powered",
-        "🔍 Clue 5: First mechanical version"
-      ],
-      "suspects": [
-        "Grass Trimmer",
-        "Lawn Mower",
-        "Hedge Clipper",
-        "Scythe"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1141,990",
-        "inventor": "Edwin Budding",
-        "year": 1830,
-        "title": "Cylinder Lawn Mower",
-        "innovation": "First mechanical lawn mower with rotating blades, replacing manual scythes."
-      },
-      "explanation": "Budding's mower made lawn care much easier and helped create the modern concept of manicured lawns."
-    },
-    {
-      "id": "case_040",
-      "caseNumber": "Case #040",
-      "category": "Garden",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1844 by Charles Goodyear",
-        "🔍 Clue 2: Made from vulcanized rubber",
-        "🔍 Clue 3: Waters plants and lawns",
-        "🔍 Clue 4: Long and flexible",
-        "🔍 Clue 5: Connects to water faucet"
-      ],
-      "suspects": [
-        "Watering Can",
-        "Sprinkler",
-        "Garden Hose",
-        "Irrigation Pipe"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US138,346",
-        "inventor": "Charles Goodyear",
-        "year": 1844,
-        "title": "Vulcanized Rubber Hose",
-        "innovation": "First flexible rubber hose using vulcanization process, making it durable."
-      },
-      "explanation": "Goodyear's vulcanization process made rubber flexible and durable, perfect for garden hoses."
-    },
-    {
-      "id": "case_041",
-      "caseNumber": "Case #041",
-      "category": "Garden",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1897 by J. Lessler",
-        "🔍 Clue 2: Waters lawn automatically",
-        "🔍 Clue 3: Rotates in circles",
-        "🔍 Clue 4: Sprays water in patterns",
-        "🔍 Clue 5: Connects to garden hose"
-      ],
-      "suspects": [
-        "Drip Irrigation",
-        "Sprinkler",
-        "Soaker Hose",
-        "Rain Barrel"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US581,346",
-        "inventor": "J. Lessler",
-        "year": 1897,
-        "title": "Rotating Lawn Sprinkler",
-        "innovation": "First rotating sprinkler for automatic lawn watering, saving time and effort."
-      },
-      "explanation": "The rotating sprinkler made lawn watering automatic and efficient, covering large areas evenly."
-    },
-    {
-      "id": "case_042",
-      "caseNumber": "Case #042",
-      "category": "Garden",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Ancient Chinese invention from 231 AD",
-        "🔍 Clue 2: Has one wheel in front",
-        "🔍 Clue 3: Carries heavy loads",
-        "🔍 Clue 4: Push with two handles",
-        "🔍 Clue 5: Essential garden tool"
-      ],
-      "suspects": [
-        "Cart",
-        "Wagon",
-        "Wheelbarrow",
-        "Dolly"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US2,210",
-        "inventor": "Zhuge Liang (Ancient China)",
-        "year": 231,
-        "title": "Single-Wheel Cart (Wheelbarrow)",
-        "innovation": "Ancient invention allowing one person to carry heavy loads efficiently."
-      },
-      "explanation": "The wheelbarrow's single wheel design distributes weight, making it easy for one person to move heavy items."
-    },
-    {
-      "id": "case_043",
-      "caseNumber": "Case #043",
-      "category": "Garden",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1867 by Antoine Grisolle",
-        "🔍 Clue 2: Cuts branches and stems",
-        "🔍 Clue 3: Has spring mechanism",
-        "🔍 Clue 4: Scissor-like tool",
-        "🔍 Clue 5: One-handed operation"
-      ],
-      "suspects": [
-        "Hedge Trimmer",
-        "Pruning Shears",
-        "Garden Scissors",
-        "Loppers"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1,123,405",
-        "inventor": "Antoine Grisolle",
-        "year": 1867,
-        "title": "Secateurs (Pruning Shears)",
-        "innovation": "First spring-loaded pruning shears for one-handed operation."
-      },
-      "explanation": "The spring mechanism allows the shears to open automatically, making pruning faster and less tiring."
-    },
-    {
-      "id": "case_044",
-      "caseNumber": "Case #044",
-      "category": "Fitness",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1968 by William Staub",
-        "🔍 Clue 2: For running indoors",
-        "🔍 Clue 3: Has a moving belt",
-        "🔍 Clue 4: Motorized version",
-        "🔍 Clue 5: Inspired by Dr. Kenneth Cooper's aerobics book"
-      ],
-      "suspects": [
-        "Exercise Bike",
-        "Elliptical Machine",
-        "Treadmill",
-        "Stair Climber"
-      ],
-      "correctIndex": 2,
-      "patentInfo": {
-        "patentNumber": "US1064968A",
-        "inventor": "William Staub",
-        "year": 1968,
-        "title": "Home Treadmill",
-        "innovation": "First motorized treadmill designed for home use, inspired by aerobics movement."
-      },
-      "explanation": "Staub created the home treadmill after reading about aerobics, making cardio exercise accessible at home."
-    },
-    {
-      "id": "case_045",
-      "caseNumber": "Case #045",
-      "category": "Fitness",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1874 by Francis Lowndes",
-        "🔍 Clue 2: Cycling without moving",
-        "🔍 Clue 3: Has pedals and seat",
-        "🔍 Clue 4: Stationary cardio machine",
-        "🔍 Clue 5: First designed specifically for exercise"
-      ],
-      "suspects": [
-        "Rowing Machine",
-        "Exercise Bike",
-        "Spin Bike",
-        "Recumbent Bike"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US149975A",
-        "inventor": "Francis Lowndes",
-        "year": 1874,
-        "title": "Stationary Bicycle Exerciser",
-        "innovation": "First stationary bicycle designed specifically for indoor exercise."
-      },
-      "explanation": "The stationary bike allowed people to get cycling exercise indoors, regardless of weather."
-    },
-    {
-      "id": "case_046",
-      "caseNumber": "Case #046",
-      "category": "Fitness",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1921 by Alan Calvert",
-        "🔍 Clue 2: Hand weights for strength training",
-        "🔍 Clue 3: Adjustable with removable plates",
-        "🔍 Clue 4: Come in pairs",
-        "🔍 Clue 5: First plate-loading design"
-      ],
-      "suspects": [
-        "Kettlebells",
-        "Dumbbells",
-        "Barbells",
-        "Weight Plates"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1,394,305",
-        "inventor": "Alan Calvert",
-        "year": 1921,
-        "title": "Adjustable Plate-Loading Dumbbell",
-        "innovation": "First adjustable dumbbell with removable weight plates for variable resistance."
-      },
-      "explanation": "Adjustable dumbbells allow users to change weight without buying multiple sets, saving space and money."
-    },
-    {
-      "id": "case_047",
-      "caseNumber": "Case #047",
-      "category": "Fitness",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1981 by Peter and Dick Dreissigacker",
-        "🔍 Clue 2: Simulates rowing a boat",
-        "🔍 Clue 3: Uses air resistance",
-        "🔍 Clue 4: Has performance monitor",
-        "🔍 Clue 5: Called Concept2"
-      ],
-      "suspects": [
-        "Rowing Machine",
-        "Ski Machine",
-        "Elliptical",
-        "Cable Machine"
-      ],
-      "correctIndex": 0,
-      "patentInfo": {
-        "patentNumber": "US4396188A",
-        "inventor": "Peter and Dick Dreissigacker",
-        "year": 1981,
-        "title": "Concept2 Rowing Ergometer",
-        "innovation": "First rowing machine with air resistance and performance monitor for accurate training."
-      },
-      "explanation": "The Concept2 rower revolutionized indoor rowing with its air resistance system and precise performance tracking."
-    },
-    {
-      "id": "case_048",
-      "caseNumber": "Case #048",
-      "category": "Fitness",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1935 by Gustav Gossweiler",
-        "🔍 Clue 2: Stretchy exercise tool",
-        "🔍 Clue 3: Provides resistance when stretched",
-        "🔍 Clue 4: Originally for physical therapy",
-        "🔍 Clue 5: Colorful elastic bands"
-      ],
-      "suspects": [
-        "Jump Rope",
-        "Resistance Bands",
-        "Yoga Strap",
-        "Exercise Tube"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US1,986,960",
-        "inventor": "Gustav Gossweiler",
-        "year": 1935,
-        "title": "Elastic Exercise Device",
-        "innovation": "First elastic resistance bands for physical therapy and exercise."
-      },
-      "explanation": "Resistance bands provide variable resistance throughout movement, making them effective for strength training."
-    },
-    {
-      "id": "case_049",
-      "caseNumber": "Case #049",
-      "category": "Fitness",
-      "difficulty": "medium",
-      "points": 20,
-      "clues": [
-        "🔍 Clue 1: Invented in 1997 by Angela Farmer",
-        "🔍 Clue 2: Used for floor exercises",
-        "🔍 Clue 3: Non-slip textured surface",
-        "🔍 Clue 4: Rolls up for storage",
-        "🔍 Clue 5: First sticky mat for yoga"
-      ],
-      "suspects": [
-        "Exercise Mat",
-        "Yoga Mat",
-        "Pilates Mat",
-        "Gym Mat"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US5,654,039",
-        "inventor": "Angela Farmer",
-        "year": 1997,
-        "title": "Non-Slip Yoga Mat",
-        "innovation": "First sticky yoga mat providing grip and cushioning for yoga practice."
-      },
-      "explanation": "The sticky surface prevents slipping during yoga poses, making practice safer and more comfortable."
-    },
-    {
-      "id": "case_050",
-      "caseNumber": "Case #050",
-      "category": "Bathroom",
-      "difficulty": "easy",
-      "points": 15,
-      "clues": [
-        "🔍 Clue 1: Invented in 1857 by H.N. Wadsworth",
-        "🔍 Clue 2: For dental hygiene",
-        "🔍 Clue 3: Has bristles",
-        "🔍 Clue 4: Used with toothpaste",
-        "🔍 Clue 5: First patent for modern design"
-      ],
-      "suspects": [
-        "Dental Floss",
-        "Toothbrush",
-        "Tongue Scraper",
-        "Mouthwash"
-      ],
-      "correctIndex": 1,
-      "patentInfo": {
-        "patentNumber": "US18653A",
-        "inventor": "H.N. Wadsworth",
-        "year": 1857,
-        "title": "Modern Toothbrush",
-        "innovation": "First patent for toothbrush with bristles set in bone handle."
-      },
-      "explanation": "Wadsworth's design standardized the toothbrush, making dental hygiene more accessible and effective."
+        {
+          "id": "suspect_1",
+          "name": "Riley Moore",
+          "role": "Documentary Filmmaker",
+          "avatar": "🎥",
+          "statement": "I shot that drone footage myself. The sunrise angle, the mountain sweep — it's unmistakably mine. I never licensed it to anyone.",
+          "keyClaims": [
+            "Says footage is original",
+            "Claims no license given",
+            "Recognizes her own shots",
+            "Says infringement occurred"
+          ]
+        },
+        {
+          "id": "suspect_2",
+          "name": "Derek Shaw",
+          "role": "Studio Producer",
+          "avatar": "🎬",
+          "statement": "We bought the footage legally from a freelancer. If Riley has an issue, she should talk to him — not us.",
+          "keyClaims": [
+            "Claims legal purchase",
+            "Blames freelancer",
+            "Denies wrongdoing",
+            "Claims innocence"
+          ]
+        },
+        {
+          "id": "suspect_3",
+          "name": "Freelancer 'SkyVids'",
+          "role": "Drone Videographer",
+          "avatar": "🛸",
+          "statement": "I *did* shoot similar footage, but the file they used wasn’t mine. I only sold them one clip — maybe they mixed it up?",
+          "keyClaims": [
+            "Says his footage was similar",
+            "Claims confusion",
+            "Admits selling footage",
+            "Denies theft"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "id": "evidence_1",
+          "name": "Original RAW File",
+          "icon": "💾",
+          "type": "document",
+          "description": "Riley’s RAW drone file",
+          "content": "Contains embedded metadata: Shot on July 4, 2023, GPS location embedded.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_2",
+          "name": "Studio Film Footage",
+          "icon": "🎞️",
+          "type": "visual",
+          "description": "Clip from studio’s film",
+          "content": "Exact same angle, lighting, camera movement — pixel-perfect match.",
+          "importance": "critical"
+        },
+        {
+          "id": "evidence_3",
+          "name": "Purchase Receipt",
+          "icon": "🧾",
+          "type": "document",
+          "description": "Receipt for freelance footage",
+          "content": "Shows studio purchased a *different* clip — not the one used.",
+          "importance": "high"
+        },
+        {
+          "id": "evidence_4",
+          "name": "SkyVids Portfolio",
+          "icon": "🌄",
+          "type": "document",
+          "description": "Freelancer’s public portfolio",
+          "content": "His footage differs significantly — different angle, lighting, and timestamps.",
+          "importance": "medium"
+        }
+      ],
+      "deductions": [
+        {
+          "question": "Is the footage identical?",
+          "correctEvidenceId": "evidence_2",
+          "explanation": "Pixel-perfect match proves copying."
+        },
+        {
+          "question": "Did Riley shoot the original clip?",
+          "correctEvidenceId": "evidence_1",
+          "explanation": "Metadata proves authorship."
+        },
+        {
+          "question": "Did the studio purchase the correct clip?",
+          "correctEvidenceId": "evidence_3",
+          "explanation": "Receipt shows they bought a different clip entirely."
+        }
+      ],
+      "verdictOptions": [
+        {
+          "id": "verdict_a",
+          "text": "Studio is innocent — they bought the exact footage used",
+          "isCorrect": false
+        },
+        {
+          "id": "verdict_b",
+          "text": "Studio used Riley’s footage without permission",
+          "isCorrect": true
+        },
+        {
+          "id": "verdict_c",
+          "text": "SkyVids provided the footage legally",
+          "isCorrect": false
+        }
+      ],
+      "solution": {
+        "verdict": "Studio used Riley’s footage without permission",
+        "explanation": "The studio bought the wrong footage and ended up using Riley’s clip instead, violating copyright law.",
+        "legalOutcome": [
+          "Studio liable for copyright infringement",
+          "Possible statutory damages",
+          "Film may require edits or takedown"
+        ],
+        "ipLesson": "Always verify license rights before using creative content."
+      }
     }
   ]
 }

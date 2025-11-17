@@ -289,12 +289,12 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 4: IP Defender
                   _buildGameCard(
                     title: 'IP Defender',
-                    description: 'Defend your IP rights from infringement',
+                    description: 'Defend your IP through 5 waves of infringers',
                     iconPath: 'assets/logos/ip_defender.png',
                     color: const Color(0xFFEF4444),
-                    difficulty: 'Hard',
-                    xpReward: 'Up to 500 XP',
-                    timeEstimate: '5-10 min',
+                    difficulty: 'Medium',
+                    xpReward: '80-200 XP',
+                    timeEstimate: '8 min',
                     isImplemented: true,
                     gameId: 'ip_defender',
                     onTap: () {
@@ -308,12 +308,12 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 5: GI Mapper
                   _buildGameCard(
                     title: 'GI Mapper',
-                    description: 'Match GI products to their states',
+                    description: 'Match India\'s GI products to their states',
                     iconPath: 'assets/logos/gi_mapper.png',
-                    color: const Color(0xFF10B981),
+                    color: const Color(0xFFFFC107),
                     difficulty: 'Medium',
                     xpReward: '10-80 XP',
-                    timeEstimate: '3-5 min',
+                    timeEstimate: '2 min',
                     isImplemented: true,
                     gameId: 'gi_mapper',
                     onTap: () {

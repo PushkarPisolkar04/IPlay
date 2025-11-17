@@ -190,9 +190,15 @@ class LeaderboardTile extends StatelessWidget {
 
   String _formatXP(int xp) {
     if (xp >= 1000000) {
-      return '${(xp / 1000000).toStringAsFixed(1)}M';
+      final value = xp / 1000000;
+      return value >= 10 
+          ? '${value.toStringAsFixed(0)}M' 
+          : '${value.toStringAsFixed(1)}M';
     } else if (xp >= 1000) {
-      return '${(xp / 1000).toStringAsFixed(1)}K';
+      final value = xp / 1000;
+      return value >= 10 
+          ? '${value.toStringAsFixed(0)}K' 
+          : '${value.toStringAsFixed(1)}K';
     }
     return xp.toString();
   }

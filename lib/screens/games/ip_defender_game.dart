@@ -547,8 +547,6 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
   }
 
   Widget _buildLevelSelectScreen() {
-    final levels = _gameData!['levels'] as List;
-    
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
@@ -558,21 +556,30 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Game logo
               Container(
-                width: 120,
-                height: 120,
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppDesignSystem.error.withValues(alpha: 0.3),
-                      blurRadius: 20,
+                      color: AppDesignSystem.error.withOpacity(0.4),
+                      blurRadius: 40,
                       spreadRadius: 5,
+                      offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: AppDesignSystem.error.withOpacity(0.2),
+                      blurRadius: 60,
+                      spreadRadius: 10,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
@@ -581,32 +588,74 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                   'assets/logos/ip_defender.png',
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.shield, size: 60, color: AppDesignSystem.error);
+                    return const Icon(
+                      Icons.shield,
+                      size: 60,
+                      color: AppDesignSystem.error,
+                    );
                   },
                 ),
               ),
-              
-              const SizedBox(height: AppSpacing.lg),
-              
-              Text('Select Level', style: AppTextStyles.h2),
-              
-              const SizedBox(height: AppSpacing.md),
-              
+
+              const SizedBox(height: AppSpacing.xl),
+
               Text(
-                'Tower Defense: Protect your IP assets!',
-                style: AppTextStyles.bodyMedium.copyWith(color: AppDesignSystem.textSecondary),
+                'IP Defender',
+                style: AppTextStyles.h1,
                 textAlign: TextAlign.center,
               ),
-              
+
+              const SizedBox(height: AppSpacing.md),
+
+              Text(
+                'Defend your IP assets from waves of infringers!',
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppDesignSystem.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
               const SizedBox(height: AppSpacing.xl),
-              
-              ...List.generate(levels.length, (index) {
-                final level = levels[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                  child: _buildLevelCard(level, index),
-                );
-              }),
+
+              // Game rules
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: AppDesignSystem.backgroundGrey,
+                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Game Rules:',
+                      style: AppTextStyles.cardTitle,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _buildRuleItem('🏰', 'Build towers to defend your IP assets'),
+                    _buildRuleItem('⚔️', 'Survive 5 waves of infringers'),
+                    _buildRuleItem('💰', 'Earn coins to upgrade your defenses'),
+                    _buildRuleItem('❤️', 'Protect your IP health from reaching zero'),
+                  ],
+                ),
+              ),
+
+              // Adjustable spacing above start button
+              const SizedBox(height: 60),
+
+              // Start button
+              PrimaryButton(
+                text: 'Start Game',
+                onPressed: () {
+                  setState(() {
+                    _currentLevelIndex = 0;
+                  });
+                  _startGame();
+                },
+                fullWidth: true,
+                icon: Icons.play_arrow,
+                color: AppDesignSystem.error,
+              ),
             ],
           ),
         ),
@@ -614,75 +663,22 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     );
   }
 
-  Widget _buildLevelCard(Map<String, dynamic> level, int index) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _currentLevelIndex = index;
-        });
-        _startGame();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-          border: Border.all(color: AppDesignSystem.error.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: AppDesignSystem.error.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  '${level['levelNumber']}',
-                  style: AppTextStyles.h3.copyWith(color: AppDesignSystem.error),
-                ),
+  Widget _buildRuleItem(String emoji, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 22)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.bodyMedium.copyWith(
+                height: 1.4,
               ),
             ),
-            
-            const SizedBox(width: AppSpacing.md),
-            
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(level['name'], style: AppTextStyles.cardTitle),
-                  const SizedBox(height: 4),
-                  Text(
-                    level['description'],
-                    style: AppTextStyles.caption.copyWith(color: AppDesignSystem.textSecondary),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.waves, size: 14, color: AppDesignSystem.textSecondary),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${(level['waves'] as List).length} waves',
-                        style: AppTextStyles.caption,
-                      ),
-                      const SizedBox(width: 12),
-                      Icon(Icons.monetization_on, size: 14, color: AppDesignSystem.warning),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${level['startingCoins']} coins',
-                        style: AppTextStyles.caption,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            const Icon(Icons.play_arrow, color: AppDesignSystem.error),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

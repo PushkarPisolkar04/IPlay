@@ -899,222 +899,262 @@
     }
   ],
   "mapData": {
+    "referenceImageSize": {
+      "width": 612,
+      "height": 695
+    },
     "states": [
       {
         "code": "AN",
         "name": "Andaman and Nicobar Islands",
         "color": "#80CBC4",
-        "region": "Islands"
+        "region": "Islands",
+        "placeholderPosition": {"x": 512, "y": 583}
       },
       {
         "code": "AP",
         "name": "Andhra Pradesh",
         "color": "#FF6B6B",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 231, "y": 514}
       },
       {
         "code": "AR",
         "name": "Arunachal Pradesh",
         "color": "#4ECDC4",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 551, "y": 214}
       },
       {
         "code": "AS",
         "name": "Assam",
         "color": "#45B7D1",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 519, "y": 261}
       },
       {
         "code": "BR",
         "name": "Bihar",
         "color": "#FFA07A",
-        "region": "East"
+        "region": "East",
+        "placeholderPosition": {"x": 368, "y": 277}
       },
       {
         "code": "CH",
         "name": "Chandigarh",
         "color": "#FFE082",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 152, "y": 165}
       },
       {
         "code": "CT",
         "name": "Chhattisgarh",
         "color": "#98D8C8",
-        "region": "Central"
+        "region": "Central",
+        "placeholderPosition": {"x": 287, "y": 378}
       },
       {
         "code": "DD",
         "name": "Daman and Diu",
         "color": "#FFD54F",
-        "region": "West"
+        "region": "West",
+        "placeholderPosition": {"x": 82, "y": 396}
       },
       {
         "code": "DL",
         "name": "Delhi",
         "color": "#EF9A9A",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 186, "y": 210}
       },
       {
         "code": "DN",
         "name": "Dadra and Nagar Haveli",
         "color": "#FFF59D",
-        "region": "West"
+        "region": "West",
+        "placeholderPosition": {"x": 100, "y": 406}
       },
       {
         "code": "GA",
         "name": "Goa",
         "color": "#F7DC6F",
-        "region": "West"
+        "region": "West",
+        "placeholderPosition": {"x": 121, "y": 509}
       },
       {
         "code": "GJ",
         "name": "Gujarat",
         "color": "#BB8FCE",
-        "region": "West"
+        "region": "West",
+        "placeholderPosition": {"x": 76, "y": 338}
       },
       {
         "code": "HP",
         "name": "Himachal Pradesh",
         "color": "#76D7C4",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 191, "y": 129}
       },
       {
         "code": "HR",
         "name": "Haryana",
         "color": "#85C1E2",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 168, "y": 194}
       },
       {
         "code": "JH",
         "name": "Jharkhand",
         "color": "#F8B88B",
-        "region": "East"
+        "region": "East",
+        "placeholderPosition": {"x": 353, "y": 329}
       },
       {
         "code": "JK",
         "name": "Jammu and Kashmir",
         "color": "#AED6F1",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 173, "y": 64}
       },
       {
         "code": "KA",
         "name": "Karnataka",
         "color": "#FAD7A0",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 159, "y": 525}
       },
       {
         "code": "KL",
         "name": "Kerala",
         "color": "#ABEBC6",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 173, "y": 621}
       },
       {
         "code": "LD",
         "name": "Lakshadweep",
         "color": "#81C784",
-        "region": "Islands"
+        "region": "Islands",
+        "placeholderPosition": {"x": 94, "y": 608}
       },
       {
         "code": "MH",
         "name": "Maharashtra",
         "color": "#D7BDE2",
-        "region": "West"
+        "region": "West",
+        "placeholderPosition": {"x": 145, "y": 424}
       },
       {
         "code": "ML",
         "name": "Meghalaya",
         "color": "#A3E4D7",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 490, "y": 284}
       },
       {
         "code": "MN",
         "name": "Manipur",
         "color": "#A9DFBF",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 541, "y": 302}
       },
       {
         "code": "MP",
         "name": "Madhya Pradesh",
         "color": "#F5B7B1",
-        "region": "Central"
+        "region": "Central",
+        "placeholderPosition": {"x": 206, "y": 336}
       },
       {
         "code": "MZ",
         "name": "Mizoram",
         "color": "#7FB3D5",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 514, "y": 338}
       },
       {
         "code": "NL",
         "name": "Nagaland",
         "color": "#C39BD3",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 550, "y": 270}
       },
       {
         "code": "OR",
         "name": "Odisha",
         "color": "#F9E79F",
-        "region": "East"
+        "region": "East",
+        "placeholderPosition": {"x": 339, "y": 396}
       },
       {
         "code": "PB",
         "name": "Punjab",
         "color": "#FAD02E",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 150, "y": 156}
       },
       {
         "code": "PY",
         "name": "Puducherry",
         "color": "#F48FB1",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 242, "y": 577}
       },
       {
         "code": "RJ",
         "name": "Rajasthan",
         "color": "#EC7063",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 116, "y": 253}
       },
       {
         "code": "SK",
         "name": "Sikkim",
         "color": "#85C1E2",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 425, "y": 235}
       },
       {
         "code": "TG",
         "name": "Telangana",
         "color": "#CE93D8",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 229, "y": 457}
       },
       {
         "code": "TN",
         "name": "Tamil Nadu",
         "color": "#F8BBD0",
-        "region": "South"
+        "region": "South",
+        "placeholderPosition": {"x": 211, "y": 608}
       },
       {
         "code": "TR",
         "name": "Tripura",
         "color": "#90CAF9",
-        "region": "Northeast"
+        "region": "Northeast",
+        "placeholderPosition": {"x": 490, "y": 325}
       },
       {
         "code": "UP",
         "name": "Uttar Pradesh",
         "color": "#FFCC80",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 263, "y": 252}
       },
       {
         "code": "UT",
         "name": "Uttarakhand",
         "color": "#80DEEA",
-        "region": "North"
+        "region": "North",
+        "placeholderPosition": {"x": 229, "y": 167}
       },
       {
         "code": "WB",
         "name": "West Bengal",
         "color": "#A5D6A7",
-        "region": "East"
+        "region": "East",
+        "placeholderPosition": {"x": 409, "y": 340}
       }
     ]
   },
