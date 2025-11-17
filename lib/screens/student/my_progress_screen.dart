@@ -1089,7 +1089,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
     final nameLower = itemName.toLowerCase();
 
     if (nameLower.contains('trademark') && nameLower.contains('game')) {
-      return 'assets/logos/match_the_IPR.png';
+      return 'assets/logos/trademark_match.png';
     }
     if (nameLower.contains('ip') && nameLower.contains('defender')) {
       return 'assets/logos/ip_defender.png';

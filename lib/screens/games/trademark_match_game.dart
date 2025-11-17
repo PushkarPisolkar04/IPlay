@@ -13,14 +13,14 @@ import '../../models/trademark_match_model.dart';
 import '../../widgets/primary_button.dart';
 
 /// Trademark Match - Memory Card Flip Game
-class MatchIPRMemoryGame extends StatefulWidget {
-  const MatchIPRMemoryGame({super.key});
+class TrademarkMatchScreen extends StatefulWidget {
+  const TrademarkMatchScreen({super.key});
 
   @override
-  State<MatchIPRMemoryGame> createState() => _MatchIPRMemoryGameState();
+  State<TrademarkMatchScreen> createState() => _TrademarkMatchScreenState();
 }
 
-class _MatchIPRMemoryGameState extends State<MatchIPRMemoryGame> with TickerProviderStateMixin {
+class _TrademarkMatchScreenState extends State<TrademarkMatchScreen> with TickerProviderStateMixin {
   final ProgressService _progressService = ProgressService();
   final GameContentService _gameService = GameContentService();
   final ConfettiController _confettiController = ConfettiController(

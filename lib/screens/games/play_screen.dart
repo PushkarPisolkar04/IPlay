@@ -6,7 +6,7 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../models/game_progress_model.dart';
 import 'ipr_quiz_master_game.dart';
-import 'match_ipr_game.dart';
+import 'trademark_match_game.dart';
 import 'spot_the_original_game.dart';
 import 'gi_mapper_game.dart';
 import 'ip_defender_game.dart';
@@ -207,21 +207,21 @@ class _PlayScreenState extends State<PlayScreen> {
                     },
                   ),
                   
-                  // Game 2: Match the IPR (Implemented)
+                  // Game 2: Trademark Match (Implemented)
                   _buildGameCard(
-                    title: 'Match the IPR',
-                    description: 'Memory card game matching IPR concepts',
-                    iconPath: 'assets/logos/match_the_IPR.png',
-                    color: const Color(0xFFEC4899),
-                    difficulty: 'Easy',
-                    xpReward: '60-100 XP',
-                    timeEstimate: '2-5 min',
+                    title: 'Trademark Match',
+                    description: 'Match famous trademarks with their companies',
+                    iconPath: 'assets/logos/trademark_match.png',
+                    color: const Color(0xFF2196F3),
+                    difficulty: 'Medium',
+                    xpReward: '60-120 XP',
+                    timeEstimate: '8 min',
                     isImplemented: true,
-                    gameId: 'match_ipr',
+                    gameId: 'trademark_match',
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const MatchIPRGame()),
+                        MaterialPageRoute(builder: (_) => const TrademarkMatchScreen()),
                       ).then((_) => _refreshData());
                     },
                   ),
