@@ -20,14 +20,22 @@ class StreakService {
 
       // Check if we should reset or increment the streak
       final newStreak = _calculateNewStreak(lastActive, now, user.currentStreak);
+      final currentLongestStreak = user.longestStreak ?? 0;
 
       // Only update if the streak has changed or it's a new day
       if (newStreak != user.currentStreak || !_isSameDay(lastActive, now)) {
-        await _firestore.collection('users').doc(userId).update({
+        final updateData = {
           'currentStreak': newStreak,
           'lastActiveDate': Timestamp.now(),
           'updatedAt': Timestamp.now(),
-        });
+        };
+        
+        // Update longestStreak if current streak is higher
+        if (newStreak > currentLongestStreak) {
+          updateData['longestStreak'] = newStreak;
+        }
+        
+        await _firestore.collection('users').doc(userId).update(updateData);
       }
     } catch (e) {
       // Log error but don't throw - streak updates shouldn't block main functionality

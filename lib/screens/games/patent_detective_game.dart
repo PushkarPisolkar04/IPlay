@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../core/services/progress_service.dart';
+import '../../services/game_integration_service.dart';
 import '../../widgets/primary_button.dart';
 
 /// Patent Detective - Investigate patent cases and determine patentability
@@ -17,7 +17,7 @@ class PatentDetectiveGame extends StatefulWidget {
 }
 
 class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
-  final ProgressService _progressService = ProgressService();
+  final GameIntegrationService _gameService = GameIntegrationService();
   
   int _currentCase = 0;
   int _score = 0;
@@ -91,58 +91,30 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final xpEarned = _score * 20;
+        const gameId = 'patent_detective';
+        const baseXP = 60; // 20 XP per case * 3 cases
         
-        // Get current high score from game_progress collection
-        final gameId = 'patent_detective';
-        final gameProgressDoc = await FirebaseFirestore.instance
-            .collection('game_progress')
-            .doc('${user.uid}__$gameId')
-            .get();
+        final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
+        final isPerfectScore = _score == 3;
         
-        final currentData = gameProgressDoc.data();
-        final currentHighScore = currentData?['highScore'] as int? ?? 0;
-        final currentGamesPlayed = currentData?['gamesPlayed'] as int? ?? 0;
-        final currentTotalScore = currentData?['totalScore'] as int? ?? 0;
+        // Award XP with automatic bonuses
+        await _gameService.awardGameXP(
+          gameId: gameId,
+          baseXP: baseXP,
+          score: (_score / 3 * 100).round(),
+          isPerfectScore: isPerfectScore,
+          isFirstCompletion: isFirstCompletion,
+        );
         
-        final newHighScore = _score > currentHighScore ? _score : currentHighScore;
-        final newGamesPlayed = currentGamesPlayed + 1;
-        final newTotalScore = currentTotalScore + _score;
-        final newAverageScore = (newTotalScore / newGamesPlayed).round();
+        // Save progress
+        await _gameService.saveGameProgress(
+          gameId: gameId,
+          score: _score,
+          timeSpentSeconds: 0,
+          completed: true,
+        );
         
-        // Save to game_progress collection
-        await FirebaseFirestore.instance
-            .collection('game_progress')
-            .doc('${user.uid}__$gameId')
-            .set({
-          'userId': user.uid,
-          'gameId': gameId,
-          'gamesPlayed': newGamesPlayed,
-          'highScore': newHighScore,
-          'lastScore': _score,
-          'totalScore': newTotalScore,
-          'averageScore': newAverageScore,
-          'totalTimeSpent': 0,
-          'completed': true,
-          'lastPlayedAt': Timestamp.now(),
-          'updatedAt': Timestamp.now(),
-        }, SetOptions(merge: true));
-        
-        // Update user's totalXP
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({
-          'totalXP': FieldValue.increment(xpEarned),
-          'lastActiveDate': Timestamp.now(),
-          'updatedAt': Timestamp.now(),
-          'gameProgress': {
-            'totalXP': FieldValue.increment(xpEarned),
-            'lastPlayedAt': Timestamp.now(),
-          },
-        }, SetOptions(merge: true));
-        
-        print('✅ Game score saved: $_score, XP earned: $xpEarned, High score: $newHighScore');
+        print('✅ Game score saved: $_score');
       } catch (e) {
         print('❌ Error saving game score: $e');
       }
@@ -198,9 +170,16 @@ class _PatentDetectiveGameState extends State<PatentDetectiveGame> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                      blurRadius: 20,
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.4),
+                      blurRadius: 40,
+                      spreadRadius: 5,
                       offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                      blurRadius: 60,
+                      spreadRadius: 10,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),

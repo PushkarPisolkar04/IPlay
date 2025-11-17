@@ -7,7 +7,7 @@
   import '../../core/design/app_design_system.dart';
   import '../../core/constants/app_spacing.dart';
   import '../../core/constants/app_text_styles.dart';
-  import '../../core/services/progress_service.dart';
+  import '../../services/game_integration_service.dart';
   import '../../widgets/primary_button.dart';
 
   /// IPR Quiz Master - Rapid-fire 10 question quiz game
@@ -19,7 +19,7 @@
   }
 
   class _IPRQuizMasterGameState extends State<IPRQuizMasterGame> {
-    final ProgressService _progressService = ProgressService();
+    final GameIntegrationService _gameService = GameIntegrationService();
     final ConfettiController _confettiController = ConfettiController(
       duration: const Duration(seconds: 3),
     );
@@ -126,71 +126,30 @@
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         try {
-          final xpEarned = _score * 10;
-          final gameId = 'quiz_master';
+          const gameId = 'quiz_master';
+          const baseXP = 100; // 10 XP per question * 10 questions
           
-          // Get current high score from game_progress collection
-          final gameProgressDoc = await FirebaseFirestore.instance
-              .collection('game_progress')
-              .doc('${user.uid}__$gameId')
-              .get();
+          final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
+          final isPerfectScore = _score == 10;
           
-          final currentHighScore = gameProgressDoc.exists 
-              ? (gameProgressDoc.data()?['highScore'] as int? ?? 0)
-              : 0;
-          final newHighScore = _score > currentHighScore ? _score : currentHighScore;
+          // Award XP with automatic bonuses
+          await _gameService.awardGameXP(
+            gameId: gameId,
+            baseXP: baseXP,
+            score: (_score / 10 * 100).round(),
+            isPerfectScore: isPerfectScore,
+            isFirstCompletion: isFirstCompletion,
+          );
           
-          // Save to game_progress collection
-          await FirebaseFirestore.instance
-              .collection('game_progress')
-              .doc('${user.uid}__$gameId')
-              .set({
-            'userId': user.uid,
-            'gameId': gameId,
-            'gamesPlayed': FieldValue.increment(1),
-            'highScore': newHighScore,
-            'lastScore': _score,
-            'totalScore': FieldValue.increment(_score),
-            'averageScore': 0, // Will be calculated
-            'totalTimeSpent': FieldValue.increment(60 - _timeLeft),
-            'completed': true,
-            'lastPlayedAt': Timestamp.now(),
-            'updatedAt': Timestamp.now(),
-          }, SetOptions(merge: true));
+          // Save progress
+          await _gameService.saveGameProgress(
+            gameId: gameId,
+            score: _score,
+            timeSpentSeconds: 60 - _timeLeft,
+            completed: true,
+          );
           
-          // Calculate average score
-          final updatedDoc = await FirebaseFirestore.instance
-              .collection('game_progress')
-              .doc('${user.uid}__$gameId')
-              .get();
-          
-          if (updatedDoc.exists) {
-            final data = updatedDoc.data()!;
-            final totalScore = data['totalScore'] as int;
-            final gamesPlayed = data['gamesPlayed'] as int;
-            final averageScore = (totalScore / gamesPlayed).round();
-            
-            await FirebaseFirestore.instance
-                .collection('game_progress')
-                .doc('${user.uid}__$gameId')
-                .update({'averageScore': averageScore});
-          }
-          
-          // Update user's totalXP
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .set({
-            'totalXP': FieldValue.increment(xpEarned),
-            'lastActiveDate': Timestamp.now(),
-            'updatedAt': Timestamp.now(),
-            'gameProgress': {
-              'totalXP': FieldValue.increment(xpEarned),
-              'lastPlayedAt': Timestamp.now(),
-            },
-          }, SetOptions(merge: true));
-          
-          print('✅ Game score saved: $_score, XP earned: $xpEarned, High score: $newHighScore');
+          print('✅ Game score saved: $_score');
         } catch (e) {
           print('❌ Error saving game score: $e');
         }
@@ -247,9 +206,16 @@
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                        blurRadius: 20,
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.4),
+                        blurRadius: 40,
+                        spreadRadius: 5,
                         offset: const Offset(0, 4),
+                      ),
+                      BoxShadow(
+                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                        blurRadius: 60,
+                        spreadRadius: 10,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -303,9 +269,9 @@
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       _buildRuleItem('⚡', '10 rapid-fire questions'),
-                      _buildRuleItem('⏱️', '60 seconds to complete'),
+                      _buildRuleItem('⏱️', '60 seconds total time'),
                       _buildRuleItem('🎯', 'Answer as many as you can'),
-                      _buildRuleItem('⭐', '10 XP per correct answer'),
+                      _buildRuleItem('⭐', 'Score based on correct answers'),
                     ],
                   ),
                 ),
@@ -331,188 +297,334 @@
       final question = _questions[_currentQuestionIndex];
       
       return Scaffold(
-        backgroundColor: AppDesignSystem.backgroundLight,
-        appBar: AppBar(
-          title: Text('Question ${_currentQuestionIndex + 1}/10'),
-          backgroundColor: AppDesignSystem.primaryIndigo,
-          foregroundColor: Colors.white,
-          automaticallyImplyLeading: false,
-          actions: [
-            // Timer
-            Center(
-              child: Container(
-                margin: const EdgeInsets.only(right: AppSpacing.md),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: _timeLeft <= 10 ? Colors.red : Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.timer,
-                      size: 16,
-                      color: _timeLeft <= 10 ? Colors.white : Colors.white,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${_timeLeft}s',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppDesignSystem.primaryIndigo.withValues(alpha: 0.05),
+                AppDesignSystem.primaryPink.withValues(alpha: 0.05),
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Top Stats Bar (matching Trademark Match style)
+                _buildTopBar(),
+                
+                // Progress bar
+                Container(
+                  height: 6,
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: LinearProgressIndicator(
+                      value: (_currentQuestionIndex + 1) / _questions.length,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppDesignSystem.primaryIndigo,
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+
+                        // Question Card with Gradient
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppDesignSystem.primaryIndigo,
+                                AppDesignSystem.primaryPink,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'Question ${_currentQuestionIndex + 1} of ${_questions.length}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                question.question,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.4,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Answer options with gradient
+                        ...List.generate(question.options.length, (index) {
+                          final isSelected = _selectedAnswer == index;
+                          final isCorrect = index == question.correctIndex;
+                          final showResult = _answerLocked;
+                          
+                          Color? gradientStart;
+                          Color? gradientEnd;
+                          Color borderColor = Colors.grey[300]!;
+                          Color textColor = const Color(0xFF1F2937);
+                          
+                          if (showResult) {
+                            if (isCorrect) {
+                              gradientStart = AppDesignSystem.success;
+                              gradientEnd = AppDesignSystem.success.withValues(alpha: 0.8);
+                              borderColor = AppDesignSystem.success;
+                              textColor = Colors.white;
+                            } else if (isSelected) {
+                              gradientStart = AppDesignSystem.error;
+                              gradientEnd = AppDesignSystem.error.withValues(alpha: 0.8);
+                              borderColor = AppDesignSystem.error;
+                              textColor = Colors.white;
+                            }
+                          } else if (isSelected) {
+                            gradientStart = AppDesignSystem.primaryIndigo.withValues(alpha: 0.2);
+                            gradientEnd = AppDesignSystem.primaryPink.withValues(alpha: 0.2);
+                            borderColor = AppDesignSystem.primaryIndigo;
+                          }
+
+                          return GestureDetector(
+                            onTap: _answerLocked ? null : () => _selectAnswer(index),
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              decoration: BoxDecoration(
+                                gradient: gradientStart != null
+                                    ? LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [gradientStart, gradientEnd!],
+                                      )
+                                    : null,
+                                color: gradientStart == null ? Colors.white : null,
+                                border: Border.all(color: borderColor, width: 2),
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  if (isSelected && !showResult)
+                                    BoxShadow(
+                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  if (showResult && isCorrect)
+                                    BoxShadow(
+                                      color: AppDesignSystem.success.withValues(alpha: 0.4),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        color: showResult && (isCorrect || isSelected)
+                                            ? Colors.white.withValues(alpha: 0.3)
+                                            : borderColor.withValues(alpha: 0.15),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          String.fromCharCode(65 + index), // A, B, C, D
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 14),
+                                    Expanded(
+                                      child: Text(
+                                        question.options[index],
+                                        style: TextStyle(
+                                          color: textColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    if (showResult && (isCorrect || isSelected))
+                                      Icon(
+                                        isCorrect ? Icons.check_circle : Icons.cancel,
+                                        color: Colors.white,
+                                        size: 24,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget _buildTopBar() {
+      final timeColor = _timeLeft <= 10 ? Colors.red : AppDesignSystem.primaryIndigo;
+      
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Colors.white, Colors.grey.shade50],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+            BoxShadow(
+              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Progress bar
-              LinearProgressIndicator(
-                value: (_currentQuestionIndex + 1) / _questions.length,
-                backgroundColor: Colors.grey[300],
-                valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
-                minHeight: 6,
-              ),
-
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: AppSpacing.md),
-
-                      // Score display
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.sm),
-                        decoration: BoxDecoration(
-                          color: AppDesignSystem.success.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(AppSpacing.sm),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.check_circle,
-                              color: AppDesignSystem.success,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Score: $_score',
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppDesignSystem.success,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Question
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                              AppDesignSystem.primaryPink.withValues(alpha: 0.1),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                        ),
-                        child: Text(
-                          question.question,
-                          style: AppTextStyles.h3,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.xl),
-
-                      // Answer options
-                      ...List.generate(question.options.length, (index) {
-                        final isSelected = _selectedAnswer == index;
-                        final isCorrect = index == question.correctIndex;
-                        
-                        Color bgColor = Colors.white;
-                        Color borderColor = AppDesignSystem.backgroundGrey;
-                        
-                        if (_answerLocked) {
-                          if (isCorrect) {
-                            bgColor = AppDesignSystem.success.withValues(alpha: 0.1);
-                            borderColor = AppDesignSystem.success;
-                          } else if (isSelected && !isCorrect) {
-                            bgColor = Colors.red.withValues(alpha: 0.1);
-                            borderColor = Colors.red;
-                          }
-                        } else if (isSelected) {
-                          bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.1);
-                          borderColor = AppDesignSystem.primaryIndigo;
-                        }
-
-                        return GestureDetector(
-                          onTap: () => _selectAnswer(index),
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                            padding: const EdgeInsets.all(AppSpacing.md),
-                            decoration: BoxDecoration(
-                              color: bgColor,
-                              border: Border.all(color: borderColor, width: 2),
-                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                    color: borderColor.withValues(alpha: 0.2),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      String.fromCharCode(65 + index), // A, B, C, D
-                                      style: TextStyle(
-                                        color: borderColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    question.options[index],
-                                    style: AppTextStyles.bodyMedium,
-                                  ),
-                                ),
-                                if (_answerLocked && (isCorrect || (isSelected && !isCorrect)))
-                                  Icon(
-                                    isCorrect ? Icons.check_circle : Icons.cancel,
-                                    color: borderColor,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Back button
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                    AppDesignSystem.primaryPink.withValues(alpha: 0.1),
+                  ],
                 ),
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, size: 20),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+              ),
+            ),
+            
+            // Timer
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [timeColor, timeColor.withValues(alpha: 0.8)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: timeColor.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.timer, color: Colors.white, size: 20),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${_timeLeft}s',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Score
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF10B981), Color(0xFF059669)],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.star, color: Colors.white, size: 20),
+                  const SizedBox(width: 6),
+                  Text(
+                    '$_score/${_questions.length}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -520,136 +632,296 @@
     Widget _buildResultScreen() {
       final percentage = (_score / _questions.length * 100).round();
       final passed = percentage >= 60;
+      final isPerfect = percentage == 100;
       final xpEarned = _score * 10;
 
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
-          title: const Text('Game Over'),
+          title: const Text('Game Over', style: TextStyle(color: Colors.white)),
           backgroundColor: AppDesignSystem.primaryIndigo,
           foregroundColor: Colors.white,
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: Stack(
           children: [
             SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: AppSpacing.xl),
-                      
-                      // Result icon
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: passed ? AppDesignSystem.success.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          passed ? Icons.emoji_events : Icons.refresh,
-                          size: 60,
-                          color: passed ? AppDesignSystem.success : Colors.orange,
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.xl),
-
-                      Text(
-                        passed ? 'Great Job!' : 'Good Try!',
-                        style: AppTextStyles.h1.copyWith(
-                          color: passed ? AppDesignSystem.success : Colors.orange,
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.md),
-
-                      Text(
-                        'You answered $_score out of ${_questions.length} questions correctly',
-                        style: AppTextStyles.bodyLarge.copyWith(
-                          color: AppDesignSystem.textSecondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-
-                      const SizedBox(height: AppSpacing.xl),
-
-                      // Stats Card - WHITE BACKGROUND
-                      Container(
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                          boxShadow: AppDesignSystem.shadowMD,
-                        ),
-                        child: Column(
-                          children: [
-                            _buildStatRow('Score', '$_score/${_questions.length}'),
-                            const Divider(height: 24),
-                            _buildStatRow('Accuracy', '$percentage%'),
-                            const Divider(height: 24),
-                            _buildStatRow('XP Earned', '+$xpEarned XP', isHighlight: true),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: AppSpacing.xl),
-
-                      // Buttons
-                      PrimaryButton(
-                        text: 'Play Again',
-                        onPressed: _restartGame,
-                        fullWidth: true,
-                        icon: Icons.refresh,
-                        color: AppDesignSystem.primaryIndigo,
-                      ),
-
-                      const SizedBox(height: AppSpacing.md),
-
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                          side: BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Spacer(flex: 1),
+                    
+                    // Animated Result icon with gradient
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 600),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      curve: Curves.elasticOut,
+                      builder: (context, value, child) {
+                        return Transform.scale(
+                          scale: value,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: passed
+                                    ? [
+                                        AppDesignSystem.success,
+                                        AppDesignSystem.success.withValues(alpha: 0.7),
+                                      ]
+                                    : [
+                                        Colors.orange,
+                                        Colors.orange.withValues(alpha: 0.7),
+                                      ],
+                              ),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: passed 
+                                      ? AppDesignSystem.success.withValues(alpha: 0.4)
+                                      : Colors.orange.withValues(alpha: 0.4),
+                                  blurRadius: 20,
+                                  spreadRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              passed ? Icons.emoji_events : Icons.refresh,
+                              size: 50,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Back to Games',
-                            style: TextStyle(color: AppDesignSystem.primaryIndigo),
-                            textAlign: TextAlign.center,
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // Animated Title
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 400),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 20 * (1 - value)),
+                            child: Column(
+                              children: [
+                                Text(
+                                  passed 
+                                      ? (isPerfect ? 'Perfect Score!' : 'Great Job!') 
+                                      : 'Good Try!',
+                                  style: AppTextStyles.h1.copyWith(
+                                    color: passed ? AppDesignSystem.success : Colors.orange,
+                                    fontSize: 28,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 8),
+                                Center(
+                                  child: Text(
+                                    '$_score/${_questions.length} correct',
+                                    style: AppTextStyles.bodyLarge.copyWith(
+                                      color: AppDesignSystem.textSecondary,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Animated Stats Card
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 600),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      curve: Curves.easeOut,
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 30 * (1 - value)),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                                    AppDesignSystem.primaryPink.withValues(alpha: 0.2),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              padding: const EdgeInsets.all(2),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(14),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    _buildFancyStatRow(
+                                      Icons.check_circle,
+                                      'Score',
+                                      '$_score/${_questions.length}',
+                                      AppDesignSystem.success,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildFancyStatRow(
+                                      Icons.speed,
+                                      'Accuracy',
+                                      '$percentage%',
+                                      AppDesignSystem.primaryIndigo,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildFancyStatRow(
+                                      Icons.military_tech,
+                                      'XP Earned',
+                                      '+$xpEarned XP',
+                                      AppDesignSystem.primaryPink,
+                                      isHighlight: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const Spacer(flex: 1),
+
+                    // Animated Buttons
+                    TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 800),
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Column(
+                            children: [
+                              PrimaryButton(
+                                text: 'Play Again',
+                                onPressed: _restartGame,
+                                fullWidth: true,
+                                icon: Icons.refresh,
+                                color: AppDesignSystem.primaryIndigo,
+                              ),
+                              const SizedBox(height: 12),
+                              OutlinedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 14),
+                                  side: BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    'Back to Games',
+                                    style: TextStyle(color: AppDesignSystem.primaryIndigo),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    
+                    const SizedBox(height: 8),
+                  ],
                 ),
               ),
             ),
             
-            // Confetti overlay - positioned at top of stack
+            // Confetti overlay
             if (passed)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: ConfettiWidget(
-                    confettiController: _confettiController,
-                    blastDirectionality: BlastDirectionality.explosive,
-                    particleDrag: 0.05,
-                    emissionFrequency: 0.05,
-                    numberOfParticles: 50,
-                    gravity: 0.1,
-                  ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  particleDrag: 0.05,
+                  emissionFrequency: 0.05,
+                  numberOfParticles: 50,
+                  gravity: 0.1,
                 ),
               ),
           ],
         ),
+      );
+    }
+
+    Widget _buildFancyStatRow(IconData icon, String label, String value, Color color, {bool isHighlight = false}) {
+      return Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  color.withValues(alpha: 0.2),
+                  color.withValues(alpha: 0.1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: color, size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppDesignSystem.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: AppTextStyles.h3.copyWith(
+                    fontSize: isHighlight ? 22 : 20,
+                    fontWeight: FontWeight.bold,
+                    color: isHighlight ? color : AppDesignSystem.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       );
     }
 

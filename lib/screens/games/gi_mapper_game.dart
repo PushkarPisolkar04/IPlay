@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../core/services/progress_service.dart';
+import '../../services/game_integration_service.dart';
 import '../../widgets/primary_button.dart';
 
 /// GI Mapper - Drag GI products to their correct states on India map
@@ -16,7 +16,7 @@ class GIMapperGame extends StatefulWidget {
 }
 
 class _GIMapperGameState extends State<GIMapperGame> {
-  final ProgressService _progressService = ProgressService();
+  final GameIntegrationService _gameService = GameIntegrationService();
   
   bool _gameStarted = false;
   bool _gameEnded = false;
@@ -80,58 +80,30 @@ class _GIMapperGameState extends State<GIMapperGame> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        final xpEarned = _score * 10;
+        const gameId = 'gi_mapper';
+        const baseXP = 80; // 10 XP per product * 8 products
         
-        // Get current high score from game_progress collection
-        final gameId = 'gi_mapper';
-        final gameProgressDoc = await FirebaseFirestore.instance
-            .collection('game_progress')
-            .doc('${user.uid}__$gameId')
-            .get();
+        final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
+        final isPerfectScore = _score == 8;
         
-        final currentData = gameProgressDoc.data();
-        final currentHighScore = currentData?['highScore'] as int? ?? 0;
-        final currentGamesPlayed = currentData?['gamesPlayed'] as int? ?? 0;
-        final currentTotalScore = currentData?['totalScore'] as int? ?? 0;
+        // Award XP with automatic bonuses
+        await _gameService.awardGameXP(
+          gameId: gameId,
+          baseXP: baseXP,
+          score: (_score / 8 * 100).round(),
+          isPerfectScore: isPerfectScore,
+          isFirstCompletion: isFirstCompletion,
+        );
         
-        final newHighScore = _score > currentHighScore ? _score : currentHighScore;
-        final newGamesPlayed = currentGamesPlayed + 1;
-        final newTotalScore = currentTotalScore + _score;
-        final newAverageScore = (newTotalScore / newGamesPlayed).round();
+        // Save progress
+        await _gameService.saveGameProgress(
+          gameId: gameId,
+          score: _score,
+          timeSpentSeconds: 0,
+          completed: true,
+        );
         
-        // Save to game_progress collection
-        await FirebaseFirestore.instance
-            .collection('game_progress')
-            .doc('${user.uid}__$gameId')
-            .set({
-          'userId': user.uid,
-          'gameId': gameId,
-          'gamesPlayed': newGamesPlayed,
-          'highScore': newHighScore,
-          'lastScore': _score,
-          'totalScore': newTotalScore,
-          'averageScore': newAverageScore,
-          'totalTimeSpent': 0,
-          'completed': true,
-          'lastPlayedAt': Timestamp.now(),
-          'updatedAt': Timestamp.now(),
-        }, SetOptions(merge: true));
-        
-        // Update user's totalXP
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({
-          'totalXP': FieldValue.increment(xpEarned),
-          'lastActiveDate': Timestamp.now(),
-          'updatedAt': Timestamp.now(),
-          'gameProgress': {
-            'totalXP': FieldValue.increment(xpEarned),
-            'lastPlayedAt': Timestamp.now(),
-          },
-        }, SetOptions(merge: true));
-        
-        print('✅ Game score saved: $_score, XP earned: $xpEarned, High score: $newHighScore');
+        print('✅ Game score saved: $_score');
       } catch (e) {
         print('❌ Error saving game score: $e');
       }
@@ -185,9 +157,16 @@ class _GIMapperGameState extends State<GIMapperGame> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF10B981).withValues(alpha: 0.2),
-                      blurRadius: 20,
+                      color: const Color(0xFF10B981).withValues(alpha: 0.4),
+                      blurRadius: 40,
+                      spreadRadius: 5,
                       offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                      blurRadius: 60,
+                      spreadRadius: 10,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),

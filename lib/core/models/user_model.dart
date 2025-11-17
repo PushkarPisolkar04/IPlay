@@ -24,6 +24,7 @@ class UserModel {
   // Gamification
   final int totalXP;
   final int currentStreak;
+  final int longestStreak;
   final DateTime lastActiveDate;
   final List<String> badges;
   
@@ -58,6 +59,7 @@ class UserModel {
     this.pendingClassroomRequests = const [],
     this.totalXP = 0,
     this.currentStreak = 0,
+    this.longestStreak = 0,
     required this.lastActiveDate,
     this.badges = const [],
     this.progressSummary = const {},
@@ -87,6 +89,7 @@ class UserModel {
       'pendingClassroomRequests': pendingClassroomRequests,
       'totalXP': totalXP,
       'currentStreak': currentStreak,
+      'longestStreak': longestStreak,
       'lastActiveDate': Timestamp.fromDate(lastActiveDate),
       'badges': badges,
       'progressSummary': progressSummary.map(
@@ -121,6 +124,7 @@ class UserModel {
       pendingClassroomRequests: List<String>.from(data['pendingClassroomRequests'] ?? []),
       totalXP: data['totalXP'] ?? 0,
       currentStreak: data['currentStreak'] ?? 0,
+      longestStreak: data['longestStreak'] ?? 0,
       lastActiveDate: (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       badges: List<String>.from(data['badges'] ?? []),
       progressSummary: (data['progressSummary'] as Map<String, dynamic>?)?.map(
@@ -155,6 +159,7 @@ class UserModel {
       pendingClassroomRequests: List<String>.from(data['pendingClassroomRequests'] ?? []),
       totalXP: data['totalXP'] ?? 0,
       currentStreak: data['currentStreak'] ?? 0,
+      longestStreak: data['longestStreak'] ?? 0,
       lastActiveDate: (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       badges: List<String>.from(data['badges'] ?? []),
       progressSummary: (data['progressSummary'] as Map<String, dynamic>?)?.map(
@@ -202,6 +207,7 @@ class UserModel {
       pendingClassroomRequests: pendingClassroomRequests,
       totalXP: totalXP ?? this.totalXP,
       currentStreak: currentStreak ?? this.currentStreak,
+      longestStreak: longestStreak,
       lastActiveDate: lastActiveDate ?? this.lastActiveDate,
       badges: badges ?? this.badges,
       progressSummary: progressSummary,

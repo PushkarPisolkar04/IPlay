@@ -24,509 +24,662 @@
     "enabled": true,
     "scope": ["classroom", "school", "global"]
   },
-  "drawingTools": [
+  "challenges": [
     {
-      "id": "pencil",
-      "name": "Pencil",
-      "icon": "edit",
-      "type": "freehand",
-      "strokeWidthRange": [1, 5],
-      "defaultStrokeWidth": 2,
-      "supportsOpacity": true,
-      "supportsColor": true
+      "id": "challenge_001",
+      "title": "Design a Sports Shoe",
+      "category": "product_design",
+      "difficulty": "medium",
+      "brief": "Create a unique sports shoe design for runners. Focus on both functionality and distinctive visual elements.",
+      "marketContext": "The athletic footwear market is highly competitive with established brands. Your design needs to stand out.",
+      "timeLimit": 180,
+      "priorArtImages": [
+        "assets/prior_art/shoe_001.png",
+        "assets/prior_art/shoe_002.png",
+        "assets/prior_art/shoe_003.png",
+        "assets/prior_art/shoe_004.png"
+      ],
+      "priorArtDescriptions": [
+        "Nike Air Max - Visible air cushioning unit in heel",
+        "Adidas Ultraboost - Knitted upper with boost sole",
+        "Puma RS-X - Chunky retro design with bold colors",
+        "New Balance 990 - Classic running shoe with N logo"
+      ],
+      "ipElements": [
+        {
+          "id": "element_001",
+          "name": "Shoe Upper Design",
+          "correctTypes": ["design_patent", "copyright"],
+          "explanation": "The ornamental design of the upper can be protected by design patent. Artistic patterns may have copyright."
+        },
+        {
+          "id": "element_002",
+          "name": "Brand Logo/Mark",
+          "correctTypes": ["trademark"],
+          "explanation": "Your brand identifier should be protected as a trademark."
+        },
+        {
+          "id": "element_003",
+          "name": "Cushioning System",
+          "correctTypes": ["utility_patent", "trade_secret"],
+          "explanation": "A novel cushioning mechanism can be patented. Manufacturing details might be trade secrets."
+        },
+        {
+          "id": "element_004",
+          "name": "Unique Sole Pattern",
+          "correctTypes": ["design_patent"],
+          "explanation": "Distinctive sole patterns can receive design patent protection."
+        },
+        {
+          "id": "element_005",
+          "name": "Color Scheme",
+          "correctTypes": ["trademark"],
+          "explanation": "Distinctive color combinations can be trademarked as trade dress."
+        }
+      ],
+      "filingQuestions": [
+        {
+          "id": "filing_q_001",
+          "ipType": "trademark",
+          "question": "What makes a brand element distinctive enough for trademark protection?",
+          "type": "multiple_choice",
+          "options": [
+            "It must be expensive to create",
+            "It must be unique and identify the source of goods",
+            "It must be registered in multiple countries",
+            "It must be a common word or phrase"
+          ],
+          "correctIndex": 1,
+          "explanation": "A trademark must be distinctive and identify the source of goods or services. It should not be generic or merely descriptive.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_002",
+          "ipType": "design_patent",
+          "question": "What aspect of your shoe design can be protected by a design patent?",
+          "type": "multiple_choice",
+          "options": [
+            "The manufacturing process",
+            "The ornamental appearance and visual features",
+            "The brand name on the shoe",
+            "The comfort level when worn"
+          ],
+          "correctIndex": 1,
+          "explanation": "Design patents protect the ornamental, non-functional visual appearance of a product, not its function or brand names.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_003",
+          "ipType": "utility_patent",
+          "question": "What makes a functional feature patentable?",
+          "type": "multiple_choice",
+          "options": [
+            "It must be expensive to manufacture",
+            "It must be novel, non-obvious, and useful",
+            "It must look attractive",
+            "It must be made of new materials"
+          ],
+          "correctIndex": 1,
+          "explanation": "Utility patents require the invention to be novel (new), non-obvious (inventive step), and useful (has practical application).",
+          "points": 20
+        },
+        {
+          "id": "filing_q_004",
+          "question": "An examiner says your trademark is too generic. What do you do?",
+          "type": "multiple_choice",
+          "options": [
+            "Abandon the application",
+            "Provide evidence of acquired distinctiveness",
+            "File a lawsuit against the examiner",
+            "Change to a different IP type"
+          ],
+          "correctIndex": 1,
+          "explanation": "You can overcome a genericness rejection by showing the mark has acquired distinctiveness (secondary meaning) through use.",
+          "points": 25
+        },
+        {
+          "id": "filing_q_005",
+          "question": "Someone filed a similar design patent last year. Can you still proceed?",
+          "type": "multiple_choice",
+          "options": [
+            "No, you must abandon your application",
+            "Yes, if your design has sufficient differences",
+            "Yes, but only if you file a lawsuit first",
+            "No, unless you buy their patent"
+          ],
+          "correctIndex": 1,
+          "explanation": "You can still get a design patent if your design is sufficiently different from prior art. The key is showing your unique ornamental features.",
+          "points": 25
+        }
+      ]
     },
     {
-      "id": "brush",
-      "name": "Brush",
-      "icon": "brush",
-      "type": "freehand",
-      "strokeWidthRange": [5, 30],
-      "defaultStrokeWidth": 10,
-      "supportsOpacity": true,
-      "supportsColor": true
+      "id": "challenge_002",
+      "title": "Create a Tech Startup Logo",
+      "category": "branding",
+      "difficulty": "easy",
+      "brief": "Design a memorable logo for a new tech startup. It should be simple, scalable, and distinctive.",
+      "marketContext": "Tech logos need to work across digital platforms and be recognizable at any size.",
+      "timeLimit": 180,
+      "priorArtImages": [
+        "assets/prior_art/logo_001.png",
+        "assets/prior_art/logo_002.png",
+        "assets/prior_art/logo_003.png",
+        "assets/prior_art/logo_004.png"
+      ],
+      "priorArtDescriptions": [
+        "Apple - Minimalist bitten apple symbol",
+        "Microsoft - Four colored squares forming window",
+        "Google - Colorful wordmark with simple sans-serif",
+        "Amazon - Wordmark with arrow from A to Z"
+      ],
+      "ipElements": [
+        {
+          "id": "element_006",
+          "name": "Logo Symbol",
+          "correctTypes": ["trademark", "copyright"],
+          "explanation": "The logo is primarily protected as a trademark for brand identity. It also has automatic copyright as artistic work."
+        },
+        {
+          "id": "element_007",
+          "name": "Company Name",
+          "correctTypes": ["trademark"],
+          "explanation": "The company name used as a brand identifier is protected by trademark."
+        },
+        {
+          "id": "element_008",
+          "name": "Unique Typography",
+          "correctTypes": ["copyright"],
+          "explanation": "Original artistic lettering has copyright protection."
+        }
+      ],
+      "filingQuestions": [
+        {
+          "id": "filing_q_006",
+          "ipType": "trademark",
+          "question": "In which class(es) should you register your tech company logo?",
+          "type": "multiple_choice",
+          "options": [
+            "Class 25 - Clothing",
+            "Class 9 - Computer software and electronics",
+            "Class 30 - Food products",
+            "Class 5 - Pharmaceuticals"
+          ],
+          "correctIndex": 1,
+          "explanation": "Tech companies typically register in Class 9 (computer software, electronics) and Class 42 (computer services).",
+          "points": 20
+        },
+        {
+          "id": "filing_q_007",
+          "question": "Can you copyright your company name?",
+          "type": "multiple_choice",
+          "options": [
+            "Yes, names are protected by copyright",
+            "No, but you can trademark it",
+            "Yes, if it's creative enough",
+            "No, names cannot be protected at all"
+          ],
+          "correctIndex": 1,
+          "explanation": "Copyright doesn't protect names or short phrases. Company names are protected through trademark registration.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_007a",
+          "question": "What should you do if your logo is similar to a competitor's trademark?",
+          "type": "multiple_choice",
+          "options": [
+            "File anyway and hope for the best",
+            "Modify the design to be more distinctive",
+            "Use it without registering",
+            "Copy it exactly since they're successful"
+          ],
+          "correctIndex": 1,
+          "explanation": "If your logo is too similar to an existing trademark, you should modify it to avoid confusion and potential rejection or infringement issues.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_007b",
+          "question": "How long does trademark protection last in India?",
+          "type": "multiple_choice",
+          "options": [
+            "10 years, renewable indefinitely",
+            "20 years, non-renewable",
+            "Life of the owner plus 60 years",
+            "Forever, no renewal needed"
+          ],
+          "correctIndex": 0,
+          "explanation": "Trademarks in India are valid for 10 years from the date of registration and can be renewed indefinitely for successive 10-year periods.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_007c",
+          "question": "Can you use the ™ symbol before your trademark is registered?",
+          "type": "multiple_choice",
+          "options": [
+            "No, it's illegal to use before registration",
+            "Yes, ™ indicates you're claiming trademark rights",
+            "Only if you've filed an application",
+            "No, you can only use ® before registration"
+          ],
+          "correctIndex": 1,
+          "explanation": "The ™ symbol can be used to indicate you're claiming trademark rights even before registration. The ® symbol can only be used after registration is complete.",
+          "points": 20
+        }
+      ]
     },
     {
-      "id": "eraser",
-      "name": "Eraser",
-      "icon": "auto_fix_high",
-      "type": "eraser",
-      "strokeWidthRange": [10, 50],
-      "defaultStrokeWidth": 20,
-      "supportsOpacity": false,
-      "supportsColor": false
+      "id": "challenge_003",
+      "title": "Invent a Kitchen Tool",
+      "category": "product_design",
+      "difficulty": "hard",
+      "brief": "Design a new kitchen gadget that solves a common cooking problem. Consider both function and form.",
+      "marketContext": "Kitchen tools need to be practical, safe, and easy to use. Unique designs can command premium prices.",
+      "timeLimit": 180,
+      "priorArtImages": [
+        "assets/prior_art/kitchen_001.png",
+        "assets/prior_art/kitchen_002.png",
+        "assets/prior_art/kitchen_003.png",
+        "assets/prior_art/kitchen_004.png"
+      ],
+      "priorArtDescriptions": [
+        "OXO Good Grips Peeler - Ergonomic handle with swivel blade",
+        "Garlic Press - Lever mechanism to crush garlic",
+        "Mandoline Slicer - Adjustable blade for uniform slicing",
+        "Salad Spinner - Rotating basket to dry lettuce"
+      ],
+      "ipElements": [
+        {
+          "id": "element_009",
+          "name": "Functional Mechanism",
+          "correctTypes": ["utility_patent"],
+          "explanation": "The novel working mechanism should be protected with a utility patent."
+        },
+        {
+          "id": "element_010",
+          "name": "Ergonomic Handle Design",
+          "correctTypes": ["design_patent"],
+          "explanation": "The ornamental shape of the handle can receive design patent protection."
+        },
+        {
+          "id": "element_011",
+          "name": "Product Name",
+          "correctTypes": ["trademark"],
+          "explanation": "Your product name should be trademarked to protect your brand."
+        },
+        {
+          "id": "element_012",
+          "name": "Unique Shape",
+          "correctTypes": ["design_patent", "trademark"],
+          "explanation": "Distinctive product shape can be both design patented and trademarked as trade dress."
+        }
+      ],
+      "filingQuestions": [
+        {
+          "id": "filing_q_008",
+          "ipType": "utility_patent",
+          "question": "What makes a technical feature novel for patent purposes?",
+          "type": "multiple_choice",
+          "options": [
+            "It must be the first invention ever made",
+            "It must not exist in prior art and must be new",
+            "It must be complex and expensive",
+            "It must be made by a famous inventor"
+          ],
+          "correctIndex": 1,
+          "explanation": "Novelty means the invention must be new and not disclosed in prior art. It doesn't need to be the first invention ever, just new compared to existing knowledge.",
+          "points": 25
+        },
+        {
+          "id": "filing_q_009",
+          "question": "Should you file a provisional or non-provisional patent application first?",
+          "type": "multiple_choice",
+          "options": [
+            "Non-provisional - it's the only option",
+            "Provisional - to secure filing date while developing",
+            "Neither - just keep it as trade secret",
+            "Both simultaneously"
+          ],
+          "correctIndex": 1,
+          "explanation": "A provisional application secures your filing date for 12 months while you refine the invention, at lower cost than non-provisional.",
+          "points": 25
+        },
+        {
+          "id": "filing_q_009a",
+          "question": "What is the 'inventive step' requirement for patents?",
+          "type": "multiple_choice",
+          "options": [
+            "The invention must be made by a professional inventor",
+            "The invention must not be obvious to a person skilled in the field",
+            "The invention must be the first of its kind",
+            "The invention must be commercially successful"
+          ],
+          "correctIndex": 1,
+          "explanation": "The inventive step (non-obviousness) means the invention wouldn't be obvious to someone with ordinary skill in the relevant field.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_009b",
+          "question": "Can you patent a new use of existing materials?",
+          "type": "multiple_choice",
+          "options": [
+            "No, the materials already exist",
+            "Yes, if the new use is novel and non-obvious",
+            "Only if you invented the materials",
+            "No, only new materials can be patented"
+          ],
+          "correctIndex": 1,
+          "explanation": "Using existing materials or components in a new, non-obvious way can be patentable if it produces unexpected results or solves a problem.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_009c",
+          "question": "How long does a utility patent last in India?",
+          "type": "multiple_choice",
+          "options": [
+            "10 years from filing",
+            "20 years from filing date",
+            "15 years from grant",
+            "Life of inventor plus 60 years"
+          ],
+          "correctIndex": 1,
+          "explanation": "Utility patents in India are valid for 20 years from the date of filing the patent application, subject to payment of renewal fees.",
+          "points": 20
+        }
+      ]
     },
     {
-      "id": "line",
-      "name": "Line",
-      "icon": "remove",
-      "type": "shape",
-      "strokeWidthRange": [1, 10],
-      "defaultStrokeWidth": 2,
-      "supportsOpacity": true,
-      "supportsColor": true,
-      "supportsFill": false
+      "id": "challenge_004",
+      "title": "Design a Mobile App Icon",
+      "category": "digital",
+      "difficulty": "easy",
+      "brief": "Create a distinctive app icon for a productivity app. It should be simple, memorable, and work at small sizes.",
+      "marketContext": "App icons need to stand out in crowded app stores and be instantly recognizable on home screens.",
+      "timeLimit": 180,
+      "priorArtImages": [
+        "assets/prior_art/app_001.png",
+        "assets/prior_art/app_002.png",
+        "assets/prior_art/app_003.png",
+        "assets/prior_art/app_004.png"
+      ],
+      "priorArtDescriptions": [
+        "Notion - Minimalist black and white design",
+        "Todoist - Red checkmark in circle",
+        "Evernote - Green elephant icon",
+        "Trello - Blue board with cards"
+      ],
+      "ipElements": [
+        {
+          "id": "element_013",
+          "name": "Icon Design",
+          "correctTypes": ["copyright", "design_patent"],
+          "explanation": "App icons have automatic copyright protection. Unique ornamental designs can also get design patents."
+        },
+        {
+          "id": "element_014",
+          "name": "App Name",
+          "correctTypes": ["trademark"],
+          "explanation": "The app name should be trademarked to protect your brand identity."
+        },
+        {
+          "id": "element_015",
+          "name": "Color Scheme",
+          "correctTypes": ["trademark"],
+          "explanation": "Distinctive color combinations can be trademarked as part of your brand identity."
+        }
+      ],
+      "filingQuestions": [
+        {
+          "id": "filing_q_010",
+          "ipType": "copyright",
+          "question": "Does your app icon have automatic copyright protection?",
+          "type": "multiple_choice",
+          "options": [
+            "No, you must register it first",
+            "Yes, it's automatic upon creation",
+            "Only if it's complex enough",
+            "No, icons cannot be copyrighted"
+          ],
+          "correctIndex": 1,
+          "explanation": "Original artistic works, including app icons, receive automatic copyright protection upon creation.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_011",
+          "question": "Can you trademark your app icon?",
+          "type": "multiple_choice",
+          "options": [
+            "No, only names can be trademarked",
+            "Yes, if it identifies your app/brand",
+            "Only if it's registered as copyright first",
+            "No, icons are only protected by copyright"
+          ],
+          "correctIndex": 1,
+          "explanation": "App icons can be trademarked if they serve as brand identifiers and distinguish your app from others.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_011a",
+          "question": "What makes an app icon design copyrightable?",
+          "type": "multiple_choice",
+          "options": [
+            "It must be registered with the copyright office",
+            "It must be original and show creative expression",
+            "It must be complex with many colors",
+            "It must be used in a successful app"
+          ],
+          "correctIndex": 1,
+          "explanation": "Copyright protects original works of authorship that show creative expression. Registration is optional but provides additional benefits.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_011b",
+          "question": "Should you register your copyright for the app icon?",
+          "type": "multiple_choice",
+          "options": [
+            "Yes, it's required for protection",
+            "No, but registration provides legal benefits",
+            "Only if you plan to sell the app",
+            "Yes, or you'll lose all rights"
+          ],
+          "correctIndex": 1,
+          "explanation": "Copyright exists automatically, but registration provides important legal benefits like the ability to sue for statutory damages and attorney fees.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_011c",
+          "question": "Can you use design patents and copyright together for your icon?",
+          "type": "multiple_choice",
+          "options": [
+            "No, you must choose one",
+            "Yes, they protect different aspects",
+            "Only if filed simultaneously",
+            "No, copyright excludes design patents"
+          ],
+          "correctIndex": 1,
+          "explanation": "Design patents and copyright can coexist. Copyright protects the artistic expression automatically, while a design patent protects the ornamental design of a functional item.",
+          "points": 20
+        }
+      ]
     },
     {
-      "id": "rectangle",
-      "name": "Rectangle",
-      "icon": "crop_square",
-      "type": "shape",
-      "strokeWidthRange": [1, 10],
-      "defaultStrokeWidth": 2,
-      "supportsOpacity": true,
-      "supportsColor": true,
-      "supportsFill": true
-    },
-    {
-      "id": "circle",
-      "name": "Circle",
-      "icon": "circle",
-      "type": "shape",
-      "strokeWidthRange": [1, 10],
-      "defaultStrokeWidth": 2,
-      "supportsOpacity": true,
-      "supportsColor": true,
-      "supportsFill": true
-    },
-    {
-      "id": "polygon",
-      "name": "Polygon",
-      "icon": "change_history",
-      "type": "shape",
-      "strokeWidthRange": [1, 10],
-      "defaultStrokeWidth": 2,
-      "supportsOpacity": true,
-      "supportsColor": true,
-      "supportsFill": true,
-      "minSides": 3,
-      "maxSides": 8
-    },
-    {
-      "id": "text",
-      "name": "Text",
-      "icon": "text_fields",
-      "type": "text",
-      "fontSizeRange": [12, 72],
-      "defaultFontSize": 24,
-      "supportsOpacity": true,
-      "supportsColor": true,
-      "supportsBold": true,
-      "supportsItalic": true
+      "id": "challenge_005",
+      "title": "Create Product Packaging",
+      "category": "packaging",
+      "difficulty": "medium",
+      "brief": "Design unique packaging for a premium chocolate brand. Consider both visual appeal and brand identity.",
+      "marketContext": "Packaging is often the first touchpoint with customers. It must attract attention and communicate quality.",
+      "timeLimit": 180,
+      "priorArtImages": [
+        "assets/prior_art/package_001.png",
+        "assets/prior_art/package_002.png",
+        "assets/prior_art/package_003.png",
+        "assets/prior_art/package_004.png"
+      ],
+      "priorArtDescriptions": [
+        "Cadbury - Purple wrapper with gold text",
+        "Lindt - Red wrapper with gold ribbon",
+        "Toblerone - Triangular box with mountain design",
+        "Ferrero Rocher - Gold foil with clear window"
+      ],
+      "ipElements": [
+        {
+          "id": "element_016",
+          "name": "Package Shape",
+          "correctTypes": ["design_patent", "trademark"],
+          "explanation": "Unique package shapes can be protected by design patents and may qualify as trade dress trademarks."
+        },
+        {
+          "id": "element_017",
+          "name": "Brand Logo",
+          "correctTypes": ["trademark", "copyright"],
+          "explanation": "Logos are primarily protected as trademarks, with automatic copyright for the artistic work."
+        },
+        {
+          "id": "element_018",
+          "name": "Graphic Design",
+          "correctTypes": ["copyright"],
+          "explanation": "Original artwork and graphics on packaging have automatic copyright protection."
+        },
+        {
+          "id": "element_019",
+          "name": "Color Combination",
+          "correctTypes": ["trademark"],
+          "explanation": "Distinctive color schemes can be trademarked as part of trade dress."
+        }
+      ],
+      "filingQuestions": [
+        {
+          "id": "filing_q_012",
+          "ipType": "design_patent",
+          "question": "What aspect of packaging can be protected by a design patent?",
+          "type": "multiple_choice",
+          "options": [
+            "The material used for packaging",
+            "The ornamental shape and visual appearance",
+            "The cost of manufacturing",
+            "The brand name printed on it"
+          ],
+          "correctIndex": 1,
+          "explanation": "Design patents protect the ornamental, non-functional visual appearance of packaging, including unique shapes and surface designs.",
+          "points": 25
+        },
+        {
+          "id": "filing_q_013",
+          "question": "Can packaging have multiple types of IP protection?",
+          "type": "multiple_choice",
+          "options": [
+            "No, you must choose only one type",
+            "Yes, different elements can have different protections",
+            "Only if you file them separately",
+            "No, only trademark applies to packaging"
+          ],
+          "correctIndex": 1,
+          "explanation": "Packaging can have layered IP protection: trademark for brand elements, copyright for artwork, design patent for unique shapes, and trade dress for overall appearance.",
+          "points": 25
+        },
+        {
+          "id": "filing_q_013a",
+          "question": "What makes a packaging shape distinctive for trademark protection?",
+          "type": "multiple_choice",
+          "options": [
+            "It must be the most expensive packaging",
+            "It must be unique and identify the product source",
+            "It must be made of rare materials",
+            "It must be the largest package on the shelf"
+          ],
+          "correctIndex": 1,
+          "explanation": "For trade dress protection, packaging shape must be distinctive and serve as a source identifier, not just be functional.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_013b",
+          "question": "Your packaging design is functional. Can you still get a design patent?",
+          "type": "multiple_choice",
+          "options": [
+            "No, functional designs cannot be design patented",
+            "Yes, if the design is primarily ornamental",
+            "Only if you also file a utility patent",
+            "Yes, functionality doesn't matter"
+          ],
+          "correctIndex": 1,
+          "explanation": "Design patents protect ornamental designs. If a design is dictated solely by function, it's not eligible. But if it's primarily ornamental with incidental function, it can be design patented.",
+          "points": 20
+        },
+        {
+          "id": "filing_q_013c",
+          "question": "How long does a design patent last in India?",
+          "type": "multiple_choice",
+          "options": [
+            "10 years from registration",
+            "15 years from filing date",
+            "20 years from filing",
+            "Life of designer plus 60 years"
+          ],
+          "correctIndex": 1,
+          "explanation": "Design patents (design registrations) in India are valid for 15 years from the date of registration, with an initial term of 10 years extendable by 5 years.",
+          "points": 20
+        }
+      ]
     }
   ],
-  "colorPalette": [
-    {"name": "Black", "hex": "#000000"},
-    {"name": "White", "hex": "#FFFFFF"},
-    {"name": "Red", "hex": "#F44336"},
-    {"name": "Pink", "hex": "#E91E63"},
-    {"name": "Purple", "hex": "#9C27B0"},
-    {"name": "Deep Purple", "hex": "#673AB7"},
-    {"name": "Indigo", "hex": "#3F51B5"},
-    {"name": "Blue", "hex": "#2196F3"},
-    {"name": "Light Blue", "hex": "#03A9F4"},
-    {"name": "Cyan", "hex": "#00BCD4"},
-    {"name": "Teal", "hex": "#009688"},
-    {"name": "Green", "hex": "#4CAF50"},
-    {"name": "Light Green", "hex": "#8BC34A"},
-    {"name": "Lime", "hex": "#CDDC39"},
-    {"name": "Yellow", "hex": "#FFEB3B"},
-    {"name": "Amber", "hex": "#FFC107"},
-    {"name": "Orange", "hex": "#FF9800"},
-    {"name": "Deep Orange", "hex": "#FF5722"},
-    {"name": "Brown", "hex": "#795548"},
-    {"name": "Grey", "hex": "#9E9E9E"},
-    {"name": "Blue Grey", "hex": "#607D8B"}
-  ],
-  "templates": [
+  "scoringWeights": {
+    "drawingPhase": {
+      "toolVariety": 0.10,
+      "complexity": 0.10,
+      "timeManagement": 0.10
+    },
+    "ipKnowledge": {
+      "priorArtAnalysis": 0.20,
+      "ipTypeSelection": 0.25,
+      "filingAnswers": 0.25
+    },
+    "bonusMultipliers": {
+      "speedBonus": 1.1,
+      "portfolioBonus": 1.15,
+      "strategistBonus": 1.1,
+      "innovatorBonus": 1.2
+    }
+  },
+  "ipTypes": [
     {
-      "id": "template_001",
-      "name": "Product Blueprint",
-      "category": "product_design",
-      "description": "Technical blueprint template for designing products with grid and measurement guides",
-      "thumbnailUrl": "assets/templates/product_blueprint_thumb.png",
-      "difficulty": "medium",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 20,
-        "gridColor": "#E3F2FD",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_bg",
-            "name": "Background Grid",
-            "visible": true,
-            "locked": true,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_sketch",
-            "name": "Sketch Layer",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "horizontal", "position": 0.5},
-          {"type": "vertical", "position": 0.5}
-        ]
-      }
+      "id": "copyright",
+      "name": "Copyright",
+      "icon": "🎨",
+      "description": "Protects artistic and creative expression",
+      "color": "0xFFE91E63",
+      "applicableTo": ["artistic_elements", "graphics", "text", "designs"]
     },
     {
-      "id": "template_002",
-      "name": "Logo Design",
-      "category": "branding",
-      "description": "Template for creating brand logos with circular and square guides",
-      "thumbnailUrl": "assets/templates/logo_design_thumb.png",
-      "difficulty": "easy",
-      "templateData": {
-        "gridEnabled": false,
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_guides",
-            "name": "Guide Shapes",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.3
-          },
-          {
-            "id": "layer_logo",
-            "name": "Logo Design",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "circle", "centerX": 0.5, "centerY": 0.5, "radius": 0.3},
-          {"type": "square", "centerX": 0.5, "centerY": 0.5, "size": 0.6}
-        ]
-      }
+      "id": "trademark",
+      "name": "Trademark",
+      "icon": "™️",
+      "description": "Protects brand identifiers",
+      "color": "0xFF2196F3",
+      "applicableTo": ["logos", "brand_names", "slogans", "trade_dress", "colors"]
     },
     {
-      "id": "template_003",
-      "name": "Packaging Design",
-      "category": "packaging",
-      "description": "Template for designing product packaging with fold lines and dimensions",
-      "thumbnailUrl": "assets/templates/packaging_design_thumb.png",
-      "difficulty": "hard",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 15,
-        "gridColor": "#FFF3E0",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_template",
-            "name": "Box Template",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.5
-          },
-          {
-            "id": "layer_design",
-            "name": "Package Design",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_text",
-            "name": "Text & Labels",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ]
-      }
+      "id": "design_patent",
+      "name": "Design Patent",
+      "icon": "🔧",
+      "description": "Protects ornamental design of functional items",
+      "color": "0xFF4CAF50",
+      "applicableTo": ["product_shape", "ornamental_features", "appearance"]
     },
     {
-      "id": "template_004",
-      "name": "App Icon Design",
-      "category": "digital",
-      "description": "Template for designing mobile app icons with rounded square guide",
-      "thumbnailUrl": "assets/templates/app_icon_thumb.png",
-      "difficulty": "easy",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 10,
-        "gridColor": "#F3E5F5",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_guide",
-            "name": "Icon Guide",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.4
-          },
-          {
-            "id": "layer_icon",
-            "name": "Icon Design",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "rounded_square", "centerX": 0.5, "centerY": 0.5, "size": 0.8, "cornerRadius": 0.2}
-        ]
-      }
+      "id": "utility_patent",
+      "name": "Utility Patent",
+      "icon": "⚙️",
+      "description": "Protects functional innovations",
+      "color": "0xFFFF9800",
+      "applicableTo": ["mechanisms", "processes", "technical_features", "functionality"]
     },
     {
-      "id": "template_005",
-      "name": "Poster Design",
-      "category": "marketing",
-      "description": "Template for creating promotional posters with title and content areas",
-      "thumbnailUrl": "assets/templates/poster_design_thumb.png",
-      "difficulty": "medium",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 25,
-        "gridColor": "#E8F5E9",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_background",
-            "name": "Background",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_content",
-            "name": "Content",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_text",
-            "name": "Text",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "horizontal", "position": 0.2},
-          {"type": "horizontal", "position": 0.8}
-        ]
-      }
-    },
-    {
-      "id": "template_006",
-      "name": "Business Card",
-      "category": "branding",
-      "description": "Template for designing professional business cards with standard dimensions",
-      "thumbnailUrl": "assets/templates/business_card_thumb.png",
-      "difficulty": "easy",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 5,
-        "gridColor": "#FFF9C4",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_front",
-            "name": "Front Side",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_logo",
-            "name": "Logo",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_info",
-            "name": "Contact Info",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "id": "template_007",
-      "name": "T-Shirt Design",
-      "category": "fashion",
-      "description": "Template for creating t-shirt graphics with print area guide",
-      "thumbnailUrl": "assets/templates/tshirt_design_thumb.png",
-      "difficulty": "medium",
-      "templateData": {
-        "gridEnabled": false,
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_tshirt",
-            "name": "T-Shirt Outline",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.3
-          },
-          {
-            "id": "layer_print_area",
-            "name": "Print Area Guide",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.2
-          },
-          {
-            "id": "layer_design",
-            "name": "Design",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "rectangle", "x": 0.3, "y": 0.25, "width": 0.4, "height": 0.4}
-        ]
-      }
-    },
-    {
-      "id": "template_008",
-      "name": "Infographic Layout",
-      "category": "information",
-      "description": "Template for creating educational infographics with section guides",
-      "thumbnailUrl": "assets/templates/infographic_thumb.png",
-      "difficulty": "hard",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 30,
-        "gridColor": "#E1F5FE",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_header",
-            "name": "Header",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_content1",
-            "name": "Content Section 1",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_content2",
-            "name": "Content Section 2",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_footer",
-            "name": "Footer",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "horizontal", "position": 0.15},
-          {"type": "horizontal", "position": 0.5},
-          {"type": "horizontal", "position": 0.85}
-        ]
-      }
-    },
-    {
-      "id": "template_009",
-      "name": "Product Label",
-      "category": "packaging",
-      "description": "Template for designing product labels with regulatory information areas",
-      "thumbnailUrl": "assets/templates/product_label_thumb.png",
-      "difficulty": "medium",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 10,
-        "gridColor": "#FCE4EC",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_border",
-            "name": "Label Border",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.5
-          },
-          {
-            "id": "layer_brand",
-            "name": "Brand Area",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_info",
-            "name": "Product Info",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "horizontal", "position": 0.4},
-          {"type": "horizontal", "position": 0.7}
-        ]
-      }
-    },
-    {
-      "id": "template_010",
-      "name": "Patent Diagram",
-      "category": "technical",
-      "description": "Template for creating technical patent diagrams with numbered callouts",
-      "thumbnailUrl": "assets/templates/patent_diagram_thumb.png",
-      "difficulty": "hard",
-      "templateData": {
-        "gridEnabled": true,
-        "gridSize": 15,
-        "gridColor": "#ECEFF1",
-        "backgroundColor": "#FFFFFF",
-        "layers": [
-          {
-            "id": "layer_grid",
-            "name": "Technical Grid",
-            "visible": true,
-            "locked": true,
-            "opacity": 0.4
-          },
-          {
-            "id": "layer_main_drawing",
-            "name": "Main Drawing",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_callouts",
-            "name": "Numbered Callouts",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          },
-          {
-            "id": "layer_labels",
-            "name": "Labels",
-            "visible": true,
-            "locked": false,
-            "opacity": 1.0
-          }
-        ],
-        "guides": [
-          {"type": "horizontal", "position": 0.5},
-          {"type": "vertical", "position": 0.5}
-        ]
-      }
+      "id": "trade_secret",
+      "name": "Trade Secret",
+      "icon": "🤫",
+      "description": "Protects confidential business information",
+      "color": "0xFF9C27B0",
+      "applicableTo": ["formulas", "processes", "methods", "confidential_info"]
     }
   ],
   "ipQuestions": [

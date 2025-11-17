@@ -230,9 +230,17 @@ service cloud.firestore {
     }
     
     // Leaderboards Collection
-    match /leaderboards/{entryId} {
+    match /leaderboards/{leaderboardId} {
       allow read: if isSignedIn();
-      allow write: if isSignedIn(); // Users can update their own scores
+      allow write: if isSignedIn();
+      
+      // Entries subcollection
+      match /entries/{userId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.auth.uid == userId;
+        allow update: if isSignedIn() && request.auth.uid == userId;
+        allow delete: if isSignedIn() && request.auth.uid == userId;
+      }
     }
     
     // ============================================================================

@@ -296,12 +296,11 @@ class _HomeScreenState extends State<HomeScreen> {
         print('Error loading progress: $e');
       }
       
-      // Get recent game plays - WITHOUT orderBy to avoid index requirement
+      // Get recent game plays from game_progress collection
       try {
         final gameProgress = await FirebaseFirestore.instance
-            .collection('progress')
-            .doc(_user!.uid)
-            .collection('games')
+            .collection('game_progress')
+            .where('userId', isEqualTo: _user!.uid)
             .get();
         
         // Sort in memory by lastPlayedAt
@@ -317,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
           final data = doc.data();
           final gameId = data['gameId'] as String?;
           final lastPlayedAt = (data['lastPlayedAt'] as Timestamp?)?.toDate();
-          final highScore = data['highScore'] as int? ?? 0;
+          final lastScore = data['lastScore'] as int? ?? data['highScore'] as int? ?? 0;
           
           if (lastPlayedAt != null && gameId != null) {
             // Format game name from ID
@@ -327,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
             
             activities.add({
               'title': 'Game Played!',
-              'subtitle': '$gameName • Score: $highScore',
+              'subtitle': '$gameName • Score: $lastScore',
               'time': _getTimeAgo(lastPlayedAt),
               'icon': Icons.videogame_asset,
               'color': 0xFFEC4899,

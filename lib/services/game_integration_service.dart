@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../core/constants/app_constants.dart';
 import '../models/game_progress_model.dart';
 import '../core/models/user_model.dart';
+import 'streak_service.dart';
 
 /// Service for integrating games with core systems (XP, progress, leaderboards, analytics)
 class GameIntegrationService {
@@ -14,6 +15,7 @@ class GameIntegrationService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  final StreakService _streakService = StreakService();
 
   /// Get current user ID
   String? get _currentUserId => _auth.currentUser?.uid;
@@ -69,9 +71,13 @@ class GameIntegrationService {
 
         transaction.update(userRef, {
           'totalXP': newTotalXP,
+          'lastActiveDate': FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
+
+      // Update streak after awarding XP
+      await _streakService.updateStreakOnActivity(_currentUserId!);
 
       return totalXP;
     } catch (e) {

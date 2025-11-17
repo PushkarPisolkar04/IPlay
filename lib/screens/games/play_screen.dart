@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
@@ -11,7 +12,7 @@ import 'spot_the_original_game.dart';
 import 'gi_mapper_game.dart';
 import 'ip_defender_game.dart';
 import 'patent_detective_game.dart';
-// import 'innovation_lab_game.dart'; // File not found
+import 'innovation_lab_game.dart';
 
 /// Play/Games Screen - All 7 Games
 class PlayScreen extends StatefulWidget {
@@ -115,6 +116,46 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
+  Widget _buildSkeletonLoader() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 150,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ...List.generate(7, (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                )),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,7 +208,7 @@ class _PlayScreenState extends State<PlayScreen> {
             Expanded(
               child:
               _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? _buildSkeletonLoader()
           : RefreshIndicator(
               onRefresh: _refreshData,
               color: const Color(0xFFEC4899),
@@ -196,7 +237,7 @@ class _PlayScreenState extends State<PlayScreen> {
                     color: const Color(0xFF6366F1),
                     difficulty: 'Medium',
                     xpReward: '10-100 XP',
-                    timeEstimate: '1-2 min',
+                    timeEstimate: '1 min',
                     isImplemented: true,
                     gameId: 'quiz_master',
                     onTap: () {
@@ -214,8 +255,8 @@ class _PlayScreenState extends State<PlayScreen> {
                     iconPath: 'assets/logos/trademark_match.png',
                     color: const Color(0xFF2196F3),
                     difficulty: 'Medium',
-                    xpReward: '60-120 XP',
-                    timeEstimate: '8 min',
+                    xpReward: '60-180 XP',
+                    timeEstimate: '2 min',
                     isImplemented: true,
                     gameId: 'trademark_match',
                     onTap: () {
@@ -233,8 +274,8 @@ class _PlayScreenState extends State<PlayScreen> {
                     iconPath: 'assets/logos/spot_the_original.png',
                     color: const Color(0xFFF59E0B),
                     difficulty: 'Medium',
-                    xpReward: '15-75 XP',
-                    timeEstimate: '2-3 min',
+                    xpReward: '15-150 XP',
+                    timeEstimate: '2 min',
                     isImplemented: true,
                     gameId: 'spot_original',
                     onTap: () {
@@ -307,17 +348,17 @@ class _PlayScreenState extends State<PlayScreen> {
                     title: 'Innovation Lab',
                     description: 'Design your invention and learn IP protection',
                     iconPath: 'assets/logos/innovation_lab.png',
-                    color: Colors.teal,
-                    difficulty: 'Easy',
-                    xpReward: '100 XP',
+                    color: const Color(0xFF00ACC1),
+                    difficulty: 'Hard',
+                    xpReward: '100-1000 XP',
                     timeEstimate: '5-10 min',
                     isImplemented: true,
                     gameId: 'innovation_lab',
                     onTap: () {
-                      // TODO: Add InnovationLabGame when file is created
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Coming soon!')),
-                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const InnovationLabGame()),
+                      ).then((_) => _refreshData());
                     },
                   ),
                 ],

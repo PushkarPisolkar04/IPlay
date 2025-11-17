@@ -265,16 +265,6 @@ class ProgressService {
         };
       }
 
-      // Calculate and add streak to updateData BEFORE batch update
-      final currentStreak = userDoc.data()?['currentStreak'] ?? 0;
-      final lastActiveDate = (userDoc.data()?['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now();
-      final newStreak = _calculateStreak(lastActiveDate, DateTime.now(), currentStreak);
-      
-      if (newStreak != currentStreak) {
-        updateData['currentStreak'] = newStreak;
-        print('📈 Streak updated: $currentStreak → $newStreak');
-      }
-
       // Add badge if unlocked
       if (newBadge != null) {
         updateData['badges'] = FieldValue.arrayUnion([newBadge]);
@@ -285,6 +275,11 @@ class ProgressService {
       
       // Commit all updates
       await batch.commit();
+      
+      // Update streak after awarding XP (only if XP was awarded)
+      if (isNewCompletion) {
+        await _streakService.updateStreakOnActivity(userId);
+      }
 
 
       
@@ -449,33 +444,4 @@ class ProgressService {
     _progressDebouncer.dispose();
   }
 
-  /// Calculate the new streak value based on last activity and current streak
-  int _calculateStreak(DateTime lastActive, DateTime now, int currentStreak) {
-    final hoursDiff = now.difference(lastActive).inHours;
-
-    // If this is the first activity (currentStreak is 0), start at 1
-    if (currentStreak == 0) {
-      return 1;
-    }
-
-    if (hoursDiff <= 48) {
-      // Within 48-hour grace period
-      if (!_isSameDay(lastActive, now)) {
-        // New day, increment streak
-        return currentStreak + 1;
-      }
-      // Same day, streak unchanged
-      return currentStreak;
-    } else {
-      // Streak broken (> 48 hours), reset to 1
-      return 1;
-    }
-  }
-
-  /// Check if two dates are on the same day
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
-  }
 }
