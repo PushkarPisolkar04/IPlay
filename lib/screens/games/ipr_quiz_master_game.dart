@@ -27,6 +27,7 @@
     int _currentQuestionIndex = 0;
     int _score = 0;
     int _timeLeft = 60; // 60 seconds total
+    int _earnedXP = 0;
     Timer? _timer;
     bool _gameStarted = false;
     bool _gameEnded = false;
@@ -127,19 +128,31 @@
       if (user != null) {
         try {
           const gameId = 'quiz_master';
-          const baseXP = 100; // 10 XP per question * 10 questions
+          
+          // Calculate base XP based on score (10 XP per correct answer)
+          // Score range: 0-10, Base XP range: 0-100
+          final baseXP = _score * 10;
           
           final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
           final isPerfectScore = _score == 10;
           
           // Award XP with automatic bonuses
-          await _gameService.awardGameXP(
+          // Example: 9/10 correct = 90 base XP
+          // Perfect (10/10): 100 + 50 = 150 XP
+          // First time: 90 + 90 = 180 XP (max)
+          // Both: 100 + 50 + 100 = 250 XP (max)
+          final xpEarned = await _gameService.awardGameXP(
             gameId: gameId,
             baseXP: baseXP,
             score: (_score / 10 * 100).round(),
             isPerfectScore: isPerfectScore,
             isFirstCompletion: isFirstCompletion,
           );
+          
+          // Store XP for result screen
+          setState(() {
+            _earnedXP = xpEarned;
+          });
           
           // Save progress
           await _gameService.saveGameProgress(
@@ -633,7 +646,7 @@
       final percentage = (_score / _questions.length * 100).round();
       final passed = percentage >= 60;
       final isPerfect = percentage == 100;
-      final xpEarned = _score * 10;
+      final xpEarned = _earnedXP;
 
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,

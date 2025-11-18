@@ -37,7 +37,8 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
   double _referenceImageHeight = 800;
   int _score = 0;
   int _correctPlacements = 0;
-  int _timeRemaining = 120; 
+  int _timeRemaining = 120;
+  int _earnedXP = 0;
   Timer? _timer;
 
   @override
@@ -207,13 +208,18 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         final isPerfectScore = _correctPlacements == _selectedProducts.length;
         
         // Award XP with automatic bonuses
-        await _gameService.awardGameXP(
+        final xpEarned = await _gameService.awardGameXP(
           gameId: gameId,
           baseXP: baseXP,
           score: (_correctPlacements / _selectedProducts.length * 100).round(),
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
+        
+        // Store XP for result screen
+        setState(() {
+          _earnedXP = xpEarned;
+        });
         
         // Save progress
         await _gameService.saveGameProgress(
@@ -1084,7 +1090,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                   _buildFancyStatRow(
                                     Icons.military_tech,
                                     'XP Earned',
-                                    '+$_score XP',
+                                    '+$_earnedXP XP',
                                     const Color(0xFFFFC107),
                                     isHighlight: true,
                                   ),

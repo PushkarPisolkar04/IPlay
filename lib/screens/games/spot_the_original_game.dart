@@ -31,6 +31,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
   int _currentRound = 0;
   int _score = 0;
   int _timeRemaining = 120; // 2 minutes
+  int _earnedXP = 0;
   Timer? _timer;
   bool _gameStarted = false;
   bool _gameEnded = false;
@@ -181,13 +182,18 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
         final isPerfectScore = _score == 10;
         
         // Award XP with automatic bonuses
-        await _gameService.awardGameXP(
+        final xpEarned = await _gameService.awardGameXP(
           gameId: gameId,
           baseXP: baseXP,
           score: (_score / 10 * 100).round(),
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
+        
+        // Store XP for result screen
+        setState(() {
+          _earnedXP = xpEarned;
+        });
         
         // Save progress
         await _gameService.saveGameProgress(
@@ -768,7 +774,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
     final percentage = (_score / _rounds.length * 100).round();
     final passed = percentage >= 60;
     final isPerfect = percentage == 100;
-    final xpEarned = _score * 15;
+    final xpEarned = _earnedXP;
 
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,

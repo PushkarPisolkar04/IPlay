@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:confetti/confetti.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:flutter_svg/flutter_svg.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
@@ -21,6 +21,10 @@ class IPDefenderGame extends StatefulWidget {
 
 class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStateMixin {
   final GameIntegrationService _gameService = GameIntegrationService();
+  final ConfettiController _confettiController = ConfettiController(
+    duration: const Duration(seconds: 3),
+  );
+  final GlobalKey _gameAreaKey = GlobalKey();
   
   Map<String, dynamic>? _gameData;
   bool _isLoading = true;
@@ -50,6 +54,9 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
   int _enemiesSpawned = 0;
   int _enemiesKilled = 0;
   bool _waveInProgress = false;
+  
+  double _mapScaleX = 1.0;
+  double _mapScaleY = 1.0;
 
   @override
   void initState() {
@@ -60,7 +67,21 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
   @override
   void dispose() {
     _stopAllTimers();
+    _confettiController.dispose();
     super.dispose();
+  }
+  
+  void _playConfettiMultipleTimes() {
+    // Play confetti 3 times with delays
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _confettiController.play();
+    });
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      if (mounted) _confettiController.play();
+    });
+    Future.delayed(const Duration(milliseconds: 4500), () {
+      if (mounted) _confettiController.play();
+    });
   }
 
   void _stopAllTimers() {
@@ -121,7 +142,8 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
 
   void _startIncomeGeneration() {
     _incomeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_isPaused || _gameEnded) return;
+      // Only generate income during active waves
+      if (_isPaused || _gameEnded || !_waveInProgress) return;
       
       int income = 0;
       for (var tower in _placedTowers) {
@@ -185,6 +207,13 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     final enemyType = enemyData['type'];
     final enemyConfig = (_gameData!['enemies'] as List).firstWhere((e) => e['id'] == enemyType);
     
+    // Scale path coordinates from reference map to actual display size
+    final scaledPathCoords = pathCoords.map((c) {
+      final x = (c['x'] as num).toDouble();
+      final y = (c['y'] as num).toDouble();
+      return Offset(x * _mapScaleX, y * _mapScaleY);
+    }).toList();
+    
     final enemy = Enemy(
       id: DateTime.now().millisecondsSinceEpoch.toString() + _random.nextInt(1000).toString(),
       type: enemyType,
@@ -197,7 +226,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
       size: (enemyConfig['size'] as num).toDouble(),
       pathIndex: 0,
       progress: 0.0,
-      pathCoordinates: pathCoords.map((c) => Offset(c['x'].toDouble(), c['y'].toDouble())).toList(),
+      pathCoordinates: scaledPathCoords,
     );
     
     setState(() {
@@ -217,8 +246,17 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
         enemy.pathIndex++;
         
         if (enemy.pathIndex >= enemy.pathCoordinates.length - 1) {
-          // Enemy reached the end
-          _ipAssetHealth -= 10;
+          // Enemy reached the end - damage based on enemy type
+          int damage = 10;
+          if (enemy.type == 'infringer') {
+            damage = 20; // Heavy enemies do more damage
+          } else if (enemy.type == 'pirate') {
+            damage = 8; // Fast enemies do less damage
+          } else if (enemy.type == 'copycat') {
+            damage = 12;
+          }
+          
+          _ipAssetHealth = (_ipAssetHealth - damage).clamp(0, 100);
           toRemove.add(enemy);
           
           if (_ipAssetHealth <= 0) {
@@ -278,10 +316,12 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     }
     
     if (target != null) {
-      if (tower.attackType == 'single') {
-        _createProjectile(tower, target);
-      } else if (tower.attackType == 'area') {
-        _areaAttack(tower);
+      // All towers now use projectiles
+      _createProjectile(tower, target);
+      
+      // Apply special effects
+      if (tower.specialEffect == 'slow') {
+        target.slowFactor = 1.0 - tower.slowAmount;
       }
     }
   }
@@ -364,7 +404,8 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     setState(() {
       _activeEnemies.remove(enemy);
       _coins += enemy.reward;
-      _score += enemy.reward;
+      // Score is 2x the reward for killing enemies
+      _score += enemy.reward * 2;
       _enemiesKilled++;
     });
   }
@@ -391,12 +432,20 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     
     if (_currentWaveIndex < waves.length) {
       final wave = waves[_currentWaveIndex];
+      final waveReward = (wave['reward'] as num).toInt();
       
       setState(() {
         _waveInProgress = false;
-        _coins += (wave['reward'] as num).toInt();
-        _score += (wave['reward'] as num).toInt();
+        _coins += waveReward;
+        // Wave completion bonus: 3x the wave reward
+        _score += waveReward * 3;
         _currentWaveIndex++;
+        
+        // Check if all waves are complete
+        if (_currentWaveIndex >= waves.length) {
+          // Level complete!
+          _completeLevel();
+        }
       });
     }
   }
@@ -421,21 +470,78 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
       try {
         const gameId = 'ip_defender';
         final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
+        final maxHealth = _gameData!['levels'][_currentLevelIndex]['ipAssetHealth'];
+        
+        // Calculate final score with multiple bonuses
+        int finalScore = _score;
+        
+        if (victory) {
+          // Health preservation bonus: 15 points per remaining health
+          final healthBonus = _ipAssetHealth * 15;
+          finalScore += healthBonus;
+          
+          // Coins remaining bonus: 1 point per 2 coins saved
+          final coinsBonus = (_coins / 2).floor();
+          finalScore += coinsBonus;
+          
+          // Tower efficiency bonus: fewer towers = higher bonus
+          final towerCount = _placedTowers.length;
+          int efficiencyBonus = 0;
+          if (towerCount <= 3) {
+            efficiencyBonus = 300; // Excellent efficiency
+          } else if (towerCount <= 5) {
+            efficiencyBonus = 150; // Good efficiency
+          } else if (towerCount <= 7) {
+            efficiencyBonus = 50; // Decent efficiency
+          }
+          finalScore += efficiencyBonus;
+          
+          // Perfect health bonus
+          if (_ipAssetHealth == maxHealth) {
+            finalScore += 500; // Big bonus for perfect defense
+          }
+          
+          // Wave completion bonus (already in _score from waves)
+          // Enemy kill bonus (already in _score from kills)
+        }
+        
+        // Calculate XP (capped at 1000-1500 max)
+        // Convert score to XP with a scaling factor
+        int baseXP = (finalScore * 0.25).round(); // Scale down score to XP
+        
+        // Cap XP based on performance
+        int maxXP = 800; // Base max XP
+        if (victory) {
+          if (_ipAssetHealth == maxHealth) {
+            maxXP = 1500; // Perfect defense
+          } else if (_ipAssetHealth >= maxHealth * 0.8) {
+            maxXP = 1200; // Excellent defense
+          } else if (_ipAssetHealth >= maxHealth * 0.5) {
+            maxXP = 1000; // Good defense
+          }
+        }
+        
+        final cappedXP = baseXP.clamp(0, maxXP);
         
         await _gameService.awardGameXP(
           gameId: gameId,
-          baseXP: _score,
-          score: _score,
-          isPerfectScore: victory && _ipAssetHealth == (_gameData!['levels'][_currentLevelIndex]['ipAssetHealth']),
+          baseXP: cappedXP,
+          score: finalScore,
+          isPerfectScore: victory && _ipAssetHealth == maxHealth,
           isFirstCompletion: isFirstCompletion,
         );
         
         await _gameService.saveGameProgress(
           gameId: gameId,
-          score: _score,
+          score: finalScore,
           timeSpentSeconds: 0,
           completed: victory,
         );
+        
+        // Update displayed score
+        setState(() {
+          _score = finalScore;
+        });
       } catch (e) {
         // Error saving
       }
@@ -456,8 +562,15 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     final level = _gameData!['levels'][_currentLevelIndex];
     final pathCoords = level['pathCoordinates'] as List;
     for (int i = 0; i < pathCoords.length - 1; i++) {
-      final start = Offset(pathCoords[i]['x'].toDouble(), pathCoords[i]['y'].toDouble());
-      final end = Offset(pathCoords[i + 1]['x'].toDouble(), pathCoords[i + 1]['y'].toDouble());
+      // Scale path coordinates from reference map to actual display size
+      final start = Offset(
+        (pathCoords[i]['x'] as num).toDouble() * _mapScaleX,
+        (pathCoords[i]['y'] as num).toDouble() * _mapScaleY,
+      );
+      final end = Offset(
+        (pathCoords[i + 1]['x'] as num).toDouble() * _mapScaleX,
+        (pathCoords[i + 1]['y'] as num).toDouble() * _mapScaleY,
+      );
       
       // Check distance to path segment
       final distToPath = _distanceToLineSegment(position, start, end);
@@ -570,34 +683,28 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppDesignSystem.error.withOpacity(0.4),
-                      blurRadius: 40,
-                      spreadRadius: 5,
-                      offset: const Offset(0, 4),
-                    ),
-                    BoxShadow(
-                      color: AppDesignSystem.error.withOpacity(0.2),
-                      blurRadius: 60,
-                      spreadRadius: 10,
-                      offset: const Offset(0, 8),
+                      color: AppDesignSystem.error.withOpacity(0.3),
+                      blurRadius: 20,
+                      spreadRadius: 3,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(16),
                 child: Image.asset(
                   'assets/logos/ip_defender.png',
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {
                     return const Icon(
                       Icons.shield,
-                      size: 60,
+                      size: 50,
                       color: AppDesignSystem.error,
                     );
                   },
                 ),
               ),
 
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 20),
 
               Text(
                 'IP Defender',
@@ -605,7 +712,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: AppSpacing.md),
+              const SizedBox(height: 8),
 
               Text(
                 'Defend your IP assets from waves of infringers!',
@@ -615,11 +722,11 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: AppSpacing.xl),
+              const SizedBox(height: 20),
 
               // Game rules
               Container(
-                padding: const EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppDesignSystem.backgroundGrey,
                   borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
@@ -631,7 +738,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                       'Game Rules:',
                       style: AppTextStyles.cardTitle,
                     ),
-                    const SizedBox(height: AppSpacing.sm),
+                    const SizedBox(height: 8),
                     _buildRuleItem('🏰', 'Build towers to defend your IP assets'),
                     _buildRuleItem('⚔️', 'Survive 5 waves of infringers'),
                     _buildRuleItem('💰', 'Earn coins to upgrade your defenses'),
@@ -641,7 +748,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
               ),
 
               // Adjustable spacing above start button
-              const SizedBox(height: 60),
+              const SizedBox(height: 30),
 
               // Start button
               PrimaryButton(
@@ -665,16 +772,17 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
 
   Widget _buildRuleItem(String emoji, String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 22)),
-          const SizedBox(width: 12),
+          Text(emoji, style: const TextStyle(fontSize: 20)),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               text,
               style: AppTextStyles.bodyMedium.copyWith(
-                height: 1.4,
+                height: 1.3,
+                fontSize: 13,
               ),
             ),
           ),
@@ -697,21 +805,21 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
+                  // Calculate scale based on reference dimensions
+                  final level = _gameData!['levels'][_currentLevelIndex];
+                  final refWidth = (level['referenceMapWidth'] as num?)?.toDouble() ?? 830.0;
+                  final refHeight = (level['referenceMapHeight'] as num?)?.toDouble() ?? 1248.0;
+                  _mapScaleX = constraints.maxWidth / refWidth;
+                  _mapScaleY = constraints.maxHeight / refHeight;
+                  
                   return Stack(
                     clipBehavior: Clip.none,
                     children: [
                       // Map background
                       Positioned.fill(
-                        child: Container(
-                          color: const Color(0xFF4A7C2C),
-                          child: SvgPicture.asset(
-                            'assets/maps/game_map.svg',
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                              Colors.white.withValues(alpha: 0.9),
-                              BlendMode.modulate,
-                            ),
-                          ),
+                        child: Image.asset(
+                          'assets/maps/game_map.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
                       
@@ -756,6 +864,49 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
                       
                       // Projectiles
                       ..._activeProjectiles.map((projectile) => _buildProjectileWidget(projectile)),
+                      
+                      // Floating Wave Button
+                      if (!_waveInProgress && _currentWaveIndex < waves.length && !_isPaused)
+                        Positioned(
+                          bottom: 20,
+                          right: 20,
+                          child: GestureDetector(
+                            onTap: _startWave,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [Color(0xFF10B981), Color(0xFF059669)],
+                                ),
+                                borderRadius: BorderRadius.circular(30),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF10B981).withValues(alpha: 0.5),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(Icons.play_arrow, color: Colors.white, size: 24),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Start Wave',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       
                       // Pause overlay
                       if (_isPaused)
@@ -897,69 +1048,23 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
               const SizedBox(width: 8),
               
               Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildStatChip(Icons.favorite, '$_ipAssetHealth', Colors.red),
-                      const SizedBox(width: 6),
-                      _buildStatChip(Icons.monetization_on, '$_coins', const Color(0xFFFBBF24)),
-                      const SizedBox(width: 6),
-                      _buildStatChip(Icons.waves, '${_currentWaveIndex}/${waves.length}', const Color(0xFF2196F3)),
-                      const SizedBox(width: 6),
-                      _buildStatChip(Icons.star, '$_score', const Color(0xFFFF9800)),
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(child: _buildStatChip(Icons.favorite, '$_ipAssetHealth', Colors.red)),
+                    const SizedBox(width: 4),
+                    Expanded(child: _buildStatChip(Icons.monetization_on, '$_coins', const Color(0xFFFBBF24))),
+                    const SizedBox(width: 4),
+                    Expanded(child: _buildStatChip(Icons.waves, '${_currentWaveIndex}/${waves.length}', const Color(0xFF2196F3))),
+                    const SizedBox(width: 4),
+                    Expanded(child: _buildStatChip(Icons.star, '$_score', const Color(0xFFFF9800))),
+                  ],
                 ),
               ),
-              
-              const SizedBox(width: 8),
-              
-              if (!_waveInProgress && _currentWaveIndex < waves.length)
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF10B981), Color(0xFF059669)],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: _startWave,
-                      borderRadius: BorderRadius.circular(20),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Icon(Icons.play_arrow, color: Colors.white, size: 18),
-                            SizedBox(width: 4),
-                            Text(
-                              'Wave',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
             ],
           ),
+          
+
         ],
       ),
     );
@@ -967,33 +1072,37 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
 
   Widget _buildStatChip(IconData icon, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [color, color.withValues(alpha: 0.8)],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+            color: color.withValues(alpha: 0.25),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 16, color: Colors.white),
-          const SizedBox(width: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+          Icon(icon, size: 14, color: Colors.white),
+          const SizedBox(width: 3),
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 11,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -1005,7 +1114,8 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
     final towers = _gameData!['towers'] as List;
     
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      height: 80,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -1018,139 +1128,136 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
+            blurRadius: 8,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: towers.map((towerData) {
-            final canAfford = _coins >= towerData['cost'];
-            final isSelected = _selectedTowerType?.type == towerData['id'];
-            
-            return GestureDetector(
-              onTap: () {
-                if (canAfford) {
-                  setState(() {
-                    _selectedTowerType = isSelected ? null : Tower(
-                      id: '',
-                      type: towerData['id'],
-                      position: Offset.zero,
-                      cost: towerData['cost'],
-                      damage: (towerData['damage'] as num).toDouble(),
-                      range: (towerData['range'] as num).toDouble(),
-                      attackSpeed: (towerData['attackSpeed'] as num).toDouble(),
-                      attackType: towerData['attackType'],
-                      projectileType: towerData['projectileType'],
-                      spriteUrl: towerData['spriteUrl'],
-                      projectileUrl: towerData['projectileUrl'],
-                      color: Color(int.parse(towerData['color'].toString().replaceFirst('0x', '0xFF'))),
-                      level: 1,
-                      specialEffect: towerData['specialEffect'],
-                      slowAmount: (towerData['slowAmount'] as num?)?.toDouble() ?? 0.0,
-                      incomePerSecond: towerData['incomePerSecond'] ?? 0,
-                      cooldown: 0,
-                    );
-                  });
-                }
-              },
-              child: Container(
-                width: 90,
-                margin: const EdgeInsets.only(right: 8),
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  gradient: isSelected
-                      ? const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
-                        )
-                      : LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: canAfford 
-                              ? [Colors.white, Colors.grey.shade100]
-                              : [Colors.grey.shade300, Colors.grey.shade400],
-                        ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: towers.map((towerData) {
+          final canAfford = _coins >= towerData['cost'];
+          final isSelected = _selectedTowerType?.type == towerData['id'];
+          
+          return Expanded(
+            child: GestureDetector(
+            onTap: () {
+              if (canAfford) {
+                setState(() {
+                  _selectedTowerType = isSelected ? null : Tower(
+                    id: '',
+                    type: towerData['id'],
+                    position: Offset.zero,
+                    cost: towerData['cost'],
+                    damage: (towerData['damage'] as num).toDouble(),
+                    range: (towerData['range'] as num).toDouble(),
+                    attackSpeed: (towerData['attackSpeed'] as num).toDouble(),
+                    attackType: towerData['attackType'],
+                    projectileType: towerData['projectileType'],
+                    spriteUrl: towerData['spriteUrl'],
+                    projectileUrl: towerData['projectileUrl'],
+                    color: Color(int.parse(towerData['color'].toString().replaceFirst('0x', '0xFF'))),
+                    level: 1,
+                    specialEffect: towerData['specialEffect'],
+                    slowAmount: (towerData['slowAmount'] as num?)?.toDouble() ?? 0.0,
+                    incomePerSecond: towerData['incomePerSecond'] ?? 0,
+                    cooldown: 0,
+                  );
+                });
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                gradient: isSelected
+                    ? const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+                      )
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: canAfford 
+                            ? [Colors.white, Colors.grey.shade100]
+                            : [Colors.grey.shade300, Colors.grey.shade400],
+                      ),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: isSelected 
+                      ? const Color(0xFF2196F3)
+                      : (canAfford ? Colors.grey.shade300 : Colors.red.shade300),
+                  width: isSelected ? 2 : 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
                     color: isSelected 
-                        ? const Color(0xFF2196F3)
-                        : (canAfford ? Colors.grey.shade300 : Colors.red.shade300),
-                    width: isSelected ? 3 : 2,
+                        ? const Color(0xFF2196F3).withValues(alpha: 0.3)
+                        : Colors.black.withValues(alpha: 0.05),
+                    blurRadius: isSelected ? 8 : 4,
+                    offset: Offset(0, isSelected ? 2 : 1),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isSelected 
-                          ? const Color(0xFF2196F3).withValues(alpha: 0.3)
-                          : Colors.black.withValues(alpha: 0.05),
-                      blurRadius: isSelected ? 12 : 6,
-                      offset: Offset(0, isSelected ? 4 : 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      towerData['spriteUrl'],
-                      width: 40,
-                      height: 40,
-                      colorFilter: ColorFilter.mode(
-                        isSelected 
-                            ? Colors.white
-                            : (canAfford ? Color(int.parse(towerData['color'].toString().replaceFirst('0x', '0xFF'))) : Colors.grey),
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: canAfford 
-                            ? const Color(0xFFFBBF24).withValues(alpha: isSelected ? 0.3 : 0.2)
-                            : Colors.red.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.monetization_on,
-                            size: 12,
-                            color: canAfford ? const Color(0xFFF59E0B) : Colors.red,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${towerData['cost']}',
-                            style: TextStyle(
-                              color: isSelected 
-                                  ? Colors.white
-                                  : (canAfford ? const Color(0xFFF59E0B) : Colors.red),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
-            );
-          }).toList(),
-        ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/${towerData['spriteUrl']}',
+                    width: 28,
+                    height: 28,
+                    color: isSelected 
+                        ? Colors.white
+                        : (canAfford ? null : Colors.grey),
+                    colorBlendMode: isSelected || !canAfford ? BlendMode.srcIn : null,
+                  ),
+                  const SizedBox(height: 2),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: canAfford 
+                          ? const Color(0xFFFBBF24).withValues(alpha: isSelected ? 0.3 : 0.2)
+                          : Colors.red.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.monetization_on,
+                          size: 10,
+                          color: canAfford ? const Color(0xFFF59E0B) : Colors.red,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${towerData['cost']}',
+                          style: TextStyle(
+                            color: isSelected 
+                                ? Colors.white
+                                : (canAfford ? const Color(0xFFF59E0B) : Colors.red),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
 
   Widget _buildTowerWidget(Tower tower) {
     return Positioned(
-      left: tower.position.dx - 30,
-      top: tower.position.dy - 30,
+      left: tower.position.dx - 35,
+      top: tower.position.dy - 35,
       child: GestureDetector(
         onTap: () {
           setState(() {
@@ -1158,31 +1265,20 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
           });
         },
         child: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.white,
-            border: Border.all(
-              color: _selectedPlacedTower == tower ? const Color(0xFFFBBF24) : Colors.transparent,
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 6,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(8),
-          child: SvgPicture.asset(
-            tower.spriteUrl,
+          width: 90,
+          height: 90,
+          decoration: _selectedPlacedTower == tower
+              ? BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFFFBBF24),
+                    width: 3,
+                  ),
+                )
+              : null,
+          child: Image.asset(
+            'assets/${tower.spriteUrl}',
             fit: BoxFit.contain,
-            colorFilter: ColorFilter.mode(
-              tower.color,
-              BlendMode.srcIn,
-            ),
           ),
         ),
       ),
@@ -1192,7 +1288,7 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
   Widget _buildEnemyWidget(Enemy enemy) {
     final pos = _getEnemyPosition(enemy);
     final healthPercent = enemy.health / enemy.maxHealth;
-    final displaySize = enemy.size * 1.5; // Increase enemy size by 50%
+    final displaySize = enemy.size * 2.0; 
     
     return Positioned(
       left: pos.dx - displaySize / 2,
@@ -1225,25 +1321,10 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
             ),
           ),
           const SizedBox(height: 3),
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: SvgPicture.asset(
-              enemy.spriteUrl,
-              width: displaySize - 8,
-              height: displaySize - 8,
-              colorFilter: ColorFilter.mode(enemy.color, BlendMode.srcIn),
-            ),
+          Image.asset(
+            'assets/${enemy.spriteUrl}',
+            width: displaySize,
+            height: displaySize,
           ),
         ],
       ),
@@ -1269,11 +1350,10 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
           ],
         ),
         child: Center(
-          child: SvgPicture.asset(
-            projectile.spriteUrl,
+          child: Image.asset(
+            'assets/${projectile.spriteUrl}',
             width: 14,
             height: 14,
-            colorFilter: ColorFilter.mode(projectile.color, BlendMode.srcIn),
           ),
         ),
       ),
@@ -1282,124 +1362,336 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
 
   Widget _buildResultScreen() {
     final victory = _ipAssetHealth > 0;
+    final maxHealth = _gameData!['levels'][_currentLevelIndex]['ipAssetHealth'];
+    final isPerfect = victory && _ipAssetHealth == maxHealth;
+    final healthPercent = (_ipAssetHealth / maxHealth * 100).round();
+    
+    // Trigger confetti when result screen is shown
+    if (victory) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _playConfettiMultipleTimes();
+      });
+    }
     
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Game Over'),
+        title: const Text('Game Over', style: TextStyle(color: Colors.white)),
         backgroundColor: AppDesignSystem.error,
         foregroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: victory ? AppDesignSystem.success.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  victory ? Icons.emoji_events : Icons.shield_outlined,
-                  size: 60,
-                  color: victory ? AppDesignSystem.success : Colors.orange,
-                ),
-              ),
-              
-              const SizedBox(height: AppSpacing.xl),
-              
-              Text(
-                victory ? 'Victory!' : 'Defeated!',
-                style: AppTextStyles.h1,
-              ),
-              
-              const SizedBox(height: AppSpacing.md),
-              
-              Text(
-                victory ? 'Level Complete!' : 'Your IP assets were compromised!',
-                style: AppTextStyles.bodyLarge.copyWith(color: AppDesignSystem.textSecondary),
-                textAlign: TextAlign.center,
-              ),
-              
-              const SizedBox(height: AppSpacing.xl),
-              
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                decoration: BoxDecoration(
-                  color: AppDesignSystem.backgroundGrey,
-                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                ),
-                child: Column(
-                  children: [
-                    _buildStatRow('Final Score', _score.toString()),
-                    const Divider(height: 24),
-                    _buildStatRow('Enemies Defeated', _enemiesKilled.toString()),
-                    const Divider(height: 24),
-                    _buildStatRow('Health Remaining', '$_ipAssetHealth'),
-                    const Divider(height: 24),
-                    _buildStatRow('XP Earned', '+$_score XP', isHighlight: true),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: AppSpacing.xl),
-              
-              PrimaryButton(
-                text: 'Play Again',
-                onPressed: () {
-                  setState(() {
-                    _gameEnded = false;
-                    _gameStarted = false;
-                  });
-                },
-                fullWidth: true,
-                icon: Icons.refresh,
-              ),
-              
-              const SizedBox(height: AppSpacing.md),
-              
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+      body: Stack(
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(flex: 1),
+                  
+                  // Animated Result icon
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 600),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.elasticOut,
+                    builder: (context, value, child) {
+                      return Transform.scale(
+                        scale: value,
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: isPerfect
+                                  ? [
+                                      AppDesignSystem.error,
+                                      AppDesignSystem.error.withOpacity(0.7),
+                                    ]
+                                  : victory
+                                      ? [
+                                          AppDesignSystem.success,
+                                          AppDesignSystem.success.withOpacity(0.7),
+                                        ]
+                                      : [
+                                          Colors.orange,
+                                          Colors.orange.withOpacity(0.7),
+                                        ],
+                            ),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: (isPerfect
+                                        ? AppDesignSystem.error
+                                        : victory
+                                            ? AppDesignSystem.success
+                                            : Colors.orange)
+                                    .withOpacity(0.4),
+                                blurRadius: 20,
+                                spreadRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            isPerfect
+                                ? Icons.emoji_events
+                                : victory
+                                    ? Icons.check_circle
+                                    : Icons.refresh,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'Back to Games',
-                    style: AppTextStyles.button,
-                    textAlign: TextAlign.center,
+
+                  const SizedBox(height: 20),
+
+                  // Animated Title
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 400),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: Column(
+                            children: [
+                              Text(
+                                isPerfect
+                                    ? 'Perfect Defense!'
+                                    : victory
+                                        ? 'Victory!'
+                                        : 'Defeated!',
+                                style: AppTextStyles.h1.copyWith(
+                                  color: isPerfect
+                                      ? AppDesignSystem.error
+                                      : victory
+                                          ? AppDesignSystem.success
+                                          : Colors.orange,
+                                  fontSize: 28,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 8),
+                              Center(
+                                child: Text(
+                                  victory ? 'Level Complete!' : 'Your IP assets were compromised!',
+                                  style: AppTextStyles.bodyLarge.copyWith(
+                                    color: AppDesignSystem.textSecondary,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
+
+                  const SizedBox(height: 24),
+
+                  // Animated Stats Card
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 600),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    curve: Curves.easeOut,
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 30 * (1 - value)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  AppDesignSystem.error.withOpacity(0.2),
+                                  AppDesignSystem.error.withOpacity(0.1),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            padding: const EdgeInsets.all(2),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(14),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppDesignSystem.error.withOpacity(0.1),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildFancyStatRow(
+                                    Icons.military_tech,
+                                    'Final Score',
+                                    '$_score',
+                                    AppDesignSystem.error,
+                                    isHighlight: true,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.favorite,
+                                    'Health',
+                                    '$_ipAssetHealth / $maxHealth ($healthPercent%)',
+                                    Colors.red,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.waves,
+                                    'Waves',
+                                    '$_currentWaveIndex / ${(_gameData!['levels'][_currentLevelIndex]['waves'] as List).length}',
+                                    const Color(0xFF2196F3),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.shield,
+                                    'Enemies Defeated',
+                                    '$_enemiesKilled',
+                                    const Color(0xFF9C27B0),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.account_balance,
+                                    'Towers Built',
+                                    '${_placedTowers.length}',
+                                    const Color(0xFF4CAF50),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+
+                  const Spacer(flex: 1),
+
+                  // Animated Buttons
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 800),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Column(
+                          children: [
+                            PrimaryButton(
+                              text: 'Play Again',
+                              onPressed: () {
+                                setState(() {
+                                  _gameEnded = false;
+                                  _gameStarted = false;
+                                });
+                              },
+                              fullWidth: true,
+                              icon: Icons.refresh,
+                              color: AppDesignSystem.error,
+                            ),
+                            const SizedBox(height: 12),
+                            OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                side: BorderSide(color: AppDesignSystem.error, width: 2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  'Back to Games',
+                                  style: TextStyle(color: AppDesignSystem.error),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  
+                  const SizedBox(height: 8),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          
+          // Confetti overlay
+          if (victory)
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                particleDrag: 0.05,
+                emissionFrequency: 0.05,
+                numberOfParticles: 50,
+                gravity: 0.1,
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildStatRow(String label, String value, {bool isHighlight = false}) {
+  Widget _buildFancyStatRow(IconData icon, String label, String value, Color color, {bool isHighlight = false}) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: AppTextStyles.bodyMedium.copyWith(color: AppDesignSystem.textSecondary),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                color.withOpacity(0.2),
+                color.withOpacity(0.1),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Icon(icon, color: color, size: 24),
         ),
-        Text(
-          value,
-          style: AppTextStyles.h3.copyWith(
-            color: isHighlight ? AppDesignSystem.error : AppDesignSystem.textPrimary,
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppDesignSystem.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: AppTextStyles.h3.copyWith(
+                  fontWeight: isHighlight ? FontWeight.bold : FontWeight.w600,
+                  color: isHighlight ? color : AppDesignSystem.textPrimary,
+                ),
+              ),
+            ],
           ),
         ),
       ],

@@ -76,6 +76,19 @@ class GameIntegrationService {
         });
       });
 
+      // Update game_progress with totalXPEarned for this game
+      final progressRef = _firestore
+          .collection('game_progress')
+          .doc('${_currentUserId}__$gameId');
+      
+      final progressDoc = await progressRef.get();
+      final currentGameXP = (progressDoc.data()?['totalXPEarned'] as num?)?.toInt() ?? 0;
+      
+      await progressRef.set({
+        'totalXPEarned': currentGameXP + totalXP,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
       // Update streak after awarding XP
       await _streakService.updateStreakOnActivity(_currentUserId!);
 

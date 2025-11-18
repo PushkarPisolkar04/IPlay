@@ -170,22 +170,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // ---------- Level / XP helpers ----------
   int _getUserLevel() {
     if (_user == null) return 1;
-    return (_user!.totalXP / 200).floor() + 1;
+    return (_user!.totalXP / 100).floor() + 1;
   }
 
   int _getXPToNextLevel() {
-    if (_user == null) return 200;
+    if (_user == null) return 100;
     final currentLevel = _getUserLevel();
-    final xpForNextLevel = currentLevel * 200;
+    final xpForNextLevel = currentLevel * 100;
     return xpForNextLevel - _user!.totalXP;
   }
 
   double _getLevelProgress() {
     if (_user == null) return 0.0;
     final currentLevel = _getUserLevel();
-    final xpForCurrentLevel = (currentLevel - 1) * 200;
+    final xpForCurrentLevel = (currentLevel - 1) * 100;
     final xpInCurrentLevel = _user!.totalXP - xpForCurrentLevel;
-    return (xpInCurrentLevel / 200).clamp(0.0, 1.0);
+    return (xpInCurrentLevel / 100).clamp(0.0, 1.0);
   }
 
   @override

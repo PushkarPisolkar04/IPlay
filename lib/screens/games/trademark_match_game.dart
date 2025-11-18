@@ -40,6 +40,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
   int _matches = 0;
   int _totalFlips = 0;
   int _timeRemaining = 120; // 2 minutes
+  int _earnedXP = 0;
   Timer? _timer;
   bool _gameStarted = false;
   bool _gameEnded = false;
@@ -227,13 +228,18 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
         final isPerfectScore = _matches == (_cards.length ~/ 2) && 
             _timeRemaining > 60;
         
-        await gameIntegrationService.awardGameXP(
+        final xpEarned = await gameIntegrationService.awardGameXP(
           gameId: _gameData!.id,
           baseXP: _gameData!.xpReward,
           score: _score,
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
+        
+        // Store XP for result screen
+        setState(() {
+          _earnedXP = xpEarned;
+        });
         
         await gameIntegrationService.saveGameProgress(
           gameId: _gameData!.id,
@@ -586,8 +592,9 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Timer
-                Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                Flexible(
+                  child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -604,24 +611,27 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
               ],
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.timer, color: Colors.white, size: 20),
-                const SizedBox(width: 6),
+                const Icon(Icons.timer, color: Colors.white, size: 16),
+                const SizedBox(width: 4),
                 Text(
                   '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
+                ),
           
           // Matches
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          Flexible(
+            child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
@@ -638,24 +648,27 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
               ],
             ),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.check_circle, color: Colors.white, size: 20),
-                const SizedBox(width: 6),
+                const Icon(Icons.check_circle, color: Colors.white, size: 16),
+                const SizedBox(width: 4),
                 Text(
                   '$_matches/${_cards.length ~/ 2}',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
+                ),
           
                 // Score
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                Flexible(
+                  child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
@@ -672,19 +685,21 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                     ],
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.star, color: Colors.white, size: 20),
-                      const SizedBox(width: 6),
+                      const Icon(Icons.star, color: Colors.white, size: 16),
+                      const SizedBox(width: 4),
                       Text(
                         '$_score',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
+                ),
                 ),
               ],
             ),
@@ -914,13 +929,8 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     final isPerfect = isWin && _timeRemaining > 60;
     final accuracy = _matches / (_cards.length ~/ 2) * 100;
     
-    // Calculate XP earned based on score
-    int xpEarned = _score; // Base XP = score
-    if (isPerfect) {
-      xpEarned = (_score * 1.5).round(); // 50% bonus for perfect
-    } else if (isWin) {
-      xpEarned = (_score * 1.2).round(); // 20% bonus for completion
-    }
+    // Use actual XP earned from Firebase
+    final xpEarned = _earnedXP;
     
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,

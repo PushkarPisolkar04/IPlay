@@ -42,39 +42,37 @@ class _PlayScreenState extends State<PlayScreen> {
         return;
       }
 
-      // Load total game XP from user document
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .get();
-
-      if (userDoc.exists) {
-        final userData = userDoc.data()!;
-        final gameProgress = userData['gameProgress'] as Map<String, dynamic>?;
-        
-        if (gameProgress != null) {
-          _totalGameXP = (gameProgress['totalXP'] as num?)?.toInt() ?? 0;
-        }
-      }
-
-      // Load individual game high scores from game_progress collection
+      // Load individual game progress and calculate total game XP
       final gameProgressDocs = await FirebaseFirestore.instance
           .collection('game_progress')
           .where('userId', isEqualTo: currentUser.uid)
           .get();
 
+      print('Found ${gameProgressDocs.docs.length} game progress documents');
+
+      int totalGameXP = 0;
+      
       for (final doc in gameProgressDocs.docs) {
         final data = doc.data();
         final gameId = data['gameId'] as String?;
         final highScore = (data['highScore'] as num?)?.toInt() ?? 0;
+        final totalXPEarned = (data['totalXPEarned'] as num?)?.toInt() ?? 0;
         
         if (gameId != null) {
           _gameHighScores[gameId] = highScore;
+          totalGameXP += totalXPEarned;
+          print('Game: $gameId, High Score: $highScore, XP Earned: $totalXPEarned');
         }
       }
       
+      // Set total game XP from sum of all games
+      _totalGameXP = totalGameXP;
+      
       // Count unique games played
       _gamesPlayed = _gameHighScores.length;
+      
+      print('Total games played: $_gamesPlayed');
+      print('Total game XP (from games only): $_totalGameXP');
 
       if (mounted) {
         setState(() => _isLoading = false);
@@ -235,8 +233,8 @@ class _PlayScreenState extends State<PlayScreen> {
                     description: 'Test your IPR knowledge in rapid-fire quiz',
                     iconPath: 'assets/logos/IPR_quiz_master.png',
                     color: const Color(0xFF6366F1),
-                    difficulty: 'Medium',
-                    xpReward: '10-100 XP',
+                    difficulty: 'Easy',
+                    xpReward: '10-250 XP',
                     timeEstimate: '1 min',
                     isImplemented: true,
                     gameId: 'quiz_master',
@@ -292,9 +290,9 @@ class _PlayScreenState extends State<PlayScreen> {
                     description: 'Defend your IP through 5 waves of infringers',
                     iconPath: 'assets/logos/ip_defender.png',
                     color: const Color(0xFFEF4444),
-                    difficulty: 'Medium',
-                    xpReward: '80-200 XP',
-                    timeEstimate: '8 min',
+                    difficulty: 'Hard',
+                    xpReward: '800-1500 XP',
+                    timeEstimate: '8-10 min',
                     isImplemented: true,
                     gameId: 'ip_defender',
                     onTap: () {
@@ -350,7 +348,7 @@ class _PlayScreenState extends State<PlayScreen> {
                     iconPath: 'assets/logos/innovation_lab.png',
                     color: const Color(0xFF00ACC1),
                     difficulty: 'Hard',
-                    xpReward: '100-1000 XP',
+                    xpReward: '100-200 XP',
                     timeEstimate: '5-10 min',
                     isImplemented: true,
                     gameId: 'innovation_lab',

@@ -200,10 +200,18 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       completed: true,
     );
     
-    // Award XP
-    await _gameService.awardGameXP(
+    // Award XP - capped at 100-200 range
+    // Calculate base XP based on score (score is 0-1000, normalize to 50-80 base XP)
+    int baseXP = 50 + ((score / 1000) * 30).round();
+    
+    // With bonuses: 50-80 base + 50% perfect + 100% first time = max ~200 XP
+    // Example: 930 score = 50 + (0.93 * 30) = 50 + 28 = 78 base
+    // Perfect: 78 + 39 = 117 XP
+    // First time: 78 + 78 = 156 XP
+    // Both: 78 + 39 + 78 = 195 XP
+    final xpEarned = await _gameService.awardGameXP(
       gameId: 'innovation_lab',
-      baseXP: 100,
+      baseXP: baseXP,
       score: score,
       isPerfectScore: isPerfect,
       isFirstCompletion: isFirstTime,
@@ -218,7 +226,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     );
     
     _confettiController.play();
-    _showResultsScreen();
+    _showResultsScreen(xpEarned);
   }
 
   void _calculateFinalScore() {
@@ -240,12 +248,13 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     score = ((drawingScore * 0.3 + ipScore * 0.7) * multiplier).round().clamp(0, 1000);
   }
 
-  void _showResultsScreen() {
+  void _showResultsScreen(int xpEarned) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => _ResultsScreen(
           score: score,
+          xpEarned: xpEarned,
           challengeTitle: currentChallenge!['title'],
           strokesUsed: strokes.length,
           priorArtAnalyzed: priorArtAnswers.length,
@@ -2222,6 +2231,7 @@ class DrawingPainter extends CustomPainter {
 // Full-screen Results Screen - Matches other games style
 class _ResultsScreen extends StatefulWidget {
   final int score;
+  final int xpEarned;
   final String challengeTitle;
   final int strokesUsed;
   final int priorArtAnalyzed;
@@ -2232,6 +2242,7 @@ class _ResultsScreen extends StatefulWidget {
 
   const _ResultsScreen({
     required this.score,
+    required this.xpEarned,
     required this.challengeTitle,
     required this.strokesUsed,
     required this.priorArtAnalyzed,
@@ -2427,7 +2438,7 @@ class _ResultsScreenState extends State<_ResultsScreen> {
                             child: Column(
                               children: [
                                 Text(
-                                  '${widget.score}',
+                                  '${widget.xpEarned}',
                                   style: AppTextStyles.h1.copyWith(
                                     fontSize: 64,
                                     fontWeight: FontWeight.bold,
