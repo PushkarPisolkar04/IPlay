@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import '../core/constants/app_constants.dart';
 import '../models/game_progress_model.dart';
 import '../core/models/user_model.dart';
+import '../core/services/badge_service.dart';
 import 'streak_service.dart';
 
 /// Service for integrating games with core systems (XP, progress, leaderboards, analytics)
@@ -29,8 +31,8 @@ class GameIntegrationService {
   /// - [isPerfectScore]: Whether user achieved perfect score
   /// - [isFirstCompletion]: Whether this is first time completing the game
   /// 
-  /// Returns total XP awarded
-  Future<int> awardGameXP({
+  /// Returns map with 'xp' (total XP awarded) and 'newBadges' (list of badge IDs)
+  Future<Map<String, dynamic>> awardGameXP({
     required String gameId,
     required int baseXP,
     required int score,
@@ -84,6 +86,8 @@ class GameIntegrationService {
       final progressDoc = await progressRef.get();
       final currentGameXP = (progressDoc.data()?['totalXPEarned'] as num?)?.toInt() ?? 0;
       
+      print('✅ Awarding $totalXP XP for $gameId (previous: $currentGameXP, new total: ${currentGameXP + totalXP})');
+      
       await progressRef.set({
         'totalXPEarned': currentGameXP + totalXP,
         'updatedAt': FieldValue.serverTimestamp(),
@@ -92,9 +96,34 @@ class GameIntegrationService {
       // Update streak after awarding XP
       await _streakService.updateStreakOnActivity(_currentUserId!);
 
-      return totalXP;
+      // Check for new badges (without context to avoid premature animations)
+      final badgeService = BadgeService();
+      final newBadges = await badgeService.checkAndAwardBadges(_currentUserId!);
+
+      return {
+        'xp': totalXP,
+        'newBadges': newBadges,
+      };
     } catch (e) {
       throw Exception('Failed to award XP: $e');
+    }
+  }
+
+  /// Show badge animations for newly unlocked badges (call this after game results are shown)
+  Future<void> showBadgeAnimations(BuildContext context, List<String> badgeIds) async {
+    if (badgeIds.isEmpty) return;
+    
+    try {
+      final badgeService = BadgeService();
+      for (final badgeId in badgeIds) {
+        final badge = await badgeService.getBadge(badgeId);
+        if (badge != null && context.mounted) {
+          badgeService.showBadgeAnimation(context, badge);
+          await Future.delayed(const Duration(milliseconds: 500));
+        }
+      }
+    } catch (e) {
+      print('Error showing badge animations: $e');
     }
   }
 
@@ -169,6 +198,7 @@ class GameIntegrationService {
         'averageScore': averageScore.round(),
         'totalScore': totalScore,
         'totalTimeSpent': totalTimeSpent,
+        'totalXPEarned': existingData?['totalXPEarned'] ?? 0, // Initialize to 0 if not exists
         'completed': completed || wasCompleted,
         'lastPlayedAt': FieldValue.serverTimestamp(),
         if (!wasCompleted && completed)

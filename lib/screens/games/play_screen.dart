@@ -325,12 +325,12 @@ class _PlayScreenState extends State<PlayScreen> {
                   // Game 6: Patent Detective
                   _buildGameCard(
                     title: 'Patent Detective',
-                    description: 'Investigate patent cases and determine patentability',
+                    description: 'Solve IP crime cases by investigating suspects and evidence',
                     iconPath: 'assets/logos/patent_detective.png',
                     color: const Color(0xFF8B5CF6),
                     difficulty: 'Medium',
-                    xpReward: '20-60 XP',
-                    timeEstimate: '3-5 min',
+                    xpReward: '100-250 XP',
+                    timeEstimate: '3 min',
                     isImplemented: true,
                     gameId: 'patent_detective',
                     onTap: () {

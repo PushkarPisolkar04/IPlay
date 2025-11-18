@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/bottom_nav_bar.dart';
+import '../../widgets/offline_indicator.dart';
 import '../../core/models/user_model.dart';
 import '../home/home_screen.dart';
 import '../learn/learn_screen.dart';
@@ -143,14 +144,21 @@ class _MainScreenState extends State<MainScreen> {
         return;
       },
       child: Scaffold(
-        body: PageView(
-          controller: _pageController,
-          onPageChanged: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          children: _screens,
+        body: Column(
+          children: [
+            const OfflineIndicator(),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                children: _screens,
+              ),
+            ),
+          ],
         ),
         bottomNavigationBar: BottomNavBar(
           currentIndex: _currentIndex,

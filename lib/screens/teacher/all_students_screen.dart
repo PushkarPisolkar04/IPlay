@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../student/my_progress_screen.dart';
 import '../../services/simplified_chat_service.dart';
 import '../chat/chat_screen.dart';
@@ -472,7 +473,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
             // Students List
             Expanded(
               child: _isLoading
-                  ? const Center(child: CircularProgressIndicator(color: Color(0xFF8B5CF6)))
+                  ? const ListSkeleton(itemCount: 8)
                   : _students.isEmpty
                       ? Center(
                           child: Column(

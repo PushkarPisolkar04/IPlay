@@ -278,3 +278,313 @@ class ProfileSkeleton extends StatelessWidget {
     );
   }
 }
+
+/// Dashboard skeleton for teacher/principal dashboards
+class DashboardSkeleton extends StatelessWidget {
+  const DashboardSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Stats row
+          Row(
+            children: [
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Section title
+          LoadingSkeleton(
+            width: 150,
+            height: 20,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          // Cards
+          ...List.generate(
+            3,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: LoadingSkeleton(
+                height: 80,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Classroom detail skeleton
+class ClassroomDetailSkeleton extends StatelessWidget {
+  const ClassroomDetailSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header card
+          LoadingSkeleton(
+            height: 120,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          const SizedBox(height: 16),
+          // Stats row
+          Row(
+            children: [
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 80,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 80,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Section title
+          LoadingSkeleton(
+            width: 120,
+            height: 18,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          // Student list
+          ...List.generate(
+            5,
+            (index) => const Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: CardSkeleton(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Realm/Level list skeleton
+class RealmListSkeleton extends StatelessWidget {
+  const RealmListSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          LoadingSkeleton(
+            width: 150,
+            height: 20,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 16),
+          ...List.generate(
+            6,
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: LoadingSkeleton(
+                height: 120,
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Settings skeleton
+class SettingsSkeleton extends StatelessWidget {
+  const SettingsSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Profile section
+          Center(
+            child: Column(
+              children: [
+                LoadingSkeleton(
+                  width: 80,
+                  height: 80,
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                const SizedBox(height: 12),
+                LoadingSkeleton(
+                  width: 120,
+                  height: 18,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 6),
+                LoadingSkeleton(
+                  width: 80,
+                  height: 14,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          // Settings sections
+          ...List.generate(
+            4,
+            (index) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LoadingSkeleton(
+                  width: 100,
+                  height: 16,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 12),
+                ...List.generate(
+                  3,
+                  (i) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: LoadingSkeleton(
+                      height: 50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Analytics skeleton
+class AnalyticsSkeleton extends StatelessWidget {
+  const AnalyticsSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Summary cards
+          Row(
+            children: [
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 90,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 90,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 90,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: LoadingSkeleton(
+                  height: 90,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          // Chart section
+          LoadingSkeleton(
+            width: 150,
+            height: 18,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          LoadingSkeleton(
+            height: 200,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          const SizedBox(height: 24),
+          // List section
+          LoadingSkeleton(
+            width: 120,
+            height: 18,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          const SizedBox(height: 12),
+          ...List.generate(
+            5,
+            (index) => const Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: CardSkeleton(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

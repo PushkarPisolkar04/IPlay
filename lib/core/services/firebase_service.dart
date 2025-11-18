@@ -12,11 +12,28 @@ class FirebaseService {
       );
       debugPrint('✅ Firebase initialized successfully');
       
+      // Enable offline persistence for Firestore
+      await _enableOfflinePersistence();
+      
       // Initialize App Check
       await _initializeAppCheck();
     } catch (e) {
       debugPrint('❌ Firebase initialization error: $e');
       rethrow;
+    }
+  }
+  
+  static Future<void> _enableOfflinePersistence() async {
+    try {
+      // Enable offline data persistence
+      FirebaseFirestore.instance.settings = const Settings(
+        persistenceEnabled: true,
+        cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+      );
+      debugPrint('✅ Firebase offline persistence enabled');
+    } catch (e) {
+      debugPrint('⚠️ Offline persistence warning: $e');
+      // Don't rethrow - app can work without offline persistence
     }
   }
   

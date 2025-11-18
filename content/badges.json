@@ -2,7 +2,15 @@
   "version": "2.0.0",
   "updatedAt": "2025-11-11T12:00:00Z",
   "totalBadges": 50,
-  "categories": ["milestone", "xp", "streak", "mastery", "game", "social", "special"],
+  "categories": [
+    "milestone",
+    "xp",
+    "streak",
+    "mastery",
+    "game",
+    "social",
+    "special"
+  ],
   "note": "Add badge images to assets/badges/ folder. Each badge should have a PNG file matching its id (e.g., first_step.png). Badges are designed to avoid overlap - each achievement type has distinct badges.",
   "badges": [
     {
@@ -28,7 +36,7 @@
       "category": "milestone",
       "rarity": "common",
       "iconPath": "assets/badges/level_explorer.png",
-      "xpBonus": 25,
+      "xpBonus": 10,
       "unlockCondition": {
         "type": "levels_complete",
         "value": 10,
@@ -44,7 +52,7 @@
       "category": "milestone",
       "rarity": "uncommon",
       "iconPath": "assets/badges/level_veteran.png",
-      "xpBonus": 50,
+      "xpBonus": 25,
       "unlockCondition": {
         "type": "levels_complete",
         "value": 25,
@@ -60,7 +68,7 @@
       "category": "milestone",
       "rarity": "rare",
       "iconPath": "assets/badges/level_master.png",
-      "xpBonus": 100,
+      "xpBonus": 50,
       "unlockCondition": {
         "type": "levels_complete",
         "value": 40,
@@ -76,7 +84,7 @@
       "category": "milestone",
       "rarity": "legendary",
       "iconPath": "assets/badges/level_legend.png",
-      "xpBonus": 300,
+      "xpBonus": 150,
       "unlockCondition": {
         "type": "levels_complete",
         "value": 60,
@@ -92,7 +100,7 @@
       "category": "milestone",
       "rarity": "common",
       "iconPath": "assets/badges/quiz_rookie.png",
-      "xpBonus": 15,
+      "xpBonus": 10,
       "unlockCondition": {
         "type": "quiz_complete",
         "count": 1,
@@ -108,7 +116,7 @@
       "category": "milestone",
       "rarity": "uncommon",
       "iconPath": "assets/badges/perfect_start.png",
-      "xpBonus": 30,
+      "xpBonus": 25,
       "unlockCondition": {
         "type": "perfect_quiz",
         "count": 1,
@@ -124,7 +132,7 @@
       "category": "milestone",
       "rarity": "rare",
       "iconPath": "assets/badges/perfectionist.png",
-      "xpBonus": 75,
+      "xpBonus": 50,
       "unlockCondition": {
         "type": "perfect_quiz",
         "count": 5,
@@ -140,7 +148,7 @@
       "category": "milestone",
       "rarity": "epic",
       "iconPath": "assets/badges/quiz_genius.png",
-      "xpBonus": 150,
+      "xpBonus": 100,
       "unlockCondition": {
         "type": "perfect_quiz",
         "count": 10,
@@ -156,7 +164,7 @@
       "category": "milestone",
       "rarity": "legendary",
       "iconPath": "assets/badges/quiz_master_supreme.png",
-      "xpBonus": 300,
+      "xpBonus": 150,
       "unlockCondition": {
         "type": "perfect_quiz",
         "count": 25,
@@ -172,7 +180,7 @@
       "category": "milestone",
       "rarity": "common",
       "iconPath": "assets/badges/first_challenge.png",
-      "xpBonus": 20,
+      "xpBonus": 10,
       "unlockCondition": {
         "type": "daily_challenge_complete",
         "count": 1,
@@ -188,7 +196,7 @@
       "category": "milestone",
       "rarity": "rare",
       "iconPath": "assets/badges/daily_champion.png",
-      "xpBonus": 100,
+      "xpBonus": 50,
       "unlockCondition": {
         "type": "daily_challenge_complete",
         "count": 30,
@@ -204,7 +212,7 @@
       "category": "xp",
       "rarity": "common",
       "iconPath": "assets/badges/xp_collector.png",
-      "xpBonus": 50,
+      "xpBonus": 20,
       "unlockCondition": {
         "type": "xp_total",
         "value": 1000,
@@ -220,7 +228,7 @@
       "category": "xp",
       "rarity": "uncommon",
       "iconPath": "assets/badges/xp_master.png",
-      "xpBonus": 100,
+      "xpBonus": 40,
       "unlockCondition": {
         "type": "xp_total",
         "value": 2500,
@@ -236,7 +244,7 @@
       "category": "xp",
       "rarity": "rare",
       "iconPath": "assets/badges/xp_legend.png",
-      "xpBonus": 150,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "xp_total",
         "value": 5000,
@@ -252,7 +260,7 @@
       "category": "xp",
       "rarity": "epic",
       "iconPath": "assets/badges/xp_titan.png",
-      "xpBonus": 250,
+      "xpBonus": 125,
       "unlockCondition": {
         "type": "xp_total",
         "value": 10000,
@@ -268,7 +276,7 @@
       "category": "xp",
       "rarity": "legendary",
       "iconPath": "assets/badges/xp_god.png",
-      "xpBonus": 500,
+      "xpBonus": 180,
       "unlockCondition": {
         "type": "xp_total",
         "value": 20000,
@@ -284,7 +292,7 @@
       "category": "streak",
       "rarity": "common",
       "iconPath": "assets/badges/streak_starter.png",
-      "xpBonus": 15,
+      "xpBonus": 10,
       "unlockCondition": {
         "type": "streak_days",
         "value": 3,
@@ -300,7 +308,7 @@
       "category": "streak",
       "rarity": "uncommon",
       "iconPath": "assets/badges/week_warrior.png",
-      "xpBonus": 50,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "streak_days",
         "value": 7,
@@ -316,7 +324,7 @@
       "category": "streak",
       "rarity": "uncommon",
       "iconPath": "assets/badges/dedicated_learner.png",
-      "xpBonus": 75,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "streak_days",
         "value": 14,
@@ -332,7 +340,7 @@
       "category": "streak",
       "rarity": "rare",
       "iconPath": "assets/badges/month_master.png",
-      "xpBonus": 150,
+      "xpBonus": 60,
       "unlockCondition": {
         "type": "streak_days",
         "value": 30,
@@ -348,7 +356,7 @@
       "category": "streak",
       "rarity": "epic",
       "iconPath": "assets/badges/unstoppable.png",
-      "xpBonus": 300,
+      "xpBonus": 120,
       "unlockCondition": {
         "type": "streak_days",
         "value": 60,
@@ -364,7 +372,7 @@
       "category": "streak",
       "rarity": "legendary",
       "iconPath": "assets/badges/leagendary_streak.png",
-      "xpBonus": 500,
+      "xpBonus": 180,
       "unlockCondition": {
         "type": "streak_days",
         "value": 100,
@@ -380,7 +388,7 @@
       "category": "streak",
       "rarity": "uncommon",
       "iconPath": "assets/badges/challenge_streak.png",
-      "xpBonus": 75,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "daily_challenge_streak",
         "value": 7,
@@ -396,7 +404,7 @@
       "category": "streak",
       "rarity": "epic",
       "iconPath": "assets/badges/challenge_master.png",
-      "xpBonus": 300,
+      "xpBonus": 120,
       "unlockCondition": {
         "type": "daily_challenge_streak",
         "value": 30,
@@ -412,7 +420,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/copyright_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_copyright",
@@ -428,7 +436,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/trademark_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_trademark",
@@ -444,7 +452,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/patent_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_patent",
@@ -460,7 +468,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/design_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_design",
@@ -476,7 +484,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/gi_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_gi",
@@ -492,7 +500,7 @@
       "category": "mastery",
       "rarity": "rare",
       "iconPath": "assets/badges/secrets_master.png",
-      "xpBonus": 100,
+      "xpBonus": 75,
       "unlockCondition": {
         "type": "realm_complete",
         "realmId": "realm_trade_secrets",
@@ -508,7 +516,7 @@
       "category": "mastery",
       "rarity": "legendary",
       "iconPath": "assets/badges/ipr_champion.png",
-      "xpBonus": 500,
+      "xpBonus": 180,
       "unlockCondition": {
         "type": "all_realms_complete",
         "count": 6,
@@ -524,7 +532,7 @@
       "category": "game",
       "rarity": "common",
       "iconPath": "assets/badges/game_starter.png",
-      "xpBonus": 20,
+      "xpBonus": 15,
       "unlockCondition": {
         "type": "games_played",
         "count": 1,
@@ -540,7 +548,7 @@
       "category": "game",
       "rarity": "uncommon",
       "iconPath": "assets/badges/game_enthusiast.png",
-      "xpBonus": 40,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "unique_games_played",
         "count": 3,
@@ -556,7 +564,7 @@
       "category": "game",
       "rarity": "rare",
       "iconPath": "assets/badges/game_master.png",
-      "xpBonus": 100,
+      "xpBonus": 60,
       "unlockCondition": {
         "type": "all_games_played",
         "count": 7,
@@ -572,7 +580,7 @@
       "category": "game",
       "rarity": "uncommon",
       "iconPath": "assets/badges/high_scorer.png",
-      "xpBonus": 50,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "game_high_score",
         "count": 1,
@@ -588,7 +596,7 @@
       "category": "game",
       "rarity": "rare",
       "iconPath": "assets/badges/game_perfectionist.png",
-      "xpBonus": 100,
+      "xpBonus": 60,
       "unlockCondition": {
         "type": "game_perfect_score",
         "count": 3,
@@ -604,7 +612,7 @@
       "category": "game",
       "rarity": "rare",
       "iconPath": "assets/badges/quiz_master_champion.png",
-      "xpBonus": 75,
+      "xpBonus": 60,
       "unlockCondition": {
         "type": "specific_game_perfect",
         "gameId": "quiz_master",
@@ -620,7 +628,7 @@
       "category": "game",
       "rarity": "epic",
       "iconPath": "assets/badges/ip_defender_hero.png",
-      "xpBonus": 150,
+      "xpBonus": 100,
       "unlockCondition": {
         "type": "specific_game_perfect",
         "gameId": "ip_defender",
@@ -636,7 +644,7 @@
       "category": "game",
       "rarity": "epic",
       "iconPath": "assets/badges/game_addict.png",
-      "xpBonus": 200,
+      "xpBonus": 100,
       "unlockCondition": {
         "type": "total_game_plays",
         "count": 50,
@@ -652,7 +660,7 @@
       "category": "social",
       "rarity": "common",
       "iconPath": "assets/badges/social_learner.png",
-      "xpBonus": 25,
+      "xpBonus": 15,
       "unlockCondition": {
         "type": "classroom_join",
         "description": "Join any classroom"
@@ -667,7 +675,7 @@
       "category": "social",
       "rarity": "rare",
       "iconPath": "assets/badges/class_champion.png",
-      "xpBonus": 100,
+      "xpBonus": 70,
       "unlockCondition": {
         "type": "leaderboard_rank",
         "scope": "classroom",
@@ -684,7 +692,7 @@
       "category": "social",
       "rarity": "rare",
       "iconPath": "assets/badges/school_star.png",
-      "xpBonus": 150,
+      "xpBonus": 70,
       "unlockCondition": {
         "type": "leaderboard_rank",
         "scope": "school",
@@ -701,7 +709,7 @@
       "category": "social",
       "rarity": "epic",
       "iconPath": "assets/badges/state_leader.png",
-      "xpBonus": 200,
+      "xpBonus": 100,
       "unlockCondition": {
         "type": "leaderboard_rank",
         "scope": "state",
@@ -718,7 +726,7 @@
       "category": "social",
       "rarity": "uncommon",
       "iconPath": "assets/badges/assignment_ace.png",
-      "xpBonus": 50,
+      "xpBonus": 25,
       "unlockCondition": {
         "type": "assignment_complete",
         "count": 5,
@@ -734,7 +742,7 @@
       "category": "social",
       "rarity": "rare",
       "iconPath": "assets/badges/helpful_student.png",
-      "xpBonus": 100,
+      "xpBonus": 70,
       "unlockCondition": {
         "type": "assignment_complete",
         "count": 15,
@@ -750,7 +758,7 @@
       "category": "special",
       "rarity": "legendary",
       "iconPath": "assets/badges/early_adopter.png",
-      "xpBonus": 250,
+      "xpBonus": 180,
       "unlockCondition": {
         "type": "early_adopter",
         "description": "Join in first month of launch"
@@ -765,7 +773,7 @@
       "category": "special",
       "rarity": "rare",
       "iconPath": "assets/badges/speed_runner.png",
-      "xpBonus": 75,
+      "xpBonus": 50,
       "unlockCondition": {
         "type": "speedrunner",
         "timeLimit": 300,
@@ -781,7 +789,7 @@
       "category": "special",
       "rarity": "uncommon",
       "iconPath": "assets/badges/night_owl.png",
-      "xpBonus": 50,
+      "xpBonus": 30,
       "unlockCondition": {
         "type": "night_owl",
         "count": 5,

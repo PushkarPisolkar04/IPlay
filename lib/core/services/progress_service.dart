@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../models/progress_model.dart';
 import '../models/user_model.dart';
 import '../../services/streak_service.dart';
 import 'badge_service.dart';
-import 'offline_progress_manager.dart';
 import 'content_service.dart';
 import '../utils/debouncer.dart';
 import '../utils/firebase_batch_helper.dart';
@@ -13,7 +11,6 @@ import '../utils/firebase_batch_helper.dart';
 class ProgressService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final BadgeService _badgeService = BadgeService();
-  final OfflineProgressManager _offlineManager = OfflineProgressManager.instance;
   final FirebaseBatchHelper _batchHelper = FirebaseBatchHelper();
   final StreakService _streakService = StreakService();
   final ContentService _contentService = ContentService();
@@ -94,29 +91,7 @@ class ProgressService {
     int stars = quizScore.clamp(0, 5);
     
     try{
-      // Check if device is online
-      final connectivityResult = await Connectivity().checkConnectivity();
-      final isOffline = connectivityResult.contains(ConnectivityResult.none);
-
-      if (isOffline) {
-        // Save progress offline
-        await _offlineManager.saveProgressLocally(
-          userId: userId,
-          contentId: '${realmId}_level_$levelNumber',
-          contentType: 'level',
-          xpEarned: xpEarned,
-          quizScore: quizScore,
-          totalQuestions: totalQuestions,
-          completionPercentage: 100,
-          accuracy: (quizScore / totalQuestions * 100).round(),
-          startedAt: DateTime.now(),
-          completedAt: DateTime.now(),
-        );
-        
-        // print('Progress saved offline: ${realmId}_level_$levelNumber, XP: $xpEarned');
-        return []; // Return empty list when offline
-      }
-
+      // Firebase will queue writes when offline and sync when online
       final batch = _firestore.batch();
 
       // Update realm progress using per-realm document
@@ -283,35 +258,40 @@ class ProgressService {
 
 
       
-      // Check for new badges and return them
-      // Note: checkAndAwardBadges now handles notification creation internally
-      final newBadges = await _badgeService.checkAndAwardBadges(userId);
-      if (newBadges.isNotEmpty) {
-        print('✅ New badges unlocked: $newBadges');
-        
-        // Create badge_unlock entries for recent activity (don't wait)
-        Future.delayed(Duration.zero, () async {
-          for (final badgeId in newBadges) {
-            try {
-              final badge = await _badgeService.getBadge(badgeId);
-              if (badge != null) {
-                // Create badge_unlock entry for recent activity
-                await _firestore
-                    .collection('users')
-                    .doc(userId)
-                    .collection('badge_unlocks')
-                    .add({
-                  'badgeId': badge.id,
-                  'badgeName': badge.name,
-                  'badgeRarity': badge.rarity,
-                  'unlockedAt': Timestamp.now(),
-                });
+      // Check for new badges only if this was a new completion (to avoid duplicate checks)
+      List<String> newBadges = [];
+      if (isNewCompletion) {
+        // Note: checkAndAwardBadges now handles notification creation internally
+        newBadges = await _badgeService.checkAndAwardBadges(userId);
+        if (newBadges.isNotEmpty) {
+          print('✅ New badges unlocked: $newBadges');
+          
+          // Create badge_unlock entries for recent activity (don't wait)
+          Future.delayed(Duration.zero, () async {
+            for (final badgeId in newBadges) {
+              try {
+                final badge = await _badgeService.getBadge(badgeId);
+                if (badge != null) {
+                  // Create badge_unlock entry for recent activity
+                  await _firestore
+                      .collection('users')
+                      .doc(userId)
+                      .collection('badge_unlocks')
+                      .add({
+                    'badgeId': badge.id,
+                    'badgeName': badge.name,
+                    'badgeRarity': badge.rarity,
+                    'unlockedAt': Timestamp.now(),
+                  });
+                }
+              } catch (e) {
+                print('Error creating badge activity: $e');
               }
-            } catch (e) {
-              print('Error creating badge activity: $e');
             }
-          }
-        });
+          });
+        }
+      } else {
+        print('ℹ️ Level already completed - skipping badge check');
       }
       
       return newBadges;

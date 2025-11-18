@@ -9,6 +9,7 @@ import '../../core/constants/app_text_styles.dart';
 import '../../core/models/user_model.dart';
 import '../../services/app_rating_service.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../profile/edit_profile_screen.dart';
 import 'privacy_policy_screen.dart';
 import 'terms_screen.dart';
@@ -64,7 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const SettingsSkeleton()
           : SafeArea(
               child: CustomScrollView(
                 slivers: [

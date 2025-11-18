@@ -10,6 +10,7 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../services/game_integration_service.dart';
 import '../../widgets/primary_button.dart';
+import '../../widgets/loading_skeleton.dart';
 
 /// IP Defender - Tower Defense Game
 class IPDefenderGame extends StatefulWidget {
@@ -523,7 +524,16 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
         
         final cappedXP = baseXP.clamp(0, maxXP);
         
-        await _gameService.awardGameXP(
+        // Save progress first (creates the document)
+        await _gameService.saveGameProgress(
+          gameId: gameId,
+          score: finalScore,
+          timeSpentSeconds: 0,
+          completed: victory,
+        );
+        
+        // Then award XP and check for badges
+        final result = await _gameService.awardGameXP(
           gameId: gameId,
           baseXP: cappedXP,
           score: finalScore,
@@ -531,12 +541,12 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
           isFirstCompletion: isFirstCompletion,
         );
         
-        await _gameService.saveGameProgress(
-          gameId: gameId,
-          score: finalScore,
-          timeSpentSeconds: 0,
-          completed: victory,
-        );
+        final newBadges = result['newBadges'] as List<String>;
+        
+        // Show badge animations if any badges were unlocked
+        if (newBadges.isNotEmpty && mounted) {
+          await _gameService.showBadgeAnimations(context, newBadges);
+        }
         
         // Update displayed score
         setState(() {
@@ -632,7 +642,18 @@ class _IPDefenderGameState extends State<IPDefenderGame> with TickerProviderStat
           backgroundColor: AppDesignSystem.error,
           foregroundColor: Colors.white,
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
+              SizedBox(height: 16),
+              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(12))),
+              SizedBox(height: 16),
+              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+            ],
+          ),
+        ),
       );
     }
 

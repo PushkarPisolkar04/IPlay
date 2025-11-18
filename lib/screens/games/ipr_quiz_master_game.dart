@@ -141,13 +141,21 @@
           // Perfect (10/10): 100 + 50 = 150 XP
           // First time: 90 + 90 = 180 XP (max)
           // Both: 100 + 50 + 100 = 250 XP (max)
-          final xpEarned = await _gameService.awardGameXP(
+          final result = await _gameService.awardGameXP(
             gameId: gameId,
             baseXP: baseXP,
             score: (_score / 10 * 100).round(),
             isPerfectScore: isPerfectScore,
             isFirstCompletion: isFirstCompletion,
           );
+          
+          final xpEarned = result['xp'] as int;
+          final newBadges = result['newBadges'] as List<String>;
+          
+          // Show badge animations if any badges were unlocked
+          if (newBadges.isNotEmpty && mounted) {
+            await _gameService.showBadgeAnimations(context, newBadges);
+          }
           
           // Store XP for result screen
           setState(() {

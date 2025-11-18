@@ -13,6 +13,7 @@ import '../../core/models/assignment_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/utils/cache_manager.dart';
 import '../../widgets/upload_progress_indicator.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class AssignmentDetailScreen extends StatefulWidget {
   final String assignmentId;
@@ -290,7 +291,18 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
         foregroundColor: Colors.white,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(16))),
+                  SizedBox(height: 16),
+                  LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+                  SizedBox(height: 16),
+                  LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+                ],
+              ),
+            )
           : _error != null
               ? _buildErrorState()
               : _buildContent(),

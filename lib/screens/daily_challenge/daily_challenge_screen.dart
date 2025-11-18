@@ -6,6 +6,7 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../core/models/daily_challenge_model.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class DailyChallengeScreen extends StatefulWidget {
   const DailyChallengeScreen({super.key});
@@ -156,7 +157,18 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(16))),
+              SizedBox(height: 16),
+              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+              SizedBox(height: 16),
+              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+            ],
+          ),
+        ),
       );
     }
 

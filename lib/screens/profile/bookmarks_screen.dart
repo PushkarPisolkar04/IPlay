@@ -5,6 +5,7 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../services/bookmark_service.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../learn/level_detail_screen.dart';
 
 /// Bookmarks Screen - Display all bookmarked levels
@@ -31,7 +32,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
         stream: _bookmarkService.getBookmarksStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const ListSkeleton(itemCount: 5);
           }
 
           if (snapshot.hasError) {

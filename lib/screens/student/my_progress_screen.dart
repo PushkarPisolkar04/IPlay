@@ -225,9 +225,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                 ),
               ),
               const Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: DashboardSkeleton(),
               ),
             ],
           ),

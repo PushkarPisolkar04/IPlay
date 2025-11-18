@@ -206,7 +206,15 @@ service cloud.firestore {
       allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
       
       // Users can update their own game progress
-      allow update: if isSignedIn() && request.auth.uid == resource.data.userId;
+      // Allow update even if resource doesn't exist yet (for set with merge)
+      allow update: if isSignedIn() && (
+        resource == null || 
+        request.auth.uid == resource.data.userId ||
+        request.auth.uid == request.resource.data.userId
+      );
+      
+      // Users can write (set) their own game progress
+      allow write: if isSignedIn() && request.resource.data.userId == request.auth.uid;
       
       // Users can delete their own game progress
       allow delete: if isSignedIn() && request.auth.uid == resource.data.userId;

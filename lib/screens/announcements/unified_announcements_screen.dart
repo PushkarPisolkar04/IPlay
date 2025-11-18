@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../teacher/create_announcement_screen.dart';
 
 /// Unified Announcements Screen - Handles ALL roles (Student, Teacher, Principal)
@@ -391,7 +392,7 @@ class _UnifiedAnnouncementsScreenState extends State<UnifiedAnnouncementsScreen>
           ),
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: AppDesignSystem.primaryIndigo))
+                ? const ListSkeleton(itemCount: 6)
                 : _announcements.isEmpty
                     ? Center(
                         child: Column(

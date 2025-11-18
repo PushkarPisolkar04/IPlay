@@ -114,10 +114,13 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
       if (requiresApproval) {
         // print('Creating join request (requires approval)...');
         
-        // Create join request
-        await FirebaseFirestore.instance
+        // Create join request with proper ID
+        final requestRef = FirebaseFirestore.instance
             .collection('join_requests')
-            .add({
+            .doc(); // Generate a new document reference with ID
+        
+        await requestRef.set({
+          'id': requestRef.id, // Store the ID in the document
           'classroomId': classroomId,
           'classroomName': _foundClassroom!['name'],
           'studentId': user.uid,

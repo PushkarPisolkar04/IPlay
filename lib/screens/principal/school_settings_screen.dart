@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 
 class SchoolSettingsScreen extends StatefulWidget {
   final String schoolId;
@@ -106,7 +107,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const SettingsSkeleton()
           : SafeArea(
               child: CustomScrollView(
                 slivers: [

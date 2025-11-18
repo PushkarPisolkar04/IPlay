@@ -7,6 +7,7 @@ import '../../core/models/realm_model.dart';
 import '../../core/services/content_service.dart';
 import '../../core/services/progress_service.dart';
 import '../../services/bookmark_service.dart';
+import '../../widgets/loading_skeleton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'level_detail_screen.dart';
 
@@ -242,8 +243,22 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
           backgroundColor: AppDesignSystem.primaryIndigo,
           foregroundColor: Colors.white,
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
+        body: const SingleChildScrollView(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
+              SizedBox(height: 16),
+              LoadingSkeleton(width: 150, height: 24, borderRadius: BorderRadius.all(Radius.circular(4))),
+              SizedBox(height: 12),
+              LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(8))),
+              SizedBox(height: 16),
+              LoadingSkeleton(width: 120, height: 20, borderRadius: BorderRadius.all(Radius.circular(4))),
+              SizedBox(height: 12),
+              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(8))),
+            ],
+          ),
         ),
       );
     }

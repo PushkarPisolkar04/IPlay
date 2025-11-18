@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 
 /// Edit Profile Screen - Edit user profile information
 class EditProfileScreen extends StatefulWidget {
@@ -134,7 +135,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       resizeToAvoidBottomInset: true,
       backgroundColor: AppDesignSystem.backgroundLight,
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const SettingsSkeleton()
           : SafeArea(
               child: Form(
                 key: _formKey,

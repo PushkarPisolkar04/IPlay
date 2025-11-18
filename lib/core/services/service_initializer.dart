@@ -1,5 +1,4 @@
 import 'notification_service.dart';
-import 'offline_sync_service.dart';
 
 /// Service Initializer - Manages lazy loading of non-critical services
 /// This improves app launch time by deferring initialization of services
@@ -13,18 +12,12 @@ class ServiceInitializer {
     if (_initialized) return;
     
     try {
-      // print('🚀 Initializing non-critical services...');
-      
-      // Initialize services in parallel for faster loading
-      await Future.wait([
-        _initializeNotifications(),
-        _initializeOfflineSync(),
-      ]);
+      // Initialize notification service
+      await _initializeNotifications();
       
       _initialized = true;
-      // print('✅ All non-critical services initialized');
     } catch (e) {
-      // print('⚠️ Error initializing non-critical services: $e');
+      // Silently handle initialization errors
     }
   }
   
@@ -32,19 +25,8 @@ class ServiceInitializer {
   static Future<void> _initializeNotifications() async {
     try {
       await NotificationService().initialize();
-      // print('✅ Notification service initialized');
     } catch (e) {
-      // print('⚠️ Notification service initialization failed: $e');
-    }
-  }
-  
-  /// Initialize offline sync service
-  static Future<void> _initializeOfflineSync() async {
-    try {
-      OfflineSyncService.instance.initialize();
-      // print('✅ Offline sync service initialized');
-    } catch (e) {
-      // print('⚠️ Offline sync service initialization failed: $e');
+      // Silently handle notification initialization errors
     }
   }
   

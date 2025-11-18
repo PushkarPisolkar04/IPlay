@@ -228,7 +228,16 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
         final isPerfectScore = _matches == (_cards.length ~/ 2) && 
             _timeRemaining > 60;
         
-        final xpEarned = await gameIntegrationService.awardGameXP(
+        // Save progress first (creates the document)
+        await gameIntegrationService.saveGameProgress(
+          gameId: _gameData!.id,
+          score: _score,
+          timeSpentSeconds: (_gameData!.timeLimit ?? 120) - _timeRemaining,
+          completed: _matches == (_cards.length ~/ 2),
+        );
+        
+        // Then award XP and check for badges
+        final result = await gameIntegrationService.awardGameXP(
           gameId: _gameData!.id,
           baseXP: _gameData!.xpReward,
           score: _score,
@@ -236,17 +245,18 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
           isFirstCompletion: isFirstCompletion,
         );
         
+        final xpEarned = result['xp'] as int;
+        final newBadges = result['newBadges'] as List<String>;
+        
+        // Show badge animations if any badges were unlocked
+        if (newBadges.isNotEmpty && mounted) {
+          await gameIntegrationService.showBadgeAnimations(context, newBadges);
+        }
+        
         // Store XP for result screen
         setState(() {
           _earnedXP = xpEarned;
         });
-        
-        await gameIntegrationService.saveGameProgress(
-          gameId: _gameData!.id,
-          score: _score,
-          timeSpentSeconds: (_gameData!.timeLimit ?? 120) - _timeRemaining,
-          completed: _matches == (_cards.length ~/ 2),
-        );
         
         await gameIntegrationService.submitToLeaderboards(
           gameId: _gameData!.id,

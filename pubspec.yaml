@@ -76,6 +76,7 @@ dependencies:
 
   # Audio
   audioplayers: ^6.1.0
+  flutter_tts: ^4.2.0
 
   # App Rating
   in_app_review: ^2.0.10

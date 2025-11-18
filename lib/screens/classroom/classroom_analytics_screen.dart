@@ -105,7 +105,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
         elevation: 0,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AnalyticsSkeleton()
           : RefreshIndicator(
               onRefresh: _loadAnalytics,
               child: SingleChildScrollView(

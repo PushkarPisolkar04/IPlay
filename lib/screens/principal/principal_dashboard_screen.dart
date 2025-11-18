@@ -989,6 +989,16 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
 
   Future<void> _approveTeacher(String teacherId, String requestId) async {
     try {
+      // Get school data to retrieve schoolTag
+      final schoolDoc = await FirebaseFirestore.instance
+          .collection('schools')
+          .doc(_schoolId)
+          .get();
+      
+      final schoolTag = schoolDoc.data()?['schoolTag'];
+      final schoolName = schoolDoc.data()?['name'];
+
+      // Update the join request status
       await FirebaseFirestore.instance
           .collection('teacher_join_requests')
           .doc(requestId)
@@ -997,19 +1007,41 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
         'approvedAt': Timestamp.now(),
       });
 
+      // Add teacher to school's teacherIds
       await FirebaseFirestore.instance
           .collection('schools')
           .doc(_schoolId)
           .update({
         'teacherIds': FieldValue.arrayUnion([teacherId]),
+        'updatedAt': Timestamp.now(),
       });
 
+      // CRITICAL FIX: Update teacher's user profile with schoolId and schoolTag
+      final updateData = {
+        'schoolId': _schoolId,
+        'updatedAt': Timestamp.now(),
+      };
+      
+      if (schoolTag != null) {
+        updateData['schoolTag'] = schoolTag;
+      }
+      
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(teacherId)
+          .update(updateData);
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Teacher approved successfully!'), backgroundColor: Colors.green),
+        SnackBar(
+          content: Text('Teacher approved and added to ${schoolName ?? 'school'}!'),
+          backgroundColor: Colors.green,
+        ),
       );
 
       _loadTeachers();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
       );

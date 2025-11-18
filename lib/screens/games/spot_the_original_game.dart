@@ -181,14 +181,22 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
         final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
         final isPerfectScore = _score == 10;
         
-        // Award XP with automatic bonuses
-        final xpEarned = await _gameService.awardGameXP(
+        // Award XP with automatic bonuses and check for badges
+        final result = await _gameService.awardGameXP(
           gameId: gameId,
           baseXP: baseXP,
           score: (_score / 10 * 100).round(),
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
+        
+        final xpEarned = result['xp'] as int;
+        final newBadges = result['newBadges'] as List<String>;
+        
+        // Show badge animations if any badges were unlocked
+        if (newBadges.isNotEmpty && mounted) {
+          await _gameService.showBadgeAnimations(context, newBadges);
+        }
         
         // Store XP for result screen
         setState(() {

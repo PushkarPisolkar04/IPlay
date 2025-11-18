@@ -147,24 +147,35 @@ class BadgeService {
           'badges': FieldValue.arrayUnion(newBadges),
         });
 
-        // Create notifications for newly earned badges
+        // Create notifications for newly earned badges (check for duplicates first)
         final batch = _firestore.batch();
         for (final badge in newBadgeModels) {
-          final docRef = _firestore.collection('notifications').doc();
-          batch.set(docRef, {
-            'toUserId': userId,
-            'fromUserId': null,
-            'title': '🏆 Badge Earned!',
-            'body': 'You earned: ${badge.name}',
-            'data': {
-              'type': 'badge',
-              'badgeId': badge.id,
-              'badgeName': badge.name,
-              'badgeRarity': badge.rarity,
-            },
-            'read': false,
-            'sentAt': Timestamp.now(),
-          });
+          // Check if notification already exists for this badge
+          final existingNotif = await _firestore
+              .collection('notifications')
+              .where('toUserId', isEqualTo: userId)
+              .where('data.badgeId', isEqualTo: badge.id)
+              .limit(1)
+              .get();
+          
+          // Only create notification if it doesn't exist
+          if (existingNotif.docs.isEmpty) {
+            final docRef = _firestore.collection('notifications').doc();
+            batch.set(docRef, {
+              'toUserId': userId,
+              'fromUserId': null,
+              'title': '🏆 Badge Earned!',
+              'body': 'You earned: ${badge.name}',
+              'data': {
+                'type': 'badge',
+                'badgeId': badge.id,
+                'badgeName': badge.name,
+                'badgeRarity': badge.rarity,
+              },
+              'read': false,
+              'sentAt': Timestamp.now(),
+            });
+          }
         }
         await batch.commit();
 

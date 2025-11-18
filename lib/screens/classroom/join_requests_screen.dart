@@ -5,6 +5,7 @@ import '../../core/constants/app_text_styles.dart';
 import '../../core/services/join_request_service.dart';
 import '../../core/models/join_request_model.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/loading_skeleton.dart';
 import 'package:intl/intl.dart';
 
 class JoinRequestsScreen extends StatefulWidget {
@@ -166,7 +167,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
           ),
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator(color: AppDesignSystem.primaryIndigo))
+                ? const ListSkeleton(itemCount: 5)
                 : _error != null
                     ? _buildErrorState()
                     : _pendingRequests.isEmpty
