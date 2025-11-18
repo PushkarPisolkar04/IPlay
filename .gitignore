@@ -18,10 +18,9 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VSCode
+.vscode/
+*.code-workspace
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -43,6 +42,38 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/build/
+/android/.gradle/
+/android/.kotlin/
+
+# iOS/XCode related
+**/ios/**/*.mode1v3
+**/ios/**/*.mode2v3
+**/ios/**/*.moved-aside
+**/ios/**/*.pbxuser
+**/ios/**/*.perspectivev3
+**/ios/**/*sync/
+**/ios/**/.sconsign.dblite
+**/ios/**/.tags*
+**/ios/**/.vagrant/
+**/ios/**/DerivedData/
+**/ios/**/Icon?
+**/ios/**/Pods/
+**/ios/**/.symlinks/
+**/ios/**/profile
+**/ios/**/xcuserdata
+**/ios/.generated/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets/
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
 
 # Firebase sensitive files - DO NOT COMMIT
 android/app/google-services.json
@@ -50,17 +81,24 @@ ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
 .firebaserc
 serviceAccountKey.json
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # Local configuration
 android/local.properties
-ios/Flutter/Generated.xcconfig
-ios/Flutter/flutter_export_environment.sh
+android/key.properties
+android/hs_err_pid*.log
+android/replay_pid*.log
 
 # Environment files
 .env
 .env.local
+.env.production
+.env.development
 *.key
 *.keystore
+*.jks
 
 # Gradle files
 .gradle/
@@ -71,11 +109,10 @@ android/gradle/wrapper/gradle-wrapper.jar
 
 # Node modules (Cloud Functions)
 functions/node_modules/
+functions/.runtimeconfig.json
 node_modules/
-
-# IDE and Editor files
-.vscode/
-*.code-workspace
+npm-debug.log
+yarn-error.log
 
 # Test coverage
 coverage/
@@ -86,12 +123,15 @@ test/.test_coverage.dart
 *.g.dart
 *.freezed.dart
 *.mocks.dart
+*.config.dart
 
 # Temporary files
 *.tmp
 *.temp
 *.bak
 *.backup
+*.swp
+*~
 
 # Platform specific
 .fvm/
@@ -109,3 +149,25 @@ logs/
 # Cache directories
 .cache/
 tmp/
+.firebase/
+
+# Web
+/web/firebase-config.js
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
