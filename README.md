@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="assets/logos/logo.png" alt="IPlay Logo" width="150"/>
 
@@ -10,9 +10,9 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Latest-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-**🎓 85% Complete** • **📚 60 Levels** • **🎮 7 Games** • **🏆 50+ Badges** • **🆓 Free Forever**
+**📚 60 Levels** • **🎮 7 Games** • **🏆 50+ Badges** • **🆓 Free Forever**
 
-[� Quick Start](#-quick-start) • [🎮 Games](#-games) • [📚 Features](#-features) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [🎮 Games](#-games) • [📚 Features](#-features) • [🤝 Contributing](#-contributing)
 
 </div>
 
@@ -29,15 +29,15 @@ IPlay transforms complex Intellectual Property Rights education into an exciting
 - 🎯 **7 Interactive Games**: From quiz challenges to tower defense
 - 🏫 **School Integration**: Classroom management, assignments, and analytics
 - 📱 **Offline Ready**: All content works without internet
-- � **Free rForever**: No ads, no subscriptions, no hidden costs
+- 🆓 **Free Forever**: No ads, no subscriptions, no hidden costs
 
 ---
 
-## � Quick dStats
+## 📊 Quick Stats
 
 <div align="center">
 
-| � CoLntent | 🎮 Games | 🏆 Rewards | 👥 Features |
+| 📚 Content | 🎮 Games | 🏆 Rewards | 👥 Features |
 |:---:|:---:|:---:|:---:|
 | **60** Levels | **7** Games | **50+** Badges | Classroom Management |
 | **60** Quizzes | Daily Challenges | XP System | Assignment System |
@@ -48,7 +48,7 @@ IPlay transforms complex Intellectual Property Rights education into an exciting
 
 ---
 
-## � Thoe Six IPR Realms
+## 🎯 The Six IPR Realms
 
 <table>
 <tr>
@@ -155,7 +155,7 @@ Fresh content every day
 - **Certificates**: Earn official certificates for completing realms
 - **Offline Mode**: Learn anywhere without internet
 
-### �‍🏫 Fmor Teachers
+### 👨‍🏫 For Teachers
 
 - **Classroom Management**: Create and manage multiple classrooms
 - **Assignments**: Create, assign, and grade student work
@@ -211,17 +211,18 @@ Fresh content every day
 
 ---
 
-## � Quickl Start
+## 🚀 Quick Start
 
 ### For Students & Teachers
 
-**Download the app** (Coming Soon to Play Store & App Store)
+**Get Started:**
 
-1. Sign up with email or Google
-2. Choose your role (Student/Teacher/Principal)
-3. Start learning or create a classroom!
+1. Download and install the app
+2. Sign up with email or Google
+3. Choose your role (Student/Teacher/Principal)
+4. Start learning or create a classroom!
 
-*Star this repo to get notified when the app launches!*
+*App deployment coming soon. Star this repo for updates!*
 
 ---
 
@@ -277,29 +278,23 @@ See [PROJECT_GUIDE.md](PROJECT_GUIDE.md) for detailed setup instructions.
 
 ---
 
-## 📈 Project Status
+## 🎯 What's Inside
 
 <div align="center">
 
-### � 85m% Complete - Ready for Beta Testing!
+### Complete IPR Learning Platform
 
-| Component | Status |
-|:----------|:------:|
-| 📚 Content (60 levels + 60 quizzes) | ✅ 100% |
-| 🎮 Games (7 games) | ✅ 100% |
-| 🏆 Badges (50+ badges) | ✅ 100% |
-| 🔥 Firebase Setup | ✅ 100% |
-| 📱 Screens & UI | ✅ 95% |
-| 🧪 Testing | 🟡 60% |
-| 📱 App Store Deployment | 🔴 0% |
+| Component | What You Get |
+|:----------|:-------------|
+| 📚 **Learning Content** | 60 comprehensive levels + 60 interactive quizzes |
+| 🎮 **Games** | 7 fully-featured educational games |
+| 🏆 **Rewards** | 50+ unique badges, XP system, certificates |
+| 🔥 **Backend** | Firebase authentication & real-time sync |
+| 📱 **Interface** | 60+ screens with Material Design 3 |
+| 🏫 **School System** | Complete classroom & assignment management |
+| � **AnSalytics** | Progress tracking & leaderboards |
 
 </div>
-
-**What's Next:**
-- Final UI polish and animations
-- Comprehensive testing
-- App store submission
-- User documentation
 
 ---
 
@@ -315,13 +310,13 @@ We welcome contributions from developers, educators, designers, and IP law exper
 4. Push to branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-**Areas We Need Help:**
-- 💻 Bug fixes and features
-- 📚 Content creation and review
-- � UI/UXa improvements
-- 🌐 Regional language translations
-- 🧪 Testing and QA
-- 📖 Documentation
+**Ways to Contribute:**
+- 💻 Add new features or fix bugs
+- 📚 Create additional learning content
+- 🎨 Enhance UI/UX design
+- 🌐 Translate to regional languages
+- 🧪 Test and report issues
+- 📖 Improve documentation
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
@@ -335,7 +330,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📧 Contact
+## � Coontact
 
 <div align="center">
 
