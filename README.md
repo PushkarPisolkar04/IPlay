@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logos/logo.png" alt="IPlay Logo" width="150"/>
+<img src="assets/logos/logo.png" alt="IPlay Logo" width="160"/>
 
 # IPlay – Learn IP Rights the Fun Way! 🎮
 
@@ -8,11 +8,11 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Latest-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-brightgreen?style=for-the-badge&logo=github)](LICENSE)
 
-**60 Levels** • **7 Games** • **50+ Badges** • **100% Free Forever**
+**60 Levels** • **7 Games** • **50+ Badges** • **100% Free Forever** • **Offline First**
 
-[Quick Start](#-quick-start) • [Games](#-games) • [Features](#-features) • [Contributing](#-contributing)
+[Quick Start](#-quick-start) • [Games](#-games-with-logos) • [Features](#-features) • [Licenses & Credits](#-licenses-credits)
 
 </div>
 
@@ -20,77 +20,97 @@
 
 ## 🌟 What is IPlay?
 
-IPlay turns complex **Intellectual Property Rights (IPR)** education into an exciting mobile game. Learn Copyright, Trademark, Patent, Design, GI, and Trade Secrets through **6 interactive realms**, **7 engaging games**, and a powerful reward system — **completely free, forever**.
-
-### Why IPlay?
-- Gamified learning with XP, badges, streaks & leaderboards  
-- Complete Indian IPR curriculum (60 levels)  
-- 7 unique educational games  
-- Full school & classroom integration  
-- Works offline  
-- No ads • No subscriptions • Truly free
+IPlay transforms **Indian Intellectual Property Rights (IPR)** education into a fun, engaging mobile game. Learn Copyright, Trademark, Patent, Design, GI & Trade Secrets through **6 realms**, **7 unique games**, and a powerful reward system — **completely free, ad-free, forever**.
 
 ---
 
-## 📊 At a Glance
+## 🎮 Games with Official Logos
 
-| Content          | Games       | Rewards          | School Features             |
-|------------------|-------------|------------------|-----------------------------|
-| 60 Levels        | 7 Games     | 50+ Badges       | Classroom Management        |
-| 60 Quizzes       | Daily Challenges | XP & Streaks  | Assignments & Grading       |
-| 6 IPR Realms     | High Scores | Certificates     | Real-time Analytics         |
-| 600+ Questions   | Real-world cases | Leaderboards  | National + State Rankings   |
+<div align="center">
+
+<table>
+<tr>
+  <td align="center">
+    <img src="assets/logos/IPR_quiz_master.png" width="100"/><br/>
+    <strong>Quiz Master ⚡</strong><br>Rapid-fire 60-second challenges
+  </td>
+  <td align="center">
+    <img src="assets/logos/trademark_match.png" width="100"/><br/>
+    <strong>Trademark Match 🧠</strong><br>Memory game with real Indian brands
+  </td>
+  <td align="center">
+    <img src="assets/logos/spot_the_original.png" width="100"/><br/>
+    <strong>Spot the Original 🔍</strong><br>Genuine vs counterfeit detection
+  </td>
+  <td align="center">
+    <img src="assets/logos/patent_detective.png" width="100"/><br/>
+    <strong>Patent Detective 🕵️</strong><br>Prior art investigation
+  </td>
+</tr>
+<tr>
+  <td align="center">
+    <img src="assets/logos/gi_mapper.png" width="100"/><br/>
+    <strong>GI Mapper 🗺️</strong><br>Match products to their Indian origin states
+  </td>
+  <td align="center">
+    <img src="assets/logos/ip_defender.png" width="100"/><br/>
+    <strong>IP Defender 🏰</strong><br>Tower defense strategy game
+  </td>
+  <td align="center">
+    <img src="assets/logos/innovation_lab.png" width="100"/><br/>
+    <strong>Innovation Lab 💡</strong><br>Create & patent your inventions
+  </td>
+  <td align="center">
+    <img src="assets/icons/daily_challenge.png" width="100"/><br/>
+    <strong>Daily Challenges 🌟</strong><br>New content every day
+  </td>
+</tr>
+</table>
+
+</div>
 
 ---
 
-## 🎯 The Six IPR Realms
+## 🎯 The Six IPR Realms (with Logos)
 
-| Copyright 📚 | Trademark 🏷️ | Patent 🔬 | Design 🎨 | Geographical Indication 🗺️ | Trade Secrets 🔐 |
-|--------------|---------------|------------|------------|-------------------------------|-------------------|
-| Books, music, art, software | Logos & brand names | Inventions & innovations | Product appearance | Regional heritage products | Confidential info |
+<div align="center">
 
-Each realm has **10 progressive levels** (Easy → Expert), quizzes, and real Indian case studies.
+<table>
+<tr>
+  <td align="center"><img src="assets/logos/copyright_logo.png" width="80"/><br><strong>Copyright 📚</strong></td>
+  <td align="center"><img src="assets/logos/trademark_logo.png" width="80"/><br><strong>Trademark 🏷️</strong></td>
+  <td align="center"><img src="assets/logos/patent_logo.png" width="80"/><br><strong>Patent 🔬</strong></td>
+</tr>
+<tr>
+  <td align="center"><img src="assets/logos/design_logo.png" width="80"/><br><strong>Design 🎨</strong></td>
+  <td align="center"><img src="assets/logos/gi_logo.png" width="80"/><br><strong>Geographical Indication 🗺️</strong></td>
+  <td align="center"><img src="assets/logos/trade_secrets_logo.png" width="80"/><br><strong>Trade Secrets 🔐</strong></td>
+</tr>
+</table>
 
----
+Each realm: 10 levels • Quizzes • Real Indian case studies
 
-## 🎮 7 Engaging Games
-
-| Quiz Master ⚡ | Trademark Match 🧠 | Spot the Original 🔍 | Patent Detective 🕵️ |
-|----------------|-------------------|----------------------|----------------------|
-| 60-sec rapid quizzes | Memory game with real brands | Identify genuine vs fake | Search prior art |
-
-| GI Mapper 🗺️ | IP Defender 🏰 | Innovation Lab 💡 | Daily Challenges 🌟 |
-|---------------|----------------|-------------------|---------------------|
-| Match products to states | Tower defense strategy | Invent & protect ideas | Fresh content daily |
+</div>
 
 ---
 
 ## ✨ Features
 
-### For Students
-- 60-level journey with gamification  
-- Earn XP, unlock 50+ badges, maintain streaks  
-- Compete on classroom → national leaderboards  
-- Download official certificates with QR codes  
+**Students**  
+- 60 progressive levels + 600+ questions  
+- XP, 50+ badges, streaks, certificates (PDF with QR)  
+- National, state, school & class leaderboards  
 - Fully offline
 
-### For Teachers
-- Create & manage classrooms  
-- Assign tasks, grade submissions  
-- Real-time student progress analytics  
-- Announcements & join requests
-
-### For Schools & Principals
-- School-wide dashboard  
-- Multi-teacher support  
-- Performance analytics & leaderboards  
+**Teachers & Schools**  
+- Classroom creation & management  
+- Assignments, grading, analytics  
+- School dashboard for principals  
 - Zero cost – forever
 
 ---
 
-## 🏆 Gamification That Works
-
-Earn XP → Unlock Badges → Build Streaks → Get Certificates
+## 🏆 Gamification
 
 <div align="center">
 <img src="assets/badges/first_step.png" width="60"/>
@@ -98,20 +118,13 @@ Earn XP → Unlock Badges → Build Streaks → Get Certificates
 <img src="assets/badges/patent_master.png" width="60"/>
 <img src="assets/badges/ipr_champion.png" width="60"/>
 <img src="assets/badges/legendary_streak.png" width="60"/>
-<span>and 45 more...</span>
+<img src="assets/badges/game_master.png" width="60"/>
+<span>and 45+ more unique badges!</span>
 </div>
 
 ---
 
 ## 🚀 Quick Start
-
-### Students & Teachers
-1. Download the app (coming soon to Play Store)  
-2. Sign up with Google or email  
-3. Choose role: Student / Teacher / Principal  
-4. Start learning or create your classroom!
-
-### Developers
 
 ```bash
 git clone https://github.com/PushkarPisolkar04/iplay.git
