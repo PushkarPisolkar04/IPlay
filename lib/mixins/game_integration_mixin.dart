@@ -73,13 +73,14 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
       final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
 
       // Award XP
-      final xpGained = await _gameService.awardGameXP(
+      final result = await _gameService.awardGameXP(
         gameId: gameId,
         baseXP: baseXP,
         score: score,
         isPerfectScore: isPerfectScore,
         isFirstCompletion: isFirstCompletion,
       );
+      final xpGained = result['xp'] as int;
 
       // Save progress
       await _gameService.saveGameProgress(

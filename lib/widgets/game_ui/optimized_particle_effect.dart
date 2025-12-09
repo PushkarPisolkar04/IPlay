@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../utils/object_pool.dart';
 import '../../services/performance_monitor_service.dart';
 
+// ignore: unused_import
+export '../../utils/object_pool.dart' show PooledParticle;
+export '../../services/performance_monitor_service.dart' show PerformanceLevel;
+
 /// Optimized particle effect widget using object pooling
 /// Automatically reduces particle count on low-end devices
 class OptimizedParticleEffect extends StatefulWidget {

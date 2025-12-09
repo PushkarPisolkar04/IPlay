@@ -4,6 +4,7 @@ import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/clean_card.dart';
+import '../../widgets/loading_skeleton.dart';
 import '../../models/classroom_model.dart';
 
 /// Classroom Analytics Screen - View student progress, average XP, engagement metrics

@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../utils/object_pool.dart';
 
 /// Particle type enum
 enum ParticleType {
@@ -8,9 +7,6 @@ enum ParticleType {
   sparkle,
   explosion,
 }
-
-/// Global particle pool for reusing particle objects
-final _particlePool = ParticlePool(initialSize: 50, maxSize: 200);
 
 /// Particle effect widget for game feedback
 /// Supports confetti, sparkles, and explosions
