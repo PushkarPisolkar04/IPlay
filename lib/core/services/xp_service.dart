@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'leaderboard_service.dart';
+import 'badge_service.dart';
+import '../../services/streak_service.dart';
 
 /// XP Service - Handles all XP calculations and rewards
 class XPService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final LeaderboardService _leaderboardService = LeaderboardService();
+  final BadgeService _badgeService = BadgeService();
+  final StreakService _streakService = StreakService();
 
   // XP Constants from documentation
   static const int DAILY_XP_CAP = 1000;
@@ -85,6 +89,7 @@ class XPService {
 
   /// Award first login of day bonus
   /// Returns XP awarded (10 if eligible, 0 if already claimed today)
+  /// Note: This method does NOT update streaks - streaks are updated when XP is earned through activities
   Future<int> awardFirstLoginBonus(String userId) async {
     try {
       final userDoc = await _firestore
@@ -98,10 +103,11 @@ class XPService {
       final lastActiveDate = (userData['lastActiveDate'] as Timestamp?)?.toDate();
 
       if (lastActiveDate == null) {
-        // First time logging in
+        // First time logging in - initialize lastActiveDate
         await _firestore.collection('users').doc(userId).update({
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
           'lastActiveDate': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
         });
         return FIRST_LOGIN_BONUS;
       }
@@ -112,16 +118,17 @@ class XPService {
 
       // Check if it's a new day
       if (today.isAfter(lastActiveDay)) {
+        // Award bonus but DON'T update lastActiveDate (let actual activities do that)
         await _firestore.collection('users').doc(userId).update({
           'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
-          'lastActiveDate': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
         });
         return FIRST_LOGIN_BONUS;
       }
 
       return 0; // Already logged in today
     } catch (e) {
-      // print('Error awarding first login bonus: $e');
+      print('❌ Error awarding first login bonus: $e');
       return 0;
     }
   }
@@ -165,6 +172,7 @@ class XPService {
 
   /// Award realm completion bonus
   /// Returns XP awarded (300 if realm is completed, 0 otherwise)
+  /// Note: Streaks are already updated by completeLevel, but we check badges here
   Future<int> awardRealmCompletionBonus({
     required String userId,
     required String realmId,
@@ -193,13 +201,16 @@ class XPService {
         await _firestore.collection('users').doc(userId).update({
           'totalXP': FieldValue.increment(REALM_COMPLETION_BONUS),
           'progressSummary.$realmId.completionBonusAwarded': true,
+          'updatedAt': Timestamp.now(),
         });
+        
+        print('✅ Awarded $REALM_COMPLETION_BONUS XP realm completion bonus for $realmId');
         return REALM_COMPLETION_BONUS;
       }
 
       return 0;
     } catch (e) {
-      // print('Error awarding realm completion bonus: $e');
+      print('❌ Error awarding realm completion bonus: $e');
       return 0;
     }
   }
@@ -258,23 +269,36 @@ class XPService {
 
   /// Award XP and check for rank changes
   /// This is a convenience method that awards XP and triggers rank change notifications
+  /// Also updates streaks and checks for badges
   Future<void> awardXPAndCheckRank({
     required String userId,
     required int xpAmount,
   }) async {
     try {
-      // Award the XP
+      // Award the XP (DON'T update lastActiveDate - let StreakService handle it)
       await _firestore.collection('users').doc(userId).update({
         'totalXP': FieldValue.increment(xpAmount),
+        'updatedAt': Timestamp.now(),
       });
+
+      print('✅ Awarded $xpAmount XP to user $userId');
+
+      // Update streak BEFORE checking badges
+      await _streakService.updateStreakOnActivity(userId);
+
+      // Check for new badges
+      final newBadges = await _badgeService.checkAndAwardBadges(userId);
+      if (newBadges.isNotEmpty) {
+        print('✅ New badges unlocked: $newBadges');
+      }
 
       // Check for rank changes and send notifications if needed
       // Run this asynchronously to not block the XP award
       _leaderboardService.monitorUserRankChanges(userId: userId).catchError((e) {
-        // print('Error monitoring rank changes: $e');
+        print('⚠️ Error monitoring rank changes: $e');
       });
     } catch (e) {
-      // print('Error awarding XP and checking rank: $e');
+      print('❌ Error awarding XP and checking rank: $e');
     }
   }
 }

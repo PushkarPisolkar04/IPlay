@@ -44,18 +44,13 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppDesignSystem.primaryIndigo,
-              AppDesignSystem.secondaryPurple,
-              AppDesignSystem.primaryPink,
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/backgrounds/background1.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: SafeArea(
@@ -247,9 +242,11 @@ class _RoleCard extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: isSelected
             ? LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: [
-                  color.withValues(alpha: 0.15),
-                  color.withValues(alpha: 0.05),
+                  color,
+                  color.withValues(alpha: 0.8),
                 ],
               )
             : null,
@@ -262,7 +259,7 @@ class _RoleCard extends StatelessWidget {
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: color.withValues(alpha: 0.3),
+                  color: color.withValues(alpha: 0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -314,15 +311,16 @@ class _RoleCard extends StatelessWidget {
                       Text(
                         title,
                         style: AppTextStyles.cardTitle.copyWith(
-                          color: isSelected ? color : AppDesignSystem.textPrimary,
+                          color: isSelected ? Colors.white : AppDesignSystem.textPrimary,
                           fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         description,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: AppDesignSystem.textPrimary,
+                          color: isSelected ? Colors.white.withValues(alpha: 0.95) : AppDesignSystem.textPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -332,14 +330,14 @@ class _RoleCard extends StatelessWidget {
                           Icon(
                             Icons.lightbulb_outline,
                             size: 14,
-                            color: isSelected ? color : AppDesignSystem.textSecondary,
+                            color: isSelected ? Colors.white.withValues(alpha: 0.9) : AppDesignSystem.textSecondary,
                           ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               helperText,
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: isSelected ? color : AppDesignSystem.textSecondary,
+                                color: isSelected ? Colors.white.withValues(alpha: 0.9) : AppDesignSystem.textSecondary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -353,7 +351,7 @@ class _RoleCard extends StatelessWidget {
                 if (isSelected)
                   Icon(
                     Icons.check_circle,
-                    color: color,
+                    color: Colors.white,
                     size: 32,
                   ),
               ],

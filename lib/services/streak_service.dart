@@ -12,18 +12,42 @@ class StreakService {
     try {
       final userDoc = await _firestore.collection('users').doc(userId).get();
       
-      if (!userDoc.exists) return;
+      if (!userDoc.exists) {
+        print('⚠️ User document not found for streak update: $userId');
+        return;
+      }
 
-      final user = UserModel.fromMap(userDoc.data()!);
+      final userData = userDoc.data()!;
       final now = DateTime.now();
-      final lastActive = user.lastActiveDate;
+      
+      // Get lastActiveDate - handle both Timestamp and DateTime
+      DateTime lastActive;
+      final lastActiveField = userData['lastActiveDate'];
+      if (lastActiveField is Timestamp) {
+        lastActive = lastActiveField.toDate();
+      } else if (lastActiveField is DateTime) {
+        lastActive = lastActiveField;
+      } else {
+        // If no lastActiveDate, this is first activity
+        print('🆕 First activity for user - initializing streak');
+        lastActive = DateTime.now().subtract(const Duration(days: 2)); // Force new streak
+      }
+      
+      final currentStreak = userData['currentStreak'] ?? 0;
+      final currentLongestStreak = userData['longestStreak'] ?? 0;
+
+      print('📊 Streak Check:');
+      print('   Last Active: ${lastActive.toString().split('.')[0]}');
+      print('   Now: ${now.toString().split('.')[0]}');
+      print('   Current Streak: $currentStreak days');
+      print('   Same Day: ${_isSameDay(lastActive, now)}');
+      print('   Hours Diff: ${now.difference(lastActive).inHours}h');
 
       // Check if we should reset or increment the streak
-      final newStreak = _calculateNewStreak(lastActive, now, user.currentStreak);
-      final currentLongestStreak = user.longestStreak ?? 0;
+      final newStreak = _calculateNewStreak(lastActive, now, currentStreak);
 
       // Only update if the streak has changed or it's a new day
-      if (newStreak != user.currentStreak || !_isSameDay(lastActive, now)) {
+      if (newStreak != currentStreak || !_isSameDay(lastActive, now)) {
         final updateData = {
           'currentStreak': newStreak,
           'lastActiveDate': Timestamp.now(),
@@ -33,13 +57,17 @@ class StreakService {
         // Update longestStreak if current streak is higher
         if (newStreak > currentLongestStreak) {
           updateData['longestStreak'] = newStreak;
+          print('🏆 New longest streak: $newStreak days!');
         }
         
         await _firestore.collection('users').doc(userId).update(updateData);
+        print('✅ Streak updated: $currentStreak → $newStreak days');
+      } else {
+        print('ℹ️ Streak unchanged: $currentStreak days (same day activity)');
       }
     } catch (e) {
       // Log error but don't throw - streak updates shouldn't block main functionality
-      // print('Error updating streak: $e');
+      print('❌ Error updating streak: $e');
     }
   }
 

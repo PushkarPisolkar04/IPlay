@@ -71,12 +71,16 @@ class GameIntegrationService {
         final currentXP = userDoc.data()?['totalXP'] ?? 0;
         final newTotalXP = currentXP + totalXP;
 
+        // DON'T update lastActiveDate here - let StreakService handle it
         transaction.update(userRef, {
           'totalXP': newTotalXP,
-          'lastActiveDate': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
+          'updatedAt': Timestamp.now(),
         });
       });
+
+      // Update streak BEFORE checking badges (so streak-based badges can be awarded)
+      // StreakService will update lastActiveDate
+      await _streakService.updateStreakOnActivity(_currentUserId!);
 
       // Update game_progress with totalXPEarned for this game
       final progressRef = _firestore
@@ -92,9 +96,6 @@ class GameIntegrationService {
         'totalXPEarned': currentGameXP + totalXP,
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-
-      // Update streak after awarding XP
-      await _streakService.updateStreakOnActivity(_currentUserId!);
 
       // Check for new badges (without context to avoid premature animations)
       final badgeService = BadgeService();

@@ -31,8 +31,6 @@ import 'screens/chat/chat_list_screen.dart';
 import 'screens/chat/chat_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/daily_challenge/daily_challenge_screen.dart';
-import 'screens/onboarding/student_tutorial_screen.dart';
-import 'screens/onboarding/teacher_tutorial_screen.dart';
 import 'screens/announcements/unified_announcements_screen.dart';
 import 'core/models/realm_model.dart';
 import 'services/deep_link_service.dart';
@@ -235,10 +233,6 @@ class _MyAppState extends State<MyApp> {
               return MaterialPageRoute(builder: (_) => const UnifiedAnnouncementsScreen());
             case '/daily-challenge':
               return MaterialPageRoute(builder: (_) => const DailyChallengeScreen());
-            case '/student-tutorial':
-              return MaterialPageRoute(builder: (_) => const StudentTutorialScreen());
-            case '/teacher-tutorial':
-              return MaterialPageRoute(builder: (_) => const TeacherTutorialScreen());
             case '/realm':
               final args = settings.arguments as Map<String, dynamic>?;
               final realmId = args?['realmId'] as String?;

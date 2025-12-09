@@ -199,7 +199,6 @@ class ProgressService {
       final userDoc = await userRef.get();
       
       Map<String, dynamic> updateData = {
-        'lastActiveDate': Timestamp.now(),
         'updatedAt': Timestamp.now(),
       };
       
@@ -210,6 +209,8 @@ class ProgressService {
       } else {
         print('ℹ️ Level $levelNumber already completed - no XP awarded');
       }
+      
+      // DON'T update lastActiveDate here - let StreakService handle it
 
       // Update progressSummary in user document for quick access
       if (userDoc.exists) {
