@@ -369,7 +369,7 @@
           "name": "Evan Brooks",
           "role": "Lead Developer at NeuraSoft",
           "avatar": "👨‍💻",
-          "statement": "I've worked at NeuraSoft for 5 years. I would *never* leak our code. Yes, I took my laptop home that weekend, but only because of deadlines.\n\nSomeone else must have accessed the repository. Maybe a break-in or a hack?",
+          "statement": "I've worked at NeuraSoft for 5 years. I would never leak our code. Yes, I took my laptop home that weekend, but only because of deadlines.\n\nSomeone else must have accessed the repository. Maybe a break-in or a hack?",
           "keyClaims": [
             "Took work laptop home",
             "Claims loyalty",
@@ -1305,7 +1305,7 @@
       ],
       "solution": {
         "verdict": "Both Felix and Nadine are co-inventors",
-        "explanation": "Felix devised the original concept, but Nadine’s contributions were essential to the final working invention. Patent law requires naming *all* inventors who contributed to the claims.",
+        "explanation": "Felix devised the original concept, but Nadine’s contributions were essential to the final working invention. Patent law requires naming all inventors who contributed to the claims.",
         "legalOutcome": [
           "Patent must list both as co-inventors",
           "CEO cannot exclude contributors",
@@ -1355,7 +1355,7 @@
           "name": "Freelancer 'SkyVids'",
           "role": "Drone Videographer",
           "avatar": "🛸",
-          "statement": "I *did* shoot similar footage, but the file they used wasn’t mine. I only sold them one clip — maybe they mixed it up?",
+          "statement": "I did shoot similar footage, but the file they used wasn’t mine. I only sold them one clip — maybe they mixed it up?",
           "keyClaims": [
             "Says his footage was similar",
             "Claims confusion",
@@ -1389,7 +1389,7 @@
           "icon": "🧾",
           "type": "document",
           "description": "Receipt for freelance footage",
-          "content": "Shows studio purchased a *different* clip — not the one used.",
+          "content": "Shows studio purchased a different clip — not the one used.",
           "importance": "high"
         },
         {
