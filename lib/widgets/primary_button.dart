@@ -13,7 +13,7 @@ class PrimaryButton extends StatelessWidget {
   final IconData? icon;
   final bool useGradient;
   final List<Color>? gradientColors;
-  
+
   const PrimaryButton({
     super.key,
     required this.text,
@@ -25,12 +25,12 @@ class PrimaryButton extends StatelessWidget {
     this.useGradient = true,
     this.gradientColors,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     final buttonColor = color ?? AppDesignSystem.primaryIndigo;
     final isDisabled = isLoading || onPressed == null;
-    
+
     return SizedBox(
       width: fullWidth ? double.infinity : null,
       height: AppSpacing.buttonHeight,
@@ -40,13 +40,14 @@ class PrimaryButton extends StatelessWidget {
               ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: gradientColors ?? [
-                    buttonColor,
-                    buttonColor.withValues(alpha: 0.8),
-                  ],
+                  colors:
+                      gradientColors ??
+                      [buttonColor, buttonColor.withValues(alpha: 0.8)],
                 )
               : null,
-          color: isDisabled ? AppDesignSystem.textTertiary : (useGradient ? null : buttonColor),
+          color: isDisabled
+              ? AppDesignSystem.textTertiary
+              : (useGradient ? null : buttonColor),
           borderRadius: AppRadius.large,
           boxShadow: !isDisabled && useGradient
               ? [
@@ -72,7 +73,9 @@ class PrimaryButton extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.backgroundWhite),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppDesignSystem.backgroundWhite,
+                        ),
                       ),
                     )
                   : Row(
@@ -84,7 +87,9 @@ class PrimaryButton extends StatelessWidget {
                         ],
                         Text(
                           text,
-                          style: AppTextStyles.buttonLarge.copyWith(color: Colors.white),
+                          style: AppTextStyles.buttonLarge.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
@@ -103,7 +108,7 @@ class SecondaryButton extends StatelessWidget {
   final Color? color;
   final bool fullWidth;
   final IconData? icon;
-  
+
   const SecondaryButton({
     super.key,
     required this.text,
@@ -112,11 +117,11 @@ class SecondaryButton extends StatelessWidget {
     this.fullWidth = false,
     this.icon,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     final buttonColor = color ?? AppDesignSystem.primaryIndigo;
-    
+
     return SizedBox(
       width: fullWidth ? double.infinity : null,
       height: AppSpacing.buttonHeight,
@@ -125,9 +130,7 @@ class SecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           foregroundColor: buttonColor,
           side: BorderSide(color: buttonColor, width: 2),
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.large,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: AppRadius.large),
           padding: const EdgeInsets.symmetric(horizontal: 24),
         ),
         child: Row(
@@ -147,4 +150,3 @@ class SecondaryButton extends StatelessWidget {
     );
   }
 }
-

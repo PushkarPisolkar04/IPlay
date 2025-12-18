@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../widgets/clean_card.dart';
 
 /// Role Selection Screen - Choose between Student/Teacher (NOT Principal)
 /// Note: Principal is NOT a signup role. Teachers become Principals by creating a school.
@@ -115,9 +114,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: AppSpacing.lg),
-                    
+
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -136,7 +135,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.info_outline, color: AppDesignSystem.info, size: 22),
+                          Icon(
+                            Icons.info_outline,
+                            color: AppDesignSystem.info,
+                            size: 22,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -150,55 +153,59 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: AppSpacing.xl),
-                    
+
                     _RoleCard(
                       title: 'Student',
                       description: 'Learn IPR through games and challenges',
-                      helperText: 'Join a classroom or learn solo - your choice!',
+                      helperText:
+                          'Join a classroom or learn solo - your choice!',
                       icon: Icons.school,
                       color: AppDesignSystem.primaryIndigo,
                       isSelected: _selectedRole == 'student',
                       onTap: () => setState(() => _selectedRole = 'student'),
                     ),
-                    
+
                     const SizedBox(height: AppSpacing.md),
-                    
+
                     _RoleCard(
                       title: 'Teacher',
-                      description: 'Manage classrooms and track student progress',
-                      helperText: 'First in your school? You\'ll become principal!',
+                      description:
+                          'Manage classrooms and track student progress',
+                      helperText:
+                          'First in your school? You\'ll become principal!',
                       icon: Icons.person,
                       color: AppDesignSystem.primaryPink,
                       isSelected: _selectedRole == 'teacher',
                       onTap: () => setState(() => _selectedRole = 'teacher'),
                     ),
-                    
+
                     const SizedBox(height: AppSpacing.xl),
-                    
+
                     SizedBox(
                       width: double.infinity,
                       height: AppSpacing.buttonHeight,
                       child: ElevatedButton(
-                        onPressed: _selectedRole != null ? _handleContinue : null,
+                        onPressed: _selectedRole != null
+                            ? _handleContinue
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _selectedRole == 'student'
                               ? AppDesignSystem.primaryIndigo
                               : AppDesignSystem.primaryPink,
                           disabledBackgroundColor: AppDesignSystem.textTertiary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.cardRadius,
+                            ),
                           ),
                           elevation: 5,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'Continue',
-                              style: AppTextStyles.buttonLarge,
-                            ),
+                            Text('Continue', style: AppTextStyles.buttonLarge),
                             const SizedBox(width: 8),
                             const Icon(Icons.arrow_forward, size: 20),
                           ],
@@ -224,7 +231,7 @@ class _RoleCard extends StatelessWidget {
   final Color color;
   final bool isSelected;
   final VoidCallback onTap;
-  
+
   const _RoleCard({
     required this.title,
     required this.description,
@@ -234,7 +241,7 @@ class _RoleCard extends StatelessWidget {
     required this.isSelected,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -244,10 +251,7 @@ class _RoleCard extends StatelessWidget {
             ? LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  color,
-                  color.withValues(alpha: 0.8),
-                ],
+                colors: [color, color.withValues(alpha: 0.8)],
               )
             : null,
         color: isSelected ? null : AppDesignSystem.backgroundLight,
@@ -311,7 +315,9 @@ class _RoleCard extends StatelessWidget {
                       Text(
                         title,
                         style: AppTextStyles.cardTitle.copyWith(
-                          color: isSelected ? Colors.white : AppDesignSystem.textPrimary,
+                          color: isSelected
+                              ? Colors.white
+                              : AppDesignSystem.textPrimary,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -320,7 +326,9 @@ class _RoleCard extends StatelessWidget {
                       Text(
                         description,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isSelected ? Colors.white.withValues(alpha: 0.95) : AppDesignSystem.textPrimary,
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.95)
+                              : AppDesignSystem.textPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -330,14 +338,18 @@ class _RoleCard extends StatelessWidget {
                           Icon(
                             Icons.lightbulb_outline,
                             size: 14,
-                            color: isSelected ? Colors.white.withValues(alpha: 0.9) : AppDesignSystem.textSecondary,
+                            color: isSelected
+                                ? Colors.white.withValues(alpha: 0.9)
+                                : AppDesignSystem.textSecondary,
                           ),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
                               helperText,
                               style: AppTextStyles.bodySmall.copyWith(
-                                color: isSelected ? Colors.white.withValues(alpha: 0.9) : AppDesignSystem.textSecondary,
+                                color: isSelected
+                                    ? Colors.white.withValues(alpha: 0.9)
+                                    : AppDesignSystem.textSecondary,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -349,11 +361,7 @@ class _RoleCard extends StatelessWidget {
                   ),
                 ),
                 if (isSelected)
-                  Icon(
-                    Icons.check_circle,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  Icon(Icons.check_circle, color: Colors.white, size: 32),
               ],
             ),
           ),

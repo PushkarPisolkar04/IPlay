@@ -8,7 +8,7 @@ class ProgressBar extends StatelessWidget {
   final Color? backgroundColor;
   final double height;
   final bool showPercentage;
-  
+
   const ProgressBar({
     super.key,
     required this.progress,
@@ -17,11 +17,11 @@ class ProgressBar extends StatelessWidget {
     this.height = 8.0,
     this.showPercentage = false,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     final progressValue = progress.clamp(0.0, 1.0);
-    
+
     return Row(
       children: [
         Expanded(
@@ -66,7 +66,7 @@ class CircularProgress extends StatelessWidget {
   final double size;
   final double strokeWidth;
   final Widget? child;
-  
+
   const CircularProgress({
     super.key,
     required this.progress,
@@ -75,7 +75,7 @@ class CircularProgress extends StatelessWidget {
     this.strokeWidth = 8.0,
     this.child,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -102,4 +102,3 @@ class CircularProgress extends StatelessWidget {
     );
   }
 }
-

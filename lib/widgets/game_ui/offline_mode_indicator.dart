@@ -5,11 +5,7 @@ class OfflineModeIndicator extends StatelessWidget {
   final bool isOffline;
   final VoidCallback? onTap;
 
-  const OfflineModeIndicator({
-    super.key,
-    required this.isOffline,
-    this.onTap,
-  });
+  const OfflineModeIndicator({super.key, required this.isOffline, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +23,7 @@ class OfflineModeIndicator extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.cloud_off,
-              size: 16,
-              color: Colors.orange[800],
-            ),
+            Icon(Icons.cloud_off, size: 16, color: Colors.orange[800]),
             const SizedBox(width: 6),
             Text(
               'Offline Mode',
@@ -53,11 +45,7 @@ class OfflineModeBanner extends StatelessWidget {
   final VoidCallback? onRetry;
   final VoidCallback? onDismiss;
 
-  const OfflineModeBanner({
-    super.key,
-    this.onRetry,
-    this.onDismiss,
-  });
+  const OfflineModeBanner({super.key, this.onRetry, this.onDismiss});
 
   @override
   Widget build(BuildContext context) {
@@ -67,19 +55,12 @@ class OfflineModeBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.orange[100],
         border: Border(
-          bottom: BorderSide(
-            color: Colors.orange[300]!,
-            width: 1,
-          ),
+          bottom: BorderSide(color: Colors.orange[300]!, width: 1),
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.cloud_off,
-            color: Colors.orange[800],
-            size: 20,
-          ),
+          Icon(Icons.cloud_off, color: Colors.orange[800], size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -96,10 +77,7 @@ class OfflineModeBanner extends StatelessWidget {
                 ),
                 Text(
                   'Using cached content',
-                  style: TextStyle(
-                    color: Colors.orange[700],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.orange[700], fontSize: 12),
                 ),
               ],
             ),
@@ -109,7 +87,10 @@ class OfflineModeBanner extends StatelessWidget {
             TextButton(
               onPressed: onRetry,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -126,11 +107,7 @@ class OfflineModeBanner extends StatelessWidget {
             const SizedBox(width: 4),
             IconButton(
               onPressed: onDismiss,
-              icon: Icon(
-                Icons.close,
-                color: Colors.orange[800],
-                size: 20,
-              ),
+              icon: Icon(Icons.close, color: Colors.orange[800], size: 20),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
@@ -169,10 +146,7 @@ class CacheStatusWidget extends StatelessWidget {
               children: [
                 const Text(
                   'Offline Cache Status',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 if (onClearCache != null && cachedCount > 0)
                   TextButton.icon(
@@ -185,16 +159,13 @@ class CacheStatusWidget extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               '$cachedCount of $totalCount games cached for offline play',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
             ...cacheStatus.entries.map((entry) {
               final gameName = _formatGameName(entry.key);
               final isCached = entry.value;
-              
+
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
@@ -221,7 +192,7 @@ class CacheStatusWidget extends StatelessWidget {
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -240,10 +211,7 @@ class CacheStatusWidget extends StatelessWidget {
 class GameCacheIndicator extends StatelessWidget {
   final bool isCached;
 
-  const GameCacheIndicator({
-    super.key,
-    required this.isCached,
-  });
+  const GameCacheIndicator({super.key, required this.isCached});
 
   @override
   Widget build(BuildContext context) {
@@ -258,11 +226,7 @@ class GameCacheIndicator extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.offline_pin,
-            size: 14,
-            color: Colors.green[700],
-          ),
+          Icon(Icons.offline_pin, size: 14, color: Colors.green[700]),
           const SizedBox(width: 4),
           Text(
             'Offline',

@@ -12,10 +12,10 @@ class FirebaseService {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       debugPrint('✅ Firebase initialized successfully');
-      
+
       // Enable offline persistence for Firestore
       await _enableOfflinePersistence();
-      
+
       // Initialize App Check
       await _initializeAppCheck();
     } catch (e) {
@@ -23,7 +23,7 @@ class FirebaseService {
       rethrow;
     }
   }
-  
+
   static Future<void> _enableOfflinePersistence() async {
     try {
       // Enable offline data persistence
@@ -37,16 +37,18 @@ class FirebaseService {
       // Don't rethrow - app can work without offline persistence
     }
   }
-  
+
   static Future<void> _initializeAppCheck() async {
     try {
       await FirebaseAppCheck.instance.activate(
+        // Web provider for browser/web platform
+        webProvider: ReCaptchaV3Provider('6LcVYZ4qAAAAAMFRJOEbTVBpqgVKXIBJSNWQWwJD'),
         // Use debug provider in debug mode, device check/play integrity in release
-        androidProvider: kDebugMode 
-            ? AndroidProvider.debug 
+        androidProvider: kDebugMode
+            ? AndroidProvider.debug
             : AndroidProvider.playIntegrity,
-        appleProvider: kDebugMode 
-            ? AppleProvider.debug 
+        appleProvider: kDebugMode
+            ? AppleProvider.debug
             : AppleProvider.deviceCheck,
       );
       debugPrint('✅ Firebase App Check initialized successfully');
@@ -56,4 +58,3 @@ class FirebaseService {
     }
   }
 }
-

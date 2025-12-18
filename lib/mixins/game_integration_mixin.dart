@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import '../services/game_integration_service.dart';
 import '../widgets/game_ui/xp_gain_animation.dart';
+import '../widgets/game_ui/daily_xp_cap_popup.dart';
 
 /// Mixin for integrating games with core systems
-/// 
+///
 /// Usage:
 /// ```dart
 /// class MyGameScreen extends StatefulWidget {
 ///   // ...
 /// }
-/// 
+///
 /// class _MyGameScreenState extends State<MyGameScreen> with GameIntegrationMixin {
 ///   @override
 ///   String get gameId => 'quiz_master';
-///   
+///
 ///   @override
 ///   int get baseXP => 50;
-///   
+///
 ///   // ... rest of game implementation
 /// }
 /// ```
 mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
   final _gameService = GameIntegrationService();
-  
+
   DateTime? _gameStartTime;
   bool _gameStartLogged = false;
 
@@ -42,7 +43,7 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
   /// Start game tracking
   Future<void> _startGame() async {
     _gameStartTime = DateTime.now();
-    
+
     if (!_gameStartLogged) {
       await _gameService.logGameStart(gameId);
       _gameStartLogged = true;
@@ -56,11 +57,11 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
   }
 
   /// Complete game and award XP
-  /// 
+  ///
   /// Parameters:
   /// - [score]: User's score (0-100)
   /// - [isPerfectScore]: Whether user achieved perfect score
-  /// 
+  ///
   /// Returns the total XP awarded
   Future<int> completeGame({
     required int score,
@@ -81,6 +82,11 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
         isFirstCompletion: isFirstCompletion,
       );
       final xpGained = result['xp'] as int;
+      final warning = (result['warning'] as bool?) ?? false;
+      final currentDailyXP = (result['currentDailyXP'] as int?) ?? 0;
+      final dailyCap = (result['dailyCap'] as int?) ?? 1000;
+      final cappedAmount = (result['cappedAmount'] as int?) ?? 0;
+      final isFullyCapped = (result['isFullyCapped'] as bool?) ?? false;
 
       // Save progress
       await _gameService.saveGameProgress(
@@ -91,10 +97,7 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
       );
 
       // Submit to leaderboards
-      await _gameService.submitToLeaderboards(
-        gameId: gameId,
-        score: score,
-      );
+      await _gameService.submitToLeaderboards(gameId: gameId, score: score);
 
       // Log analytics
       await _gameService.logGameComplete(
@@ -112,6 +115,17 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
+
+        // Show daily XP cap popup if warning is true
+        if (warning && mounted) {
+          await showDailyXPCapPopup(
+            context,
+            currentXP: currentDailyXP,
+            dailyCap: dailyCap,
+            cappedAmount: cappedAmount,
+            isFullyCapped: isFullyCapped,
+          );
+        }
       }
 
       return xpGained;
@@ -122,9 +136,7 @@ mixin GameIntegrationMixin<T extends StatefulWidget> on State<T> {
   }
 
   /// Save progress without completing (for partial progress)
-  Future<void> saveProgress({
-    required int score,
-  }) async {
+  Future<void> saveProgress({required int score}) async {
     try {
       await _gameService.saveGameProgress(
         gameId: gameId,

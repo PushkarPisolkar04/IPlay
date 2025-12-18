@@ -34,10 +34,7 @@ class NotificationBellIcon extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppDesignSystem.secondaryRed,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
                   constraints: const BoxConstraints(
                     minWidth: 18,

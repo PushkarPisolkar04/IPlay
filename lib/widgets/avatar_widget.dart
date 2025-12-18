@@ -12,7 +12,7 @@ class AvatarWidget extends StatelessWidget {
   final bool showOnlineBadge;
   final Color? backgroundColor;
   final VoidCallback? onTap;
-  
+
   const AvatarWidget({
     super.key,
     this.imageUrl,
@@ -22,7 +22,7 @@ class AvatarWidget extends StatelessWidget {
     this.backgroundColor,
     this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,9 +40,7 @@ class AvatarWidget extends StatelessWidget {
             // Avatar image or initials
             Center(
               child: imageUrl != null
-                  ? ClipOval(
-                      child: _buildAvatarImage(),
-                    )
+                  ? ClipOval(child: _buildAvatarImage())
                   : _buildInitials(),
             ),
             // Online badge
@@ -56,7 +54,10 @@ class AvatarWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppDesignSystem.success,
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppDesignSystem.backgroundLight, width: 2),
+                    border: Border.all(
+                      color: AppDesignSystem.backgroundLight,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -65,7 +66,7 @@ class AvatarWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildAvatarImage() {
     // Check if it's a local asset (starts with 'assets/') or network URL
     if (imageUrl!.startsWith('assets/')) {
@@ -92,7 +93,9 @@ class AvatarWidget extends StatelessWidget {
               height: size * 0.3,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppDesignSystem.primaryIndigo,
+                ),
               ),
             ),
           ),
@@ -101,7 +104,7 @@ class AvatarWidget extends StatelessWidget {
       );
     }
   }
-  
+
   Widget _buildInitials() {
     return Text(
       initials.toUpperCase(),
@@ -112,4 +115,3 @@ class AvatarWidget extends StatelessWidget {
     );
   }
 }
-

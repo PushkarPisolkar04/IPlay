@@ -47,7 +47,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
 
       if (userDoc.exists) {
         final schoolId = userDoc.data()?['schoolId'] as String?;
-        
+
         if (schoolId != null) {
           // Teacher already has a school, fetch it
           final schoolDoc = await FirebaseFirestore.instance
@@ -90,19 +90,19 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         .where('joinCode', isEqualTo: code)
         .limit(1)
         .get();
-    
+
     return query.docs.isEmpty;
   }
 
   Future<String> _generateUniqueCode() async {
     String code;
     bool isUnique = false;
-    
+
     do {
       code = _generateClassroomCode();
       isUnique = await _isCodeUnique(code);
     } while (!isUnique);
-    
+
     return code;
   }
 
@@ -128,9 +128,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
 
       if (query.docs.isEmpty) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('School not found')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('School not found')));
         if (mounted) {
           setState(() => _isLoading = false);
         }
@@ -139,7 +139,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
 
       final schoolDoc = query.docs.first;
       final schoolData = schoolDoc.data();
-      
+
       if (mounted) {
         setState(() {
           _selectedSchoolId = schoolDoc.id;
@@ -190,23 +190,25 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
           .collection('users')
           .doc(user.uid)
           .get();
-      
+
       if (!userDoc.exists) throw Exception('User not found');
-      
+
       final teacherName = userDoc.data()?['displayName'] ?? 'Teacher';
-      
+
       // Generate unique classroom code
       final joinCode = await _generateUniqueCode();
-      
+
       // Create classroom document
-      final classroomRef = FirebaseFirestore.instance.collection('classrooms').doc();
-      
+      final classroomRef = FirebaseFirestore.instance
+          .collection('classrooms')
+          .doc();
+
       final classroomData = {
         'id': classroomRef.id,
         'name': _nameController.text.trim(),
         'grade': _gradeController.text.trim(),
-        'subject': _subjectController.text.trim().isNotEmpty 
-            ? _subjectController.text.trim() 
+        'subject': _subjectController.text.trim().isNotEmpty
+            ? _subjectController.text.trim()
             : null,
         'teacherId': user.uid,
         'teacherName': teacherName,
@@ -219,12 +221,12 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
       };
-      
+
       // Use batch for atomic operations
       final batch = FirebaseFirestore.instance.batch();
-      
+
       batch.set(classroomRef, classroomData);
-      
+
       // Update teacher's profile
       batch.update(
         FirebaseFirestore.instance.collection('users').doc(user.uid),
@@ -233,11 +235,13 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
           'updatedAt': Timestamp.now(),
         },
       );
-      
+
       // If under a school, update school document
       if (!_isIndependent && _selectedSchoolId != null) {
         batch.update(
-          FirebaseFirestore.instance.collection('schools').doc(_selectedSchoolId),
+          FirebaseFirestore.instance
+              .collection('schools')
+              .doc(_selectedSchoolId),
           {
             'classroomIds': FieldValue.arrayUnion([classroomRef.id]),
             'teacherIds': FieldValue.arrayUnion([user.uid]),
@@ -245,12 +249,12 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
           },
         );
       }
-      
+
       // print('Creating classroom with data: $classroomData');
       // print('User UID: ${user.uid}');
       // print('School ID: $_selectedSchoolId');
       // print('Is Independent: $_isIndependent');
-      
+
       await batch.commit();
 
       // print('Classroom created successfully!');
@@ -280,7 +284,10 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                   children: [
                     const Text(
                       'Join Code',
-                      style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppDesignSystem.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -308,7 +315,10 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context); // Close dialog
-                Navigator.pop(context, {'classroomId': classroomRef.id, 'joinCode': joinCode}); // Close screen
+                Navigator.pop(context, {
+                  'classroomId': classroomRef.id,
+                  'joinCode': joinCode,
+                }); // Close screen
               },
               child: const Text('Done'),
             ),
@@ -318,9 +328,9 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
     } catch (e) {
       // print('Error creating classroom: $e');
       // print('Error details: ${e.toString()}');
-      
+
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
@@ -328,7 +338,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
           duration: const Duration(seconds: 5),
         ),
       );
-      
+
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -357,7 +367,10 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -382,7 +395,7 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
               ),
             ),
           ),
-          
+
           // Form Content
           Expanded(
             child: SingleChildScrollView(
@@ -393,257 +406,317 @@ class _CreateClassroomScreenState extends State<CreateClassroomScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 8),
-              
-              // School Affiliation Toggle
-              const Text(
-                'Classroom Type',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              
-              CleanCard(
-                child: Column(
-                  children: [
-                    RadioListTile<bool>(
-                      title: const Text('Independent', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                      subtitle: const Text(
-                        'Not affiliated with any school',
-                        style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+
+                    // School Affiliation Toggle
+                    const Text(
+                      'Classroom Type',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      value: true,
-                      groupValue: _isIndependent,
-                      onChanged: (value) {
-                        setState(() {
-                          _isIndependent = value!;
-                          _selectedSchoolId = null;
-                          _selectedSchoolName = null;
-                        });
-                      },
-                      activeColor: AppDesignSystem.primaryIndigo,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
                     ),
-                    const Divider(height: 1),
-                    RadioListTile<bool>(
-                      title: const Text('Under School', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                      subtitle: const Text(
-                        'Part of a school system',
-                        style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+                    const SizedBox(height: 8),
+
+                    CleanCard(
+                      child: Column(
+                        children: [
+                          RadioListTile<bool>(
+                            title: const Text(
+                              'Independent',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: const Text(
+                              'Not affiliated with any school',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF6B7280),
+                              ),
+                            ),
+                            value: true,
+                            groupValue: _isIndependent,
+                            onChanged: (value) {
+                              setState(() {
+                                _isIndependent = value!;
+                                _selectedSchoolId = null;
+                                _selectedSchoolName = null;
+                              });
+                            },
+                            activeColor: AppDesignSystem.primaryIndigo,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 0,
+                            ),
+                            visualDensity: const VisualDensity(
+                              horizontal: 0,
+                              vertical: -2,
+                            ),
+                          ),
+                          const Divider(height: 1),
+                          RadioListTile<bool>(
+                            title: const Text(
+                              'Under School',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: const Text(
+                              'Part of a school system',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF6B7280),
+                              ),
+                            ),
+                            value: false,
+                            groupValue: _isIndependent,
+                            onChanged: (value) {
+                              setState(() => _isIndependent = value!);
+                            },
+                            activeColor: AppDesignSystem.primaryIndigo,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 0,
+                            ),
+                            visualDensity: const VisualDensity(
+                              horizontal: 0,
+                              vertical: -2,
+                            ),
+                          ),
+                        ],
                       ),
-                      value: false,
-                      groupValue: _isIndependent,
-                      onChanged: (value) {
-                        setState(() => _isIndependent = value!);
-                      },
-                      activeColor: AppDesignSystem.primaryIndigo,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                      visualDensity: const VisualDensity(horizontal: 0, vertical: -2),
                     ),
-                  ],
-                ),
-              ),
-              
-              // School Selection (if under school)
-              if (!_isIndependent) ...[
-                const SizedBox(height: 16),
-                const Text(
-                  'Find School',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 12),
-                
-                if (_selectedSchoolName != null)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
+
+                    // School Selection (if under school)
+                    if (!_isIndependent) ...[
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Find School',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.check_circle, color: Colors.white, size: 24),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      const SizedBox(height: 12),
+
+                      if (_selectedSchoolName != null)
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF10B981,
+                                ).withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
                             children: [
-                              Text(
-                                'Selected School',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white.withValues(alpha: 0.9),
+                              const Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Selected School',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white.withValues(
+                                          alpha: 0.9,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _selectedSchoolName!,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _selectedSchoolName!,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.close,
                                   color: Colors.white,
                                 ),
+                                onPressed: () {
+                                  setState(() {
+                                    _selectedSchoolId = null;
+                                    _selectedSchoolName = null;
+                                  });
+                                },
                               ),
                             ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: () {
-                            setState(() {
-                              _selectedSchoolId = null;
-                              _selectedSchoolName = null;
-                            });
-                          },
+
+                      if (_selectedSchoolName == null) ...[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _schoolCodeController,
+                                decoration: const InputDecoration(
+                                  labelText: 'School Code',
+                                  hintText: 'e.g., SCH-XXXXX',
+                                  prefixIcon: Icon(Icons.qr_code),
+                                ),
+                                textCapitalization:
+                                    TextCapitalization.characters,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            ElevatedButton(
+                              onPressed: _isLoading ? null : _findSchool,
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 16,
+                                ),
+                              ),
+                              child: const Text('Find'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Ask your school principal for the school code',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppDesignSystem.textSecondary,
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                
-                if (_selectedSchoolName == null) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _schoolCodeController,
-                          decoration: const InputDecoration(
-                            labelText: 'School Code',
-                            hintText: 'e.g., SCH-XXXXX',
-                            prefixIcon: Icon(Icons.qr_code),
-                          ),
-                          textCapitalization: TextCapitalization.characters,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _findSchool,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        ),
-                        child: const Text('Find'),
-                      ),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Ask your school principal for the school code',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppDesignSystem.textSecondary,
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Classroom Details',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              ],
-              
-              const SizedBox(height: 20),
-              
-              const Text(
-                'Classroom Details',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              
-              const SizedBox(height: 12),
-              
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Classroom Name',
-                  hintText: 'e.g., Grade 10 - Section A',
-                  prefixIcon: Icon(Icons.class_),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a classroom name';
-                  }
-                  return null;
-                },
-              ),
-              
-              const SizedBox(height: 16),
-              
-              TextFormField(
-                controller: _gradeController,
-                decoration: const InputDecoration(
-                  labelText: 'Grade/Class',
-                  hintText: 'e.g., 10, 11, 12',
-                  prefixIcon: Icon(Icons.school),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a grade/class';
-                  }
-                  return null;
-                },
-              ),
-              
-              const SizedBox(height: 16),
-              
-              TextFormField(
-                controller: _subjectController,
-                decoration: const InputDecoration(
-                  labelText: 'Subject (Optional)',
-                  hintText: 'e.g., Social Science, Computer Science',
-                  prefixIcon: Icon(Icons.book),
-                ),
-              ),
-              
-              const SizedBox(height: 20),
-              
-              const Text(
-                'Classroom Access',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              
-              const SizedBox(height: 12),
-              
-              CleanCard(
-                child: SwitchListTile(
-                  title: const Text(
-                    'Locked Classroom',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  subtitle: const Text(
-                    'Students need your approval before joining',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                  value: _requiresApproval,
-                  onChanged: (value) {
-                    setState(() => _requiresApproval = value);
-                  },
-                  activeColor: AppDesignSystem.primaryIndigo,
-                ),
-              ),
-              
-              const SizedBox(height: 24),
-              
-              PrimaryButton(
-                text: _isLoading ? 'Creating...' : 'Create Classroom',
-                onPressed: _isLoading ? () {} : _createClassroom,
-                fullWidth: true,
-              ),
-              
-              const SizedBox(height: 12),
-              
-              const Center(
-                child: Text(
-                  'A unique join code will be generated',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF9CA3AF),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 24),
+
+                    const SizedBox(height: 12),
+
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Classroom Name',
+                        hintText: 'e.g., Grade 10 - Section A',
+                        prefixIcon: Icon(Icons.class_),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a classroom name';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _gradeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Grade/Class',
+                        hintText: 'e.g., 10, 11, 12',
+                        prefixIcon: Icon(Icons.school),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a grade/class';
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _subjectController,
+                      decoration: const InputDecoration(
+                        labelText: 'Subject (Optional)',
+                        hintText: 'e.g., Social Science, Computer Science',
+                        prefixIcon: Icon(Icons.book),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Classroom Access',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    CleanCard(
+                      child: SwitchListTile(
+                        title: const Text(
+                          'Locked Classroom',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: const Text(
+                          'Students need your approval before joining',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        value: _requiresApproval,
+                        onChanged: (value) {
+                          setState(() => _requiresApproval = value);
+                        },
+                        activeColor: AppDesignSystem.primaryIndigo,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    PrimaryButton(
+                      text: _isLoading ? 'Creating...' : 'Create Classroom',
+                      onPressed: _isLoading ? () {} : _createClassroom,
+                      fullWidth: true,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    const Center(
+                      child: Text(
+                        'A unique join code will be generated',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF9CA3AF),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),

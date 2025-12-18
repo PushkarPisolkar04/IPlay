@@ -42,20 +42,12 @@ class DrawingCanvasPainter extends CustomPainter {
 
     // Vertical lines
     for (double x = 0; x <= size.width; x += gridSize.toDouble()) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
     }
 
     // Horizontal lines
     for (double y = 0; y <= size.height; y += gridSize.toDouble()) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
   }
 

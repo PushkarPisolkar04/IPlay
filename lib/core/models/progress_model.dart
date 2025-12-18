@@ -5,7 +5,8 @@ class ProgressModel {
   final String userId;
   final String realmId;
   final List<int> completedLevels; // List of completed level numbers
-  final Map<String, int> levelStars; // Star ratings for each level (key: 'level_X', value: stars 0-5)
+  final Map<String, int>
+  levelStars; // Star ratings for each level (key: 'level_X', value: stars 0-5)
   final int currentLevelNumber; // Next level to be completed
   final int xpEarned; // Total XP earned in this realm
   final DateTime? lastAccessedAt;
@@ -41,12 +42,12 @@ class ProgressModel {
       userId: map['userId'] ?? '',
       realmId: map['realmId'] ?? '',
       completedLevels: List<int>.from(map['completedLevels'] ?? []),
-      levelStars: map['levelStars'] != null 
+      levelStars: map['levelStars'] != null
           ? Map<String, int>.from(map['levelStars'])
           : {},
       currentLevelNumber: map['currentLevelNumber'] ?? 1,
       xpEarned: map['xpEarned'] ?? 0,
-      lastAccessedAt: map['lastAccessedAt'] != null 
+      lastAccessedAt: map['lastAccessedAt'] != null
           ? (map['lastAccessedAt'] as Timestamp).toDate()
           : null,
     );
@@ -60,7 +61,7 @@ class ProgressModel {
       'levelStars': levelStars,
       'currentLevelNumber': currentLevelNumber,
       'xpEarned': xpEarned,
-      'lastAccessedAt': lastAccessedAt != null 
+      'lastAccessedAt': lastAccessedAt != null
           ? Timestamp.fromDate(lastAccessedAt!)
           : null,
     };
@@ -86,4 +87,3 @@ class ProgressModel {
     );
   }
 }
-

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/services/daily_challenge_service.dart';
 import '../../core/models/daily_challenge_model.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../widgets/game_ui/daily_xp_cap_popup.dart';
 
 class DailyChallengeScreen extends StatefulWidget {
   const DailyChallengeScreen({super.key});
@@ -20,26 +20,26 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
-  
+
   DailyChallengeModel? _challenge;
   ChallengeAttemptModel? _todayAttempt;
   bool _isLoading = true;
   bool _isSubmitting = false;
   String? _error;
   bool _showResults = false;
-  
+
   int _currentQuestionIndex = 0;
   final Map<int, int> _selectedAnswers = {};
   int? _selectedAnswer;
   bool _answerLocked = false;
   int _correctCount = 0;
-  
+
   @override
   void initState() {
     super.initState();
     _loadChallenge();
   }
-  
+
   @override
   void dispose() {
     _confettiController.dispose();
@@ -58,7 +58,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
       // Get today's challenge
       _challenge = await _challengeService.getTodaysChallenge();
-      
+
       if (_challenge == null) {
         setState(() {
           _error = 'No daily challenge available today. Check back tomorrow!';
@@ -89,7 +89,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
   void _selectAnswer(int index) {
     if (_answerLocked) return;
-    
+
     setState(() {
       _selectedAnswer = index;
       _answerLocked = true;
@@ -121,11 +121,18 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
       // Submit attempt
-      final attempt = await _challengeService.submitAttempt(
+      final result = await _challengeService.submitAttempt(
         userId: userId,
         challengeId: _challenge!.id,
         score: _correctCount,
       );
+
+      final attempt = result['attempt'] as ChallengeAttemptModel;
+      final warning = (result['warning'] as bool?) ?? false;
+      final currentDailyXP = (result['currentDailyXP'] as int?) ?? 0;
+      final dailyCap = (result['dailyCap'] as int?) ?? 1000;
+      final cappedAmount = (result['cappedAmount'] as int?) ?? 0;
+      final isFullyCapped = (result['isFullyCapped'] as bool?) ?? false;
 
       setState(() {
         _todayAttempt = attempt;
@@ -134,15 +141,27 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       });
 
       // Trigger confetti if passed
-      final percentage = (_correctCount / _challenge!.questions.length * 100).round();
+      final percentage = (_correctCount / _challenge!.questions.length * 100)
+          .round();
       if (percentage >= 60) {
         _confettiController.play();
       }
+
+      // Show daily XP cap popup if warning is true
+      if (warning && mounted) {
+        await showDailyXPCapPopup(
+          context,
+          currentXP: currentDailyXP,
+          dailyCap: dailyCap,
+          cappedAmount: cappedAmount,
+          isFullyCapped: isFullyCapped,
+        );
+      }
     } catch (e) {
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error submitting: $e')));
     }
   }
 
@@ -152,7 +171,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,
         appBar: AppBar(
-          title: const Text('Daily Challenge', style: TextStyle(color: Colors.white)),
+          title: const Text(
+            'Daily Challenge',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: AppDesignSystem.primaryIndigo,
           foregroundColor: Colors.white,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -161,11 +183,20 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(16))),
+              LoadingSkeleton(
+                height: 150,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 200,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 100,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
             ],
           ),
         ),
@@ -191,7 +222,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Daily Challenge', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Daily Challenge',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -202,7 +236,11 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: AppDesignSystem.textSecondary,
+              ),
               const SizedBox(height: 16),
               Text(
                 _error!,
@@ -229,7 +267,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Daily Challenge', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Daily Challenge',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -261,18 +302,16 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     ),
                   ],
                 ),
-                child: const Icon(Icons.check_circle, size: 50, color: Colors.white),
+                child: const Icon(
+                  Icons.check_circle,
+                  size: 50,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 24),
-              Text(
-                'Challenge Complete!',
-                style: AppTextStyles.h1,
-              ),
+              Text('Challenge Complete!', style: AppTextStyles.h1),
               const SizedBox(height: 16),
-              Text(
-                'Score: ${_todayAttempt!.score}/5',
-                style: AppTextStyles.h2,
-              ),
+              Text('Score: ${_todayAttempt!.score}/5', style: AppTextStyles.h2),
               const SizedBox(height: 8),
               Text(
                 'XP Earned: +${_todayAttempt!.xpEarned}',
@@ -295,7 +334,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppDesignSystem.primaryIndigo,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 48,
+                    vertical: 16,
+                  ),
                 ),
                 child: const Text('Back to Home'),
               ),
@@ -308,7 +350,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
   Widget _buildChallengeScreen() {
     final question = _challenge!.questions[_currentQuestionIndex];
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -326,7 +368,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
             children: [
               // Top bar
               _buildTopBar(),
-              
+
               // Progress bar
               Container(
                 height: 6,
@@ -334,9 +376,13 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
                   child: LinearProgressIndicator(
-                    value: (_currentQuestionIndex + 1) / _challenge!.questions.length,
+                    value:
+                        (_currentQuestionIndex + 1) /
+                        _challenge!.questions.length,
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppDesignSystem.primaryIndigo,
+                    ),
                   ),
                 ),
               ),
@@ -364,7 +410,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                              color: AppDesignSystem.primaryIndigo.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -373,7 +421,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                         child: Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(20),
@@ -409,32 +460,41 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                         final isSelected = _selectedAnswer == index;
                         final isCorrect = index == question.correctAnswer;
                         final showResult = _answerLocked;
-                        
+
                         Color? gradientStart;
                         Color? gradientEnd;
                         Color borderColor = Colors.grey[300]!;
                         Color textColor = const Color(0xFF1F2937);
-                        
+
                         if (showResult) {
                           if (isCorrect) {
                             gradientStart = AppDesignSystem.success;
-                            gradientEnd = AppDesignSystem.success.withValues(alpha: 0.8);
+                            gradientEnd = AppDesignSystem.success.withValues(
+                              alpha: 0.8,
+                            );
                             borderColor = AppDesignSystem.success;
                             textColor = Colors.white;
                           } else if (isSelected) {
                             gradientStart = AppDesignSystem.error;
-                            gradientEnd = AppDesignSystem.error.withValues(alpha: 0.8);
+                            gradientEnd = AppDesignSystem.error.withValues(
+                              alpha: 0.8,
+                            );
                             borderColor = AppDesignSystem.error;
                             textColor = Colors.white;
                           }
                         } else if (isSelected) {
-                          gradientStart = AppDesignSystem.primaryIndigo.withValues(alpha: 0.2);
-                          gradientEnd = AppDesignSystem.primaryPink.withValues(alpha: 0.2);
+                          gradientStart = AppDesignSystem.primaryIndigo
+                              .withValues(alpha: 0.2);
+                          gradientEnd = AppDesignSystem.primaryPink.withValues(
+                            alpha: 0.2,
+                          );
                           borderColor = AppDesignSystem.primaryIndigo;
                         }
 
                         return GestureDetector(
-                          onTap: _answerLocked ? null : () => _selectAnswer(index),
+                          onTap: _answerLocked
+                              ? null
+                              : () => _selectAnswer(index),
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
@@ -445,19 +505,24 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                                       colors: [gradientStart, gradientEnd!],
                                     )
                                   : null,
-                              color: gradientStart == null ? Colors.white : null,
+                              color: gradientStart == null
+                                  ? Colors.white
+                                  : null,
                               border: Border.all(color: borderColor, width: 2),
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 if (isSelected && !showResult)
                                   BoxShadow(
-                                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                                    color: AppDesignSystem.primaryIndigo
+                                        .withValues(alpha: 0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
                                 if (showResult && isCorrect)
                                   BoxShadow(
-                                    color: AppDesignSystem.success.withValues(alpha: 0.4),
+                                    color: AppDesignSystem.success.withValues(
+                                      alpha: 0.4,
+                                    ),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -471,14 +536,18 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                                     width: 36,
                                     height: 36,
                                     decoration: BoxDecoration(
-                                      color: showResult && (isCorrect || isSelected)
+                                      color:
+                                          showResult &&
+                                              (isCorrect || isSelected)
                                           ? Colors.white.withValues(alpha: 0.3)
                                           : borderColor.withValues(alpha: 0.15),
                                       shape: BoxShape.circle,
                                     ),
                                     child: Center(
                                       child: Text(
-                                        String.fromCharCode(65 + index), // A, B, C, D
+                                        String.fromCharCode(
+                                          65 + index,
+                                        ), // A, B, C, D
                                         style: TextStyle(
                                           color: textColor,
                                           fontWeight: FontWeight.bold,
@@ -500,7 +569,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                                   ),
                                   if (showResult && (isCorrect || isSelected))
                                     Icon(
-                                      isCorrect ? Icons.check_circle : Icons.cancel,
+                                      isCorrect
+                                          ? Icons.check_circle
+                                          : Icons.cancel,
                                       color: Colors.white,
                                       size: 24,
                                     ),
@@ -565,7 +636,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               padding: EdgeInsets.zero,
             ),
           ),
-          
+
           // Title
           Text(
             'Daily Challenge',
@@ -575,7 +646,7 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               color: AppDesignSystem.textPrimary,
             ),
           ),
-          
+
           // XP Badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -615,7 +686,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
   }
 
   Widget _buildResultScreen() {
-    final percentage = (_correctCount / _challenge!.questions.length * 100).round();
+    final percentage = (_correctCount / _challenge!.questions.length * 100)
+        .round();
     final passed = percentage >= 60;
     final isPerfect = percentage == 100;
     final xpEarned = _todayAttempt!.xpEarned;
@@ -623,7 +695,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Challenge Complete', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Challenge Complete',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -645,14 +720,14 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
               ],
             ),
           ),
-          
+
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   const Spacer(flex: 1),
-                  
+
                   // Animated Result icon
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 600),
@@ -671,7 +746,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                               colors: passed
                                   ? [
                                       AppDesignSystem.success,
-                                      AppDesignSystem.success.withValues(alpha: 0.7),
+                                      AppDesignSystem.success.withValues(
+                                        alpha: 0.7,
+                                      ),
                                     ]
                                   : [
                                       Colors.orange,
@@ -681,8 +758,10 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: passed 
-                                    ? AppDesignSystem.success.withValues(alpha: 0.4)
+                                color: passed
+                                    ? AppDesignSystem.success.withValues(
+                                        alpha: 0.4,
+                                      )
                                     : Colors.orange.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 5,
@@ -703,8 +782,8 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
 
                   // Title
                   Text(
-                    passed 
-                        ? (isPerfect ? 'Perfect Score!' : 'Great Job!') 
+                    passed
+                        ? (isPerfect ? 'Perfect Score!' : 'Great Job!')
                         : 'Good Try!',
                     style: const TextStyle(
                       fontSize: 32,
@@ -744,11 +823,18 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
                     ),
                     child: Column(
                       children: [
-                        _buildStatRow('Score', '$_correctCount/${_challenge!.questions.length}'),
+                        _buildStatRow(
+                          'Score',
+                          '$_correctCount/${_challenge!.questions.length}',
+                        ),
                         const Divider(height: 24),
                         _buildStatRow('Accuracy', '$percentage%'),
                         const Divider(height: 24),
-                        _buildStatRow('XP Earned', '+$xpEarned XP', isHighlight: true),
+                        _buildStatRow(
+                          'XP Earned',
+                          '+$xpEarned XP',
+                          isHighlight: true,
+                        ),
                       ],
                     ),
                   ),
@@ -804,7 +890,9 @@ class _DailyChallengeScreenState extends State<DailyChallengeScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: isHighlight ? AppDesignSystem.primaryIndigo : AppDesignSystem.textPrimary,
+            color: isHighlight
+                ? AppDesignSystem.primaryIndigo
+                : AppDesignSystem.textPrimary,
           ),
         ),
       ],

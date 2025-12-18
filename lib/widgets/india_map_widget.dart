@@ -44,28 +44,25 @@ class _IndiaMapWidgetState extends State<IndiaMapWidget> {
         child: Stack(
           children: [
             // SVG Map
-            SvgPicture.asset(
-              'assets/maps/india_map.svg',
-              fit: BoxFit.contain,
-            ),
-            
+            SvgPicture.asset('assets/maps/india_map.svg', fit: BoxFit.contain),
+
             // Interactive overlay for each state
             ...widget.mapData.states.map((state) {
               return _buildStateOverlay(state);
             }),
-            
+
             // Product pins on placed states
             ...widget.statePlacements.entries
                 .where((entry) => entry.value != null)
                 .map((entry) {
-              final stateCode = entry.key;
-              final product = entry.value!;
-              final state = widget.mapData.getStateByCode(stateCode);
-              
-              if (state == null) return const SizedBox.shrink();
-              
-              return _buildProductPin(state, product);
-            }),
+                  final stateCode = entry.key;
+                  final product = entry.value!;
+                  final state = widget.mapData.getStateByCode(stateCode);
+
+                  if (state == null) return const SizedBox.shrink();
+
+                  return _buildProductPin(state, product);
+                }),
           ],
         ),
       ),
@@ -76,7 +73,7 @@ class _IndiaMapWidgetState extends State<IndiaMapWidget> {
     final hasProduct = widget.statePlacements[state.code] != null;
     final product = widget.statePlacements[state.code];
     final isHovered = _hoveredStateCode == state.code;
-    
+
     Color? overlayColor;
     if (widget.showResults && hasProduct && product != null) {
       // Show correct/incorrect feedback
@@ -121,9 +118,7 @@ class _IndiaMapWidgetState extends State<IndiaMapWidget> {
               widget.onStateHover?.call(null);
             },
             child: overlayColor != null
-                ? Container(
-                    color: overlayColor,
-                  )
+                ? Container(color: overlayColor)
                 : const SizedBox.shrink(),
           );
         },
@@ -133,9 +128,10 @@ class _IndiaMapWidgetState extends State<IndiaMapWidget> {
 
   Widget _buildProductPin(StateData state, GIProduct product) {
     final isCorrect = product.stateCode == state.code;
-    
+
     return Positioned(
-      left: 100, // This would need proper positioning based on state coordinates
+      left:
+          100, // This would need proper positioning based on state coordinates
       top: 100,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),

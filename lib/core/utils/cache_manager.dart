@@ -1,7 +1,7 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// Custom cache manager for IPlay app with aggressive caching strategy
-/// 
+///
 /// Cache durations:
 /// - Static content (images, icons): 24 hours
 /// - User data (avatars, profiles): 1 hour

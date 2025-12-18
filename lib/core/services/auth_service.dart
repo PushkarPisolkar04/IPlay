@@ -8,7 +8,7 @@ import '../models/user_model.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Initialize GoogleSignIn conditionally - on web it needs client ID in index.html
   late final GoogleSignIn? _googleSignIn = kIsWeb ? null : GoogleSignIn();
 
@@ -28,9 +28,9 @@ class AuthService {
         email: email,
         password: password,
       );
-      
+
       // Email verification removed - email kept for notifications, reports, and joining via links
-      
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
@@ -57,18 +57,21 @@ class AuthService {
     try {
       // Google Sign-In not configured for web
       if (kIsWeb || _googleSignIn == null) {
-        throw Exception('Google sign-in is not available on web. Please use email/password sign-in.');
+        throw Exception(
+          'Google sign-in is not available on web. Please use email/password sign-in.',
+        );
       }
 
       // Trigger Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
-      
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
       if (googleUser == null) {
         throw Exception('Google sign-in canceled');
       }
 
       // Obtain auth details
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Create credential
       final credential = GoogleAuthProvider.credential(
@@ -106,7 +109,10 @@ class AuthService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('users').doc(uid).set(userModel.toFirestore());
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .set(userModel.toFirestore());
     } catch (e) {
       throw Exception('Failed to create user profile: $e');
     }
@@ -151,7 +157,7 @@ class AuthService {
     try {
       final futures = <Future>[_auth.signOut()];
       if (_googleSignIn != null) {
-        futures.add(_googleSignIn!.signOut());
+        futures.add(_googleSignIn.signOut());
       }
       await Future.wait(futures);
     } catch (e) {
@@ -196,4 +202,3 @@ class AuthService {
     }
   }
 }
-

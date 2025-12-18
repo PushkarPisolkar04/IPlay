@@ -26,10 +26,10 @@ class XPService {
 
   // Replay XP reduction percentages
   static const List<double> REPLAY_XP_MULTIPLIERS = [
-    1.0,   // 1st attempt: 100%
-    0.25,  // 2nd attempt: 25%
-    0.10,  // 3rd attempt: 10%
-    0.0,   // 4th+ attempt: 0%
+    1.0, // 1st attempt: 100%
+    0.25, // 2nd attempt: 25%
+    0.10, // 3rd attempt: 10%
+    0.0, // 4th+ attempt: 0%
   ];
 
   /// Calculate XP for completing a level based on difficulty and attempts
@@ -42,7 +42,10 @@ class XPService {
     final baseXP = customXP ?? DIFFICULTY_XP[difficulty.toLowerCase()] ?? 100;
 
     // Apply replay multiplier
-    final multiplierIndex = (attemptCount - 1).clamp(0, REPLAY_XP_MULTIPLIERS.length - 1);
+    final multiplierIndex = (attemptCount - 1).clamp(
+      0,
+      REPLAY_XP_MULTIPLIERS.length - 1,
+    );
     final multiplier = REPLAY_XP_MULTIPLIERS[multiplierIndex];
 
     return (baseXP * multiplier).round();
@@ -50,24 +53,61 @@ class XPService {
 
   /// Check if user has reached daily XP cap
   /// Returns: {hasReachedCap: bool, currentDailyXP: int, remainingXP: int}
+  ///
+  /// IMPORTANT: This method checks XP from multiple sources:
+  /// - Level completions (progress collection)
+  /// - Daily challenges (daily_challenge_attempts collection)
+  ///
+  /// NOTE: Game XP is NOT included here because game_progress.totalXPEarned is cumulative.
+  /// However, game XP is still capped because awardGameXP() calls calculateAwardedXP()
+  /// before awarding XP. For accurate daily XP tracking across all sources, consider
+  /// implementing a daily_xp_log collection that logs all XP awards with timestamps.
   Future<Map<String, dynamic>> checkDailyXPCap(String userId) async {
     try {
       final today = DateTime.now();
       final startOfDay = DateTime(today.year, today.month, today.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      // Query all progress updates from today
-      final todayProgress = await _firestore
-          .collection('progress')
-          .where('userId', isEqualTo: userId)
-          .where('lastAttemptAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('lastAttemptAt', isLessThan: Timestamp.fromDate(endOfDay))
-          .get();
+      final startTimestamp = Timestamp.fromDate(startOfDay);
+      final endTimestamp = Timestamp.fromDate(endOfDay);
 
       int totalDailyXP = 0;
-      for (final doc in todayProgress.docs) {
-        totalDailyXP += (doc.data()['xpEarned'] as int?) ?? 0;
+
+      // 1. Check level completions from progress collection
+      try {
+        final todayProgress = await _firestore
+            .collection('progress')
+            .where('userId', isEqualTo: userId)
+            .where('lastAttemptAt', isGreaterThanOrEqualTo: startTimestamp)
+            .where('lastAttemptAt', isLessThan: endTimestamp)
+            .get();
+
+        for (final doc in todayProgress.docs) {
+          totalDailyXP += (doc.data()['xpEarned'] as int?) ?? 0;
+        }
+      } catch (e) {
+        print('⚠️ Error checking progress XP: $e');
       }
+
+      // 2. Check daily challenge attempts
+      try {
+        final challengeAttempts = await _firestore
+            .collection('daily_challenge_attempts')
+            .where('userId', isEqualTo: userId)
+            .where('attemptedAt', isGreaterThanOrEqualTo: startTimestamp)
+            .where('attemptedAt', isLessThan: endTimestamp)
+            .get();
+
+        for (final doc in challengeAttempts.docs) {
+          totalDailyXP += (doc.data()['xpEarned'] as int?) ?? 0;
+        }
+      } catch (e) {
+        print('⚠️ Error checking daily challenge XP: $e');
+      }
+
+      // Note: Game XP is enforced at award time via calculateAwardedXP() in awardGameXP()
+      // but cannot be accurately tracked here because game_progress.totalXPEarned is cumulative.
+      // This means the displayed daily XP might be slightly inaccurate, but users cannot
+      // exceed the cap because each service enforces it before awarding XP.
 
       final hasReachedCap = totalDailyXP >= DAILY_XP_CAP;
       final remainingXP = (DAILY_XP_CAP - totalDailyXP).clamp(0, DAILY_XP_CAP);
@@ -78,7 +118,7 @@ class XPService {
         'remainingXP': remainingXP,
       };
     } catch (e) {
-      // print('Error checking daily XP cap: $e');
+      print('❌ Error checking daily XP cap: $e');
       return {
         'hasReachedCap': false,
         'currentDailyXP': 0,
@@ -88,19 +128,18 @@ class XPService {
   }
 
   /// Award first login of day bonus
-  /// Returns XP awarded (10 if eligible, 0 if already claimed today)
+  /// Returns XP awarded (10 if eligible, 0 if already claimed today or cap reached)
   /// Note: This method does NOT update streaks - streaks are updated when XP is earned through activities
+  /// Enforces daily XP cap before awarding
   Future<int> awardFirstLoginBonus(String userId) async {
     try {
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await _firestore.collection('users').doc(userId).get();
 
       if (!userDoc.exists) return 0;
 
       final userData = userDoc.data()!;
-      final lastActiveDate = (userData['lastActiveDate'] as Timestamp?)?.toDate();
+      final lastActiveDate = (userData['lastActiveDate'] as Timestamp?)
+          ?.toDate();
 
       if (lastActiveDate == null) {
         // First time logging in - initialize lastActiveDate
@@ -113,17 +152,31 @@ class XPService {
       }
 
       final now = DateTime.now();
-      final lastActiveDay = DateTime(lastActiveDate.year, lastActiveDate.month, lastActiveDate.day);
+      final lastActiveDay = DateTime(
+        lastActiveDate.year,
+        lastActiveDate.month,
+        lastActiveDate.day,
+      );
       final today = DateTime(now.year, now.month, now.day);
 
       // Check if it's a new day
       if (today.isAfter(lastActiveDay)) {
-        // Award bonus but DON'T update lastActiveDate (let actual activities do that)
-        await _firestore.collection('users').doc(userId).update({
-          'totalXP': FieldValue.increment(FIRST_LOGIN_BONUS),
-          'updatedAt': Timestamp.now(),
-        });
-        return FIRST_LOGIN_BONUS;
+        // Enforce daily XP cap before awarding
+        final xpCapResult = await calculateAwardedXP(
+          userId: userId,
+          earnedXP: FIRST_LOGIN_BONUS,
+        );
+        final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+
+        if (xpToAward > 0) {
+          // Award bonus but DON'T update lastActiveDate (let actual activities do that)
+          await _firestore.collection('users').doc(userId).update({
+            'totalXP': FieldValue.increment(xpToAward),
+            'updatedAt': Timestamp.now(),
+          });
+          return xpToAward;
+        }
+        return 0; // Cap reached
       }
 
       return 0; // Already logged in today
@@ -137,10 +190,7 @@ class XPService {
   /// Returns XP awarded (100 if user has 7+ day streak, 0 otherwise)
   Future<int> awardStreakMilestoneBonus(String userId) async {
     try {
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await _firestore.collection('users').doc(userId).get();
 
       if (!userDoc.exists) return 0;
 
@@ -153,13 +203,23 @@ class XPService {
         final lastStreakBonusAt = userData['lastStreakBonusAt'] as Timestamp?;
         final now = DateTime.now();
 
-        if (lastStreakBonusAt == null || 
+        if (lastStreakBonusAt == null ||
             now.difference(lastStreakBonusAt.toDate()).inDays >= 7) {
-          await _firestore.collection('users').doc(userId).update({
-            'totalXP': FieldValue.increment(SEVEN_DAY_STREAK_BONUS),
-            'lastStreakBonusAt': Timestamp.now(),
-          });
-          return SEVEN_DAY_STREAK_BONUS;
+          // Enforce daily XP cap before awarding
+          final xpCapResult = await calculateAwardedXP(
+            userId: userId,
+            earnedXP: SEVEN_DAY_STREAK_BONUS,
+          );
+          final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+
+          if (xpToAward > 0) {
+            await _firestore.collection('users').doc(userId).update({
+              'totalXP': FieldValue.increment(xpToAward),
+              'lastStreakBonusAt': Timestamp.now(),
+            });
+            return xpToAward;
+          }
+          return 0; // Cap reached
         }
       }
 
@@ -184,28 +244,43 @@ class XPService {
       if (levelsCompleted < totalLevels) return 0;
 
       // Check if we already awarded completion bonus for this realm
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await _firestore.collection('users').doc(userId).get();
 
       if (!userDoc.exists) return 0;
 
       final userData = userDoc.data()!;
-      final progressSummary = userData['progressSummary'] as Map<String, dynamic>? ?? {};
-      final realmProgress = progressSummary[realmId] as Map<String, dynamic>? ?? {};
-      
-      final completionBonusAwarded = realmProgress['completionBonusAwarded'] as bool? ?? false;
+      final progressSummary =
+          userData['progressSummary'] as Map<String, dynamic>? ?? {};
+      final realmProgress =
+          progressSummary[realmId] as Map<String, dynamic>? ?? {};
+
+      final completionBonusAwarded =
+          realmProgress['completionBonusAwarded'] as bool? ?? false;
 
       if (!completionBonusAwarded) {
+        // Enforce daily XP cap before awarding
+        final xpCapResult = await calculateAwardedXP(
+          userId: userId,
+          earnedXP: REALM_COMPLETION_BONUS,
+        );
+        final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+
+        if (xpToAward > 0) {
+          await _firestore.collection('users').doc(userId).update({
+            'totalXP': FieldValue.increment(xpToAward),
+            'progressSummary.$realmId.completionBonusAwarded': true,
+            'updatedAt': Timestamp.now(),
+          });
+
+          print('✅ Awarded $xpToAward XP realm completion bonus for $realmId');
+          return xpToAward;
+        }
+        // Still mark as awarded even if cap reached, to prevent retry
         await _firestore.collection('users').doc(userId).update({
-          'totalXP': FieldValue.increment(REALM_COMPLETION_BONUS),
           'progressSummary.$realmId.completionBonusAwarded': true,
           'updatedAt': Timestamp.now(),
         });
-        
-        print('✅ Awarded $REALM_COMPLETION_BONUS XP realm completion bonus for $realmId');
-        return REALM_COMPLETION_BONUS;
+        return 0; // Cap reached
       }
 
       return 0;
@@ -239,7 +314,8 @@ class XPService {
         'xpToAward': remainingXP,
         'cappedAmount': earnedXP - remainingXP,
         'warning': true,
-        'message': 'You\'re close to your daily XP cap! You earned $remainingXP XP (${ earnedXP - remainingXP} XP capped).',
+        'message':
+            'You\'re close to your daily XP cap! You earned $remainingXP XP (${earnedXP - remainingXP} XP capped).',
       };
     }
 
@@ -294,7 +370,9 @@ class XPService {
 
       // Check for rank changes and send notifications if needed
       // Run this asynchronously to not block the XP award
-      _leaderboardService.monitorUserRankChanges(userId: userId).catchError((e) {
+      _leaderboardService.monitorUserRankChanges(userId: userId).catchError((
+        e,
+      ) {
         print('⚠️ Error monitoring rank changes: $e');
       });
     } catch (e) {
@@ -302,4 +380,3 @@ class XPService {
     }
   }
 }
-

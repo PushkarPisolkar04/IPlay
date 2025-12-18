@@ -70,9 +70,7 @@ class DrawingToolbar extends StatelessWidget {
                   icon: const Icon(Icons.save, size: 20),
                   label: const Text('Save'),
                   onPressed: onSave,
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.teal,
-                  ),
+                  style: TextButton.styleFrom(foregroundColor: Colors.teal),
                 ),
 
               const SizedBox(width: 8),
@@ -100,7 +98,9 @@ class DrawingToolbar extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Clear Canvas'),
-        content: const Text('Are you sure you want to clear all layers? This action cannot be undone.'),
+        content: const Text(
+          'Are you sure you want to clear all layers? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -138,7 +138,7 @@ class DrawingStorageService {
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Get existing drawings
       final drawingsJson = prefs.getString(_storageKey);
       final drawings = drawingsJson != null
@@ -184,7 +184,9 @@ class DrawingStorageService {
 
       if (drawingsJson == null) return [];
 
-      final drawingsList = List<Map<String, dynamic>>.from(json.decode(drawingsJson));
+      final drawingsList = List<Map<String, dynamic>>.from(
+        json.decode(drawingsJson),
+      );
 
       return drawingsList.map((data) {
         return SavedDrawing(
@@ -209,7 +211,9 @@ class DrawingStorageService {
 
       if (drawingsJson == null) return false;
 
-      final drawings = List<Map<String, dynamic>>.from(json.decode(drawingsJson));
+      final drawings = List<Map<String, dynamic>>.from(
+        json.decode(drawingsJson),
+      );
       drawings.removeWhere((d) => d['id'] == id);
 
       await prefs.setString(_storageKey, json.encode(drawings));
@@ -376,9 +380,9 @@ class _SaveDrawingDialogState extends State<SaveDrawingDialog> {
           const SnackBar(content: Text('Drawing saved successfully!')),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save drawing')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to save drawing')));
       }
     }
   }
@@ -454,9 +458,9 @@ class _ExportDrawingDialogState extends State<ExportDrawingDialog> {
 
   Future<void> _export() async {
     if (_nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a file name')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a file name')));
       return;
     }
 
@@ -474,9 +478,9 @@ class _ExportDrawingDialogState extends State<ExportDrawingDialog> {
 
       if (filePath != null) {
         Navigator.pop(context, filePath);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Exported to: $filePath')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Exported to: $filePath')));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to export drawing')),
@@ -506,10 +510,7 @@ class _ExportDrawingDialogState extends State<ExportDrawingDialog> {
           const SizedBox(height: 12),
           Text(
             'Image will be exported as PNG format',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
           if (_exporting) ...[
             const SizedBox(height: 16),

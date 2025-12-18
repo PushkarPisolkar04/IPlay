@@ -61,15 +61,15 @@ class LevelCard extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getStatusColor(effectiveColor).withValues(alpha: 0.1),
+                    color: _getStatusColor(
+                      effectiveColor,
+                    ).withValues(alpha: 0.1),
                     borderRadius: AppDesignSystem.borderRadiusMD,
                   ),
-                  child: Center(
-                    child: _buildStatusIcon(effectiveColor),
-                  ),
+                  child: Center(child: _buildStatusIcon(effectiveColor)),
                 ),
                 const SizedBox(width: AppDesignSystem.spacingMD),
-                
+
                 // Level info
                 Expanded(
                   child: Column(
@@ -88,7 +88,7 @@ class LevelCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: AppDesignSystem.spacingXS),
-                      
+
                       // Metadata
                       Wrap(
                         spacing: AppDesignSystem.spacingSM,
@@ -110,7 +110,7 @@ class LevelCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      
+
                       // Score if completed
                       if (isCompleted && score != null) ...[
                         const SizedBox(height: AppDesignSystem.spacingXS),
@@ -125,19 +125,19 @@ class LevelCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // Arrow or lock icon
                 Icon(
                   isLocked
                       ? Icons.lock
                       : isCompleted
-                          ? Icons.check_circle
-                          : Icons.arrow_forward_ios,
+                      ? Icons.check_circle
+                      : Icons.arrow_forward_ios,
                   color: isLocked
                       ? AppDesignSystem.textTertiary
                       : isCompleted
-                          ? AppDesignSystem.success
-                          : effectiveColor,
+                      ? AppDesignSystem.success
+                      : effectiveColor,
                   size: 20,
                 ),
               ],
@@ -150,17 +150,9 @@ class LevelCard extends StatelessWidget {
 
   Widget _buildStatusIcon(Color color) {
     if (isLocked) {
-      return Icon(
-        Icons.lock,
-        color: AppDesignSystem.textTertiary,
-        size: 24,
-      );
+      return Icon(Icons.lock, color: AppDesignSystem.textTertiary, size: 24);
     } else if (isCompleted) {
-      return Icon(
-        Icons.check_circle,
-        color: AppDesignSystem.success,
-        size: 24,
-      );
+      return Icon(Icons.check_circle, color: AppDesignSystem.success, size: 24);
     } else {
       return Text(
         '$levelNumber',
@@ -196,11 +188,7 @@ class LevelCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(
-              icon,
-              size: 10,
-              color: color,
-            ),
+            Icon(icon, size: 10, color: color),
             const SizedBox(width: 4),
           ],
           Text(

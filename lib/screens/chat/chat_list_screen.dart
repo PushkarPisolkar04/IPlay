@@ -89,7 +89,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -118,275 +121,310 @@ class _ChatListScreenState extends State<ChatListScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: _chatService.getUserChats(),
                 builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: AppDesignSystem.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Error loading chats',
-                    style: AppDesignSystem.h5,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    snapshot.error.toString(),
-                    style: AppDesignSystem.bodySmall.copyWith(
-                      color: AppDesignSystem.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const ListSkeleton(itemCount: 5);
-          }
-
-          final chats = snapshot.data?.docs ?? [];
-
-          if (chats.isEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                // Force refresh by rebuilding
-                setState(() {});
-              },
-              color: AppDesignSystem.primaryIndigo,
-              child: ListView(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height - 200,
-                    child: Center(
+                  if (snapshot.hasError) {
+                    return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80,
-                            color: AppDesignSystem.textTertiary,
+                            Icons.error_outline,
+                            size: 64,
+                            color: AppDesignSystem.error,
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 16),
                           Text(
-                            'No messages yet',
-                            style: AppDesignSystem.h4.copyWith(
+                            'Error loading chats',
+                            style: AppDesignSystem.h5,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            snapshot.error.toString(),
+                            style: AppDesignSystem.bodySmall.copyWith(
                               color: AppDesignSystem.textSecondary,
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 48),
-                            child: Text(
-                              _userRole == 'student'
-                                  ? 'No messages yet\n\nTap the button below to message your teachers!'
-                                  : 'No messages yet\n\nTap the button below to message your students!',
-                              style: AppDesignSystem.bodyMedium.copyWith(
-                                color: AppDesignSystem.textTertiary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
+                    );
+                  }
 
-          // Filter chats to only show those with messages
-          final chatsWithMessages = chats.where((chat) {
-            final chatData = chat.data() as Map<String, dynamic>;
-            final lastMessage = chatData['lastMessage'] as String? ?? '';
-            return lastMessage.isNotEmpty;
-          }).toList();
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const ListSkeleton(itemCount: 5);
+                  }
 
-          if (chatsWithMessages.isEmpty) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                setState(() {});
-              },
-              color: AppDesignSystem.primaryIndigo,
-              child: ListView(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height - 200,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  final chats = snapshot.data?.docs ?? [];
+
+                  if (chats.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        // Force refresh by rebuilding
+                        setState(() {});
+                      },
+                      color: AppDesignSystem.primaryIndigo,
+                      child: ListView(
                         children: [
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 80,
-                            color: AppDesignSystem.textTertiary,
-                          ),
-                          const SizedBox(height: 24),
-                          Text(
-                            'No messages yet',
-                            style: AppDesignSystem.h4.copyWith(
-                              color: AppDesignSystem.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 48),
-                            child: Text(
-                              _userRole == 'student'
-                                  ? 'Tap the button below to message your teachers!'
-                                  : 'Tap the button below to message your students!',
-                              style: AppDesignSystem.bodyMedium.copyWith(
-                                color: AppDesignSystem.textTertiary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              // Force refresh by rebuilding
-              setState(() {});
-            },
-            color: AppDesignSystem.primaryIndigo,
-            child: ListView.separated(
-            itemCount: chatsWithMessages.length,
-            separatorBuilder: (context, index) => const Divider(height: 1),
-            itemBuilder: (context, index) {
-              final chat = chatsWithMessages[index].data() as Map<String, dynamic>;
-              final chatId = chatsWithMessages[index].id;
-              final participants = List<String>.from(chat['participants'] ?? []);
-              final otherUserId = participants.firstWhere(
-                (id) => id != currentUserId,
-                orElse: () => '',
-              );
-              final lastMessage = chat['lastMessage'] as String? ?? '';
-              final lastMessageAt = chat['lastMessageAt'] as Timestamp?;
-              final unreadCount = (chat['unreadCount'] as Map<String, dynamic>?)?[currentUserId] ?? 0;
-
-              return FutureBuilder<Map<String, dynamic>?>(
-                future: _getUserData(otherUserId),
-                builder: (context, userSnapshot) {
-                  final userData = userSnapshot.data;
-                  final userName = userData?['displayName'] ?? 'User';
-                  final userAvatar = userData?['avatarUrl'];
-
-                  return ListTile(
-                    leading: Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 24,
-                          backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                          backgroundImage: userAvatar != null
-                              ? (userAvatar.startsWith('http')
-                                  ? NetworkImage(userAvatar)
-                                  : AssetImage(userAvatar) as ImageProvider)
-                              : null,
-                          child: userAvatar == null
-                              ? Text(
-                                  userName[0].toUpperCase(),
-                                  style: AppDesignSystem.h6.copyWith(
-                                    color: AppDesignSystem.primaryIndigo,
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height - 200,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.chat_bubble_outline,
+                                    size: 80,
+                                    color: AppDesignSystem.textTertiary,
                                   ),
-                                )
-                              : null,
-                        ),
-                        if (unreadCount > 0)
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: AppDesignSystem.error,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.white, width: 2),
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 20,
-                                minHeight: 20,
-                              ),
-                              child: Text(
-                                unreadCount > 9 ? '9+' : unreadCount.toString(),
-                                style: AppDesignSystem.caption.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10,
-                                ),
-                                textAlign: TextAlign.center,
+                                  const SizedBox(height: 24),
+                                  Text(
+                                    'No messages yet',
+                                    style: AppDesignSystem.h4.copyWith(
+                                      color: AppDesignSystem.textSecondary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 48,
+                                    ),
+                                    child: Text(
+                                      _userRole == 'student'
+                                          ? 'No messages yet\n\nTap the button below to message your teachers!'
+                                          : 'No messages yet\n\nTap the button below to message your students!',
+                                      style: AppDesignSystem.bodyMedium
+                                          .copyWith(
+                                            color: AppDesignSystem.textTertiary,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                    title: Text(
-                      userName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: unreadCount > 0 ? FontWeight.bold : FontWeight.w600,
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(
-                      lastMessage.isEmpty ? 'No messages yet' : lastMessage,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: unreadCount > 0
-                            ? AppDesignSystem.textPrimary
-                            : AppDesignSystem.textSecondary,
-                        fontWeight: unreadCount > 0 ? FontWeight.w600 : FontWeight.normal,
+                    );
+                  }
+
+                  // Filter chats to only show those with messages
+                  final chatsWithMessages = chats.where((chat) {
+                    final chatData = chat.data() as Map<String, dynamic>;
+                    final lastMessage =
+                        chatData['lastMessage'] as String? ?? '';
+                    return lastMessage.isNotEmpty;
+                  }).toList();
+
+                  if (chatsWithMessages.isEmpty) {
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {});
+                      },
+                      color: AppDesignSystem.primaryIndigo,
+                      child: ListView(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height - 200,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.chat_bubble_outline,
+                                    size: 80,
+                                    color: AppDesignSystem.textTertiary,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  Text(
+                                    'No messages yet',
+                                    style: AppDesignSystem.h4.copyWith(
+                                      color: AppDesignSystem.textSecondary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 48,
+                                    ),
+                                    child: Text(
+                                      _userRole == 'student'
+                                          ? 'Tap the button below to message your teachers!'
+                                          : 'Tap the button below to message your students!',
+                                      style: AppDesignSystem.bodyMedium
+                                          .copyWith(
+                                            color: AppDesignSystem.textTertiary,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          _formatTimestamp(lastMessageAt),
-                          style: AppDesignSystem.caption.copyWith(
-                            color: unreadCount > 0
-                                ? AppDesignSystem.primaryIndigo
-                                : AppDesignSystem.textTertiary,
-                            fontWeight: unreadCount > 0 ? FontWeight.w600 : FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatScreen(
-                            chatId: chatId,
-                            otherUserName: userName,
-                            otherUserAvatar: userAvatar,
-                          ),
-                        ),
-                      );
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      // Force refresh by rebuilding
+                      setState(() {});
                     },
+                    color: AppDesignSystem.primaryIndigo,
+                    child: ListView.separated(
+                      itemCount: chatsWithMessages.length,
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final chat =
+                            chatsWithMessages[index].data()
+                                as Map<String, dynamic>;
+                        final chatId = chatsWithMessages[index].id;
+                        final participants = List<String>.from(
+                          chat['participants'] ?? [],
+                        );
+                        final otherUserId = participants.firstWhere(
+                          (id) => id != currentUserId,
+                          orElse: () => '',
+                        );
+                        final lastMessage =
+                            chat['lastMessage'] as String? ?? '';
+                        final lastMessageAt =
+                            chat['lastMessageAt'] as Timestamp?;
+                        final unreadCount =
+                            (chat['unreadCount']
+                                as Map<String, dynamic>?)?[currentUserId] ??
+                            0;
+
+                        return FutureBuilder<Map<String, dynamic>?>(
+                          future: _getUserData(otherUserId),
+                          builder: (context, userSnapshot) {
+                            final userData = userSnapshot.data;
+                            final userName = userData?['displayName'] ?? 'User';
+                            final userAvatar = userData?['avatarUrl'];
+
+                            return ListTile(
+                              leading: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: AppDesignSystem
+                                        .primaryIndigo
+                                        .withValues(alpha: 0.1),
+                                    backgroundImage: userAvatar != null
+                                        ? (userAvatar.startsWith('http')
+                                              ? NetworkImage(userAvatar)
+                                              : AssetImage(userAvatar)
+                                                    as ImageProvider)
+                                        : null,
+                                    child: userAvatar == null
+                                        ? Text(
+                                            userName[0].toUpperCase(),
+                                            style: AppDesignSystem.h6.copyWith(
+                                              color:
+                                                  AppDesignSystem.primaryIndigo,
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                  if (unreadCount > 0)
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: AppDesignSystem.error,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ),
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 20,
+                                          minHeight: 20,
+                                        ),
+                                        child: Text(
+                                          unreadCount > 9
+                                              ? '9+'
+                                              : unreadCount.toString(),
+                                          style: AppDesignSystem.caption
+                                              .copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              title: Text(
+                                userName,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: unreadCount > 0
+                                      ? FontWeight.bold
+                                      : FontWeight.w600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              subtitle: Text(
+                                lastMessage.isEmpty
+                                    ? 'No messages yet'
+                                    : lastMessage,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: unreadCount > 0
+                                      ? AppDesignSystem.textPrimary
+                                      : AppDesignSystem.textSecondary,
+                                  fontWeight: unreadCount > 0
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    _formatTimestamp(lastMessageAt),
+                                    style: AppDesignSystem.caption.copyWith(
+                                      color: unreadCount > 0
+                                          ? AppDesignSystem.primaryIndigo
+                                          : AppDesignSystem.textTertiary,
+                                      fontWeight: unreadCount > 0
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatScreen(
+                                      chatId: chatId,
+                                      otherUserName: userName,
+                                      otherUserAvatar: userAvatar,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
                   );
                 },
-              );
-            },
-            ),
-          );
-        },
               ),
             ),
           ],
@@ -407,7 +445,10 @@ class _ChatListScreenState extends State<ChatListScreen> {
               backgroundColor: AppDesignSystem.primaryIndigo,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('New Message', style: TextStyle(color: Colors.white)),
+              label: const Text(
+                'New Message',
+                style: TextStyle(color: Colors.white),
+              ),
             )
           : null,
     );

@@ -22,7 +22,7 @@ class _LearnScreenState extends State<LearnScreen> {
   List<RealmModel> _realms = [];
   Map<String, dynamic> _userProgress = {};
   bool _isLoading = true;
-  
+
   // Cached calculations to avoid recomputing in build
   int _cachedTotalXP = 0;
   int _cachedCompletedRealms = 0;
@@ -37,7 +37,7 @@ class _LearnScreenState extends State<LearnScreen> {
     try {
       // Load realms from ContentService (async)
       final realms = await _contentService.getAllRealms();
-      
+
       setState(() {
         _realms = realms;
       });
@@ -49,7 +49,7 @@ class _LearnScreenState extends State<LearnScreen> {
             .collection('users')
             .doc(user.uid)
             .get();
-        
+
         if (userDoc.exists) {
           if (mounted) {
             setState(() {
@@ -69,11 +69,11 @@ class _LearnScreenState extends State<LearnScreen> {
       }
     }
   }
-  
+
   void _updateCachedStats() {
     _cachedTotalXP = 0;
     _cachedCompletedRealms = 0;
-    
+
     _userProgress.forEach((key, value) {
       if (value is Map) {
         if (value.containsKey('xpEarned')) {
@@ -186,7 +186,10 @@ class _LearnScreenState extends State<LearnScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _buildStatChip(Icons.emoji_events, '$completedRealms/${_realms.length} Realms'),
+                        _buildStatChip(
+                          Icons.emoji_events,
+                          '$completedRealms/${_realms.length} Realms',
+                        ),
                         const SizedBox(width: 12),
                         _buildStatChip(Icons.stars, '$totalXP XP'),
                       ],
@@ -195,7 +198,7 @@ class _LearnScreenState extends State<LearnScreen> {
                 ),
               ),
             ),
-            
+
             // Content
             Expanded(
               child: RefreshIndicator(
@@ -213,7 +216,7 @@ class _LearnScreenState extends State<LearnScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8),
-                            
+
                             // Realms section
                             Text(
                               'All Realms',
@@ -223,13 +226,13 @@ class _LearnScreenState extends State<LearnScreen> {
                               ),
                             ),
                             const SizedBox(height: AppSpacing.md),
-                            
+
                             // Realm cards
                             ..._realms.map((realm) {
                               final progress = _getRealmProgress(realm.id);
                               final isStarted = progress > 0;
                               final isCompleted = progress >= 1.0;
-                              
+
                               return Container(
                                 margin: const EdgeInsets.only(bottom: 12),
                                 decoration: BoxDecoration(
@@ -244,7 +247,9 @@ class _LearnScreenState extends State<LearnScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Color(realm.color).withOpacity(0.25),
+                                      color: Color(
+                                        realm.color,
+                                      ).withOpacity(0.25),
                                       blurRadius: 8,
                                       offset: const Offset(0, 2),
                                     ),
@@ -259,7 +264,10 @@ class _LearnScreenState extends State<LearnScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => RealmDetailScreen(realm: realm.toMap()),
+                                            builder: (context) =>
+                                                RealmDetailScreen(
+                                                  realm: realm.toMap(),
+                                                ),
                                           ),
                                         );
                                       },
@@ -271,39 +279,53 @@ class _LearnScreenState extends State<LearnScreen> {
                                             Container(
                                               padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(0.25),
-                                                borderRadius: BorderRadius.circular(10),
+                                                color: Colors.white.withOpacity(
+                                                  0.25,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
                                               child: Image.asset(
                                                 realm.iconPath,
                                                 width: 48,
                                                 height: 48,
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  return const Icon(
-                                                    Icons.school,
-                                                    size: 48,
-                                                    color: Colors.white,
-                                                  );
-                                                },
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) {
+                                                      return const Icon(
+                                                        Icons.school,
+                                                        size: 48,
+                                                        color: Colors.white,
+                                                      );
+                                                    },
                                               ),
                                             ),
                                             const SizedBox(width: 14),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
                                                       Expanded(
                                                         child: Text(
                                                           realm.name,
-                                                          style: const TextStyle(
-                                                            fontSize: 17,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
+                                                          style:
+                                                              const TextStyle(
+                                                                fontSize: 17,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
                                                           maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         ),
                                                       ),
                                                       if (isCompleted)
@@ -319,18 +341,27 @@ class _LearnScreenState extends State<LearnScreen> {
                                                     '${realm.totalLevels} Levels',
                                                     style: TextStyle(
                                                       fontSize: 12,
-                                                      color: Colors.white.withOpacity(0.9),
+                                                      color: Colors.white
+                                                          .withOpacity(0.9),
                                                     ),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   // Progress bar
                                                   if (isStarted) ...[
                                                     ClipRRect(
-                                                      borderRadius: BorderRadius.circular(4),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
                                                       child: LinearProgressIndicator(
                                                         value: progress,
-                                                        backgroundColor: Colors.white.withOpacity(0.3),
-                                                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                                                        backgroundColor: Colors
+                                                            .white
+                                                            .withOpacity(0.3),
+                                                        valueColor:
+                                                            const AlwaysStoppedAnimation<
+                                                              Color
+                                                            >(Colors.white),
                                                         minHeight: 6,
                                                       ),
                                                     ),
@@ -340,7 +371,8 @@ class _LearnScreenState extends State<LearnScreen> {
                                                       style: const TextStyle(
                                                         fontSize: 11,
                                                         color: Colors.white,
-                                                        fontWeight: FontWeight.w600,
+                                                        fontWeight:
+                                                            FontWeight.w600,
                                                       ),
                                                     ),
                                                   ] else ...[
@@ -348,7 +380,8 @@ class _LearnScreenState extends State<LearnScreen> {
                                                       'Start your journey',
                                                       style: TextStyle(
                                                         fontSize: 11,
-                                                        color: Colors.white.withOpacity(0.85),
+                                                        color: Colors.white
+                                                            .withOpacity(0.85),
                                                       ),
                                                     ),
                                                   ],

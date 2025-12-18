@@ -5,7 +5,6 @@ import 'package:shimmer/shimmer.dart';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../models/game_progress_model.dart';
 import 'ipr_quiz_master_game.dart';
 import 'trademark_match_game.dart';
 import 'spot_the_original_game.dart';
@@ -26,7 +25,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool _isLoading = true;
   int _totalGameXP = 0;
   int _gamesPlayed = 0;
-  Map<String, int> _gameHighScores = {};
+  final Map<String, int> _gameHighScores = {};
 
   @override
   void initState() {
@@ -51,26 +50,28 @@ class _PlayScreenState extends State<PlayScreen> {
       print('Found ${gameProgressDocs.docs.length} game progress documents');
 
       int totalGameXP = 0;
-      
+
       for (final doc in gameProgressDocs.docs) {
         final data = doc.data();
         final gameId = data['gameId'] as String?;
         final highScore = (data['highScore'] as num?)?.toInt() ?? 0;
         final totalXPEarned = (data['totalXPEarned'] as num?)?.toInt() ?? 0;
-        
+
         if (gameId != null) {
           _gameHighScores[gameId] = highScore;
           totalGameXP += totalXPEarned;
-          print('Game: $gameId, High Score: $highScore, XP Earned: $totalXPEarned');
+          print(
+            'Game: $gameId, High Score: $highScore, XP Earned: $totalXPEarned',
+          );
         }
       }
-      
+
       // Set total game XP from sum of all games
       _totalGameXP = totalGameXP;
-      
+
       // Count unique games played
       _gamesPlayed = _gameHighScores.length;
-      
+
       print('Total games played: $_gamesPlayed');
       print('Total game XP (from games only): $_totalGameXP');
 
@@ -136,16 +137,19 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                ...List.generate(7, (index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
+                ...List.generate(
+                  7,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Container(
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                )),
+                ),
               ],
             ),
           ),
@@ -201,168 +205,191 @@ class _PlayScreenState extends State<PlayScreen> {
                 ),
               ),
             ),
-            
+
             // Body content
             Expanded(
-              child:
-              _isLoading
-          ? _buildSkeletonLoader()
-          : RefreshIndicator(
-              onRefresh: _refreshData,
-              color: const Color(0xFFEC4899),
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-                child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  
-                  Text(
-                    'Available Games',
-                    style: AppTextStyles.sectionHeader.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+              child: _isLoading
+                  ? _buildSkeletonLoader()
+                  : RefreshIndicator(
+                      onRefresh: _refreshData,
+                      color: const Color(0xFFEC4899),
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(
+                          AppSpacing.screenHorizontal,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8),
+
+                            Text(
+                              'Available Games',
+                              style: AppTextStyles.sectionHeader.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Game 1: IP Quiz Master (Implemented)
+                            _buildGameCard(
+                              title: 'IPR Quiz Master',
+                              description:
+                                  'Test your IPR knowledge in rapid-fire quiz',
+                              iconPath: 'assets/logos/IPR_quiz_master.png',
+                              color: const Color(0xFF6366F1),
+                              difficulty: 'Easy',
+                              xpReward: '10-250 XP',
+                              timeEstimate: '1 min',
+                              isImplemented: true,
+                              gameId: 'quiz_master',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const IPRQuizMasterGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 2: Trademark Match (Implemented)
+                            _buildGameCard(
+                              title: 'Trademark Match',
+                              description:
+                                  'Match famous trademarks with their companies',
+                              iconPath: 'assets/logos/trademark_match.png',
+                              color: const Color(0xFF2196F3),
+                              difficulty: 'Medium',
+                              xpReward: '60-180 XP',
+                              timeEstimate: '2 min',
+                              isImplemented: true,
+                              gameId: 'trademark_match',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const TrademarkMatchScreen(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 3: Spot the Original
+                            _buildGameCard(
+                              title: 'Spot the Original',
+                              description:
+                                  'Identify genuine IP from counterfeits',
+                              iconPath: 'assets/logos/spot_the_original.png',
+                              color: const Color(0xFFF59E0B),
+                              difficulty: 'Medium',
+                              xpReward: '15-150 XP',
+                              timeEstimate: '2 min',
+                              isImplemented: true,
+                              gameId: 'spot_original',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const SpotTheOriginalGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 4: IP Defender
+                            _buildGameCard(
+                              title: 'IP Defender',
+                              description:
+                                  'Defend your IP through 5 waves of infringers',
+                              iconPath: 'assets/logos/ip_defender.png',
+                              color: const Color(0xFFEF4444),
+                              difficulty: 'Hard',
+                              xpReward: '800-1500 XP',
+                              timeEstimate: '8-10 min',
+                              isImplemented: true,
+                              gameId: 'ip_defender',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const IPDefenderGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 5: GI Mapper
+                            _buildGameCard(
+                              title: 'GI Mapper',
+                              description:
+                                  'Match India\'s GI products to their states',
+                              iconPath: 'assets/logos/gi_mapper.png',
+                              color: const Color(0xFFFFC107),
+                              difficulty: 'Medium',
+                              xpReward: '10-80 XP',
+                              timeEstimate: '2 min',
+                              isImplemented: true,
+                              gameId: 'gi_mapper',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const GIMapperGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 6: Patent Detective
+                            _buildGameCard(
+                              title: 'Patent Detective',
+                              description:
+                                  'Solve IP crime cases by investigating suspects and evidence',
+                              iconPath: 'assets/logos/patent_detective.png',
+                              color: const Color(0xFF8B5CF6),
+                              difficulty: 'Medium',
+                              xpReward: '100-250 XP',
+                              timeEstimate: '3 min',
+                              isImplemented: true,
+                              gameId: 'patent_detective',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const PatentDetectiveGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+
+                            // Game 7: Innovation Lab
+                            _buildGameCard(
+                              title: 'Innovation Lab',
+                              description:
+                                  'Design your invention and learn IP protection',
+                              iconPath: 'assets/logos/innovation_lab.png',
+                              color: const Color(0xFF00ACC1),
+                              difficulty: 'Hard',
+                              xpReward: '100-200 XP',
+                              timeEstimate: '5-10 min',
+                              isImplemented: true,
+                              gameId: 'innovation_lab',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const InnovationLabGame(),
+                                  ),
+                                ).then((_) => _refreshData());
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  
-                  // Game 1: IP Quiz Master (Implemented)
-                  _buildGameCard(
-                    title: 'IPR Quiz Master',
-                    description: 'Test your IPR knowledge in rapid-fire quiz',
-                    iconPath: 'assets/logos/IPR_quiz_master.png',
-                    color: const Color(0xFF6366F1),
-                    difficulty: 'Easy',
-                    xpReward: '10-250 XP',
-                    timeEstimate: '1 min',
-                    isImplemented: true,
-                    gameId: 'quiz_master',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const IPRQuizMasterGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 2: Trademark Match (Implemented)
-                  _buildGameCard(
-                    title: 'Trademark Match',
-                    description: 'Match famous trademarks with their companies',
-                    iconPath: 'assets/logos/trademark_match.png',
-                    color: const Color(0xFF2196F3),
-                    difficulty: 'Medium',
-                    xpReward: '60-180 XP',
-                    timeEstimate: '2 min',
-                    isImplemented: true,
-                    gameId: 'trademark_match',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const TrademarkMatchScreen()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 3: Spot the Original
-                  _buildGameCard(
-                    title: 'Spot the Original',
-                    description: 'Identify genuine IP from counterfeits',
-                    iconPath: 'assets/logos/spot_the_original.png',
-                    color: const Color(0xFFF59E0B),
-                    difficulty: 'Medium',
-                    xpReward: '15-150 XP',
-                    timeEstimate: '2 min',
-                    isImplemented: true,
-                    gameId: 'spot_original',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const SpotTheOriginalGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 4: IP Defender
-                  _buildGameCard(
-                    title: 'IP Defender',
-                    description: 'Defend your IP through 5 waves of infringers',
-                    iconPath: 'assets/logos/ip_defender.png',
-                    color: const Color(0xFFEF4444),
-                    difficulty: 'Hard',
-                    xpReward: '800-1500 XP',
-                    timeEstimate: '8-10 min',
-                    isImplemented: true,
-                    gameId: 'ip_defender',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const IPDefenderGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 5: GI Mapper
-                  _buildGameCard(
-                    title: 'GI Mapper',
-                    description: 'Match India\'s GI products to their states',
-                    iconPath: 'assets/logos/gi_mapper.png',
-                    color: const Color(0xFFFFC107),
-                    difficulty: 'Medium',
-                    xpReward: '10-80 XP',
-                    timeEstimate: '2 min',
-                    isImplemented: true,
-                    gameId: 'gi_mapper',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const GIMapperGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 6: Patent Detective
-                  _buildGameCard(
-                    title: 'Patent Detective',
-                    description: 'Solve IP crime cases by investigating suspects and evidence',
-                    iconPath: 'assets/logos/patent_detective.png',
-                    color: const Color(0xFF8B5CF6),
-                    difficulty: 'Medium',
-                    xpReward: '100-250 XP',
-                    timeEstimate: '3 min',
-                    isImplemented: true,
-                    gameId: 'patent_detective',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const PatentDetectiveGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                  
-                  // Game 7: Innovation Lab
-                  _buildGameCard(
-                    title: 'Innovation Lab',
-                    description: 'Design your invention and learn IP protection',
-                    iconPath: 'assets/logos/innovation_lab.png',
-                    color: const Color(0xFF00ACC1),
-                    difficulty: 'Hard',
-                    xpReward: '100-200 XP',
-                    timeEstimate: '5-10 min',
-                    isImplemented: true,
-                    gameId: 'innovation_lab',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const InnovationLabGame()),
-                      ).then((_) => _refreshData());
-                    },
-                  ),
-                ],
-                ),
-              ),
-            ),
             ),
           ],
         ),
@@ -387,10 +414,7 @@ class _PlayScreenState extends State<PlayScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            color,
-            color.withOpacity(0.8),
-          ],
+          colors: [color, color.withOpacity(0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -491,7 +515,10 @@ class _PlayScreenState extends State<PlayScreen> {
                             _buildInfoChip(xpReward, Icons.stars),
                             _buildInfoChip(timeEstimate, Icons.access_time),
                             if (highScore > 0)
-                              _buildInfoChip('Best: $highScore', Icons.emoji_events),
+                              _buildInfoChip(
+                                'Best: $highScore',
+                                Icons.emoji_events,
+                              ),
                           ],
                         ),
                       ],
@@ -539,4 +566,3 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 }
-

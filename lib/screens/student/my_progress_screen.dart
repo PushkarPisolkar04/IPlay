@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,14 +13,11 @@ import '../../models/badge_model.dart';
 /// My Progress Screen - Student's self-view of their progress
 /// Can also be used by teachers to view a specific student's progress
 class MyProgressScreen extends StatefulWidget {
-  final String? studentId; // Optional: if provided, shows that student's progress
+  final String?
+  studentId; // Optional: if provided, shows that student's progress
   final String? studentName; // Optional: student name for title
-  
-  const MyProgressScreen({
-    super.key,
-    this.studentId,
-    this.studentName,
-  });
+
+  const MyProgressScreen({super.key, this.studentId, this.studentName});
 
   @override
   State<MyProgressScreen> createState() => _MyProgressScreenState();
@@ -57,7 +55,8 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   Future<void> _loadData() async {
     try {
       // Use provided studentId or current user's ID
-      final targetUserId = widget.studentId ?? FirebaseAuth.instance.currentUser?.uid;
+      final targetUserId =
+          widget.studentId ?? FirebaseAuth.instance.currentUser?.uid;
       if (targetUserId == null) return;
 
       final userDoc = await FirebaseFirestore.instance
@@ -88,23 +87,35 @@ class _MyProgressScreenState extends State<MyProgressScreen>
 
       // Define all available realms (6 realms) with realm_ prefix
       final allRealms = {
-        'realm_patent': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
-        'realm_trademark': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
-        'realm_copyright': {'totalLevels': 10, 'levelsCompleted': 0, 'completed': false},
+        'realm_patent': {
+          'totalLevels': 10,
+          'levelsCompleted': 0,
+          'completed': false,
+        },
+        'realm_trademark': {
+          'totalLevels': 10,
+          'levelsCompleted': 0,
+          'completed': false,
+        },
+        'realm_copyright': {
+          'totalLevels': 10,
+          'levelsCompleted': 0,
+          'completed': false,
+        },
         'realm_trade_secrets': {
           'totalLevels': 10,
           'levelsCompleted': 0,
-          'completed': false
+          'completed': false,
         },
         'realm_industrial_design': {
           'totalLevels': 10,
           'levelsCompleted': 0,
-          'completed': false
+          'completed': false,
         },
         'realm_geographical_indications': {
           'totalLevels': 10,
           'levelsCompleted': 0,
-          'completed': false
+          'completed': false,
         },
       };
 
@@ -123,7 +134,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
           .collection('game_progress')
           .where('userId', isEqualTo: targetUserId)
           .get();
-      
+
       for (final doc in gameProgressDocs.docs) {
         final data = doc.data();
         final gameId = data['gameId'] as String?;
@@ -152,7 +163,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
         });
       }
     } catch (e) {
-      print('Error loading progress: $e');
+      if (kDebugMode) {
+        print('Error loading progress: $e');
+      }
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -197,8 +210,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                   gradient: AppDesignSystem.gradientPrimary,
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 12,
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -208,7 +223,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       Expanded(
                         child: Center(
                           child: Text(
-                            _isViewingOtherStudent 
+                            _isViewingOtherStudent
                                 ? '${widget.studentName ?? 'Student'} Progress'
                                 : 'My Progress',
                             style: const TextStyle(
@@ -224,9 +239,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                   ),
                 ),
               ),
-              const Expanded(
-                child: DashboardSkeleton(),
-              ),
+              const Expanded(child: DashboardSkeleton()),
             ],
           ),
         ),
@@ -275,8 +288,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                 ],
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -286,7 +301,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     Expanded(
                       child: Center(
                         child: Text(
-                          _isViewingOtherStudent 
+                          _isViewingOtherStudent
                               ? '${widget.studentName ?? 'Student'} Progress'
                               : 'My Progress',
                           style: const TextStyle(
@@ -331,8 +346,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                              color: AppDesignSystem.primaryIndigo.withValues(
+                                alpha: 0.3,
+                              ),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -346,7 +362,8 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         _userData?['displayName'] ?? 'Student',
@@ -361,7 +378,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                                         'Global Rank #$_globalRank',
                                         style: TextStyle(
                                           fontSize: 14,
-                                          color: Colors.white.withValues(alpha: 0.9),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.9,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -375,20 +394,24 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                                     color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.1),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         blurRadius: 10,
                                       ),
                                     ],
                                   ),
                                   child: Center(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         const Text(
                                           'LVL',
                                           style: TextStyle(
                                             fontSize: 11,
-                                            color: AppDesignSystem.primaryIndigo,
+                                            color:
+                                                AppDesignSystem.primaryIndigo,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
@@ -397,7 +420,8 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                                           style: const TextStyle(
                                             fontSize: 28,
                                             fontWeight: FontWeight.bold,
-                                            color: AppDesignSystem.primaryIndigo,
+                                            color:
+                                                AppDesignSystem.primaryIndigo,
                                           ),
                                         ),
                                       ],
@@ -442,10 +466,13 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                                     borderRadius: BorderRadius.circular(8),
                                     child: LinearProgressIndicator(
                                       value: levelProgress / 100,
-                                      backgroundColor:
-                                          Colors.white.withValues(alpha: 0.3),
-                                      valueColor: const AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                      backgroundColor: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      valueColor:
+                                          const AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
+                                          ),
                                       minHeight: 10,
                                     ),
                                   ),
@@ -454,7 +481,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                                     '$xpToNextLevel XP to Level ${level + 1}',
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -501,12 +530,20 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       const SizedBox(height: AppSpacing.xl),
 
                       // Badges Section - Show all badges
-                      if ((_userData?['badges'] as List?)?.isNotEmpty ?? false) ...[
+                      if ((_userData?['badges'] as List?)?.isNotEmpty ??
+                          false) ...[
                         Row(
                           children: [
-                            const Icon(Icons.emoji_events, color: Color(0xFFEC4899), size: 22),
+                            const Icon(
+                              Icons.emoji_events,
+                              color: Color(0xFFEC4899),
+                              size: 22,
+                            ),
                             const SizedBox(width: 8),
-                            Text('Badges Earned', style: AppTextStyles.sectionHeader),
+                            Text(
+                              'Badges Earned',
+                              style: AppTextStyles.sectionHeader,
+                            ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.sm),
@@ -526,7 +563,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       ],
 
                       // Overall Progress
-                      Text('Overall Progress', style: AppTextStyles.sectionHeader),
+                      Text(
+                        'Overall Progress',
+                        style: AppTextStyles.sectionHeader,
+                      ),
                       const SizedBox(height: AppSpacing.sm),
                       CleanCard(
                         child: Column(
@@ -583,11 +623,16 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                         ),
 
                       // Games Section - Only show if games exist
-                      if (_progressSummary.entries.any((e) => _isGame(e.key))) ...[
+                      if (_progressSummary.entries.any(
+                        (e) => _isGame(e.key),
+                      )) ...[
                         Row(
                           children: [
-                            Icon(Icons.videogame_asset,
-                                color: AppDesignSystem.primaryIndigo, size: 22),
+                            Icon(
+                              Icons.videogame_asset,
+                              color: AppDesignSystem.primaryIndigo,
+                              size: 22,
+                            ),
                             const SizedBox(width: 8),
                             Text('Games', style: AppTextStyles.sectionHeader),
                           ],
@@ -611,8 +656,11 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       // Realms Section - Always show (core learning content)
                       Row(
                         children: [
-                          Icon(Icons.school,
-                              color: AppDesignSystem.primaryIndigo, size: 22),
+                          Icon(
+                            Icons.school,
+                            color: AppDesignSystem.primaryIndigo,
+                            size: 22,
+                          ),
                           const SizedBox(width: 8),
                           Text('Realms', style: AppTextStyles.sectionHeader),
                         ],
@@ -688,9 +736,11 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     child: Image.asset(
                       itemLogo,
                       fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.videogame_asset,
-                              color: Colors.white, size: 32),
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.videogame_asset,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -699,9 +749,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     child: Text(
                       _formatRealmName(itemName),
                       style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -710,22 +761,28 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.emoji_events,
-                          color: Colors.white, size: 13),
+                      const Icon(
+                        Icons.emoji_events,
+                        color: Colors.white,
+                        size: 13,
+                      ),
                       const SizedBox(width: 3),
                       Text(
                         '$highScore',
                         style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
                   Text(
                     'High Score',
                     style: TextStyle(
-                        fontSize: 9, color: Colors.white.withValues(alpha: 0.9)),
+                      fontSize: 9,
+                      color: Colors.white.withValues(alpha: 0.9),
+                    ),
                   ),
                 ],
               ),
@@ -782,8 +839,11 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     child: Image.asset(
                       itemLogo,
                       fit: BoxFit.contain,
-                      errorBuilder: (_, __, ___) =>
-                          const Icon(Icons.school, color: Colors.white, size: 32),
+                      errorBuilder: (_, __, ___) => const Icon(
+                        Icons.school,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -792,9 +852,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     child: Text(
                       _formatRealmName(itemName),
                       style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -806,21 +867,26 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                       Text(
                         '$levelsCompleted',
                         style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                       Text(
                         '/$totalLevels',
                         style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.8)),
+                          fontSize: 12,
+                          color: Colors.white.withValues(alpha: 0.8),
+                        ),
                       ),
                       if (isCompleted)
                         const Padding(
                           padding: EdgeInsets.only(left: 3),
-                          child: Icon(Icons.check_circle,
-                              color: Colors.white, size: 13),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 13,
+                          ),
                         ),
                     ],
                   ),
@@ -830,8 +896,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
                     child: LinearProgressIndicator(
                       value: progress,
                       backgroundColor: Colors.white.withValues(alpha: 0.3),
-                      valueColor:
-                          const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
                       minHeight: 5,
                     ),
                   ),
@@ -845,7 +912,11 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   }
 
   Widget _buildStatCard(
-      IconData icon, String value, String label, Color color) {
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -877,7 +948,10 @@ class _MyProgressScreenState extends State<MyProgressScreen>
           Text(
             value,
             style: const TextStyle(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
@@ -896,13 +970,17 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   Widget _buildBadgePreview(dynamic badge) {
     // Badge is stored as just the ID string in user's badges array
     final badgeId = badge is String ? badge : (badge['id'] ?? badge.toString());
-    
+
     // Find the actual badge data from loaded badges
     final badgeData = _allBadges.firstWhere(
       (b) => b.id == badgeId,
       orElse: () => BadgeModel(
         id: badgeId,
-        name: badgeId.replaceAll('_', ' ').split(' ').map((w) => w.isEmpty ? '' : w[0].toUpperCase() + w.substring(1)).join(' '),
+        name: badgeId
+            .replaceAll('_', ' ')
+            .split(' ')
+            .map((w) => w.isEmpty ? '' : w[0].toUpperCase() + w.substring(1))
+            .join(' '),
         description: '',
         iconPath: 'assets/badges/$badgeId.png',
         category: 'milestone',
@@ -910,10 +988,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
         rarity: 'common',
       ),
     );
-    
     final badgeColor = _getRarityColor(badgeData.rarity);
-    
-    return Container(
+
+    return SizedBox(
       width: 70,
       child: Column(
         children: [
@@ -937,11 +1014,8 @@ class _MyProgressScreenState extends State<MyProgressScreen>
               child: Image.asset(
                 badgeData.iconPath,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Icon(
-                  Icons.emoji_events,
-                  color: badgeColor,
-                  size: 28,
-                ),
+                errorBuilder: (_, __, ___) =>
+                    Icon(Icons.emoji_events, color: badgeColor, size: 28),
               ),
             ),
           ),
@@ -957,7 +1031,7 @@ class _MyProgressScreenState extends State<MyProgressScreen>
       ),
     );
   }
-  
+
   Color _getRarityColor(String rarity) {
     return switch (rarity.toLowerCase()) {
       'legendary' => const Color(0xFFFFD700),
@@ -970,21 +1044,22 @@ class _MyProgressScreenState extends State<MyProgressScreen>
 
   IconData _getBadgeIcon(String badgeId) {
     final idLower = badgeId.toLowerCase();
-    
+
     // Specific badge mappings
     if (idLower == 'perfect_start') return Icons.rocket_launch;
     if (idLower == 'first_challenge') return Icons.flag;
     if (idLower == 'social_learner') return Icons.people;
     if (idLower == 'early_adopter') return Icons.access_time;
     if (idLower == 'night_owl') return Icons.nightlight_round;
-    if (idLower == 'first_step' || idLower == 'first_steps') return Icons.directions_walk;
+    if (idLower == 'first_step' || idLower == 'first_steps')
+      return Icons.directions_walk;
     if (idLower == 'level_explorer') return Icons.explore;
     if (idLower == 'first_quiz') return Icons.quiz;
     if (idLower == 'xp_collector') return Icons.stars;
     if (idLower == 'xp_master') return Icons.military_tech;
     if (idLower == 'xp_legend') return Icons.workspace_premium;
     if (idLower == 'copyright_master') return Icons.copyright;
-    
+
     // General patterns
     if (idLower.contains('streak')) return Icons.local_fire_department;
     if (idLower.contains('master')) return Icons.school;
@@ -1000,46 +1075,56 @@ class _MyProgressScreenState extends State<MyProgressScreen>
     if (idLower.contains('copyright')) return Icons.copyright;
     if (idLower.contains('patent')) return Icons.lightbulb;
     if (idLower.contains('trademark')) return Icons.verified;
-    
+
     return Icons.emoji_events;
   }
 
   Color _getBadgeColor(String badgeId) {
     final idLower = badgeId.toLowerCase();
-    
+
     // XP badges - Gold/Amber
     if (idLower.contains('xp')) return const Color(0xFFFBBF24);
-    
+
     // Streak badges - Orange/Fire
     if (idLower.contains('streak')) return const Color(0xFFF59E0B);
-    
+
     // Master/Champion badges - Purple
-    if (idLower.contains('master') || idLower.contains('champion')) return const Color(0xFF8B5CF6);
-    
+    if (idLower.contains('master') || idLower.contains('champion'))
+      return const Color(0xFF8B5CF6);
+
     // Explorer badges - Cyan
     if (idLower.contains('explorer')) return const Color(0xFF06B6D4);
-    
+
     // Social/People badges - Pink
-    if (idLower.contains('social') || idLower.contains('genius')) return const Color(0xFFEC4899);
-    
+    if (idLower.contains('social') || idLower.contains('genius'))
+      return const Color(0xFFEC4899);
+
     // First/Start badges - Green
-    if (idLower.contains('first') || idLower.contains('start') || idLower.contains('step')) return const Color(0xFF10B981);
-    
+    if (idLower.contains('first') ||
+        idLower.contains('start') ||
+        idLower.contains('step'))
+      return const Color(0xFF10B981);
+
     // Quiz badges - Red
     if (idLower.contains('quiz')) return const Color(0xFFEF4444);
-    
+
     // Night/Time badges - Indigo
-    if (idLower.contains('night') || idLower.contains('owl') || idLower.contains('early')) return const Color(0xFF6366F1);
-    
+    if (idLower.contains('night') ||
+        idLower.contains('owl') ||
+        idLower.contains('early'))
+      return const Color(0xFF6366F1);
+
     // Copyright/Legal badges - Purple
-    if (idLower.contains('copyright') || idLower.contains('patent') || idLower.contains('trademark')) return const Color(0xFF8B5CF6);
-    
+    if (idLower.contains('copyright') ||
+        idLower.contains('patent') ||
+        idLower.contains('trademark'))
+      return const Color(0xFF8B5CF6);
+
     // Default - Blue
     return const Color(0xFF6366F1);
   }
 
-  Widget _buildProgressRow(
-      String label, int current, int total, Color color) {
+  Widget _buildProgressRow(String label, int current, int total, Color color) {
     final progress = total > 0 ? current / total : 0.0;
     return Row(
       children: [
@@ -1050,14 +1135,21 @@ class _MyProgressScreenState extends State<MyProgressScreen>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(label,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w600)),
-                  Text('$current / $total',
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500)),
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    '$current / $total',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -1160,8 +1252,12 @@ class _MyProgressScreenState extends State<MyProgressScreen>
   }
 
   String _formatRealmName(String name) {
-    return name.split('_').map((word) =>
-      word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1)
-    ).join(' ');
+    return name
+        .split('_')
+        .map(
+          (word) =>
+              word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1),
+        )
+        .join(' ');
   }
 }

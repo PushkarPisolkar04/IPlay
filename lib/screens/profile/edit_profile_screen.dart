@@ -16,7 +16,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  
+
   bool _isLoading = true;
   bool _isSaving = false;
   String? _selectedState;
@@ -44,24 +44,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         _currentUserId = currentUser.uid;
-        
+
         final doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        
+
         if (doc.exists) {
           final userData = doc.data()!;
           _userRole = userData['role'];
           _isPrincipal = userData['isPrincipal'] == true;
-          
+
           // Set avatar options based on role
           if (_userRole == 'student') {
-            _avatarOptions = List.generate(16, (i) => 'assets/stu_avatars/avatar${i + 1}.png');
+            _avatarOptions = List.generate(
+              16,
+              (i) => 'assets/stu_avatars/avatar${i + 1}.png',
+            );
           } else {
-            _avatarOptions = List.generate(16, (i) => 'assets/tea_avatars/avatar${i + 1}.png');
+            _avatarOptions = List.generate(
+              16,
+              (i) => 'assets/tea_avatars/avatar${i + 1}.png',
+            );
           }
-          
+
           setState(() {
             _nameController.text = userData['displayName'] ?? '';
             _selectedState = userData['state'];
@@ -78,7 +84,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_selectedAvatar == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -97,15 +103,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           .collection('users')
           .doc(_currentUserId)
           .update({
-        'displayName': _nameController.text.trim(),
-        'avatarUrl': _selectedAvatar,
-        'updatedAt': Timestamp.now(),
-      });
+            'displayName': _nameController.text.trim(),
+            'avatarUrl': _selectedAvatar,
+            'updatedAt': Timestamp.now(),
+          });
 
       if (!mounted) return;
 
       Navigator.pop(context);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Profile updated successfully!'),
@@ -115,7 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     } catch (e) {
       // print('Error saving profile: $e');
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
@@ -162,7 +168,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: IconButton(
-                                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                                icon: const Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                                 onPressed: () => Navigator.pop(context),
                               ),
                             ),
@@ -194,16 +204,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               child: GridView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
-                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 12,
+                                      mainAxisSpacing: 12,
+                                    ),
                                 itemCount: _avatarOptions.length,
                                 itemBuilder: (context, index) {
                                   final avatar = _avatarOptions[index];
                                   final isSelected = _selectedAvatar == avatar;
-                                  
+
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() => _selectedAvatar = avatar);
@@ -212,8 +223,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
                                         border: Border.all(
-                                          color: isSelected 
-                                              ? AppDesignSystem.primaryIndigo 
+                                          color: isSelected
+                                              ? AppDesignSystem.primaryIndigo
                                               : Colors.grey.shade300,
                                           width: isSelected ? 3 : 2,
                                         ),
@@ -222,7 +233,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         child: Image.asset(
                                           avatar,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => const Icon(Icons.person),
+                                          errorBuilder: (_, __, ___) =>
+                                              const Icon(Icons.person),
                                         ),
                                       ),
                                     ),
@@ -231,9 +243,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
-                          
+
                           // Display Name
                           CleanCard(
                             child: Padding(
@@ -255,9 +267,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
-                          
+
                           // State Selection (Locked for everyone - set during signup)
                           CleanCard(
                             child: Padding(
@@ -272,7 +284,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   border: const OutlineInputBorder(),
                                   filled: true,
                                   fillColor: Colors.grey[200],
-                                  suffixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                  suffixIcon: const Icon(
+                                    Icons.lock,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
@@ -285,7 +300,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             child: Padding(
                               padding: const EdgeInsets.all(16),
                               child: TextFormField(
-                                initialValue: _isPrincipal ? 'Principal' : (_userRole ?? 'User'),
+                                initialValue: _isPrincipal
+                                    ? 'Principal'
+                                    : (_userRole ?? 'User'),
                                 enabled: false,
                                 decoration: InputDecoration(
                                   labelText: 'Role',
@@ -294,14 +311,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   border: const OutlineInputBorder(),
                                   filled: true,
                                   fillColor: Colors.grey[200],
-                                  suffixIcon: const Icon(Icons.lock, color: Colors.grey),
+                                  suffixIcon: const Icon(
+                                    Icons.lock,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 24),
-                          
+
                           // Save Button
                           SizedBox(
                             width: double.infinity,
@@ -325,10 +345,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                         color: Colors.white,
                                       ),
                                     )
-                                  : const Text('Save Changes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                                  : const Text(
+                                      'Save Changes',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 24),
                         ]),
                       ),
@@ -340,4 +366,3 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
-

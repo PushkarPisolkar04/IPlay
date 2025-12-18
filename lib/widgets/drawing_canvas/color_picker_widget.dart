@@ -30,7 +30,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
   void _updateColor(Color color) {
     widget.controller.setColor(color);
     _currentHSV = HSVColor.fromColor(color);
-    
+
     // Add to recent colors
     if (!_recentColors.contains(color)) {
       _recentColors.insert(0, color);
@@ -38,7 +38,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         _recentColors.removeLast();
       }
     }
-    
+
     setState(() {});
   }
 
@@ -50,10 +50,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
       children: [
         const Text(
           'Color',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
 
@@ -74,10 +71,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         if (widget.presetColors != null && widget.presetColors!.isNotEmpty) ...[
           const Text(
             'Preset Colors',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -94,10 +88,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         if (_recentColors.isNotEmpty) ...[
           const Text(
             'Recent Colors',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -113,10 +104,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         // HSV Color Wheel
         const Text(
           'Color Wheel',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Center(
@@ -135,10 +123,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         // Saturation slider
         const Text(
           'Saturation',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         SliderTheme(
@@ -162,10 +147,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
         // Value (brightness) slider
         const Text(
           'Brightness',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         SliderTheme(
@@ -222,10 +204,7 @@ class _ColorPickerWidgetState extends State<ColorPickerWidget> {
 
     // Find the color wheel widget position
     // This is a simplified version - adjust based on actual layout
-    final center = Offset(
-      renderBox.size.width / 2,
-      localPosition.dy,
-    );
+    final center = Offset(renderBox.size.width / 2, localPosition.dy);
 
     final dx = localPosition.dx - center.dx;
     final dy = localPosition.dy - center.dy;

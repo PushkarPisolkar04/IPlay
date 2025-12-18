@@ -2,11 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 /// Particle type enum
-enum ParticleType {
-  confetti,
-  sparkle,
-  explosion,
-}
+enum ParticleType { confetti, sparkle, explosion }
 
 /// Particle effect widget for game feedback
 /// Supports confetti, sparkles, and explosions
@@ -39,10 +35,7 @@ class _GameParticleEffectState extends State<GameParticleEffect>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -115,7 +108,7 @@ class _GameParticleEffectState extends State<GameParticleEffect>
 
   Color _getRandomColor() {
     if (widget.color != null) return widget.color!;
-    
+
     final colors = [
       Colors.red,
       Colors.blue,
@@ -154,12 +147,7 @@ class _GameParticleEffectState extends State<GameParticleEffect>
 }
 
 /// Particle shape enum
-enum ParticleShape {
-  square,
-  circle,
-  star,
-  triangle,
-}
+enum ParticleShape { square, circle, star, triangle }
 
 /// Particle data class
 class Particle {
@@ -238,17 +226,20 @@ class ParticlePainter extends CustomPainter {
         return size.width * particle.x + particle.velocityX * progress * 100;
       case ParticleType.sparkle:
       case ParticleType.explosion:
-        return size.width * particle.x + particle.velocityX * progress * size.width * 0.5;
+        return size.width * particle.x +
+            particle.velocityX * progress * size.width * 0.5;
     }
   }
 
   double _calculateY(Particle particle, Size size) {
     switch (particleType) {
       case ParticleType.confetti:
-        return size.height * particle.y + particle.velocityY * progress * size.height;
+        return size.height * particle.y +
+            particle.velocityY * progress * size.height;
       case ParticleType.sparkle:
       case ParticleType.explosion:
-        return size.height * particle.y + particle.velocityY * progress * size.height * 0.5;
+        return size.height * particle.y +
+            particle.velocityY * progress * size.height * 0.5;
     }
   }
 
@@ -265,11 +256,7 @@ class ParticlePainter extends CustomPainter {
 
   void _drawSquare(Canvas canvas, Paint paint, double size) {
     canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset.zero,
-        width: size,
-        height: size,
-      ),
+      Rect.fromCenter(center: Offset.zero, width: size, height: size),
       paint,
     );
   }

@@ -48,18 +48,18 @@ class AuthScreen extends StatelessWidget {
                       width: 150,
                       height: 150,
                     ),
-                
+
                     const SizedBox(height: AppSpacing.xl),
-                
+
                     // Title
                     Text(
                       'Welcome to IPlay',
                       style: AppTextStyles.h1,
                       textAlign: TextAlign.center,
                     ),
-                
+
                     const SizedBox(height: AppSpacing.sm),
-                
+
                     // Subtitle
                     Text(
                       'Learn IPR through fun games',
@@ -68,9 +68,9 @@ class AuthScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                
+
                     const SizedBox(height: AppSpacing.xl),
-                
+
                     // Sign Up button - Now goes to Role Selection FIRST
                     PrimaryButton(
                       text: 'Create Account',
@@ -79,9 +79,9 @@ class AuthScreen extends StatelessWidget {
                       },
                       fullWidth: true,
                     ),
-                
+
                     const SizedBox(height: AppSpacing.md),
-                
+
                     // Sign In button
                     SecondaryButton(
                       text: 'Sign In',

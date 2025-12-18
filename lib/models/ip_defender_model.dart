@@ -53,7 +53,9 @@ class TowerUpgrade {
       damage: json['damage'] as int,
       range: (json['range'] as num).toDouble(),
       attackSpeed: (json['attackSpeed'] as num).toDouble(),
-      slowAmount: json['slowAmount'] != null ? (json['slowAmount'] as num).toDouble() : null,
+      slowAmount: json['slowAmount'] != null
+          ? (json['slowAmount'] as num).toDouble()
+          : null,
       incomePerSecond: json['incomePerSecond'] as int?,
     );
   }
@@ -124,7 +126,9 @@ class Tower {
       projectileUrl: json['projectileUrl'] as String,
       color: Color(int.parse(json['color'] as String)),
       specialEffect: json['specialEffect'] as String?,
-      slowAmount: json['slowAmount'] != null ? (json['slowAmount'] as num).toDouble() : null,
+      slowAmount: json['slowAmount'] != null
+          ? (json['slowAmount'] as num).toDouble()
+          : null,
       incomePerSecond: json['incomePerSecond'] as int?,
       upgrades: (json['upgrades'] as List)
           .map((u) => TowerUpgrade.fromJson(u as Map<String, dynamic>))
@@ -145,7 +149,8 @@ class Tower {
       'projectileType': projectileType,
       'spriteUrl': spriteUrl,
       'projectileUrl': projectileUrl,
-      'color': '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
+      'color':
+          '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
       if (specialEffect != null) 'specialEffect': specialEffect,
       if (slowAmount != null) 'slowAmount': slowAmount,
       if (incomePerSecond != null) 'incomePerSecond': incomePerSecond,
@@ -201,7 +206,8 @@ class Enemy {
       'baseSpeed': baseSpeed,
       'reward': reward,
       'spriteUrl': spriteUrl,
-      'color': '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
+      'color':
+          '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
       if (specialAbility != null) 'specialAbility': specialAbility,
     };
   }
@@ -231,12 +237,7 @@ class WaveEnemy {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-      'count': count,
-      'health': health,
-      'speed': speed,
-    };
+    return {'type': type, 'count': count, 'health': health, 'speed': speed};
   }
 }
 
@@ -376,7 +377,9 @@ class IPDefenderGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,

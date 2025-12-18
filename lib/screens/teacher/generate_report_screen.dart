@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'dart:io';
 import '../../widgets/clean_card.dart';
 import '../../widgets/loading_skeleton.dart';
 import '../../core/services/report_service.dart';
+import '../../widgets/export_format_dialog.dart';
+import '../../core/services/export_service.dart';
+import '../../core/services/file_download_service.dart';
+import '../../core/services/error_handler_service.dart';
+import '../../widgets/error_dialog.dart';
 
 class GenerateReportScreen extends StatefulWidget {
   const GenerateReportScreen({super.key});
@@ -33,7 +35,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
@@ -46,22 +48,47 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
 
       _classrooms.clear();
       Set<String> allStudentIds = {};
-      
+
       for (var doc in classroomsSnapshot.docs) {
         final classData = doc.data();
+        final studentIds = List<String>.from(classData['studentIds'] ?? []);
+        
+        // Count only active (non-deleted) students
+        int activeStudentCount = 0;
+        for (String studentId in studentIds) {
+          try {
+            final userDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(studentId)
+                .get();
+            
+            if (userDoc.exists) {
+              final userData = userDoc.data()!;
+              final isDeleted = userData['isDeleted'] == true;
+              if (!isDeleted) {
+                activeStudentCount++;
+              }
+            }
+          } catch (e) {
+            // Skip this student if there's an error
+            continue;
+          }
+        }
+        
         _classrooms.add({
           'id': doc.id,
           'name': classData['name'] ?? 'Unknown',
-          'studentCount': (classData['studentIds'] as List?)?.length ?? 0,
+          'studentCount': activeStudentCount,
         });
-        
-        final studentIds = List<String>.from(classData['studentIds'] ?? []);
+
         allStudentIds.addAll(studentIds);
       }
 
-      _classrooms.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      _classrooms.sort(
+        (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+      );
 
-      // Get all students
+      // Get all students (excluding deleted ones)
       _students.clear();
       for (String studentId in allStudentIds) {
         final userDoc = await FirebaseFirestore.instance
@@ -71,15 +98,21 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
 
         if (userDoc.exists) {
           final userData = userDoc.data()!;
-          _students.add({
-            'id': studentId,
-            'name': userData['displayName'] ?? 'Unknown',
-            'email': userData['email'] ?? '',
-          });
+          // Skip deleted students
+          final isDeleted = userData['isDeleted'] == true;
+          if (!isDeleted) {
+            _students.add({
+              'id': studentId,
+              'name': userData['displayName'] ?? 'Unknown',
+              'email': userData['email'] ?? '',
+            });
+          }
         }
       }
 
-      _students.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      _students.sort(
+        (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+      );
 
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
@@ -90,17 +123,33 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
 
   Future<void> _generateReport() async {
     if (_reportType == 'student' && _selectedStudentId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a student')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a student')));
       return;
     }
-    
+
     if (_reportType == 'classroom' && _selectedClassroomId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a classroom')),
       );
       return;
+    }
+
+    // Validate classroom has students
+    if (_reportType == 'classroom') {
+      final classroom = _classrooms.firstWhere(
+        (c) => c['id'] == _selectedClassroomId,
+      );
+      if (classroom['studentCount'] == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('This classroom has no active students. Cannot generate report.'),
+            backgroundColor: Color(0xFFEF4444),
+          ),
+        );
+        return;
+      }
     }
 
     setState(() => _isGenerating = true);
@@ -109,53 +158,81 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       if (_reportType == 'student') {
         // Fetch complete student data for preview
         final studentData = await _fetchStudentReportData(_selectedStudentId!);
-        
+
         if (mounted) {
           _showReportPreviewDialog(studentData, 'student');
         }
       } else {
         // Fetch classroom data for preview
-        final classroomData = await _fetchClassroomReportData(_selectedClassroomId!);
-        
+        final classroomData = await _fetchClassroomReportData(
+          _selectedClassroomId!,
+        );
+
+        // Additional validation after fetching data
+        if (classroomData['studentCount'] == 0) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('This classroom has no active students. Cannot generate report.'),
+                backgroundColor: Color(0xFFEF4444),
+              ),
+            );
+          }
+          return;
+        }
+
         if (mounted) {
           _showReportPreviewDialog(classroomData, 'classroom');
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(
+          SnackBar(
+            content: Text('Error generating report: ${e.toString()}'),
+            backgroundColor: const Color(0xFFEF4444),
+          ),
         );
       }
     } finally {
       setState(() => _isGenerating = false);
     }
   }
-  
-  Future<Map<String, dynamic>> _fetchClassroomReportData(String classroomId) async {
+
+  Future<Map<String, dynamic>> _fetchClassroomReportData(
+    String classroomId,
+  ) async {
     final classroomDoc = await FirebaseFirestore.instance
         .collection('classrooms')
         .doc(classroomId)
         .get();
-    
+
     final classData = classroomDoc.data()!;
     final studentIds = List<String>.from(classData['studentIds'] ?? []);
-    
+
     int totalXP = 0;
     int totalStreak = 0;
     int totalCompleted = 0;
-    
+    int activeStudentCount = 0;
+
     for (String studentId in studentIds) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(studentId)
           .get();
-      
+
       if (userDoc.exists) {
         final userData = userDoc.data()!;
+        // Skip deleted students
+        final isDeleted = userData['isDeleted'] == true;
+        if (isDeleted) continue;
+        
+        activeStudentCount++;
         totalXP += (userData['totalXP'] ?? 0) as int;
         totalStreak += (userData['currentStreak'] ?? 0) as int;
-        
+
         final progressSummary = userData['progressSummary'] as Map?;
         if (progressSummary != null) {
           totalCompleted += progressSummary.values
@@ -164,15 +241,19 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         }
       }
     }
-    
+
     return {
       'classroomId': classroomId,
       'name': classData['name'],
       'teacherName': classData['teacherName'],
-      'studentCount': studentIds.length,
+      'studentCount': activeStudentCount,
       'totalXP': totalXP,
-      'avgXP': studentIds.isNotEmpty ? (totalXP / studentIds.length).round() : 0,
-      'avgStreak': studentIds.isNotEmpty ? (totalStreak / studentIds.length).round() : 0,
+      'avgXP': activeStudentCount > 0
+          ? (totalXP / activeStudentCount).round()
+          : 0,
+      'avgStreak': activeStudentCount > 0
+          ? (totalStreak / activeStudentCount).round()
+          : 0,
       'totalRealmsCompleted': totalCompleted,
     };
   }
@@ -220,7 +301,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       'totalQuizzes': quizCount,
       'averageScore': avgScore,
       'badges': (userData['badges'] as List?)?.length ?? 0,
-      'lastActive': userData['lastActiveDate'] != null 
+      'lastActive': userData['lastActiveDate'] != null
           ? (userData['lastActiveDate'] as Timestamp).toDate()
           : null,
     };
@@ -241,13 +322,22 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.description, color: Colors.white, size: 24),
+              child: const Icon(
+                Icons.description,
+                color: Colors.white,
+                size: 24,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                type == 'student' ? 'Student Report Preview' : 'Classroom Report Preview',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                type == 'student'
+                    ? 'Student Report Preview'
+                    : 'Classroom Report Preview',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -256,7 +346,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-            children: type == 'student' 
+            children: type == 'student'
                 ? _buildStudentPreview(data)
                 : _buildClassroomPreview(data),
           ),
@@ -274,12 +364,12 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: ElevatedButton.icon(
-              onPressed: () async {
+              onPressed: () {
                 Navigator.pop(context);
-                await _downloadAndShareReport(data, type);
+                _showExportFormatDialog(data, type);
               },
               icon: const Icon(Icons.download),
-              label: const Text('Download PDF'),
+              label: const Text('Export Report'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 foregroundColor: Colors.white,
@@ -312,7 +402,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       ),
     );
   }
-  
+
   List<Widget> _buildStudentPreview(Map<String, dynamic> data) {
     return [
       Container(
@@ -337,10 +427,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
             const SizedBox(height: 4),
             Text(
               data['email'],
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
           ],
         ),
@@ -348,16 +435,32 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       const SizedBox(height: 20),
       _buildReportRow('Total XP', '${data['totalXP']}', Icons.stars),
       _buildReportRow('XP Earned', '${data['earnedXP']}', Icons.trending_up),
-      _buildReportRow('Current Streak', '${data['currentStreak']} days', Icons.local_fire_department),
-      _buildReportRow('Completed Levels', '${data['completedLevels']}', Icons.check_circle),
+      _buildReportRow(
+        'Current Streak',
+        '${data['currentStreak']} days',
+        Icons.local_fire_department,
+      ),
+      _buildReportRow(
+        'Completed Levels',
+        '${data['completedLevels']}',
+        Icons.check_circle,
+      ),
       _buildReportRow('Total Quizzes', '${data['totalQuizzes']}', Icons.quiz),
-      _buildReportRow('Average Score', '${data['averageScore'].toStringAsFixed(1)}%', Icons.school),
+      _buildReportRow(
+        'Average Score',
+        '${data['averageScore'].toStringAsFixed(1)}%',
+        Icons.school,
+      ),
       _buildReportRow('Badges Earned', '${data['badges']}', Icons.emoji_events),
       if (data['lastActive'] != null)
-        _buildReportRow('Last Active', _formatDate(data['lastActive']), Icons.access_time),
+        _buildReportRow(
+          'Last Active',
+          _formatDate(data['lastActive']),
+          Icons.access_time,
+        ),
     ];
   }
-  
+
   List<Widget> _buildClassroomPreview(Map<String, dynamic> data) {
     return [
       Container(
@@ -382,24 +485,37 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
             const SizedBox(height: 4),
             Text(
               'Teacher: ${data['teacherName']}',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
             ),
           ],
         ),
       ),
       const SizedBox(height: 20),
-      _buildReportRow('Total Students', '${data['studentCount']}', Icons.people),
+      _buildReportRow(
+        'Total Students',
+        '${data['studentCount']}',
+        Icons.people,
+      ),
       _buildReportRow('Total XP', '${data['totalXP']}', Icons.stars),
       _buildReportRow('Average XP', '${data['avgXP']}', Icons.trending_up),
-      _buildReportRow('Average Streak', '${data['avgStreak']} days', Icons.local_fire_department),
-      _buildReportRow('Realms Completed', '${data['totalRealmsCompleted']}', Icons.check_circle),
+      _buildReportRow(
+        'Average Streak',
+        '${data['avgStreak']} days',
+        Icons.local_fire_department,
+      ),
+      _buildReportRow(
+        'Realms Completed',
+        '${data['totalRealmsCompleted']}',
+        Icons.check_circle,
+      ),
     ];
   }
-  
-  Future<void> _downloadAndShareReport(Map<String, dynamic> data, String type, {bool share = false}) async {
+
+  Future<void> _downloadAndShareReport(
+    Map<String, dynamic> data,
+    String type, {
+    bool share = false,
+  }) async {
     try {
       // Show loading
       if (mounted) {
@@ -416,80 +532,57 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Text(share ? 'Preparing report to share...' : 'Generating PDF...'),
+                Text(
+                  share ? 'Preparing report to share...' : 'Generating PDF...',
+                ),
               ],
             ),
             duration: const Duration(seconds: 2),
           ),
         );
       }
-      
+
       // Generate PDF
       final pdfBytes = type == 'student'
-          ? await _reportService.generateStudentReport(data['studentId'] ?? _selectedStudentId!)
-          : await _reportService.generateClassroomReport(data['classroomId'] ?? _selectedClassroomId!);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
+          ? await _reportService.generateStudentReport(
+              data['studentId'] ?? _selectedStudentId!,
+            )
+          : await _reportService.generateClassroomReport(
+              data['classroomId'] ?? _selectedClassroomId!,
+            );
+
+      // Use FileDownloadService for cross-platform support
+      final fileDownloadService = FileDownloadService();
       final fileName = type == 'student'
           ? 'student_report_${data['name'].replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}.pdf'
           : 'classroom_report_${data['name'].replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-      final file = File('${directory.path}/$fileName');
       
-      // Write PDF to file
-      await file.writeAsBytes(pdfBytes);
-      
-      if (share) {
-        // Share the file
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text: type == 'student'
-              ? 'Student Progress Report for ${data['name']}'
-              : 'Classroom Performance Report for ${data['name']}',
-        );
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Row(
-                children: [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 12),
-                  Text('Report shared successfully!'),
-                ],
-              ),
-              backgroundColor: Color(0xFF10B981),
-            ),
-          );
-        }
-      } else {
-        // Just download
-        if (mounted) {
+      final savedPath = await fileDownloadService.saveFile(
+        bytes: pdfBytes,
+        suggestedName: fileName,
+        mimeType: 'application/pdf',
+      );
+
+      if (mounted) {
+        if (savedPath != null) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Row(
                 children: [
                   const Icon(Icons.check_circle, color: Colors.white),
                   const SizedBox(width: 12),
-                  Expanded(
-                    child: Text('Report saved to: ${file.path}'),
-                  ),
+                  Expanded(child: Text('Report saved: $savedPath')),
                 ],
               ),
               backgroundColor: const Color(0xFF10B981),
               duration: const Duration(seconds: 4),
-              action: SnackBarAction(
-                label: 'Share',
-                textColor: Colors.white,
-                onPressed: () async {
-                  await Share.shareXFiles(
-                    [XFile(file.path)],
-                    text: type == 'student'
-                        ? 'Student Progress Report for ${data['name']}'
-                        : 'Classroom Performance Report for ${data['name']}',
-                  );
-                },
-              ),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Export cancelled or failed'),
+              backgroundColor: Color(0xFFF59E0B),
             ),
           );
         }
@@ -555,6 +648,118 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
+  /// Show export format selection dialog
+  void _showExportFormatDialog(Map<String, dynamic> data, String type) {
+    showDialog(
+      context: context,
+      builder: (context) => ExportFormatDialog(
+        title: type == 'student' ? 'Export Student Report' : 'Export Classroom Report',
+        onPdfExport: () => _downloadAndShareReport(data, type),
+        onCsvExport: () => _exportToCSV(data, type),
+        onExcelExport: () => _exportToExcel(data, type),
+      ),
+    );
+  }
+
+  /// Export to CSV
+  Future<void> _exportToCSV(Map<String, dynamic> data, String type) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating CSV...')),
+      );
+
+      final exportService = ExportService();
+      String? savedPath;
+
+      if (type == 'classroom') {
+        savedPath = await exportService.exportClassroomAnalyticsToCSV(
+          data['name'] ?? 'Classroom',
+          data,
+        );
+      } else {
+        // For student, create a list with single student
+        savedPath = await exportService.exportStudentsToCSV([data]);
+      }
+
+      if (mounted) {
+        if (savedPath != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('CSV saved to: $savedPath'),
+              backgroundColor: const Color(0xFF10B981),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Export cancelled or failed'),
+              backgroundColor: Color(0xFFF59E0B),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting CSV: ${e.toString()}'),
+            backgroundColor: const Color(0xFFEF4444),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Export to Excel
+  Future<void> _exportToExcel(Map<String, dynamic> data, String type) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating Excel...')),
+      );
+
+      final exportService = ExportService();
+      String? savedPath;
+
+      if (type == 'classroom') {
+        savedPath = await exportService.exportClassroomAnalyticsToExcel(
+          data['name'] ?? 'Classroom',
+          data,
+        );
+      } else {
+        savedPath = await exportService.exportStudentsToExcel([data]);
+      }
+
+      if (mounted) {
+        if (savedPath != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Excel saved to: $savedPath'),
+              backgroundColor: const Color(0xFF10B981),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Export cancelled or failed'),
+              backgroundColor: Color(0xFFF59E0B),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting Excel: ${e.toString()}'),
+            backgroundColor: const Color(0xFFEF4444),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -582,7 +787,11 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 8),
@@ -628,11 +837,20 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                       padding: EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 60,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                           SizedBox(height: 16),
-                          LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 200,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                           SizedBox(height: 16),
-                          LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 60,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                         ],
                       ),
                     )
@@ -671,9 +889,11 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                             ],
                           ),
                           const SizedBox(height: 24),
-                          
+
                           Text(
-                            _reportType == 'student' ? 'Select Student' : 'Select Classroom',
+                            _reportType == 'student'
+                                ? 'Select Student'
+                                : 'Select Classroom',
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -681,57 +901,15 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          
+
                           if (_reportType == 'student')
                             ..._buildStudentList()
                           else
                             ..._buildClassroomList(),
-                          
+
                           const SizedBox(height: 24),
-                          
-                          // Export CSV Button (for classroom reports)
-                          if (_reportType == 'classroom' && _selectedClassroomId != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Container(
-                                width: double.infinity,
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [Color(0xFF10B981), Color(0xFF14B8A6)],
-                                  ),
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF10B981).withValues(alpha: 0.4),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: ElevatedButton.icon(
-                                  onPressed: _isGenerating ? null : _exportClassroomCSV,
-                                  icon: const Icon(Icons.table_chart, size: 24),
-                                  label: const Text(
-                                    'Export as CSV',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundColor: Colors.white,
-                                    shadowColor: Colors.transparent,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          
-                          // Generate PDF Button
+
+                          // Generate Report Button (opens ExportFormatDialog)
                           Container(
                             width: double.infinity,
                             height: 56,
@@ -742,7 +920,9 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
+                                  color: const Color(
+                                    0xFF8B5CF6,
+                                  ).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -759,9 +939,11 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                                         strokeWidth: 2,
                                       ),
                                     )
-                                  : const Icon(Icons.picture_as_pdf, size: 24),
+                                  : const Icon(Icons.description, size: 24),
                               label: Text(
-                                _isGenerating ? 'Generating...' : 'Generate PDF Report',
+                                _isGenerating
+                                    ? 'Generating...'
+                                    : 'Generate Report',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -786,7 +968,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       ),
     );
   }
-  
+
   Widget _buildReportTypeButton(String label, String type, IconData icon) {
     final isSelected = _reportType == type;
     return GestureDetector(
@@ -843,7 +1025,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       ),
     );
   }
-  
+
   List<Widget> _buildStudentList() {
     if (_students.isEmpty) {
       return [
@@ -866,139 +1048,18 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
         ),
       ];
     }
-    
+
     return _students.map((student) {
-                              final isSelected = _selectedStudentId == student['id'];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: CleanCard(
-                                  color: isSelected 
-                                      ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
-                                      : Colors.white,
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedStudentId = student['id'];
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 54,
-                                          height: 54,
-                                          decoration: BoxDecoration(
-                                            gradient: const LinearGradient(
-                                              colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
-                                            ),
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
-                                                blurRadius: 8,
-                                                offset: const Offset(0, 4),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              student['name'][0].toUpperCase(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                student['name'],
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color(0xFF1F2937),
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                student['email'],
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        if (isSelected)
-                                          Container(
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xFF8B5CF6),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(
-                                              Icons.check,
-                                              color: Colors.white,
-                                              size: 20,
-                                            ),
-                                          )
-                                        else
-                                          Container(
-                                            width: 36,
-                                            height: 36,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: Colors.grey[300]!, width: 2),
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList();
-  }
-  
-  List<Widget> _buildClassroomList() {
-    if (_classrooms.isEmpty) {
-      return [
-        Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              Icon(Icons.class_outlined, size: 80, color: Colors.grey[300]),
-              const SizedBox(height: 16),
-              Text(
-                'No classrooms found',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ];
-    }
-    
-    return _classrooms.map((classroom) {
-      final isSelected = _selectedClassroomId == classroom['id'];
+      final isSelected = _selectedStudentId == student['id'];
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: CleanCard(
-          color: isSelected 
+          color: isSelected
               ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
               : Colors.white,
           onTap: () {
             setState(() {
-              _selectedClassroomId = classroom['id'];
+              _selectedStudentId = student['id'];
             });
           },
           child: Padding(
@@ -1021,11 +1082,14 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                       ),
                     ],
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.class_,
-                      color: Colors.white,
-                      size: 28,
+                  child: Center(
+                    child: Text(
+                      student['name'][0].toUpperCase(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -1035,7 +1099,7 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        classroom['name'],
+                        student['name'],
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -1044,11 +1108,8 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${classroom['studentCount']} students',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
+                        student['email'],
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -1082,92 +1143,115 @@ class _GenerateReportScreenState extends State<GenerateReportScreen> {
       );
     }).toList();
   }
-  
-  Future<void> _exportClassroomCSV() async {
-    if (_selectedClassroomId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a classroom')),
-      );
-      return;
+
+  List<Widget> _buildClassroomList() {
+    if (_classrooms.isEmpty) {
+      return [
+        Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              Icon(Icons.class_outlined, size: 80, color: Colors.grey[300]),
+              const SizedBox(height: 16),
+              Text(
+                'No classrooms found',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ];
     }
-    
-    setState(() => _isGenerating = true);
-    
-    try {
-      // Show loading
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Row(
+
+    return _classrooms.map((classroom) {
+      final isSelected = _selectedClassroomId == classroom['id'];
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: CleanCard(
+          color: isSelected
+              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              : Colors.white,
+          onTap: () {
+            setState(() {
+              _selectedClassroomId = classroom['id'];
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
+                Container(
+                  width: 54,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                    ),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.class_, color: Colors.white, size: 28),
                   ),
                 ),
-                SizedBox(width: 16),
-                Text('Generating CSV...'),
-              ],
-            ),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-      
-      // Generate CSV
-      final csvData = await _reportService.exportClassDataCSV(_selectedClassroomId!);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
-      final classroom = _classrooms.firstWhere((c) => c['id'] == _selectedClassroomId);
-      final fileName = 'classroom_data_${classroom['name'].replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}.csv';
-      final file = File('${directory.path}/$fileName');
-      
-      // Write CSV to file
-      await file.writeAsString(csvData);
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
+                const SizedBox(width: 16),
                 Expanded(
-                  child: Text('CSV saved to: ${file.path}'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        classroom['name'],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1F2937),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${classroom['studentCount']} students',
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
                 ),
+                if (isSelected)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF8B5CF6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  )
+                else
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]!, width: 2),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
               ],
             ),
-            backgroundColor: const Color(0xFF10B981),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Share',
-              textColor: Colors.white,
-              onPressed: () async {
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: 'Classroom Data Export for ${classroom['name']}',
-                );
-              },
-            ),
           ),
-        );
-      }
-    } catch (e) {
-      // print('Error exporting CSV: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: const Color(0xFFEF4444),
-          ),
-        );
-      }
-    } finally {
-      setState(() => _isGenerating = false);
-    }
+        ),
+      );
+    }).toList();
   }
 }

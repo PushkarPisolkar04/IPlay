@@ -5,7 +5,7 @@ import '../services/auth_service.dart';
 /// User state provider
 class UserProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
-  
+
   UserModel? _userModel;
   bool _isLoading = false;
   String? _error;
@@ -99,10 +99,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   /// Sign in
-  Future<bool> signIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<bool> signIn({required String email, required String password}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -134,10 +131,12 @@ class UserProvider extends ChangeNotifier {
 
     try {
       final userCredential = await _authService.signInWithGoogle();
-      
+
       // Check if user profile exists
-      final profile = await _authService.getUserProfile(userCredential.user!.uid);
-      
+      final profile = await _authService.getUserProfile(
+        userCredential.user!.uid,
+      );
+
       if (profile == null) {
         // New user - needs to complete profile
         _userModel = null;
@@ -217,10 +216,7 @@ class UserProvider extends ChangeNotifier {
     }
 
     try {
-      await updateProfile({
-        'currentStreak': newStreak,
-        'lastActiveDate': now,
-      });
+      await updateProfile({'currentStreak': newStreak, 'lastActiveDate': now});
     } catch (e) {
       _error = e.toString();
       notifyListeners();
@@ -233,4 +229,3 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-

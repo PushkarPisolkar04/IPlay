@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' as ui;
 import 'drawing_controller.dart';
 
 /// Layer information model
@@ -27,10 +26,7 @@ class LayerManager extends ChangeNotifier {
 
   LayerManager({required this.drawingController}) {
     // Initialize with default layer
-    _layerInfo['layer_0'] = LayerInfo(
-      id: 'layer_0',
-      name: 'Layer 1',
-    );
+    _layerInfo['layer_0'] = LayerInfo(id: 'layer_0', name: 'Layer 1');
   }
 
   Map<String, LayerInfo> get layerInfo => Map.unmodifiable(_layerInfo);
@@ -41,10 +37,7 @@ class LayerManager extends ChangeNotifier {
     final layerId = 'layer_$_layerCounter';
     final layerName = 'Layer ${_layerCounter + 1}';
 
-    _layerInfo[layerId] = LayerInfo(
-      id: layerId,
-      name: layerName,
-    );
+    _layerInfo[layerId] = LayerInfo(id: layerId, name: layerName);
 
     drawingController.addLayer(layerId);
     notifyListeners();
@@ -176,10 +169,7 @@ class _LayerPanelState extends State<LayerPanel> {
               children: [
                 const Text(
                   'Layers',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const Spacer(),
                 IconButton(
@@ -232,7 +222,9 @@ class _LayerPanelState extends State<LayerPanel> {
       key: key,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: isCurrentLayer ? Colors.teal.withValues(alpha: 0.1) : Colors.white,
+        color: isCurrentLayer
+            ? Colors.teal.withValues(alpha: 0.1)
+            : Colors.white,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: isCurrentLayer ? Colors.teal : Colors.grey[300]!,
@@ -251,11 +243,7 @@ class _LayerPanelState extends State<LayerPanel> {
           child: Row(
             children: [
               // Drag handle
-              const Icon(
-                Icons.drag_indicator,
-                size: 20,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.drag_indicator, size: 20, color: Colors.grey),
 
               const SizedBox(width: 8),
 
@@ -268,11 +256,7 @@ class _LayerPanelState extends State<LayerPanel> {
                   borderRadius: BorderRadius.circular(4),
                   border: Border.all(color: Colors.grey[300]!),
                 ),
-                child: const Icon(
-                  Icons.layers,
-                  size: 20,
-                  color: Colors.grey,
-                ),
+                child: const Icon(Icons.layers, size: 20, color: Colors.grey),
               ),
 
               const SizedBox(width: 12),
@@ -287,17 +271,16 @@ class _LayerPanelState extends State<LayerPanel> {
                       layerInfo.name,
                       style: TextStyle(
                         fontSize: 14,
-                        fontWeight: isCurrentLayer ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isCurrentLayer
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                         color: layerInfo.locked ? Colors.grey : Colors.black,
                       ),
                     ),
                     if (layerInfo.opacity < 1.0)
                       Text(
                         '${(layerInfo.opacity * 100).toInt()}%',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       ),
                   ],
                 ),
@@ -309,7 +292,8 @@ class _LayerPanelState extends State<LayerPanel> {
                   layerInfo.visible ? Icons.visibility : Icons.visibility_off,
                   size: 20,
                 ),
-                onPressed: () => widget.layerManager.toggleLayerVisibility(layerId),
+                onPressed: () =>
+                    widget.layerManager.toggleLayerVisibility(layerId),
                 tooltip: layerInfo.visible ? 'Hide Layer' : 'Show Layer',
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -378,7 +362,8 @@ class _LayerPanelState extends State<LayerPanel> {
                       ),
                     ),
                 ],
-                onSelected: (value) => _handleLayerAction(value, layerId, layerInfo),
+                onSelected: (value) =>
+                    _handleLayerAction(value, layerId, layerInfo),
               ),
             ],
           ),
@@ -475,9 +460,17 @@ class LayerThumbnailsView extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey[400]!, width: 2, style: BorderStyle.solid),
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 2,
+                          style: BorderStyle.solid,
+                        ),
                       ),
-                      child: const Icon(Icons.add, size: 30, color: Colors.grey),
+                      child: const Icon(
+                        Icons.add,
+                        size: 30,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 );
@@ -485,7 +478,8 @@ class LayerThumbnailsView extends StatelessWidget {
 
               final layerId = layerIds[index];
               final layerInfo = layerManager.layerInfo[layerId]!;
-              final isCurrentLayer = drawingController.currentLayerId == layerId;
+              final isCurrentLayer =
+                  drawingController.currentLayerId == layerId;
 
               return Padding(
                 padding: const EdgeInsets.all(8),
@@ -521,7 +515,9 @@ class LayerThumbnailsView extends StatelessWidget {
                           layerInfo.name,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: isCurrentLayer ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight: isCurrentLayer
+                                ? FontWeight.w600
+                                : FontWeight.normal,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

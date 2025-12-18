@@ -24,37 +24,47 @@ class TDGamePainter extends CustomPainter {
     // Draw game map background if available
     final mapImage = svgImages?['assets/maps/game_map.svg'];
     if (mapImage != null) {
-      final srcRect = Rect.fromLTWH(0, 0, mapImage.width.toDouble(), mapImage.height.toDouble());
+      final srcRect = Rect.fromLTWH(
+        0,
+        0,
+        mapImage.width.toDouble(),
+        mapImage.height.toDouble(),
+      );
       final dstRect = Rect.fromLTWH(0, 0, size.width, size.height);
-      canvas.drawImageRect(mapImage, srcRect, dstRect, Paint()..filterQuality = FilterQuality.high);
+      canvas.drawImageRect(
+        mapImage,
+        srcRect,
+        dstRect,
+        Paint()..filterQuality = FilterQuality.high,
+      );
     }
-    
+
     // Draw grid
     _drawGrid(canvas, size);
-    
+
     // Draw path
     _drawPath(canvas);
-    
+
     // Draw tower placement preview
     if (hoverGridPos != null && towerToPlace != null) {
       _drawTowerPlacementPreview(canvas, hoverGridPos!, towerToPlace!);
     }
-    
+
     // Draw towers
     for (final tower in engine.placedTowers) {
       _drawTower(canvas, tower);
-      
+
       // Draw range indicator for selected tower
       if (selectedTower == tower) {
         _drawTowerRange(canvas, tower);
       }
     }
-    
+
     // Draw enemies
     for (final enemy in engine.activeEnemies) {
       _drawEnemy(canvas, enemy);
     }
-    
+
     // Draw projectiles
     for (final projectile in engine.activeProjectiles) {
       _drawProjectile(canvas, projectile);
@@ -100,7 +110,7 @@ class TDGamePainter extends CustomPainter {
 
     final path = Path();
     path.moveTo(engine.path.first.x, engine.path.first.y);
-    
+
     for (int i = 1; i < engine.path.length; i++) {
       path.lineTo(engine.path[i].x, engine.path[i].y);
     }
@@ -114,17 +124,22 @@ class TDGamePainter extends CustomPainter {
 
     // Try to use SVG image if available
     final svgImage = svgImages?[tower.towerData.spriteUrl];
-    
+
     if (svgImage != null) {
       // Draw SVG image
       final imageSize = tileSize * 0.8;
-      final srcRect = Rect.fromLTWH(0, 0, svgImage.width.toDouble(), svgImage.height.toDouble());
+      final srcRect = Rect.fromLTWH(
+        0,
+        0,
+        svgImage.width.toDouble(),
+        svgImage.height.toDouble(),
+      );
       final dstRect = Rect.fromCenter(
         center: Offset(pos.x, pos.y),
         width: imageSize,
         height: imageSize,
       );
-      
+
       canvas.drawImageRect(svgImage, srcRect, dstRect, Paint());
     } else {
       // Fallback to programmatic rendering
@@ -133,22 +148,14 @@ class TDGamePainter extends CustomPainter {
         ..color = tower.towerData.color.withValues(alpha: 0.3)
         ..style = PaintingStyle.fill;
 
-      canvas.drawCircle(
-        Offset(pos.x, pos.y),
-        tileSize * 0.4,
-        basePaint,
-      );
+      canvas.drawCircle(Offset(pos.x, pos.y), tileSize * 0.4, basePaint);
 
       // Draw tower body
       final bodyPaint = Paint()
         ..color = tower.towerData.color
         ..style = PaintingStyle.fill;
 
-      canvas.drawCircle(
-        Offset(pos.x, pos.y),
-        tileSize * 0.3,
-        bodyPaint,
-      );
+      canvas.drawCircle(Offset(pos.x, pos.y), tileSize * 0.3, bodyPaint);
 
       // Draw tower icon based on type
       _drawTowerIcon(canvas, tower, pos);
@@ -236,7 +243,11 @@ class TDGamePainter extends CustomPainter {
     );
   }
 
-  void _drawTowerPlacementPreview(Canvas canvas, Coordinate gridPos, Tower tower) {
+  void _drawTowerPlacementPreview(
+    Canvas canvas,
+    Coordinate gridPos,
+    Tower tower,
+  ) {
     final pos = engine.gridToWorld(gridPos);
     final isValid = engine.isValidTowerPosition(gridPos);
 
@@ -245,11 +256,7 @@ class TDGamePainter extends CustomPainter {
       ..color = (isValid ? Colors.green : Colors.red).withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(
-      Offset(pos.x, pos.y),
-      TDGameEngine.tileSize * 0.4,
-      paint,
-    );
+    canvas.drawCircle(Offset(pos.x, pos.y), TDGameEngine.tileSize * 0.4, paint);
 
     // Draw range preview
     final rangePaint = Paint()
@@ -269,17 +276,22 @@ class TDGamePainter extends CustomPainter {
 
     // Try to use SVG image if available
     final svgImage = svgImages?[enemy.enemyData.spriteUrl];
-    
+
     if (svgImage != null) {
       // Draw SVG image
       final imageSize = size * 2;
-      final srcRect = Rect.fromLTWH(0, 0, svgImage.width.toDouble(), svgImage.height.toDouble());
+      final srcRect = Rect.fromLTWH(
+        0,
+        0,
+        svgImage.width.toDouble(),
+        svgImage.height.toDouble(),
+      );
       final dstRect = Rect.fromCenter(
         center: Offset(pos.x, pos.y),
         width: imageSize,
         height: imageSize,
       );
-      
+
       canvas.drawImageRect(svgImage, srcRect, dstRect, Paint());
     } else {
       // Fallback to programmatic rendering
@@ -287,18 +299,26 @@ class TDGamePainter extends CustomPainter {
         ..color = enemy.enemyData.color
         ..style = PaintingStyle.fill;
 
-      canvas.drawCircle(
-        Offset(pos.x, pos.y),
-        size,
-        bodyPaint,
-      );
+      canvas.drawCircle(Offset(pos.x, pos.y), size, bodyPaint);
     }
 
     // Draw health bar
-    _drawHealthBar(canvas, pos, enemy.currentHealth, enemy.enemyData.baseHealth, size);
+    _drawHealthBar(
+      canvas,
+      pos,
+      enemy.currentHealth,
+      enemy.enemyData.baseHealth,
+      size,
+    );
   }
 
-  void _drawHealthBar(Canvas canvas, Coordinate pos, int current, int max, double enemySize) {
+  void _drawHealthBar(
+    Canvas canvas,
+    Coordinate pos,
+    int current,
+    int max,
+    double enemySize,
+  ) {
     final barWidth = enemySize * 2;
     final barHeight = 4.0;
     final barY = pos.y - enemySize - 8;
@@ -328,17 +348,22 @@ class TDGamePainter extends CustomPainter {
   void _drawProjectile(Canvas canvas, Projectile projectile) {
     // Try to use SVG image if available
     final svgImage = svgImages?[projectile.tower.towerData.projectileUrl];
-    
+
     if (svgImage != null) {
       // Draw SVG image
       final imageSize = 12.0;
-      final srcRect = Rect.fromLTWH(0, 0, svgImage.width.toDouble(), svgImage.height.toDouble());
+      final srcRect = Rect.fromLTWH(
+        0,
+        0,
+        svgImage.width.toDouble(),
+        svgImage.height.toDouble(),
+      );
       final dstRect = Rect.fromCenter(
         center: Offset(projectile.position.x, projectile.position.y),
         width: imageSize,
         height: imageSize,
       );
-      
+
       canvas.drawImageRect(svgImage, srcRect, dstRect, Paint());
     } else {
       // Fallback to programmatic rendering

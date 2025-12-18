@@ -43,25 +43,20 @@ class _GameProgressBarState extends State<GameProgressBar>
     _animation = Tween<double>(
       begin: _previousProgress,
       end: widget.current / widget.total,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.forward();
   }
 
   @override
   void didUpdateWidget(GameProgressBar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.current != widget.current || oldWidget.total != widget.total) {
+    if (oldWidget.current != widget.current ||
+        oldWidget.total != widget.total) {
       _previousProgress = oldWidget.current / oldWidget.total;
       _animation = Tween<double>(
         begin: _previousProgress,
         end: widget.current / widget.total,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
       _controller.forward(from: 0);
     }
   }

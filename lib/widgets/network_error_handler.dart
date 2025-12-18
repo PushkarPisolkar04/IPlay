@@ -26,11 +26,7 @@ class NetworkErrorHandler extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon ?? Icons.wifi_off,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(icon ?? Icons.wifi_off, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 24),
             Text(
               'Connection Error',
@@ -43,10 +39,7 @@ class NetworkErrorHandler extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               message,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -97,27 +90,17 @@ class NetworkErrorBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.orange[100],
         border: Border(
-          bottom: BorderSide(
-            color: Colors.orange[300]!,
-            width: 1,
-          ),
+          bottom: BorderSide(color: Colors.orange[300]!, width: 1),
         ),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.wifi_off,
-            color: Colors.orange[800],
-            size: 20,
-          ),
+          Icon(Icons.wifi_off, color: Colors.orange[800], size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               message,
-              style: TextStyle(
-                color: Colors.orange[900],
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.orange[900], fontSize: 14),
             ),
           ),
           if (onRetry != null) ...[
@@ -125,7 +108,10 @@ class NetworkErrorBanner extends StatelessWidget {
             TextButton(
               onPressed: onRetry,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -142,11 +128,7 @@ class NetworkErrorBanner extends StatelessWidget {
             const SizedBox(width: 4),
             IconButton(
               onPressed: onDismiss,
-              icon: Icon(
-                Icons.close,
-                color: Colors.orange[800],
-                size: 20,
-              ),
+              icon: Icon(Icons.close, color: Colors.orange[800], size: 20),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
@@ -171,9 +153,7 @@ class NetworkErrorSnackbar {
           children: [
             const Icon(Icons.wifi_off, color: Colors.white),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(message),
-            ),
+            Expanded(child: Text(message)),
           ],
         ),
         backgroundColor: Colors.orange[700],
@@ -216,33 +196,33 @@ class NetworkErrorSnackbar {
 
 /// Helper class for common network error messages
 class NetworkErrorMessages {
-  static const String noConnection = 
+  static const String noConnection =
       'No internet connection. Please check your network settings.';
-  
-  static const String timeout = 
+
+  static const String timeout =
       'Request timed out. Please check your connection and try again.';
-  
-  static const String serverError = 
+
+  static const String serverError =
       'Server error occurred. Please try again later.';
-  
-  static const String unknownError = 
+
+  static const String unknownError =
       'An unexpected error occurred. Please try again.';
-  
-  static const String slowConnection = 
+
+  static const String slowConnection =
       'Your connection is slow. This may take a while.';
-  
+
   static String getErrorMessage(dynamic error) {
     final errorString = error.toString().toLowerCase();
-    
-    if (errorString.contains('network') || 
+
+    if (errorString.contains('network') ||
         errorString.contains('socket') ||
         errorString.contains('connection')) {
       return noConnection;
     } else if (errorString.contains('timeout')) {
       return timeout;
-    } else if (errorString.contains('500') || 
-               errorString.contains('502') ||
-               errorString.contains('503')) {
+    } else if (errorString.contains('500') ||
+        errorString.contains('502') ||
+        errorString.contains('503')) {
       return serverError;
     } else {
       return unknownError;

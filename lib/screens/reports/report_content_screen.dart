@@ -25,7 +25,7 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
   final ReportService _reportService = ReportService();
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
-  
+
   String? _selectedReason;
   bool _isSubmitting = false;
 
@@ -55,13 +55,17 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
     setState(() => _isSubmitting = true);
 
     try {
-      final user = Provider.of<AuthProvider>(context, listen: false).currentUser;
+      final user = Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).currentUser;
       if (user == null) throw Exception('User not logged in');
 
       await _reportService.submitReport(
         reportType: widget.reportType,
         contentId: widget.reportedItemId,
-        description: '${_selectedReason!}${_descriptionController.text.trim().isEmpty ? '' : ': ${_descriptionController.text.trim()}'}',
+        description:
+            '${_selectedReason!}${_descriptionController.text.trim().isEmpty ? '' : ': ${_descriptionController.text.trim()}'}',
       );
 
       if (mounted) {
@@ -89,9 +93,9 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
       }
     } catch (e) {
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting report: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error submitting report: $e')));
     }
   }
 
@@ -117,11 +121,16 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                 decoration: BoxDecoration(
                   color: AppDesignSystem.warning.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppDesignSystem.warning.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppDesignSystem.warning.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline, color: AppDesignSystem.warning),
+                    const Icon(
+                      Icons.info_outline,
+                      color: AppDesignSystem.warning,
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
@@ -170,7 +179,7 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
               ...List.generate(_reportReasons.length, (index) {
                 final reason = _reportReasons[index];
                 final isSelected = _selectedReason == reason;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: InkWell(
@@ -181,11 +190,13 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
-                        color: isSelected 
-                            ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.1)
+                        color: isSelected
+                            ? AppDesignSystem.primaryIndigo.withValues(
+                                alpha: 0.1,
+                              )
                             : AppDesignSystem.backgroundWhite,
                         border: Border.all(
-                          color: isSelected 
+                          color: isSelected
                               ? AppDesignSystem.primaryIndigo
                               : AppDesignSystem.backgroundWhite,
                           width: 2,
@@ -195,19 +206,19 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                       child: Row(
                         children: [
                           Icon(
-                            isSelected 
-                                ? Icons.radio_button_checked 
+                            isSelected
+                                ? Icons.radio_button_checked
                                 : Icons.radio_button_unchecked,
-                            color: isSelected 
-                                ? AppDesignSystem.primaryIndigo 
+                            color: isSelected
+                                ? AppDesignSystem.primaryIndigo
                                 : AppDesignSystem.textSecondary,
                           ),
                           const SizedBox(width: 12),
                           Text(
                             reason,
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: isSelected 
-                                  ? AppDesignSystem.textPrimary 
+                              color: isSelected
+                                  ? AppDesignSystem.textPrimary
                                   : AppDesignSystem.textSecondary,
                             ),
                           ),
@@ -232,7 +243,8 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                 maxLines: 5,
                 maxLength: 500,
                 decoration: InputDecoration(
-                  hintText: 'Provide any additional context that might help us understand the issue...',
+                  hintText:
+                      'Provide any additional context that might help us understand the issue...',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -259,7 +271,9 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : const Text(
@@ -277,4 +291,3 @@ class _ReportContentScreenState extends State<ReportContentScreen> {
     );
   }
 }
-

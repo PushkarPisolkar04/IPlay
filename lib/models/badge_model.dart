@@ -30,11 +30,13 @@ class BadgeModel {
     int? order,
     int? displayOrder, // Backward compatibility
     this.isActive = true,
-  }) : iconPath = iconPath ?? icon ?? iconEmoji ?? 'assets/badges/default_badge.png',
-       criteriaType = criteriaType ?? (condition?['type'] as String?) ?? 'manual',
+  }) : iconPath =
+           iconPath ?? icon ?? iconEmoji ?? 'assets/badges/default_badge.png',
+       criteriaType =
+           criteriaType ?? (condition?['type'] as String?) ?? 'manual',
        criteriaValue = criteriaValue ?? condition?['value'],
        order = order ?? displayOrder ?? 0;
-  
+
   // Aliases for backward compatibility
   String get icon => iconPath;
   String get iconEmoji => iconPath;
@@ -64,13 +66,17 @@ class BadgeModel {
       id: data['id'] as String,
       name: data['name'] as String,
       description: data['description'] as String,
-      iconPath: (data['iconPath'] ?? data['icon'] ?? data['iconEmoji']) as String?, // Support all field names
+      iconPath:
+          (data['iconPath'] ?? data['icon'] ?? data['iconEmoji'])
+              as String?, // Support all field names
       category: data['category'] as String,
       xpBonus: data['xpBonus'] as int? ?? 0,
       rarity: data['rarity'] as String,
       criteriaType: data['criteriaType'] as String,
       criteriaValue: data['criteriaValue'],
-      order: (data['order'] ?? data['displayOrder']) as int, // Support both field names
+      order:
+          (data['order'] ?? data['displayOrder'])
+              as int, // Support both field names
       isActive: data['isActive'] as bool? ?? true,
     );
   }
@@ -79,7 +85,8 @@ class BadgeModel {
   Map<String, dynamic> toMap() => toFirestore();
 
   /// Legacy: fromMap for backward compatibility
-  factory BadgeModel.fromMap(Map<String, dynamic> map) => BadgeModel.fromFirestore(map);
+  factory BadgeModel.fromMap(Map<String, dynamic> map) =>
+      BadgeModel.fromFirestore(map);
 }
 
 class UserBadge {
@@ -109,4 +116,3 @@ class UserBadge {
     );
   }
 }
-

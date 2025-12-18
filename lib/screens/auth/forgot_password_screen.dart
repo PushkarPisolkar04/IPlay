@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
+import '../../core/utils/auth_error_handler.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../services/auth_service.dart';
@@ -35,26 +36,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     try {
       await _authService.resetPassword(_emailController.text.trim());
-      
+
       setState(() {
         _emailSent = true;
       });
 
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Password reset email sent! The link will expire in 1 hour. Check your inbox.'),
+          content: Text(
+            'Password reset email sent! The link will expire in 1 hour. Check your inbox.',
+          ),
           backgroundColor: Colors.green,
           duration: Duration(seconds: 6),
         ),
       );
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text(AuthErrorHandler.getErrorMessage(e)),
           backgroundColor: Colors.red,
         ),
       );
@@ -112,7 +115,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.md),
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                            color: AppDesignSystem.primaryIndigo.withValues(
+                              alpha: 0.1,
+                            ),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -122,9 +127,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.lg),
-                      
+
                       // Title
                       const Center(
                         child: Text(
@@ -133,9 +138,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.sm),
-                      
+
                       // Description
                       Center(
                         child: Text(
@@ -146,9 +151,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.lg),
-                      
+
                       // Email field
                       TextFormField(
                         controller: _emailController,
@@ -156,7 +161,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Email Address',
                           hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email_outlined, color: AppDesignSystem.primaryIndigo),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -168,9 +176,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.lg),
-                      
+
                       // Buttons
                       if (!_emailSent) ...[
                         PrimaryButton(
@@ -190,10 +198,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Container(
                           padding: const EdgeInsets.all(AppSpacing.md),
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.success.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                            color: AppDesignSystem.success.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.cardRadius,
+                            ),
                             border: Border.all(
-                              color: AppDesignSystem.success.withValues(alpha: 0.3),
+                              color: AppDesignSystem.success.withValues(
+                                alpha: 0.3,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -233,4 +247,3 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 }
-

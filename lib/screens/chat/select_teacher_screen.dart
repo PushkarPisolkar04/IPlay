@@ -34,7 +34,7 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
 
   Future<void> _loadTeachers() async {
     setState(() => _isLoading = true);
-    
+
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       setState(() => _isLoading = false);
@@ -53,7 +53,9 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
         return;
       }
 
-      final classroomIds = List<String>.from(userDoc.data()?['classroomIds'] ?? []);
+      final classroomIds = List<String>.from(
+        userDoc.data()?['classroomIds'] ?? [],
+      );
 
       if (classroomIds.isEmpty) {
         setState(() => _isLoading = false);
@@ -99,7 +101,7 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
 
         final teacherData = teacherDoc.data()!;
         final classroomInfo = teacherClassroomInfo[teacherId];
-        
+
         teachers.add({
           'id': teacherId,
           'name': teacherData['displayName'] ?? 'Teacher',
@@ -112,7 +114,9 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
       }
 
       // Sort by name
-      teachers.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      teachers.sort(
+        (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+      );
 
       setState(() {
         _allTeachers = teachers;
@@ -127,7 +131,7 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
     if (_searchQuery.isEmpty) {
       return _allTeachers;
     }
-    
+
     return _allTeachers.where((teacher) {
       final name = teacher['name'].toString().toLowerCase();
       final classroom = teacher['classroom'].toString().toLowerCase();
@@ -136,7 +140,11 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
     }).toList();
   }
 
-  Future<void> _startChat(String teacherId, String teacherName, String? teacherAvatar) async {
+  Future<void> _startChat(
+    String teacherId,
+    String teacherName,
+    String? teacherAvatar,
+  ) async {
     try {
       final studentId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -189,7 +197,10 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -216,213 +227,264 @@ class _SelectTeacherScreenState extends State<SelectTeacherScreen> {
             // Body content
             Expanded(
               child: Column(
-        children: [
-          // Search bar
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search teachers...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchController.clear();
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppDesignSystem.backgroundGrey),
-                ),
-                filled: true,
-                fillColor: AppDesignSystem.backgroundGrey,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-            ),
-          ),
-
-          // Teachers list
-          Expanded(
-            child: _isLoading
-                ? const ListSkeleton(itemCount: 5)
-                : _filteredTeachers.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              _searchQuery.isEmpty ? Icons.school_outlined : Icons.search_off,
-                              size: 80,
-                              color: AppDesignSystem.textTertiary,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              _searchQuery.isEmpty ? 'No teachers yet' : 'No teachers found',
-                              style: TextStyle(
-                                color: AppDesignSystem.textSecondary,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 48),
-                              child: Text(
-                                _searchQuery.isEmpty
-                                    ? 'Join a classroom to see your teachers here'
-                                    : 'Try a different search term',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppDesignSystem.textTertiary,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
+                children: [
+                  // Search bar
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search teachers...',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  setState(() {
+                                    _searchController.clear();
+                                    _searchQuery = '';
+                                  });
+                                },
+                              )
+                            : null,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: AppDesignSystem.backgroundGrey,
+                          ),
                         ),
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _filteredTeachers.length,
-                        separatorBuilder: (context, index) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final teacher = _filteredTeachers[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
+                        filled: true,
+                        fillColor: AppDesignSystem.backgroundGrey,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
+                    ),
+                  ),
+
+                  // Teachers list
+                  Expanded(
+                    child: _isLoading
+                        ? const ListSkeleton(itemCount: 5)
+                        : _filteredTeachers.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  _searchQuery.isEmpty
+                                      ? Icons.school_outlined
+                                      : Icons.search_off,
+                                  size: 80,
+                                  color: AppDesignSystem.textTertiary,
                                 ),
-                              ],
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              leading: CircleAvatar(
-                                radius: 28,
-                                backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                backgroundImage: teacher['avatarUrl'] != null && teacher['avatarUrl'].toString().isNotEmpty
-                                    ? (teacher['avatarUrl'].toString().startsWith('http')
-                                        ? NetworkImage(teacher['avatarUrl'])
-                                        : teacher['avatarUrl'].toString().startsWith('assets/')
-                                            ? AssetImage(teacher['avatarUrl']) as ImageProvider
-                                            : null)
-                                    : null,
-                                child: (teacher['avatarUrl'] == null || 
-                                       teacher['avatarUrl'].toString().isEmpty ||
-                                       (!teacher['avatarUrl'].toString().startsWith('http') && 
-                                        !teacher['avatarUrl'].toString().startsWith('assets/')))
-                                    ? Text(
-                                        teacher['name'][0].toUpperCase(),
-                                        style: TextStyle(
-                                          color: AppDesignSystem.primaryIndigo,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              title: Text(
-                                teacher['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                const SizedBox(height: 24),
+                                Text(
+                                  _searchQuery.isEmpty
+                                      ? 'No teachers yet'
+                                      : 'No teachers found',
+                                  style: TextStyle(
+                                    color: AppDesignSystem.textSecondary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    teacher['classroom'],
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
+                                const SizedBox(height: 8),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 48,
+                                  ),
+                                  child: Text(
+                                    _searchQuery.isEmpty
+                                        ? 'Join a classroom to see your teachers here'
+                                        : 'Try a different search term',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppDesignSystem.textTertiary,
                                       fontSize: 14,
                                     ),
                                   ),
-                                  if (teacher['grade'] != null && teacher['grade'].toString().isNotEmpty) ...[
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'Grade ${teacher['grade']}${teacher['section'] != null && teacher['section'].toString().isNotEmpty ? ' - ${teacher['section']}' : ''}',
-                                      style: TextStyle(
-                                        color: AppDesignSystem.textSecondary,
-                                        fontSize: 13,
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.separated(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: _filteredTeachers.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final teacher = _filteredTeachers[index];
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
                                       ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
                                     ),
                                   ],
-                                  const SizedBox(height: 6),
-                                  Row(
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  leading: CircleAvatar(
+                                    radius: 28,
+                                    backgroundColor: AppDesignSystem
+                                        .primaryIndigo
+                                        .withValues(alpha: 0.1),
+                                    backgroundImage:
+                                        teacher['avatarUrl'] != null &&
+                                            teacher['avatarUrl']
+                                                .toString()
+                                                .isNotEmpty
+                                        ? (teacher['avatarUrl']
+                                                  .toString()
+                                                  .startsWith('http')
+                                              ? NetworkImage(
+                                                  teacher['avatarUrl'],
+                                                )
+                                              : teacher['avatarUrl']
+                                                    .toString()
+                                                    .startsWith('assets/')
+                                              ? AssetImage(teacher['avatarUrl'])
+                                                    as ImageProvider
+                                              : null)
+                                        : null,
+                                    child:
+                                        (teacher['avatarUrl'] == null ||
+                                            teacher['avatarUrl']
+                                                .toString()
+                                                .isEmpty ||
+                                            (!teacher['avatarUrl']
+                                                    .toString()
+                                                    .startsWith('http') &&
+                                                !teacher['avatarUrl']
+                                                    .toString()
+                                                    .startsWith('assets/')))
+                                        ? Text(
+                                            teacher['name'][0].toUpperCase(),
+                                            style: TextStyle(
+                                              color:
+                                                  AppDesignSystem.primaryIndigo,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          )
+                                        : null,
+                                  ),
+                                  title: Text(
+                                    teacher['name'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(4),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        teacher['classroom'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
                                         ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              Icons.school,
-                                              size: 12,
-                                              color: AppDesignSystem.primaryIndigo,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              'Teacher',
-                                              style: TextStyle(
-                                                color: AppDesignSystem.primaryIndigo,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
+                                      ),
+                                      if (teacher['grade'] != null &&
+                                          teacher['grade']
+                                              .toString()
+                                              .isNotEmpty) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Grade ${teacher['grade']}${teacher['section'] != null && teacher['section'].toString().isNotEmpty ? ' - ${teacher['section']}' : ''}',
+                                          style: TextStyle(
+                                            color:
+                                                AppDesignSystem.textSecondary,
+                                            fontSize: 13,
+                                          ),
                                         ),
+                                      ],
+                                      const SizedBox(height: 6),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 3,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppDesignSystem
+                                                  .primaryIndigo
+                                                  .withValues(alpha: 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.school,
+                                                  size: 12,
+                                                  color: AppDesignSystem
+                                                      .primaryIndigo,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  'Teacher',
+                                                  style: TextStyle(
+                                                    color: AppDesignSystem
+                                                        .primaryIndigo,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              trailing: Container(
-                                decoration: BoxDecoration(
-                                  gradient: AppDesignSystem.gradientPrimary,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.message, color: Colors.white),
-                                  onPressed: () => _startChat(
+                                  trailing: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: AppDesignSystem.gradientPrimary,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.message,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () => _startChat(
+                                        teacher['id'],
+                                        teacher['name'],
+                                        teacher['avatarUrl'],
+                                      ),
+                                    ),
+                                  ),
+                                  onTap: () => _startChat(
                                     teacher['id'],
                                     teacher['name'],
                                     teacher['avatarUrl'],
                                   ),
                                 ),
-                              ),
-                              onTap: () => _startChat(
-                                teacher['id'],
-                                teacher['name'],
-                                teacher['avatarUrl'],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-          ),
-        ],
-      ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

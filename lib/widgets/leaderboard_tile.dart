@@ -48,12 +48,9 @@ class LeaderboardTile extends StatelessWidget {
           child: Row(
             children: [
               // Rank or medal
-              SizedBox(
-                width: 40,
-                child: _buildRankIndicator(),
-              ),
+              SizedBox(width: 40, child: _buildRankIndicator()),
               const SizedBox(width: AppDesignSystem.spacingMD),
-              
+
               // Avatar with caching
               avatarUrl != null
                   ? ClipOval(
@@ -81,7 +78,9 @@ class LeaderboardTile extends StatelessWidget {
                           radius: 20,
                           backgroundColor: AppDesignSystem.backgroundGrey,
                           child: Text(
-                            userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                            userName.isNotEmpty
+                                ? userName[0].toUpperCase()
+                                : '?',
                             style: AppDesignSystem.h6.copyWith(
                               color: AppDesignSystem.textSecondary,
                             ),
@@ -100,7 +99,7 @@ class LeaderboardTile extends StatelessWidget {
                       ),
                     ),
               const SizedBox(width: AppDesignSystem.spacingMD),
-              
+
               // User name
               Expanded(
                 child: Column(
@@ -129,7 +128,7 @@ class LeaderboardTile extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // XP
               Row(
                 children: [
@@ -191,13 +190,13 @@ class LeaderboardTile extends StatelessWidget {
   String _formatXP(int xp) {
     if (xp >= 1000000) {
       final value = xp / 1000000;
-      return value >= 10 
-          ? '${value.toStringAsFixed(0)}M' 
+      return value >= 10
+          ? '${value.toStringAsFixed(0)}M'
           : '${value.toStringAsFixed(1)}M';
     } else if (xp >= 1000) {
       final value = xp / 1000;
-      return value >= 10 
-          ? '${value.toStringAsFixed(0)}K' 
+      return value >= 10
+          ? '${value.toStringAsFixed(0)}K'
           : '${value.toStringAsFixed(1)}K';
     }
     return xp.toString();

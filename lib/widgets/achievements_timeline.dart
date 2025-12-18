@@ -32,16 +32,18 @@ class AchievementsTimeline extends StatelessWidget {
     for (final milestone in xpMilestones) {
       final xp = milestone['xp'] as int;
       final achieved = totalXP >= xp;
-      achievements.add(Achievement(
-        title: milestone['title'] as String,
-        subtitle: achieved
-            ? 'Reached $xp XP'
-            : 'Reach $xp XP ($totalXP/$xp)',
-        icon: milestone['icon'] as String,
-        achieved: achieved,
-        progress: achieved ? 1.0 : (totalXP / xp).clamp(0.0, 1.0),
-        date: achieved ? DateTime.now() : null, // In production, get actual date
-      ));
+      achievements.add(
+        Achievement(
+          title: milestone['title'] as String,
+          subtitle: achieved ? 'Reached $xp XP' : 'Reach $xp XP ($totalXP/$xp)',
+          icon: milestone['icon'] as String,
+          achieved: achieved,
+          progress: achieved ? 1.0 : (totalXP / xp).clamp(0.0, 1.0),
+          date: achieved
+              ? DateTime.now()
+              : null, // In production, get actual date
+        ),
+      );
     }
 
     // Realm completions
@@ -57,25 +59,27 @@ class AchievementsTimeline extends StatelessWidget {
     for (final entry in progressSummary.entries) {
       final realmId = entry.key;
       final progress = entry.value as Map<String, dynamic>?;
-      
+
       if (progress != null && realmInfo.containsKey(realmId)) {
         final completed = progress['completed'] == true;
         final levelsCompleted = progress['levelsCompleted'] as int? ?? 0;
         final totalLevels = progress['totalLevels'] as int? ?? 8;
         final info = realmInfo[realmId]!;
 
-        achievements.add(Achievement(
-          title: info['name'] as String,
-          subtitle: completed
-              ? 'Completed all $totalLevels levels'
-              : 'Complete $levelsCompleted/$totalLevels levels',
-          icon: info['icon'] as String,
-          achieved: completed,
-          progress: levelsCompleted / totalLevels,
-          date: completed && progress['completedAt'] != null
-              ? (progress['completedAt'] as Timestamp).toDate()
-              : null,
-        ));
+        achievements.add(
+          Achievement(
+            title: info['name'] as String,
+            subtitle: completed
+                ? 'Completed all $totalLevels levels'
+                : 'Complete $levelsCompleted/$totalLevels levels',
+            icon: info['icon'] as String,
+            achieved: completed,
+            progress: levelsCompleted / totalLevels,
+            date: completed && progress['completedAt'] != null
+                ? (progress['completedAt'] as Timestamp).toDate()
+                : null,
+          ),
+        );
       }
     }
 
@@ -115,10 +119,7 @@ class AchievementsTimeline extends StatelessWidget {
             children: [
               const Text(
                 'Achievements',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Text(
                 '${achievements.where((a) => a.achieved).length}/${achievements.length}',
@@ -187,17 +188,16 @@ class AchievementsTimeline extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: nextMilestone.progress,
                       backgroundColor: Colors.white30,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
                       minHeight: 8,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     nextMilestone.subtitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
+                    style: const TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ],
               ),
@@ -251,11 +251,7 @@ class AchievementsTimeline extends StatelessWidget {
                 ),
                 child: Center(
                   child: achievement.achieved
-                      ? const Icon(
-                          Icons.check,
-                          color: Colors.white,
-                          size: 20,
-                        )
+                      ? const Icon(Icons.check, color: Colors.white, size: 20)
                       : Text(
                           achievement.icon,
                           style: const TextStyle(fontSize: 16),

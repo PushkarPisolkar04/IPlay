@@ -1,7 +1,7 @@
 // Game UI Components Library
-// 
+//
 // This library exports all game UI components for easy importing.
-// 
+//
 // Usage:
 // import 'package:iplay/widgets/game_ui/game_ui.dart';
 

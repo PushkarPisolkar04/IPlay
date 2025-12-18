@@ -31,9 +31,10 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
       vsync: this,
     )..repeat();
 
-    _animation = Tween<double>(begin: -1.0, end: 2.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: -1.0,
+      end: 2.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -129,10 +130,7 @@ class CardSkeleton extends StatelessWidget {
 class ListSkeleton extends StatelessWidget {
   final int itemCount;
 
-  const ListSkeleton({
-    super.key,
-    this.itemCount = 5,
-  });
+  const ListSkeleton({super.key, this.itemCount = 5});
 
   @override
   Widget build(BuildContext context) {
@@ -363,10 +361,7 @@ class ClassroomDetailSkeleton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header card
-          LoadingSkeleton(
-            height: 120,
-            borderRadius: BorderRadius.circular(16),
-          ),
+          LoadingSkeleton(height: 120, borderRadius: BorderRadius.circular(16)),
           const SizedBox(height: 16),
           // Stats row
           Row(
@@ -564,10 +559,7 @@ class AnalyticsSkeleton extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
           ),
           const SizedBox(height: 12),
-          LoadingSkeleton(
-            height: 200,
-            borderRadius: BorderRadius.circular(12),
-          ),
+          LoadingSkeleton(height: 200, borderRadius: BorderRadius.circular(12)),
           const SizedBox(height: 24),
           // List section
           LoadingSkeleton(

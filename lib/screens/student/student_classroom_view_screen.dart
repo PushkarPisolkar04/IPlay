@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,19 +9,18 @@ import '../../widgets/loading_skeleton.dart';
 class StudentClassroomViewScreen extends StatefulWidget {
   final String classroomId;
 
-  const StudentClassroomViewScreen({
-    super.key,
-    required this.classroomId,
-  });
+  const StudentClassroomViewScreen({super.key, required this.classroomId});
 
   @override
-  State<StudentClassroomViewScreen> createState() => _StudentClassroomViewScreenState();
+  State<StudentClassroomViewScreen> createState() =>
+      _StudentClassroomViewScreenState();
 }
 
-class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen> {
+class _StudentClassroomViewScreenState
+    extends State<StudentClassroomViewScreen> {
   Map<String, dynamic>? _classroomData;
   Map<String, dynamic>? _teacherData;
-  List<Map<String, dynamic>> _students = [];
+  final List<Map<String, dynamic>> _students = [];
   bool _isLoading = true;
 
   @override
@@ -45,9 +45,11 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
       }
 
       _classroomData = classroomDoc.data()!;
-      print('Classroom data loaded: ${_classroomData!['name']}');
-      print('Join code: ${_classroomData!['joinCode']}');
-      print('Grade: ${_classroomData!['grade']}');
+      if (kDebugMode) {
+        print('Classroom data loaded: ${_classroomData!['name']}');
+        print('Join code: ${_classroomData!['joinCode']}');
+        print('Grade: ${_classroomData!['grade']}');
+      }
 
       // Load teacher data
       final teacherId = _classroomData!['teacherId'];
@@ -69,16 +71,14 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
             .doc(studentId)
             .get();
         if (studentDoc.exists) {
-          _students.add({
-            'id': studentId,
-            ...studentDoc.data()!,
-          });
+          _students.add({'id': studentId, ...studentDoc.data()!});
         }
       }
 
       // Sort students by name
-      _students.sort((a, b) => 
-        (a['displayName'] ?? '').compareTo(b['displayName'] ?? ''));
+      _students.sort(
+        (a, b) => (a['displayName'] ?? '').compareTo(b['displayName'] ?? ''),
+      );
 
       if (mounted) {
         setState(() => _isLoading = false);
@@ -119,7 +119,10 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -162,7 +165,8 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                                  color: AppDesignSystem.primaryIndigo
+                                      .withValues(alpha: 0.3),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -173,15 +177,18 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                               children: [
                                 // Title and Grade in one row
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            _classroomData!['name'] ?? 'Classroom',
+                                            _classroomData!['name'] ??
+                                                'Classroom',
                                             style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 24,
@@ -192,7 +199,9 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                           Text(
                                             'Grade ${_classroomData!['grade'] ?? '-'}${_classroomData!['section'] != null ? ' • ${_classroomData!['section']}' : ''}',
                                             style: TextStyle(
-                                              color: Colors.white.withValues(alpha: 0.9),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.9,
+                                              ),
                                               fontSize: 16,
                                             ),
                                           ),
@@ -201,9 +210,14 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     ),
                                     // Created date on the right
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.15),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.15,
+                                        ),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
@@ -212,13 +226,19 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                           Icon(
                                             Icons.calendar_today,
                                             size: 12,
-                                            color: Colors.white.withValues(alpha: 0.9),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.9,
+                                            ),
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
-                                            _formatDate(_classroomData!['createdAt']),
+                                            _formatDate(
+                                              _classroomData!['createdAt'],
+                                            ),
                                             style: TextStyle(
-                                              color: Colors.white.withValues(alpha: 0.9),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.9,
+                                              ),
                                               fontSize: 11,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -235,21 +255,34 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     onTap: () {
                                       // Copy classroom code to clipboard
                                       Clipboard.setData(
-                                        ClipboardData(text: _classroomData!['joinCode']),
+                                        ClipboardData(
+                                          text: _classroomData!['joinCode'],
+                                        ),
                                       );
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Row(
                                             children: [
-                                              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                              const Icon(
+                                                Icons.check_circle,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
                                               const SizedBox(width: 8),
-                                              Text('Code "${_classroomData!['joinCode']}" copied!'),
+                                              Text(
+                                                'Code "${_classroomData!['joinCode']}" copied!',
+                                              ),
                                             ],
                                           ),
-                                          backgroundColor: AppDesignSystem.primaryGreen,
+                                          backgroundColor:
+                                              AppDesignSystem.primaryGreen,
                                           behavior: SnackBarBehavior.floating,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                           ),
                                           duration: const Duration(seconds: 2),
                                         ),
@@ -257,12 +290,19 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     },
                                     borderRadius: BorderRadius.circular(8),
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: Colors.white.withValues(alpha: 0.2),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                          color: Colors.white.withValues(alpha: 0.3),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.3,
+                                          ),
                                           width: 1,
                                         ),
                                       ),
@@ -301,7 +341,9 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                   Text(
                                     _classroomData!['description'],
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.85),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.85,
+                                      ),
                                       fontSize: 14,
                                     ),
                                   ),
@@ -338,17 +380,28 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                 contentPadding: const EdgeInsets.all(12),
                                 leading: CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                  backgroundImage: _teacherData!['avatarUrl'] != null
-                                      ? (_teacherData!['avatarUrl'].toString().startsWith('http')
-                                          ? NetworkImage(_teacherData!['avatarUrl'])
-                                          : AssetImage(_teacherData!['avatarUrl']) as ImageProvider)
+                                  backgroundColor: AppDesignSystem.primaryIndigo
+                                      .withValues(alpha: 0.1),
+                                  backgroundImage:
+                                      _teacherData!['avatarUrl'] != null
+                                      ? (_teacherData!['avatarUrl']
+                                                .toString()
+                                                .startsWith('http')
+                                            ? NetworkImage(
+                                                _teacherData!['avatarUrl'],
+                                              )
+                                            : AssetImage(
+                                                    _teacherData!['avatarUrl'],
+                                                  )
+                                                  as ImageProvider)
                                       : null,
                                   child: _teacherData!['avatarUrl'] == null
                                       ? Text(
-                                          _teacherData!['displayName'][0].toUpperCase(),
+                                          _teacherData!['displayName'][0]
+                                              .toUpperCase(),
                                           style: TextStyle(
-                                            color: AppDesignSystem.primaryIndigo,
+                                            color:
+                                                AppDesignSystem.primaryIndigo,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
                                           ),
@@ -379,9 +432,13 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                 ),
                               ),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                  color: AppDesignSystem.primaryIndigo
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
@@ -416,12 +473,15 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: _students.length,
-                              separatorBuilder: (context, index) => const SizedBox(height: 8),
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 8),
                               itemBuilder: (context, index) {
                                 final student = _students[index];
-                                final currentUserId = FirebaseAuth.instance.currentUser?.uid;
-                                final isCurrentUser = student['id'] == currentUserId;
-                                
+                                final currentUserId =
+                                    FirebaseAuth.instance.currentUser?.uid;
+                                final isCurrentUser =
+                                    student['id'] == currentUserId;
+
                                 return Container(
                                   decoration: BoxDecoration(
                                     gradient: isCurrentUser
@@ -432,32 +492,52 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                     boxShadow: [
                                       BoxShadow(
                                         color: isCurrentUser
-                                            ? AppDesignSystem.primaryGreen.withValues(alpha: 0.3)
-                                            : Colors.black.withValues(alpha: 0.05),
+                                            ? AppDesignSystem.primaryGreen
+                                                  .withValues(alpha: 0.3)
+                                            : Colors.black.withValues(
+                                                alpha: 0.05,
+                                              ),
                                         blurRadius: isCurrentUser ? 12 : 8,
-                                        offset: Offset(0, isCurrentUser ? 4 : 2),
+                                        offset: Offset(
+                                          0,
+                                          isCurrentUser ? 4 : 2,
+                                        ),
                                       ),
                                     ],
                                   ),
                                   child: ListTile(
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
                                     leading: CircleAvatar(
                                       radius: 24,
                                       backgroundColor: isCurrentUser
                                           ? Colors.white.withValues(alpha: 0.3)
-                                          : AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                      backgroundImage: student['avatarUrl'] != null
-                                          ? (student['avatarUrl'].toString().startsWith('http')
-                                              ? NetworkImage(student['avatarUrl'])
-                                              : AssetImage(student['avatarUrl']) as ImageProvider)
+                                          : AppDesignSystem.primaryIndigo
+                                                .withValues(alpha: 0.1),
+                                      backgroundImage:
+                                          student['avatarUrl'] != null
+                                          ? (student['avatarUrl']
+                                                    .toString()
+                                                    .startsWith('http')
+                                                ? NetworkImage(
+                                                    student['avatarUrl'],
+                                                  )
+                                                : AssetImage(
+                                                        student['avatarUrl'],
+                                                      )
+                                                      as ImageProvider)
                                           : null,
                                       child: student['avatarUrl'] == null
                                           ? Text(
-                                              student['displayName'][0].toUpperCase(),
+                                              student['displayName'][0]
+                                                  .toUpperCase(),
                                               style: TextStyle(
                                                 color: isCurrentUser
                                                     ? Colors.white
-                                                    : AppDesignSystem.primaryIndigo,
+                                                    : AppDesignSystem
+                                                          .primaryIndigo,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             )
@@ -471,16 +551,24 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 15,
-                                              color: isCurrentUser ? Colors.white : Colors.black87,
+                                              color: isCurrentUser
+                                                  ? Colors.white
+                                                  : Colors.black87,
                                             ),
                                           ),
                                         ),
                                         if (isCurrentUser)
                                           Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.25),
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: Colors.white.withValues(
+                                                alpha: 0.25,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: const Text(
                                               'You',
@@ -500,16 +588,22 @@ class _StudentClassroomViewScreenState extends State<StudentClassroomViewScreen>
                                                 Icons.stars,
                                                 size: 14,
                                                 color: isCurrentUser
-                                                    ? Colors.white.withValues(alpha: 0.9)
-                                                    : AppDesignSystem.primaryAmber,
+                                                    ? Colors.white.withValues(
+                                                        alpha: 0.9,
+                                                      )
+                                                    : AppDesignSystem
+                                                          .primaryAmber,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 '${student['totalXP']} XP',
                                                 style: TextStyle(
                                                   color: isCurrentUser
-                                                      ? Colors.white.withValues(alpha: 0.85)
-                                                      : AppDesignSystem.textSecondary,
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.85,
+                                                        )
+                                                      : AppDesignSystem
+                                                            .textSecondary,
                                                   fontSize: 13,
                                                 ),
                                               ),

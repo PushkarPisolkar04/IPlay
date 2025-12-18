@@ -43,7 +43,10 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           .get();
 
       _classrooms.clear();
-      _classrooms.add({'id': null, 'name': 'All Classrooms'}); // Add "All" option
+      _classrooms.add({
+        'id': null,
+        'name': 'All Classrooms',
+      }); // Add "All" option
 
       for (var doc in classroomsSnapshot.docs) {
         _classrooms.add({
@@ -73,7 +76,8 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
       final classroomsSnapshot = await classroomsQuery.get();
 
       Set<String> allStudentIds = {};
-      Map<String, List<String>> studentClassrooms = {}; // Changed to List to handle multiple classrooms
+      Map<String, List<String>> studentClassrooms =
+          {}; // Changed to List to handle multiple classrooms
       Map<String, String> studentClassroomIds = {};
 
       // Collect student IDs based on selected classroom
@@ -81,23 +85,26 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         final classroomId = classroomDoc.id;
 
         // Skip if filtering by classroom and this isn't the selected one
-        if (_selectedClassroomId != null && classroomId != _selectedClassroomId) {
+        if (_selectedClassroomId != null &&
+            classroomId != _selectedClassroomId) {
           continue;
         }
 
         final classroomData = classroomDoc.data() as Map<String, dynamic>;
-        final studentIds = List<String>.from(classroomData['studentIds'] as List? ?? []);
+        final studentIds = List<String>.from(
+          classroomData['studentIds'] as List? ?? [],
+        );
         final classroomName = classroomData['name'] as String? ?? 'Unknown';
 
         for (String studentId in studentIds) {
           allStudentIds.add(studentId); // Set ensures uniqueness
-          
+
           // Add classroom to student's list of classrooms
           if (!studentClassrooms.containsKey(studentId)) {
             studentClassrooms[studentId] = [];
           }
           studentClassrooms[studentId]!.add(classroomName);
-          
+
           // Store first classroom ID for reference
           if (!studentClassroomIds.containsKey(studentId)) {
             studentClassroomIds[studentId] = classroomId;
@@ -150,14 +157,17 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         String grade = _calculateGrade(avgScore);
 
         // Completion rate
-        double completionRate = (completedLevels / totalLevels * 100).clamp(0, 100);
+        double completionRate = (completedLevels / totalLevels * 100).clamp(
+          0,
+          100,
+        );
 
         // Format classroom names
         final classroomsList = studentClassrooms[studentId] ?? ['Unknown'];
-        final classroomDisplay = classroomsList.length > 1 
-            ? '${classroomsList.length} classes' 
+        final classroomDisplay = classroomsList.length > 1
+            ? '${classroomsList.length} classes'
             : classroomsList.first;
-        
+
         _students.add({
           'id': studentId,
           'name': userData['displayName'] ?? 'Unknown',
@@ -187,13 +197,21 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
   void _sortStudents() {
     switch (_sortBy) {
       case 'xp':
-        _students.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
+        _students.sort(
+          (a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int),
+        );
         break;
       case 'name':
-        _students.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+        _students.sort(
+          (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+        );
         break;
       case 'completion':
-        _students.sort((a, b) => (b['completionRate'] as double).compareTo(a['completionRate'] as double));
+        _students.sort(
+          (a, b) => (b['completionRate'] as double).compareTo(
+            a['completionRate'] as double,
+          ),
+        );
         break;
     }
   }
@@ -264,7 +282,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Remove Student'),
-        content: Text('Are you sure you want to remove ${student['name']} from their classroom?'),
+        content: Text(
+          'Are you sure you want to remove ${student['name']} from their classroom?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -292,7 +312,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
 
       for (var classroomDoc in classroomsSnapshot.docs) {
         final classroomId = classroomDoc.id;
-        final data = classroomDoc.data() as Map<String, dynamic>;
+        final data = classroomDoc.data();
         final studentIds = List<String>.from(data['studentIds'] as List? ?? []);
 
         if (studentIds.contains(student['id'])) {
@@ -300,17 +320,17 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               .collection('classrooms')
               .doc(classroomId)
               .update({
-            'studentIds': FieldValue.arrayRemove([student['id']]),
-            'updatedAt': Timestamp.now(),
-          });
+                'studentIds': FieldValue.arrayRemove([student['id']]),
+                'updatedAt': Timestamp.now(),
+              });
 
           await FirebaseFirestore.instance
               .collection('users')
               .doc(student['id'])
               .update({
-            'classroomIds': FieldValue.arrayRemove([classroomId]),
-            'updatedAt': Timestamp.now(),
-          });
+                'classroomIds': FieldValue.arrayRemove([classroomId]),
+                'updatedAt': Timestamp.now(),
+              });
         }
       }
 
@@ -355,11 +375,17 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                 children: [
                   // App Bar
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 12,
+                    ),
                     child: Row(
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
                           onPressed: () => Navigator.pop(context),
                         ),
                         const Expanded(
@@ -385,11 +411,19 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.people, color: Colors.white70, size: 20),
+                        const Icon(
+                          Icons.people,
+                          color: Colors.white70,
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Text(
                           '${_students.length} ${_students.length == 1 ? 'Student' : 'Students'}',
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
@@ -406,7 +440,8 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                         itemCount: _classrooms.length,
                         itemBuilder: (context, index) {
                           final classroom = _classrooms[index];
-                          final isSelected = _selectedClassroomId == classroom['id'];
+                          final isSelected =
+                              _selectedClassroomId == classroom['id'];
 
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
@@ -418,19 +453,28 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                                 _loadStudents();
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 12,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
+                                  color: isSelected
+                                      ? Colors.white
+                                      : Colors.white.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(25),
                                   border: Border.all(
-                                    color: Colors.white.withOpacity(isSelected ? 1.0 : 0.3),
+                                    color: Colors.white.withOpacity(
+                                      isSelected ? 1.0 : 0.3,
+                                    ),
                                     width: 2,
                                   ),
                                 ),
                                 child: Text(
                                   classroom['name'],
                                   style: TextStyle(
-                                    color: isSelected ? const Color(0xFF8B5CF6) : Colors.white,
+                                    color: isSelected
+                                        ? const Color(0xFF8B5CF6)
+                                        : Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 14,
                                   ),
@@ -450,7 +494,10 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const Text('Sort by:', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                  const Text(
+                    'Sort by:',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: SingleChildScrollView(
@@ -475,206 +522,273 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               child: _isLoading
                   ? const ListSkeleton(itemCount: 8)
                   : _students.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.people_outline, size: 64, color: Colors.grey[300]),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No students found',
-                                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                              ),
-                            ],
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            size: 64,
+                            color: Colors.grey[300],
                           ),
-                        )
-                      : RefreshIndicator(
-                          onRefresh: _loadStudents,
-                          child: ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                            itemCount: _students.length,
-                            itemBuilder: (context, index) {
-                              final student = _students[index];
+                          const SizedBox(height: 16),
+                          Text(
+                            'No students found',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: _loadStudents,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        itemCount: _students.length,
+                        itemBuilder: (context, index) {
+                          final student = _students[index];
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: CleanCard(
-                                  padding: const EdgeInsets.all(14),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: CleanCard(
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Student Info
+                                  Row(
                                     children: [
-                                      // Student Info
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: 50,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              gradient: AppDesignSystem.gradientPrimary,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                student['name'][0].toUpperCase(),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          gradient:
+                                              AppDesignSystem.gradientPrimary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            student['name'][0].toUpperCase(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(student['name'], style: AppTextStyles.cardTitle),
-                                                Text(student['classroom'], style: AppTextStyles.bodySmall),
-                                              ],
-                                            ),
-                                          ),
-                                          // Grade Badge
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                            decoration: BoxDecoration(
-                                              color: _getGradeColor(student['grade']),
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              student['grade'],
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-
-                                      const SizedBox(height: 12),
-                                      const Divider(),
-                                      const SizedBox(height: 12),
-
-                                      // Stats Grid
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          _buildMiniStat(
-                                            Icons.stars,
-                                            '${student['totalXP']}',
-                                            'XP',
-                                            AppDesignSystem.primaryAmber,
-                                          ),
-                                          _buildMiniStat(
-                                            Icons.check_circle,
-                                            '${student['completedLevels']}/${student['totalLevels']}',
-                                            'Levels',
-                                            AppDesignSystem.success,
-                                          ),
-                                          _buildMiniStat(
-                                            Icons.school,
-                                            '${student['avgScore'].toStringAsFixed(0)}%',
-                                            'Avg Score',
-                                            AppDesignSystem.primaryIndigo,
-                                          ),
-                                          _buildMiniStat(
-                                            Icons.emoji_events,
-                                            '${student['badges']}',
-                                            'Badges',
-                                            AppDesignSystem.warning,
-                                          ),
-                                        ],
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              student['name'],
+                                              style: AppTextStyles.cardTitle,
+                                            ),
+                                            Text(
+                                              student['classroom'],
+                                              style: AppTextStyles.bodySmall,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-
-                                      const SizedBox(height: 12),
-
-                                      // Action Buttons
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: OutlinedButton.icon(
-                                              onPressed: () => _viewStudentDetails(student),
-                                              icon: const Icon(Icons.visibility, size: 18),
-                                              label: const Text('View', style: TextStyle(fontSize: 13)),
-                                              style: OutlinedButton.styleFrom(
-                                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                              ),
-                                            ),
+                                      // Grade Badge
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _getGradeColor(
+                                            student['grade'],
                                           ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: OutlinedButton.icon(
-                                              onPressed: () => _messageStudent(student),
-                                              icon: const Icon(Icons.message, size: 18),
-                                              label: const Text('Message', style: TextStyle(fontSize: 13)),
-                                              style: OutlinedButton.styleFrom(
-                                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                                foregroundColor: AppDesignSystem.primaryIndigo,
-                                                side: BorderSide(color: AppDesignSystem.primaryIndigo),
-                                              ),
-                                            ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
                                           ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: OutlinedButton.icon(
-                                              onPressed: () => _removeStudent(student),
-                                              icon: const Icon(Icons.remove_circle_outline, size: 18),
-                                              label: const Text('Remove', style: TextStyle(fontSize: 13)),
-                                              style: OutlinedButton.styleFrom(
-                                                padding: const EdgeInsets.symmetric(vertical: 12),
-                                                foregroundColor: AppDesignSystem.error,
-                                                side: BorderSide(color: AppDesignSystem.error),
-                                              ),
-                                            ),
+                                        ),
+                                        child: Text(
+                                          student['grade'],
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                           ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 16),
-
-                                      // Completion Progress Bar
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                'Course Completion',
-                                                style: AppTextStyles.bodySmall.copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                              Text(
-                                                '${student['completionRate'].toStringAsFixed(0)}%',
-                                                style: AppTextStyles.bodySmall.copyWith(
-                                                  color: AppDesignSystem.success,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: LinearProgressIndicator(
-                                              value: student['completionRate'] / 100,
-                                              minHeight: 8,
-                                              backgroundColor: AppDesignSystem.backgroundWhite,
-                                              valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.success),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+
+                                  const SizedBox(height: 12),
+                                  const Divider(),
+                                  const SizedBox(height: 12),
+
+                                  // Stats Grid
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _buildMiniStat(
+                                        Icons.stars,
+                                        '${student['totalXP']}',
+                                        'XP',
+                                        AppDesignSystem.primaryAmber,
+                                      ),
+                                      _buildMiniStat(
+                                        Icons.check_circle,
+                                        '${student['completedLevels']}/${student['totalLevels']}',
+                                        'Levels',
+                                        AppDesignSystem.success,
+                                      ),
+                                      _buildMiniStat(
+                                        Icons.school,
+                                        '${student['avgScore'].toStringAsFixed(0)}%',
+                                        'Avg Score',
+                                        AppDesignSystem.primaryIndigo,
+                                      ),
+                                      _buildMiniStat(
+                                        Icons.emoji_events,
+                                        '${student['badges']}',
+                                        'Badges',
+                                        AppDesignSystem.warning,
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 12),
+
+                                  // Action Buttons
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton.icon(
+                                          onPressed: () =>
+                                              _viewStudentDetails(student),
+                                          icon: const Icon(
+                                            Icons.visibility,
+                                            size: 18,
+                                          ),
+                                          label: const Text(
+                                            'View',
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: OutlinedButton.icon(
+                                          onPressed: () =>
+                                              _messageStudent(student),
+                                          icon: const Icon(
+                                            Icons.message,
+                                            size: 18,
+                                          ),
+                                          label: const Text(
+                                            'Message',
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            foregroundColor:
+                                                AppDesignSystem.primaryIndigo,
+                                            side: BorderSide(
+                                              color:
+                                                  AppDesignSystem.primaryIndigo,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: OutlinedButton.icon(
+                                          onPressed: () =>
+                                              _removeStudent(student),
+                                          icon: const Icon(
+                                            Icons.remove_circle_outline,
+                                            size: 18,
+                                          ),
+                                          label: const Text(
+                                            'Remove',
+                                            style: TextStyle(fontSize: 13),
+                                          ),
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            foregroundColor:
+                                                AppDesignSystem.error,
+                                            side: BorderSide(
+                                              color: AppDesignSystem.error,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 16),
+
+                                  // Completion Progress Bar
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Course Completion',
+                                            style: AppTextStyles.bodySmall
+                                                .copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                          Text(
+                                            '${student['completionRate'].toStringAsFixed(0)}%',
+                                            style: AppTextStyles.bodySmall
+                                                .copyWith(
+                                                  color:
+                                                      AppDesignSystem.success,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: LinearProgressIndicator(
+                                          value:
+                                              student['completionRate'] / 100,
+                                          minHeight: 8,
+                                          backgroundColor:
+                                              AppDesignSystem.backgroundWhite,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppDesignSystem.success,
+                                              ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
             ),
           ],
         ),
@@ -719,7 +833,12 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
     );
   }
 
-  Widget _buildMiniStat(IconData icon, String value, String label, Color color) {
+  Widget _buildMiniStat(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Column(
       children: [
         Icon(icon, color: color, size: 18),
@@ -734,10 +853,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         ),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 10,
-            color: AppDesignSystem.textSecondary,
-          ),
+          style: TextStyle(fontSize: 10, color: AppDesignSystem.textSecondary),
         ),
       ],
     );

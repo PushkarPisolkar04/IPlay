@@ -32,7 +32,9 @@ class AchievementBadge extends StatelessWidget {
           decoration: AppDesignSystem.solidDecoration(
             color: AppDesignSystem.backgroundWhite,
             borderRadius: AppDesignSystem.borderRadiusMD,
-            boxShadow: unlocked ? AppDesignSystem.shadowMD : AppDesignSystem.shadowSM,
+            boxShadow: unlocked
+                ? AppDesignSystem.shadowMD
+                : AppDesignSystem.shadowSM,
           ),
           padding: const EdgeInsets.all(AppDesignSystem.spacingMD),
           child: Column(
@@ -43,9 +45,7 @@ class AchievementBadge extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  gradient: unlocked
-                      ? AppDesignSystem.gradientPrimary
-                      : null,
+                  gradient: unlocked ? AppDesignSystem.gradientPrimary : null,
                   color: unlocked ? null : AppDesignSystem.backgroundGrey,
                   shape: BoxShape.circle,
                   boxShadow: unlocked ? AppDesignSystem.shadowMD : null,
@@ -63,7 +63,7 @@ class AchievementBadge extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppDesignSystem.spacingMD),
-              
+
               // Badge name
               Text(
                 name,
@@ -77,7 +77,7 @@ class AchievementBadge extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               // Unlock date or locked status
               const SizedBox(height: AppDesignSystem.spacingXS),
               if (unlocked && unlockedAt != null)
@@ -106,7 +106,7 @@ class AchievementBadge extends StatelessWidget {
                     ),
                   ],
                 ),
-              
+
               // Description (optional)
               if (description != null && unlocked) ...[
                 const SizedBox(height: AppDesignSystem.spacingSM),
@@ -129,8 +129,18 @@ class AchievementBadge extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }

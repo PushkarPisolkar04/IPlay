@@ -17,8 +17,9 @@ class SocialShareHelper {
     String? filePath,
   }) async {
     final verificationUrl = 'https://iplay.app/verify/$certificateId';
-    
-    final text = '''
+
+    final text =
+        '''
 🎓 Certificate Achievement!
 
 I've successfully completed the $realmName in IPlay and earned my certificate!
@@ -39,10 +40,7 @@ Download IPlay and start your IPR learning journey:
         subject: 'IPlay Certificate - $realmName',
       );
     } else {
-      await Share.share(
-        text,
-        subject: 'IPlay Certificate - $realmName',
-      );
+      await Share.share(text, subject: 'IPlay Certificate - $realmName');
     }
   }
 
@@ -51,7 +49,8 @@ Download IPlay and start your IPR learning journey:
     required BadgeModel badge,
     required String userName,
   }) async {
-    final text = '''
+    final text =
+        '''
 🎉 Badge Unlocked!
 
 I just earned the "${badge.name}" badge in IPlay!
@@ -66,10 +65,7 @@ Join me in learning about Intellectual Property Rights:
 #IPlay #IPR #Badge #Achievement
 ''';
 
-    await Share.share(
-      text,
-      subject: 'IPlay Badge - ${badge.name}',
-    );
+    await Share.share(text, subject: 'IPlay Badge - ${badge.name}');
   }
 
   /// Generate and share badge image
@@ -81,8 +77,9 @@ Join me in learning about Intellectual Property Rights:
     try {
       // Create badge image
       final imageFile = await _generateBadgeImage(badge, userName);
-      
-      final text = '''
+
+      final text =
+          '''
 🎉 I just unlocked the "${badge.name}" badge in IPlay!
 
 ${badge.description}
@@ -118,10 +115,7 @@ Download IPlay: [App Link]
     final gradient = ui.Gradient.linear(
       const Offset(0, 0),
       const Offset(800, 800),
-      [
-        AppDesignSystem.primaryIndigo,
-        AppDesignSystem.primaryPink,
-      ],
+      [AppDesignSystem.primaryIndigo, AppDesignSystem.primaryPink],
     );
 
     final paint = Paint()..shader = gradient;
@@ -137,12 +131,7 @@ Download IPlay: [App Link]
 
     // Badge icon (would need proper text rendering)
     final textPainter = TextPainter(
-      text: TextSpan(
-        text: badge.icon,
-        style: const TextStyle(
-          fontSize: 200,
-        ),
-      ),
+      text: TextSpan(text: badge.icon, style: const TextStyle(fontSize: 200)),
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
@@ -170,30 +159,21 @@ Download IPlay: [App Link]
     namePainter.layout(maxWidth: 700);
     namePainter.paint(
       canvas,
-      Offset(
-        (size.width - namePainter.width) / 2,
-        size.height / 2 + 150,
-      ),
+      Offset((size.width - namePainter.width) / 2, size.height / 2 + 150),
     );
 
     // User name
     final userPainter = TextPainter(
       text: TextSpan(
         text: 'Earned by $userName',
-        style: const TextStyle(
-          fontSize: 32,
-          color: Colors.black87,
-        ),
+        style: const TextStyle(fontSize: 32, color: Colors.black87),
       ),
       textDirection: TextDirection.ltr,
     );
     userPainter.layout();
     userPainter.paint(
       canvas,
-      Offset(
-        (size.width - userPainter.width) / 2,
-        size.height / 2 + 220,
-      ),
+      Offset((size.width - userPainter.width) / 2, size.height / 2 + 220),
     );
 
     // Convert to image
@@ -219,7 +199,8 @@ Download IPlay: [App Link]
     required String achievementDescription,
     required String userName,
   }) async {
-    final text = '''
+    final text =
+        '''
 🎯 Achievement Unlocked!
 
 $achievementTitle
@@ -232,10 +213,7 @@ Join me on IPlay and start your IPR learning journey:
 #IPlay #IPR #Achievement
 ''';
 
-    await Share.share(
-      text,
-      subject: 'IPlay Achievement - $achievementTitle',
-    );
+    await Share.share(text, subject: 'IPlay Achievement - $achievementTitle');
   }
 
   /// Share realm completion
@@ -245,7 +223,8 @@ Join me on IPlay and start your IPR learning journey:
     required int xpEarned,
     required String userName,
   }) async {
-    final text = '''
+    final text =
+        '''
 🎉 Realm Completed!
 
 I just completed the $realmName in IPlay!
@@ -259,10 +238,7 @@ Master Intellectual Property Rights with IPlay:
 #IPlay #IPR #Learning
 ''';
 
-    await Share.share(
-      text,
-      subject: 'IPlay - $realmName Completed',
-    );
+    await Share.share(text, subject: 'IPlay - $realmName Completed');
   }
 
   /// Share leaderboard rank
@@ -275,12 +251,13 @@ Master Intellectual Property Rights with IPlay:
     final scopeText = scope == 'classroom'
         ? 'classroom'
         : scope == 'school'
-            ? 'school'
-            : scope == 'state'
-                ? 'state'
-                : 'national';
+        ? 'school'
+        : scope == 'state'
+        ? 'state'
+        : 'national';
 
-    final text = '''
+    final text =
+        '''
 🏆 Leaderboard Achievement!
 
 I'm ranked #$rank on the $scopeText leaderboard in IPlay!
@@ -293,16 +270,11 @@ Think you can beat me? Download IPlay and start learning:
 #IPlay #IPR #Leaderboard
 ''';
 
-    await Share.share(
-      text,
-      subject: 'IPlay Leaderboard - Rank #$rank',
-    );
+    await Share.share(text, subject: 'IPlay Leaderboard - Rank #$rank');
   }
 
   /// Share app invitation
-  static Future<void> shareAppInvitation({
-    required String userName,
-  }) async {
+  static Future<void> shareAppInvitation({required String userName}) async {
     final text = '''
 🎓 Join me on IPlay!
 
@@ -317,10 +289,7 @@ Let's learn together!
 #IPlay #IPR #Learning
 ''';
 
-    await Share.share(
-      text,
-      subject: 'Join me on IPlay!',
-    );
+    await Share.share(text, subject: 'Join me on IPlay!');
   }
 
   /// Capture widget as image and share
@@ -341,15 +310,13 @@ Let's learn together!
 
       // Save to temp file
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/share_${DateTime.now().millisecondsSinceEpoch}.png');
+      final file = File(
+        '${tempDir.path}/share_${DateTime.now().millisecondsSinceEpoch}.png',
+      );
       await file.writeAsBytes(bytes);
 
       // Share
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: text,
-        subject: subject,
-      );
+      await Share.shareXFiles([XFile(file.path)], text: text, subject: subject);
     } catch (e) {
       // print('Error sharing widget as image: $e');
       // Fallback to text-only share

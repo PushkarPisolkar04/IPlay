@@ -5,7 +5,7 @@ import '../design/app_design_system.dart';
 /// Fallback to system default if Inter not available
 class AppTextStyles {
   static const String fontFamily = 'Inter';
-  
+
   // HEADINGS
   static const h1 = TextStyle(
     fontFamily: fontFamily,
@@ -15,7 +15,7 @@ class AppTextStyles {
     height: 1.3,
     letterSpacing: -0.5,
   );
-  
+
   static const h2 = TextStyle(
     fontFamily: fontFamily,
     fontSize: 22,
@@ -23,7 +23,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
-  
+
   static const h3 = TextStyle(
     fontFamily: fontFamily,
     fontSize: 18,
@@ -31,7 +31,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.4,
   );
-  
+
   static const h4 = TextStyle(
     fontFamily: fontFamily,
     fontSize: 16,
@@ -39,7 +39,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.4,
   );
-  
+
   static const h5 = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
@@ -47,7 +47,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.4,
   );
-  
+
   // BODY TEXT
   static const bodyLarge = TextStyle(
     fontFamily: fontFamily,
@@ -56,7 +56,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.5,
   );
-  
+
   static const bodyMedium = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
@@ -64,7 +64,7 @@ class AppTextStyles {
     color: AppDesignSystem.textSecondary,
     height: 1.5,
   );
-  
+
   static const bodySmall = TextStyle(
     fontFamily: fontFamily,
     fontSize: 12,
@@ -72,7 +72,7 @@ class AppTextStyles {
     color: AppDesignSystem.textTertiary,
     height: 1.4,
   );
-  
+
   // BUTTON TEXT
   static const buttonLarge = TextStyle(
     fontFamily: fontFamily,
@@ -81,7 +81,7 @@ class AppTextStyles {
     color: AppDesignSystem.backgroundWhite,
     height: 1.2,
   );
-  
+
   static const buttonMedium = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
@@ -92,7 +92,7 @@ class AppTextStyles {
 
   // Alias for compatibility
   static const button = buttonLarge;
-  
+
   // LABELS
   static const label = TextStyle(
     fontFamily: fontFamily,
@@ -102,7 +102,7 @@ class AppTextStyles {
     height: 1.2,
     letterSpacing: 0.5,
   );
-  
+
   static const caption = TextStyle(
     fontFamily: fontFamily,
     fontSize: 11,
@@ -110,7 +110,7 @@ class AppTextStyles {
     color: AppDesignSystem.textTertiary,
     height: 1.2,
   );
-  
+
   // SPECIAL PURPOSE
   static const sectionHeader = TextStyle(
     fontFamily: fontFamily,
@@ -119,7 +119,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
-  
+
   static const cardTitle = TextStyle(
     fontFamily: fontFamily,
     fontSize: 18,
@@ -127,7 +127,7 @@ class AppTextStyles {
     color: AppDesignSystem.textPrimary,
     height: 1.3,
   );
-  
+
   static const cardSubtitle = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,
@@ -135,16 +135,16 @@ class AppTextStyles {
     color: AppDesignSystem.textSecondary,
     height: 1.4,
   );
-  
+
   // Helper methods
   static TextStyle withColor(TextStyle style, Color color) {
     return style.copyWith(color: color);
   }
-  
+
   static TextStyle withSize(TextStyle style, double fontSize) {
     return style.copyWith(fontSize: fontSize);
   }
-  
+
   static TextStyle withWeight(TextStyle style, FontWeight weight) {
     return style.copyWith(fontWeight: weight);
   }

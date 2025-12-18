@@ -6,11 +6,7 @@ class ConfettiWidget extends StatefulWidget {
   final bool show;
   final VoidCallback? onComplete;
 
-  const ConfettiWidget({
-    super.key,
-    required this.show,
-    this.onComplete,
-  });
+  const ConfettiWidget({super.key, required this.show, this.onComplete});
 
   @override
   State<ConfettiWidget> createState() => _ConfettiWidgetState();
@@ -38,18 +34,20 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
 
     // Generate 50 particles
     for (int i = 0; i < 50; i++) {
-      _particles.add(ConfettiParticle(
-        x: _random.nextDouble(),
-        y: -0.1,
-        color: _getRandomColor(),
-        size: _random.nextDouble() * 8 + 4,
-        velocityX: (_random.nextDouble() - 0.5) * 2,
-        velocityY: _random.nextDouble() * 2 + 1,
-        rotation: _random.nextDouble() * 2 * pi,
-        rotationSpeed: (_random.nextDouble() - 0.5) * 4,
-      ));
+      _particles.add(
+        ConfettiParticle(
+          x: _random.nextDouble(),
+          y: -0.1,
+          color: _getRandomColor(),
+          size: _random.nextDouble() * 8 + 4,
+          velocityX: (_random.nextDouble() - 0.5) * 2,
+          velocityY: _random.nextDouble() * 2 + 1,
+          rotation: _random.nextDouble() * 2 * pi,
+          rotationSpeed: (_random.nextDouble() - 0.5) * 4,
+        ),
+      );
     }
-    
+
     // Start animation if show is true
     if (widget.show) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,7 +66,7 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
       _controller.forward();
     }
   }
-  
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -149,10 +147,7 @@ class ConfettiPainter extends CustomPainter {
   final List<ConfettiParticle> particles;
   final double progress;
 
-  ConfettiPainter({
-    required this.particles,
-    required this.progress,
-  });
+  ConfettiPainter({required this.particles, required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -162,7 +157,9 @@ class ConfettiPainter extends CustomPainter {
         ..style = PaintingStyle.fill;
 
       final x = size.width * particle.x + particle.velocityX * progress * 100;
-      final y = size.height * particle.y + particle.velocityY * progress * size.height;
+      final y =
+          size.height * particle.y +
+          particle.velocityY * progress * size.height;
       final rotation = particle.rotation + particle.rotationSpeed * progress;
 
       canvas.save();

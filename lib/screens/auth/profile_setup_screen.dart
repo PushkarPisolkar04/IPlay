@@ -18,25 +18,63 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
-  
+
   String? _selectedState;
   String? _selectedAvatar;
   String _schoolTag = '';
 
   final List<String> _indianStates = [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand',
-    'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
-    'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
-    'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
-    'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
-    'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry',
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi',
+    'Jammu and Kashmir',
+    'Ladakh',
+    'Lakshadweep',
+    'Puducherry',
   ];
 
   final List<String> _avatarOptions = [
-    '👦', '👧', '👨', '👩', '🧒', '👶',
-    '👨‍🎓', '👩‍🎓', '👨‍💻', '👩‍💻', '👨‍🏫', '👩‍🏫',
+    '👦',
+    '👧',
+    '👨',
+    '👩',
+    '🧒',
+    '👶',
+    '👨‍🎓',
+    '👩‍🎓',
+    '👨‍💻',
+    '👩‍💻',
+    '👨‍🏫',
+    '👩‍🏫',
   ];
 
   @override
@@ -49,26 +87,26 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedState == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select your state')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select your state')));
       return;
     }
     if (_selectedAvatar == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an avatar')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select an avatar')));
       return;
     }
 
     final userProvider = context.read<UserProvider>();
-    
+
     try {
       // Update profile with collected information
       await userProvider.updateProfile({
         'displayName': _nameController.text.trim(),
-        'username': _usernameController.text.trim().isNotEmpty 
-            ? _usernameController.text.trim() 
+        'username': _usernameController.text.trim().isNotEmpty
+            ? _usernameController.text.trim()
             : null,
         'state': _selectedState,
         'avatarUrl': _selectedAvatar,
@@ -88,7 +126,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       );
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving profile: ${e.toString()}'),
@@ -118,14 +156,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 const SizedBox(height: AppSpacing.md),
                 // Header
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Complete Your Profile',
-                        style: AppTextStyles.h1,
-                      ),
+                      Text('Complete Your Profile', style: AppTextStyles.h1),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
                         'Tell us a bit about yourself',
@@ -137,7 +174,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                
+
                 // Scrollable content
                 Expanded(
                   child: SingleChildScrollView(
@@ -151,10 +188,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Avatar Selection
-                          Text(
-                            'Choose Your Avatar',
-                            style: AppTextStyles.h3,
-                          ),
+                          Text('Choose Your Avatar', style: AppTextStyles.h3),
                           const SizedBox(height: AppSpacing.md),
                           SizedBox(
                             height: 80,
@@ -164,7 +198,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               itemBuilder: (context, index) {
                                 final avatar = _avatarOptions[index];
                                 final isSelected = _selectedAvatar == avatar;
-                                
+
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -176,11 +210,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                                     height: 70,
                                     margin: const EdgeInsets.only(right: 12),
                                     decoration: BoxDecoration(
-                                      color: isSelected 
-                                          ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.2)
+                                      color: isSelected
+                                          ? AppDesignSystem.primaryIndigo
+                                                .withValues(alpha: 0.2)
                                           : Colors.white,
                                       border: Border.all(
-                                        color: isSelected 
+                                        color: isSelected
                                             ? AppDesignSystem.primaryIndigo
                                             : AppDesignSystem.backgroundGrey,
                                         width: isSelected ? 3 : 1,
@@ -198,9 +233,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               },
                             ),
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.xl),
-                          
+
                           // Full Name
                           TextFormField(
                             controller: _nameController,
@@ -216,9 +251,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               return null;
                             },
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.md),
-                          
+
                           // Username (Display Name)
                           TextFormField(
                             controller: _usernameController,
@@ -229,9 +264,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             ),
                             maxLength: 20,
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.md),
-                          
+
                           // State Selection
                           DropdownButtonFormField<String>(
                             value: _selectedState,
@@ -258,9 +293,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               return null;
                             },
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.md),
-                          
+
                           // School Tag (Optional)
                           TextFormField(
                             onChanged: (value) {
@@ -274,20 +309,24 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                               prefixIcon: Icon(Icons.school_outlined),
                             ),
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.xl),
-                          
+
                           // Save Button
                           Consumer<UserProvider>(
                             builder: (context, userProvider, _) {
                               return PrimaryButton(
-                                text: userProvider.isLoading ? 'Saving...' : 'Continue',
-                                onPressed: userProvider.isLoading ? () {} : _saveProfile,
+                                text: userProvider.isLoading
+                                    ? 'Saving...'
+                                    : 'Continue',
+                                onPressed: userProvider.isLoading
+                                    ? () {}
+                                    : _saveProfile,
                                 fullWidth: true,
                               );
                             },
                           ),
-                          
+
                           const SizedBox(height: AppSpacing.xl),
                         ],
                       ),
@@ -302,4 +341,3 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
     );
   }
 }
-

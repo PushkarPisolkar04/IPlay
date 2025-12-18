@@ -17,25 +17,32 @@ class SimplifiedChatService {
     required String studentId,
   }) async {
     // Verify both users exist
-    final teacherDoc = await _firestore.collection('users').doc(teacherId).get();
-    final studentDoc = await _firestore.collection('users').doc(studentId).get();
-    
+    final teacherDoc = await _firestore
+        .collection('users')
+        .doc(teacherId)
+        .get();
+    final studentDoc = await _firestore
+        .collection('users')
+        .doc(studentId)
+        .get();
+
     if (!teacherDoc.exists) {
       throw Exception('Teacher not found');
     }
-    
+
     if (!studentDoc.exists) {
       throw Exception('Student not found');
     }
-    
+
     final teacherData = teacherDoc.data()!;
     final studentData = studentDoc.data()!;
-    
+
     // Verify roles
-    if (teacherData['role'] != 'teacher' && teacherData['isPrincipal'] != true) {
+    if (teacherData['role'] != 'teacher' &&
+        teacherData['isPrincipal'] != true) {
       throw Exception('Invalid teacher');
     }
-    
+
     if (studentData['role'] != 'student') {
       throw Exception('Invalid student');
     }
@@ -53,16 +60,21 @@ class SimplifiedChatService {
 
     // Check if chat already exists
     final chatId = _generateChatId(teacherId, studentId);
-    
+
     try {
-      final existingChat = await _firestore.collection('chats').doc(chatId).get();
-      
+      final existingChat = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .get();
+
       if (existingChat.exists) {
         // Verify the chat has the correct structure
-        final chatData = existingChat.data() as Map<String, dynamic>?;
+        final chatData = existingChat.data();
         if (chatData != null) {
           final participants = chatData['participants'] as List?;
-          if (participants == null || !participants.contains(teacherId) || !participants.contains(studentId)) {
+          if (participants == null ||
+              !participants.contains(teacherId) ||
+              !participants.contains(studentId)) {
             // Fix the participants array
             await _firestore.collection('chats').doc(chatId).update({
               'participants': [teacherId, studentId],
@@ -87,10 +99,7 @@ class SimplifiedChatService {
       'lastMessage': '',
       'lastMessageAt': FieldValue.serverTimestamp(),
       'createdAt': FieldValue.serverTimestamp(),
-      'unreadCount': {
-        teacherId: 0,
-        studentId: 0,
-      },
+      'unreadCount': {teacherId: 0, studentId: 0},
     });
 
     return chatId;
@@ -120,16 +129,14 @@ class SimplifiedChatService {
     }
 
     // Send message
-    await _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .add({
-      'senderId': user.uid,
-      'text': text,
-      'sentAt': FieldValue.serverTimestamp(),
-      'readBy': [user.uid],
-    });
+    await _firestore.collection('chats').doc(chatId).collection('messages').add(
+      {
+        'senderId': user.uid,
+        'text': text,
+        'sentAt': FieldValue.serverTimestamp(),
+        'readBy': [user.uid],
+      },
+    );
 
     // Update last message and unread count
     final otherUserId = participants.firstWhere((id) => id != user.uid);
@@ -141,7 +148,10 @@ class SimplifiedChatService {
 
     // Send notification to the other user
     try {
-      final senderDoc = await _firestore.collection('users').doc(user.uid).get();
+      final senderDoc = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .get();
       final senderData = senderDoc.data();
       final senderName = senderData?['displayName'] ?? 'Someone';
       final senderAvatar = senderData?['avatarUrl'];
@@ -165,9 +175,7 @@ class SimplifiedChatService {
   }
 
   /// Mark messages as read
-  Future<void> markAsRead({
-    required String chatId,
-  }) async {
+  Future<void> markAsRead({required String chatId}) async {
     final user = _auth.currentUser;
     if (user == null) return;
 
@@ -181,9 +189,12 @@ class SimplifiedChatService {
         .collection('chats')
         .doc(chatId)
         .collection('messages')
-        .where('readBy', whereNotIn: [
-          [user.uid]
-        ])
+        .where(
+          'readBy',
+          whereNotIn: [
+            [user.uid],
+          ],
+        )
         .get();
 
     final batch = _firestore.batch();
@@ -227,7 +238,7 @@ class SimplifiedChatService {
   /// Basic content moderation
   bool _containsInappropriateContent(String text) {
     final lowerText = text.toLowerCase();
-    
+
     // Basic inappropriate keywords list
     final inappropriateKeywords = [
       // Add inappropriate words here

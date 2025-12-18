@@ -37,24 +37,24 @@ class _StreakIndicatorState extends State<StreakIndicator>
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 1.2).chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween(
+          begin: 1.0,
+          end: 1.2,
+        ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 50,
       ),
       TweenSequenceItem(
-        tween: Tween(begin: 1.2, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween(
+          begin: 1.2,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
         weight: 50,
       ),
     ]).animate(_controller);
 
     _opacityAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween(begin: 1.0, end: 0.6),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween(begin: 0.6, end: 1.0),
-        weight: 50,
-      ),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.6), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 0.6, end: 1.0), weight: 50),
     ]).animate(_controller);
 
     if (widget.isActive) {
@@ -65,7 +65,7 @@ class _StreakIndicatorState extends State<StreakIndicator>
   @override
   void didUpdateWidget(StreakIndicator oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.isActive && !oldWidget.isActive) {
       _controller.repeat();
     } else if (!widget.isActive && oldWidget.isActive) {
@@ -82,10 +82,9 @@ class _StreakIndicatorState extends State<StreakIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTextStyle = widget.textStyle ??
-        AppDesignSystem.bodyMedium.copyWith(
-          fontWeight: FontWeight.w600,
-        );
+    final effectiveTextStyle =
+        widget.textStyle ??
+        AppDesignSystem.bodyMedium.copyWith(fontWeight: FontWeight.w600);
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -127,7 +126,7 @@ class _StreakIndicatorState extends State<StreakIndicator>
             },
           ),
           const SizedBox(width: AppDesignSystem.spacingSM),
-          
+
           // Streak count
           Text(
             '${widget.currentStreak}',
@@ -147,7 +146,7 @@ class _StreakIndicatorState extends State<StreakIndicator>
                   : AppDesignSystem.textTertiary,
             ),
           ),
-          
+
           // Max streak indicator (if current equals max)
           if (widget.currentStreak == widget.maxStreak &&
               widget.currentStreak > 0) ...[

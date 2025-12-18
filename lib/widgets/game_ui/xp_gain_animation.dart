@@ -22,10 +22,7 @@ class XPGainAnimation extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.amber.shade700,
-            Colors.orange.shade600,
-          ],
+          colors: [Colors.amber.shade700, Colors.orange.shade600],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -42,14 +39,8 @@ class XPGainAnimation extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Star icon
-          Icon(
-            Icons.star,
-            size: 64,
-            color: Colors.white,
-          )
-              .animate(
-                onComplete: (_) => onComplete?.call(),
-              )
+          Icon(Icons.star, size: 64, color: Colors.white)
+              .animate(onComplete: (_) => onComplete?.call())
               .scale(
                 duration: 400.ms,
                 curve: Curves.elasticOut,
@@ -57,22 +48,19 @@ class XPGainAnimation extends StatelessWidget {
                 end: const Offset(1, 1),
               )
               .then()
-              .shimmer(
-                duration: 1000.ms,
-                color: Colors.white.withOpacity(0.5),
-              ),
+              .shimmer(duration: 1000.ms, color: Colors.white.withOpacity(0.5)),
 
           const SizedBox(height: 16),
 
           // XP amount
           Text(
-            '+$xpGained XP',
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          )
+                '+$xpGained XP',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              )
               .animate()
               .fadeIn(duration: 300.ms, delay: 200.ms)
               .slideY(begin: 0.3, end: 0, duration: 300.ms, delay: 200.ms),
@@ -83,22 +71,22 @@ class XPGainAnimation extends StatelessWidget {
           if (isPerfectScore || isFirstCompletion) ...[
             const SizedBox(height: 8),
             Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              alignment: WrapAlignment.center,
-              children: [
-                if (isPerfectScore)
-                  _BonusBadge(
-                    icon: Icons.emoji_events,
-                    label: 'Perfect Score!',
-                  ),
-                if (isFirstCompletion)
-                  _BonusBadge(
-                    icon: Icons.new_releases,
-                    label: 'First Time!',
-                  ),
-              ],
-            )
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    if (isPerfectScore)
+                      _BonusBadge(
+                        icon: Icons.emoji_events,
+                        label: 'Perfect Score!',
+                      ),
+                    if (isFirstCompletion)
+                      _BonusBadge(
+                        icon: Icons.new_releases,
+                        label: 'First Time!',
+                      ),
+                  ],
+                )
                 .animate()
                 .fadeIn(duration: 300.ms, delay: 400.ms)
                 .scale(
@@ -117,10 +105,7 @@ class _BonusBadge extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const _BonusBadge({
-    required this.icon,
-    required this.label,
-  });
+  const _BonusBadge({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -129,19 +114,12 @@ class _BonusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.5),
-          width: 1,
-        ),
+        border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: Colors.white,
-          ),
+          Icon(icon, size: 16, color: Colors.white),
           const SizedBox(width: 6),
           Text(
             label,

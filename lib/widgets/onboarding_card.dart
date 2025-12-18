@@ -10,7 +10,7 @@ class OnboardingCard extends StatelessWidget {
   final String description;
   final Color? iconColor;
   final Color? backgroundColor;
-  
+
   const OnboardingCard({
     super.key,
     required this.icon,
@@ -19,7 +19,7 @@ class OnboardingCard extends StatelessWidget {
     this.iconColor,
     this.backgroundColor,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -27,10 +27,7 @@ class OnboardingCard extends StatelessWidget {
         color: backgroundColor ?? AppDesignSystem.backgroundWhite,
         borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
         boxShadow: AppDesignSystem.shadowLG,
-        border: Border.all(
-          color: AppDesignSystem.backgroundGrey,
-          width: 1,
-        ),
+        border: Border.all(color: AppDesignSystem.backgroundGrey, width: 1),
       ),
       padding: const EdgeInsets.all(AppSpacing.cardPadding * 1.5),
       child: Column(
@@ -42,7 +39,9 @@ class OnboardingCard extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: (iconColor ?? AppDesignSystem.primaryIndigo).withOpacity(0.1),
+              color: (iconColor ?? AppDesignSystem.primaryIndigo).withOpacity(
+                0.1,
+              ),
             ),
             child: Center(
               child: Icon(
@@ -53,7 +52,7 @@ class OnboardingCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          
+
           // Title
           Text(
             title,
@@ -63,7 +62,7 @@ class OnboardingCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.md),
-          
+
           // Description
           Text(
             description,

@@ -138,22 +138,14 @@ class PolygonElement extends DrawingElement {
 }
 
 /// Drawing tool types
-enum DrawingTool {
-  pencil,
-  brush,
-  eraser,
-  rectangle,
-  circle,
-  line,
-  polygon,
-}
+enum DrawingTool { pencil, brush, eraser, rectangle, circle, line, polygon }
 
 /// Controller for managing drawing state
 class DrawingController extends ChangeNotifier {
   // Drawing elements organized by layers
   final Map<String, List<DrawingElement>> _layers = {};
   String _currentLayerId = 'layer_0';
-  
+
   // Undo/redo stacks (max 20 actions)
   final List<Map<String, List<DrawingElement>>> _undoStack = [];
   final List<Map<String, List<DrawingElement>>> _redoStack = [];

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import '../core/design/app_design_system.dart';
 
 /// Bottom navigation bar with icons AND labels
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
-  
+
   const BottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,14 +73,14 @@ class _NavItem extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
-  
+
   const _NavItem({
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -129,7 +128,9 @@ class _NavItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? const Color(0xFF6366F1) : const Color(0xFF9CA3AF),
+                color: isSelected
+                    ? const Color(0xFF6366F1)
+                    : const Color(0xFF9CA3AF),
               ),
             ),
           ],
@@ -138,4 +139,3 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
-

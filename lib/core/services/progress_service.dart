@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/progress_model.dart';
-import '../models/user_model.dart';
 import '../../services/streak_service.dart';
 import 'badge_service.dart';
 import 'content_service.dart';
+import 'xp_service.dart';
 import '../utils/debouncer.dart';
 import '../utils/firebase_batch_helper.dart';
 
@@ -14,10 +14,11 @@ class ProgressService {
   final FirebaseBatchHelper _batchHelper = FirebaseBatchHelper();
   final StreakService _streakService = StreakService();
   final ContentService _contentService = ContentService();
-  
+  final XPService _xpService = XPService();
+
   // Debouncer for progress updates (save every 30 seconds)
   final _progressDebouncer = Debouncer(delay: const Duration(seconds: 30));
-  
+
   // Pending progress updates
   final Map<String, Map<String, dynamic>> _pendingUpdates = {};
 
@@ -39,15 +40,11 @@ class ProgressService {
   }
 
   /// Get user's progress for a specific realm
-  Future<ProgressModel?> getRealmProgress(
-      String userId, String realmId) async {
+  Future<ProgressModel?> getRealmProgress(String userId, String realmId) async {
     try {
       // Use composite ID format: userId__realmId
       final docId = '${userId}__$realmId';
-      final doc = await _firestore
-          .collection('progress')
-          .doc(docId)
-          .get();
+      final doc = await _firestore.collection('progress').doc(docId).get();
 
       if (!doc.exists) return null;
       return ProgressModel.fromMap(doc.data()!);
@@ -59,7 +56,10 @@ class ProgressService {
 
   /// Check if a level is unlocked for the user
   Future<bool> isLevelUnlocked(
-      String userId, String realmId, int levelNumber) async {
+    String userId,
+    String realmId,
+    int levelNumber,
+  ) async {
     try {
       final progress = await getRealmProgress(userId, realmId);
       if (progress == null) {
@@ -76,8 +76,8 @@ class ProgressService {
   }
 
   /// Mark a level as completed and update progress
-  /// Returns list of newly unlocked badge IDs
-  Future<List<String>> completeLevel({
+  /// Returns map with 'badges' (list of newly unlocked badge IDs) and 'xpCapWarning' info
+  Future<Map<String, dynamic>> completeLevel({
     required String userId,
     required String realmId,
     required int levelNumber,
@@ -89,30 +89,28 @@ class ProgressService {
     // Calculate star rating based on quiz performance
     // Each correct answer = 1 star (5 questions = 5 stars max)
     int stars = quizScore.clamp(0, 5);
-    
-    try{
+
+    try {
       // Firebase will queue writes when offline and sync when online
       final batch = _firestore.batch();
 
       // Update realm progress using per-realm document
       // Format: userId__realmId
       final progressDocId = '${userId}__$realmId';
-      final progressRef = _firestore
-          .collection('progress')
-          .doc(progressDocId);
+      final progressRef = _firestore.collection('progress').doc(progressDocId);
 
       final progressDoc = await progressRef.get();
-      
+
       // Track completed levels count for later use
       int finalCompletedLevelsCount = 0;
-      
+
       // Track if this is a new completion (for XP awarding)
       bool isNewCompletion = false;
-      
+
       if (progressDoc.exists) {
         // Update existing progress
         final currentData = progressDoc.data()!;
-        
+
         // Safely parse completedLevels - handle both List and int types
         List<int> completedLevels = [];
         if (currentData.containsKey('completedLevels')) {
@@ -121,15 +119,18 @@ class ProgressService {
             completedLevels = List<int>.from(levelsData);
           } else if (levelsData is int) {
             // Old format: just a count, not a list - we'll rebuild it
-            print('⚠️ WARNING: completedLevels is int ($levelsData), converting to list format');
+            print(
+              '⚠️ WARNING: completedLevels is int ($levelsData), converting to list format',
+            );
             // We can't recover the exact levels, so we'll just add the current one
             completedLevels = [];
           }
         }
-        
+
         // Safely parse levelStars map
         final Map<String, int> levelStars = {};
-        if (currentData.containsKey('levelStars') && currentData['levelStars'] is Map) {
+        if (currentData.containsKey('levelStars') &&
+            currentData['levelStars'] is Map) {
           final starsData = currentData['levelStars'] as Map;
           starsData.forEach((key, value) {
             if (value is int) {
@@ -137,31 +138,31 @@ class ProgressService {
             }
           });
         }
-        
+
         // Check if this is a new completion
         isNewCompletion = !completedLevels.contains(levelNumber);
-        
+
         // Add level to completed list if not already there
         if (isNewCompletion) {
           completedLevels.add(levelNumber);
         }
-        
+
         // Store star rating for this level (update if better)
         final levelKey = 'level_$levelNumber';
         final existingStars = levelStars[levelKey] ?? 0;
         if (stars > existingStars) {
           levelStars[levelKey] = stars;
         }
-        
+
         // Sort completed levels
         completedLevels.sort();
-        
+
         // Current level is the next uncompleted level
         final currentLevel = completedLevels.length + 1;
-        
+
         // Store count for later use
         finalCompletedLevelsCount = completedLevels.length;
-        
+
         // Only increment XP if this is a new completion
         final updateMap = {
           'completedLevels': completedLevels,
@@ -169,11 +170,11 @@ class ProgressService {
           'currentLevelNumber': currentLevel,
           'lastAccessedAt': Timestamp.now(),
         };
-        
+
         if (isNewCompletion) {
           updateMap['xpEarned'] = FieldValue.increment(xpEarned);
         }
-        
+
         batch.update(progressRef, updateMap);
       } else {
         // Create new progress document
@@ -186,52 +187,70 @@ class ProgressService {
           'xpEarned': xpEarned,
           'lastAccessedAt': Timestamp.now(),
         };
-        
+
         // Store count for later use
         finalCompletedLevelsCount = 1;
         isNewCompletion = true; // First time completing any level in this realm
-        
+
         batch.set(progressRef, newProgress);
       }
+
+      // Enforce daily XP cap for this award
+      final xpCapResult = await _xpService.calculateAwardedXP(
+        userId: userId,
+        earnedXP: xpEarned,
+      );
+      final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+      final warning = (xpCapResult['warning'] as bool?) ?? false;
+      final cappedAmount = (xpCapResult['cappedAmount'] as int?) ?? 0;
+
+      // Get current daily XP stats for popup
+      final xpStats = await _xpService.getTodayXPStats(userId);
+      final currentDailyXP = (xpStats['currentDailyXP'] as int?) ?? 0;
+      final dailyCap = (xpStats['dailyXPCap'] as int?) ?? 1000;
+      final isFullyCapped = (xpStats['hasReachedCap'] as bool?) ?? false;
 
       // Update user's total XP and progressSummary
       final userRef = _firestore.collection('users').doc(userId);
       final userDoc = await userRef.get();
-      
-      Map<String, dynamic> updateData = {
-        'updatedAt': Timestamp.now(),
-      };
-      
+
+      Map<String, dynamic> updateData = {'updatedAt': Timestamp.now()};
+
       // Only increment XP if this is a new completion
       if (isNewCompletion) {
-        updateData['totalXP'] = FieldValue.increment(xpEarned);
-        print('✅ Awarding $xpEarned XP for first-time completion of level $levelNumber');
+        updateData['totalXP'] = FieldValue.increment(xpToAward);
+        print(
+          '✅ Awarding $xpToAward XP for first-time completion of level $levelNumber',
+        );
       } else {
         print('ℹ️ Level $levelNumber already completed - no XP awarded');
       }
-      
+
       // DON'T update lastActiveDate here - let StreakService handle it
 
       // Update progressSummary in user document for quick access
       if (userDoc.exists) {
         final userData = userDoc.data();
         final progressSummary = userData?['progressSummary'] ?? {};
-        
+
         // Use realmId as-is (e.g., 'realm_copyright')
         final summaryKey = realmId;
         final realmProgress = progressSummary[summaryKey] ?? {};
-        
+
         // Use the count we calculated earlier
         int levelsCompletedCount = finalCompletedLevelsCount;
-        
+
         // Get total levels from realm data (always use the correct value from content)
         final realm = _contentService.getRealmById(realmId);
-        final totalLevels = realm?.totalLevels ?? 10; // Default to 10 if realm not found
-        
+        final totalLevels =
+            realm?.totalLevels ?? 10; // Default to 10 if realm not found
+
         // Only add XP if this is a new completion
-        final xpEarnedSoFar = (realmProgress['xpEarned'] ?? 0) + (isNewCompletion ? xpEarned : 0);
+        final xpEarnedSoFar =
+            (realmProgress['xpEarned'] ?? 0) +
+            (isNewCompletion ? xpToAward : 0);
         final isCompleted = levelsCompletedCount >= totalLevels;
-        
+
         updateData['progressSummary.$summaryKey'] = {
           'completed': isCompleted,
           'levelsCompleted': levelsCompletedCount,
@@ -248,17 +267,15 @@ class ProgressService {
 
       // Single batch update with all data
       batch.update(userRef, updateData);
-      
+
       // Commit all updates
       await batch.commit();
-      
+
       // Update streak after awarding XP (only if XP was awarded)
       if (isNewCompletion) {
         await _streakService.updateStreakOnActivity(userId);
       }
 
-
-      
       // Check for new badges only if this was a new completion (to avoid duplicate checks)
       List<String> newBadges = [];
       if (isNewCompletion) {
@@ -266,7 +283,7 @@ class ProgressService {
         newBadges = await _badgeService.checkAndAwardBadges(userId);
         if (newBadges.isNotEmpty) {
           print('✅ New badges unlocked: $newBadges');
-          
+
           // Create badge_unlock entries for recent activity (don't wait)
           Future.delayed(Duration.zero, () async {
             for (final badgeId in newBadges) {
@@ -279,11 +296,11 @@ class ProgressService {
                       .doc(userId)
                       .collection('badge_unlocks')
                       .add({
-                    'badgeId': badge.id,
-                    'badgeName': badge.name,
-                    'badgeRarity': badge.rarity,
-                    'unlockedAt': Timestamp.now(),
-                  });
+                        'badgeId': badge.id,
+                        'badgeName': badge.name,
+                        'badgeRarity': badge.rarity,
+                        'unlockedAt': Timestamp.now(),
+                      });
                 }
               } catch (e) {
                 print('Error creating badge activity: $e');
@@ -294,11 +311,21 @@ class ProgressService {
       } else {
         print('ℹ️ Level already completed - skipping badge check');
       }
-      
-      return newBadges;
+
+      return {
+        'badges': newBadges,
+        'warning':
+            warning && isNewCompletion, // Only warn if XP was actually awarded
+        'currentDailyXP':
+            currentDailyXP +
+            (isNewCompletion ? xpToAward : 0), // Updated after award
+        'dailyCap': dailyCap,
+        'cappedAmount': isNewCompletion ? cappedAmount : 0,
+        'isFullyCapped': isFullyCapped,
+      };
     } catch (e) {
       print('Error completing level: $e');
-      return []; // Return empty list on error
+      return {}; // Return empty map on error
     }
   }
 
@@ -306,7 +333,7 @@ class ProgressService {
   Future<Map<String, dynamic>> getProgressSummary(String userId) async {
     try {
       final allProgress = await getUserProgress(userId);
-      
+
       int totalLevelsCompleted = 0;
       int totalXPEarned = 0;
       int realmsInProgress = 0;
@@ -315,11 +342,11 @@ class ProgressService {
       for (final progress in allProgress) {
         totalLevelsCompleted += progress.completedLevels.length;
         totalXPEarned += progress.xpEarned;
-        
+
         if (progress.completedLevels.isNotEmpty) {
           realmsInProgress++;
         }
-        
+
         // TODO: Check if realm fully completed (need total levels count)
       }
 
@@ -346,7 +373,7 @@ class ProgressService {
       // Delete the progress document for this user and realm
       final docId = '${userId}__$realmId';
       await _firestore.collection('progress').doc(docId).delete();
-      
+
       // Also clear from user's progressSummary
       await _firestore.collection('users').doc(userId).update({
         'progressSummary.$realmId': FieldValue.delete(),
@@ -356,6 +383,7 @@ class ProgressService {
       rethrow;
     }
   }
+
   /// Save progress with debouncing (batches updates every 30 seconds)
   /// This reduces Firebase write operations significantly
   void saveProgressDebounced({
@@ -364,18 +392,18 @@ class ProgressService {
     required Map<String, dynamic> updates,
   }) {
     final docId = '${userId}__$realmId';
-    
+
     // Merge with existing pending updates
     if (_pendingUpdates.containsKey(docId)) {
       _pendingUpdates[docId]!.addAll(updates);
     } else {
       _pendingUpdates[docId] = updates;
     }
-    
+
     // Debounce the actual save
     _progressDebouncer.call(() async {
       if (_pendingUpdates.isEmpty) return;
-      
+
       try {
         // Batch all pending updates
         final operations = _pendingUpdates.entries.map((entry) {
@@ -384,9 +412,9 @@ class ProgressService {
             entry.value,
           );
         }).toList();
-        
+
         await _batchHelper.executeBatch(operations);
-        
+
         // print('✅ Saved ${_pendingUpdates.length} debounced progress updates');
         _pendingUpdates.clear();
       } catch (e) {
@@ -394,14 +422,14 @@ class ProgressService {
       }
     });
   }
-  
+
   /// Force save all pending progress updates immediately
   /// Call this when user navigates away or app goes to background
   Future<void> flushPendingUpdates() async {
     _progressDebouncer.cancel();
-    
+
     if (_pendingUpdates.isEmpty) return;
-    
+
     try {
       final operations = _pendingUpdates.entries.map((entry) {
         return BatchOperation.update(
@@ -409,20 +437,19 @@ class ProgressService {
           entry.value,
         );
       }).toList();
-      
+
       await _batchHelper.executeBatch(operations);
-      
+
       // print('✅ Flushed ${_pendingUpdates.length} pending progress updates');
       _pendingUpdates.clear();
     } catch (e) {
       // print('❌ Error flushing pending updates: $e');
     }
   }
-  
+
   /// Dispose the service and flush pending updates
   Future<void> dispose() async {
     await flushPendingUpdates();
     _progressDebouncer.dispose();
   }
-
 }

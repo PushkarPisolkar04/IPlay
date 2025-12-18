@@ -45,7 +45,9 @@ class CertificateModel {
       certificateType: data['certificateType'] as String,
       realmId: data['realmId'] as String,
       realmName: data['realmName'] as String,
-      certificateUrl: data['certificateUrl'] as String? ?? '', // Handle null for PDF stored as base64
+      certificateUrl:
+          data['certificateUrl'] as String? ??
+          '', // Handle null for PDF stored as base64
       certificateNumber: data['certificateNumber'] as String,
       issuedAt: (data['issuedAt'] as Timestamp).toDate(),
     );
@@ -74,4 +76,3 @@ class CertificateModel {
     );
   }
 }
-

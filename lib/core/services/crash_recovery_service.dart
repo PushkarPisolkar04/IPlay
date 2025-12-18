@@ -7,7 +7,8 @@ import 'dart:convert';
 /// Service for handling app crashes and state recovery
 /// Saves app state before crashes and restores it on restart
 class CrashRecoveryService {
-  static final CrashRecoveryService _instance = CrashRecoveryService._internal();
+  static final CrashRecoveryService _instance =
+      CrashRecoveryService._internal();
   factory CrashRecoveryService() => _instance;
   CrashRecoveryService._internal();
 
@@ -51,27 +52,27 @@ class CrashRecoveryService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final lastCrash = prefs.getInt(_lastCrashKey);
-      
+
       if (lastCrash != null) {
         final crashTime = DateTime.fromMillisecondsSinceEpoch(lastCrash);
         final now = DateTime.now();
-        
+
         // If crash was within last 5 minutes, consider it a recent crash
         if (now.difference(crashTime).inMinutes < 5) {
           final crashCount = prefs.getInt(_crashCountKey) ?? 0;
           await prefs.setInt(_crashCountKey, crashCount + 1);
-          
+
           // Log crash recovery event (only on non-web platforms)
           if (!kIsWeb) {
             await FirebaseCrashlytics.instance.log(
-              'App recovered from crash. Crash count: ${crashCount + 1}'
+              'App recovered from crash. Crash count: ${crashCount + 1}',
             );
           }
         } else {
           // Reset crash count if it's been a while
           await prefs.setInt(_crashCountKey, 0);
         }
-        
+
         // Clear last crash timestamp
         await prefs.remove(_lastCrashKey);
       }
@@ -86,12 +87,9 @@ class CrashRecoveryService {
       final prefs = await SharedPreferences.getInstance();
       final stateJson = jsonEncode(state);
       await prefs.setString(_appStateKey, stateJson);
-      
+
       // Also save timestamp
-      await prefs.setInt(
-        _lastCrashKey,
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await prefs.setInt(_lastCrashKey, DateTime.now().millisecondsSinceEpoch);
     } catch (e) {
       // print('Error saving app state: $e');
     }
@@ -102,13 +100,13 @@ class CrashRecoveryService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final stateJson = prefs.getString(_appStateKey);
-      
+
       if (stateJson != null) {
         final state = jsonDecode(stateJson) as Map<String, dynamic>;
-        
+
         // Clear saved state after restoration
         await prefs.remove(_appStateKey);
-        
+
         return state;
       }
     } catch (e) {

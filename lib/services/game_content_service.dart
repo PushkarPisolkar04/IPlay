@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/game_model.dart';
 import '../models/quiz_master_model.dart';
@@ -21,17 +22,17 @@ class GameContentService {
 
   // Cache for loaded game content (in-memory)
   final Map<String, dynamic> _cache = {};
-  
+
   // Cache expiration tracking
   final Map<String, DateTime> _cacheTimestamps = {};
-  
+
   // Cache duration (1 hour for in-memory, indefinite for persistent)
   static const Duration _cacheDuration = Duration(hours: 1);
-  
+
   // Retry configuration
   static const int _maxRetries = 3;
   static const Duration _retryDelay = Duration(seconds: 1);
-  
+
   // Persistent cache keys
   static const String _persistentCachePrefix = 'game_content_';
   static const String _cacheVersionKey = 'game_content_version';
@@ -40,7 +41,7 @@ class GameContentService {
   /// Load Quiz Master game content with retry and offline support
   Future<QuizMasterGame> loadQuizMaster() async {
     const cacheKey = 'quiz_master';
-    
+
     // Check in-memory cache first
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as QuizMasterGame;
@@ -50,19 +51,21 @@ class GameContentService {
       // Try to load with retry mechanism
       final game = await GameErrorHandler.retryWithBackoff<QuizMasterGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/quiz_master.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/quiz_master.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return QuizMasterGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       // Cache the loaded game (in-memory and persistent)
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
       // Log error
@@ -72,18 +75,18 @@ class GameContentService {
         context: 'Loading Quiz Master',
         gameId: cacheKey,
       );
-      
+
       // Try to load from persistent cache
       final cachedGame = await _loadFromPersistentCache<QuizMasterGame>(
         cacheKey,
         (json) => QuizMasterGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       // Return fallback content as last resort
       return _getFallbackQuizMaster(e);
     }
@@ -92,7 +95,7 @@ class GameContentService {
   /// Load Trademark Match game content with retry and offline support
   Future<TrademarkMatchGame> loadTrademarkMatch() async {
     const cacheKey = 'trademark_match';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as TrademarkMatchGame;
     }
@@ -100,32 +103,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<TrademarkMatchGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/trademark_match.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/trademark_match.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return TrademarkMatchGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading Trademark Match', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading Trademark Match',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<TrademarkMatchGame>(
         cacheKey,
         (json) => TrademarkMatchGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackTrademarkMatch(e);
     }
   }
@@ -133,7 +143,7 @@ class GameContentService {
   /// Load IP Defender game content with retry and offline support
   Future<IPDefenderGame> loadIPDefender() async {
     const cacheKey = 'ip_defender';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as IPDefenderGame;
     }
@@ -141,32 +151,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<IPDefenderGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/ip_defender.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/ip_defender.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return IPDefenderGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading IP Defender', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading IP Defender',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<IPDefenderGame>(
         cacheKey,
         (json) => IPDefenderGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackIPDefender(e);
     }
   }
@@ -174,7 +191,7 @@ class GameContentService {
   /// Load Spot the Original game content with retry and offline support
   Future<SpotTheOriginalGame> loadSpotTheOriginal() async {
     const cacheKey = 'spot_the_original';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as SpotTheOriginalGame;
     }
@@ -182,32 +199,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<SpotTheOriginalGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/spot_the_original.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/spot_the_original.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return SpotTheOriginalGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading Spot the Original', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading Spot the Original',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<SpotTheOriginalGame>(
         cacheKey,
         (json) => SpotTheOriginalGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackSpotTheOriginal(e);
     }
   }
@@ -215,7 +239,7 @@ class GameContentService {
   /// Load GI Mapper game content with retry and offline support
   Future<GIMapperGame> loadGIMapper() async {
     const cacheKey = 'gi_mapper';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as GIMapperGame;
     }
@@ -223,32 +247,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<GIMapperGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/gi_mapper.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/gi_mapper.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return GIMapperGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading GI Mapper', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading GI Mapper',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<GIMapperGame>(
         cacheKey,
         (json) => GIMapperGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackGIMapper(e);
     }
   }
@@ -256,7 +287,7 @@ class GameContentService {
   /// Load Patent Detective game content with retry and offline support
   Future<PatentDetectiveGame> loadPatentDetective() async {
     const cacheKey = 'patent_detective';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as PatentDetectiveGame;
     }
@@ -264,32 +295,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<PatentDetectiveGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/patent_detective.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/patent_detective.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return PatentDetectiveGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading Patent Detective', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading Patent Detective',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<PatentDetectiveGame>(
         cacheKey,
         (json) => PatentDetectiveGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackPatentDetective(e);
     }
   }
@@ -297,7 +335,7 @@ class GameContentService {
   /// Load Innovation Lab game content with retry and offline support
   Future<InnovationLabGame> loadInnovationLab() async {
     const cacheKey = 'innovation_lab';
-    
+
     if (_isCacheValid(cacheKey)) {
       return _cache[cacheKey] as InnovationLabGame;
     }
@@ -305,32 +343,39 @@ class GameContentService {
     try {
       final game = await GameErrorHandler.retryWithBackoff<InnovationLabGame>(
         operation: () async {
-          final jsonString = await rootBundle.loadString('content/games/innovation_lab.json');
+          final jsonString = await rootBundle.loadString(
+            'content/games/innovation_lab.json',
+          );
           final jsonData = json.decode(jsonString) as Map<String, dynamic>;
           return InnovationLabGame.fromJson(jsonData);
         },
         maxAttempts: _maxRetries,
         initialDelay: _retryDelay,
       );
-      
+
       _cache[cacheKey] = game;
       _cacheTimestamps[cacheKey] = DateTime.now();
       await _saveToPersistentCache(cacheKey, game.toJson());
-      
+
       return game;
     } catch (e, stackTrace) {
-      GameErrorHandler.logError(e, stackTrace: stackTrace, context: 'Loading Innovation Lab', gameId: cacheKey);
-      
+      GameErrorHandler.logError(
+        e,
+        stackTrace: stackTrace,
+        context: 'Loading Innovation Lab',
+        gameId: cacheKey,
+      );
+
       final cachedGame = await _loadFromPersistentCache<InnovationLabGame>(
         cacheKey,
         (json) => InnovationLabGame.fromJson(json),
       );
-      
+
       if (cachedGame != null) {
         _cache[cacheKey] = cachedGame;
         return cachedGame;
       }
-      
+
       return _getFallbackInnovationLab(e);
     }
   }
@@ -340,7 +385,7 @@ class GameContentService {
   Future<Map<String, dynamic>> loadAllGames() async {
     final games = <String, dynamic>{};
     final errors = <String, dynamic>{};
-    
+
     // Load each game individually to handle errors gracefully
     try {
       games['quiz_master'] = await loadQuizMaster();
@@ -348,77 +393,94 @@ class GameContentService {
       errors['quiz_master'] = e;
       GameErrorHandler.logError(e, context: 'Loading all games - Quiz Master');
     }
-    
+
     try {
       games['trademark_match'] = await loadTrademarkMatch();
     } catch (e) {
       errors['trademark_match'] = e;
-      GameErrorHandler.logError(e, context: 'Loading all games - Trademark Match');
+      GameErrorHandler.logError(
+        e,
+        context: 'Loading all games - Trademark Match',
+      );
     }
-    
+
     try {
       games['ip_defender'] = await loadIPDefender();
     } catch (e) {
       errors['ip_defender'] = e;
       GameErrorHandler.logError(e, context: 'Loading all games - IP Defender');
     }
-    
+
     try {
       games['spot_the_original'] = await loadSpotTheOriginal();
     } catch (e) {
       errors['spot_the_original'] = e;
-      GameErrorHandler.logError(e, context: 'Loading all games - Spot the Original');
+      GameErrorHandler.logError(
+        e,
+        context: 'Loading all games - Spot the Original',
+      );
     }
-    
+
     try {
       games['gi_mapper'] = await loadGIMapper();
     } catch (e) {
       errors['gi_mapper'] = e;
       GameErrorHandler.logError(e, context: 'Loading all games - GI Mapper');
     }
-    
+
     try {
       games['patent_detective'] = await loadPatentDetective();
     } catch (e) {
       errors['patent_detective'] = e;
-      GameErrorHandler.logError(e, context: 'Loading all games - Patent Detective');
+      GameErrorHandler.logError(
+        e,
+        context: 'Loading all games - Patent Detective',
+      );
     }
-    
+
     try {
       games['innovation_lab'] = await loadInnovationLab();
     } catch (e) {
       errors['innovation_lab'] = e;
-      GameErrorHandler.logError(e, context: 'Loading all games - Innovation Lab');
+      GameErrorHandler.logError(
+        e,
+        context: 'Loading all games - Innovation Lab',
+      );
     }
-    
+
     // If no games loaded successfully, throw exception
     if (games.isEmpty) {
       throw GameContentException(
-        'Failed to load all games. Errors: ${errors.keys.join(", ")}'
+        'Failed to load all games. Errors: ${errors.keys.join(", ")}',
       );
     }
-    
+
     // Log if some games failed to load
     if (errors.isNotEmpty) {
-      print('Warning: Some games failed to load: ${errors.keys.join(", ")}');
+      if (kDebugMode) {
+        print('Warning: Some games failed to load: ${errors.keys.join(", ")}');
+      }
     }
-    
+
     return games;
   }
 
   /// Check if cached content is still valid
   bool _isCacheValid(String key) {
     if (!_cache.containsKey(key)) return false;
-    
+
     final timestamp = _cacheTimestamps[key];
     if (timestamp == null) return false;
-    
+
     final age = DateTime.now().difference(timestamp);
     return age < _cacheDuration;
   }
 
   /// Save game content to persistent cache (SharedPreferences)
-  Future<void> _saveToPersistentCache(String key, Map<String, dynamic> data) async {
+  Future<void> _saveToPersistentCache(
+    String key,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonString = json.encode(data);
@@ -440,7 +502,7 @@ class GameContentService {
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Check cache version
       final cacheVersion = prefs.getString(_cacheVersionKey);
       if (cacheVersion != _currentCacheVersion) {
@@ -448,10 +510,10 @@ class GameContentService {
         await clearPersistentCache();
         return null;
       }
-      
+
       final jsonString = prefs.getString('$_persistentCachePrefix$key');
       if (jsonString == null) return null;
-      
+
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       return fromJson(jsonData);
     } catch (e) {
@@ -468,16 +530,12 @@ class GameContentService {
   Future<void> clearCache(String gameId) async {
     _cache.remove(gameId);
     _cacheTimestamps.remove(gameId);
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('$_persistentCachePrefix$gameId');
     } catch (e) {
-      GameErrorHandler.logError(
-        e,
-        context: 'Clearing cache',
-        gameId: gameId,
-      );
+      GameErrorHandler.logError(e, context: 'Clearing cache', gameId: gameId);
     }
   }
 
@@ -485,7 +543,7 @@ class GameContentService {
   Future<void> clearAllCache() async {
     _cache.clear();
     _cacheTimestamps.clear();
-    
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final keys = prefs.getKeys();
@@ -527,7 +585,7 @@ class GameContentService {
   Future<bool> isOfflineModeAvailable(String gameId) async {
     // Check in-memory cache
     if (_cache.containsKey(gameId)) return true;
-    
+
     // Check persistent cache
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -549,19 +607,21 @@ class GameContentService {
       'patent_detective',
       'innovation_lab',
     ];
-    
+
     for (final gameId in gameIds) {
       status[gameId] = await isOfflineModeAvailable(gameId);
     }
-    
+
     return status;
   }
 
   // Fallback content methods for offline mode
 
   QuizMasterGame _getFallbackQuizMaster(dynamic error) {
-    print('Error loading Quiz Master: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading Quiz Master: $error. Using fallback content.');
+    }
+
     return QuizMasterGame(
       id: 'quiz_master',
       name: 'Quiz Master',
@@ -608,8 +668,10 @@ class GameContentService {
   }
 
   TrademarkMatchGame _getFallbackTrademarkMatch(dynamic error) {
-    print('Error loading Trademark Match: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading Trademark Match: $error. Using fallback content.');
+    }
+
     return TrademarkMatchGame(
       id: 'trademark_match',
       name: 'Trademark Match',
@@ -651,8 +713,10 @@ class GameContentService {
   }
 
   IPDefenderGame _getFallbackIPDefender(dynamic error) {
-    print('Error loading IP Defender: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading IP Defender: $error. Using fallback content.');
+    }
+
     return IPDefenderGame(
       id: 'ip_defender',
       name: 'IP Defender',
@@ -683,8 +747,10 @@ class GameContentService {
   }
 
   SpotTheOriginalGame _getFallbackSpotTheOriginal(dynamic error) {
-    print('Error loading Spot the Original: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading Spot the Original: $error. Using fallback content.');
+    }
+
     return SpotTheOriginalGame(
       id: 'spot_the_original',
       name: 'Spot the Original',
@@ -714,8 +780,10 @@ class GameContentService {
   }
 
   GIMapperGame _getFallbackGIMapper(dynamic error) {
-    print('Error loading GI Mapper: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading GI Mapper: $error. Using fallback content.');
+    }
+
     // Create a minimal fallback with at least one product to pass validation
     final fallbackProduct = GIProduct(
       id: 'fallback_gi_001',
@@ -732,14 +800,14 @@ class GameContentService {
       difficulty: 'easy',
       points: 10,
     );
-    
+
     final fallbackState = StateData(
       code: 'WB',
       name: 'West Bengal',
       svgPath: 'M 0 0',
       color: const Color(0xFFFF6B6B),
     );
-    
+
     return GIMapperGame(
       id: 'gi_mapper',
       name: 'GI Mapper',
@@ -770,8 +838,10 @@ class GameContentService {
   }
 
   PatentDetectiveGame _getFallbackPatentDetective(dynamic error) {
-    print('Error loading Patent Detective: $error. Using fallback content.');
-    
+    if (kDebugMode) {
+      print('Error loading Patent Detective: $error. Using fallback content.');
+    }
+
     return PatentDetectiveGame(
       id: 'patent_detective',
       name: 'Patent Detective',
@@ -802,7 +872,7 @@ class GameContentService {
 
   InnovationLabGame _getFallbackInnovationLab(dynamic error) {
     print('Error loading Innovation Lab: $error. Using fallback content.');
-    
+
     // Create minimal fallback data to pass validation
     final fallbackTool = DrawingTool(
       id: 'pencil',
@@ -814,9 +884,9 @@ class GameContentService {
       supportsOpacity: true,
       supportsColor: true,
     );
-    
+
     final fallbackColor = ColorPaletteItem(name: 'Black', hex: '#000000');
-    
+
     final fallbackTemplate = DesignTemplate(
       id: 'fallback_template',
       name: 'Blank Canvas',
@@ -838,7 +908,7 @@ class GameContentService {
         ],
       ),
     );
-    
+
     final fallbackQuestion = IPQuestion(
       id: 'fallback_ip_001',
       question: 'What type of IP protection is this?',
@@ -853,7 +923,7 @@ class GameContentService {
       difficulty: 'easy',
       points: 10,
     );
-    
+
     return InnovationLabGame(
       id: 'innovation_lab',
       name: 'Innovation Lab',
@@ -871,10 +941,7 @@ class GameContentService {
         firstTime: 35,
         highScore: 90,
       ),
-      leaderboard: LeaderboardConfig(
-        enabled: false,
-        scope: [],
-      ),
+      leaderboard: LeaderboardConfig(enabled: false, scope: []),
       version: '1.0.0',
       updatedAt: DateTime.now(),
       templates: [fallbackTemplate],

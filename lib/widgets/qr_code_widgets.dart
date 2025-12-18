@@ -64,10 +64,7 @@ class ClassroomQRCode extends StatelessWidget {
 class QRCodeScannerScreen extends StatefulWidget {
   final Function(String) onCodeScanned;
 
-  const QRCodeScannerScreen({
-    super.key,
-    required this.onCodeScanned,
-  });
+  const QRCodeScannerScreen({super.key, required this.onCodeScanned});
 
   @override
   State<QRCodeScannerScreen> createState() => _QRCodeScannerScreenState();
@@ -85,7 +82,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
 
   void _onDetect(BarcodeCapture capture) {
     if (_isProcessing) return;
-    
+
     final List<Barcode> barcodes = capture.barcodes;
     if (barcodes.isEmpty) return;
 
@@ -94,7 +91,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
       setState(() {
         _isProcessing = true;
       });
-      
+
       widget.onCodeScanned(code);
       Navigator.of(context).pop(code);
     }
@@ -111,17 +108,11 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
       ),
       body: Stack(
         children: [
-          MobileScanner(
-            controller: cameraController,
-            onDetect: _onDetect,
-          ),
-          
+          MobileScanner(controller: cameraController, onDetect: _onDetect),
+
           // Overlay with scanning area
-          CustomPaint(
-            painter: ScannerOverlayPainter(),
-            child: Container(),
-          ),
-          
+          CustomPaint(painter: ScannerOverlayPainter(), child: Container()),
+
           // Instructions
           Positioned(
             bottom: 40,
@@ -135,9 +126,7 @@ class _QRCodeScannerScreenState extends State<QRCodeScannerScreen> {
               ),
               child: Text(
                 'Position the QR code within the frame',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.black,
-                ),
+                style: AppTextStyles.bodyMedium.copyWith(color: Colors.black),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -163,10 +152,12 @@ class ScannerOverlayPainter extends CustomPainter {
     // Draw overlay with transparent center
     final path = Path()
       ..addRect(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..addRRect(RRect.fromRectAndRadius(
-        Rect.fromLTWH(left, top, scanAreaSize, scanAreaSize),
-        const Radius.circular(12),
-      ))
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(left, top, scanAreaSize, scanAreaSize),
+          const Radius.circular(12),
+        ),
+      )
       ..fillType = PathFillType.evenOdd;
 
     canvas.drawPath(path, paint);

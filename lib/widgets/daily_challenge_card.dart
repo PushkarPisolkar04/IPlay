@@ -40,7 +40,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
       // Get today's challenge
       final now = DateTime.now();
       final todayStart = DateTime(now.year, now.month, now.day);
-      
+
       final challengeQuery = await FirebaseFirestore.instance
           .collection('daily_challenges')
           .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(todayStart))
@@ -128,14 +128,10 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                   color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  _getIcon(),
-                  color: Colors.white,
-                  size: 32,
-                ),
+                child: Icon(_getIcon(), color: Colors.white, size: 32),
               ),
               const SizedBox(width: 16),
-              
+
               // Content
               Expanded(
                 child: Column(
@@ -153,7 +149,10 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                         if (_status == 'completed')
                           Container(
                             margin: const EdgeInsets.only(left: 8),
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(12),
@@ -181,7 +180,10 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
@@ -189,7 +191,11 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.check_circle, color: Colors.white, size: 14),
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '$_score/5',
@@ -204,7 +210,10 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
@@ -212,7 +221,11 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.star, color: Colors.white, size: 14),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '+$_xpEarned XP',
@@ -231,7 +244,7 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
                   ],
                 ),
               ),
-              
+
               // Arrow (if available)
               if (_status == 'available')
                 const Icon(
@@ -306,4 +319,3 @@ class _DailyChallengeCardState extends State<DailyChallengeCard> {
     }
   }
 }
-

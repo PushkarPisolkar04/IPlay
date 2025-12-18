@@ -19,7 +19,8 @@ class XPCounter extends StatefulWidget {
   State<XPCounter> createState() => _XPCounterState();
 }
 
-class _XPCounterState extends State<XPCounter> with SingleTickerProviderStateMixin {
+class _XPCounterState extends State<XPCounter>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<int> _animation;
   int _previousXP = 0;
@@ -32,7 +33,10 @@ class _XPCounterState extends State<XPCounter> with SingleTickerProviderStateMix
       duration: widget.animationDuration,
       vsync: this,
     );
-    _animation = IntTween(begin: widget.xp, end: widget.xp).animate(_controller);
+    _animation = IntTween(
+      begin: widget.xp,
+      end: widget.xp,
+    ).animate(_controller);
   }
 
   @override
@@ -43,10 +47,7 @@ class _XPCounterState extends State<XPCounter> with SingleTickerProviderStateMix
       _animation = IntTween(
         begin: _previousXP,
         end: widget.xp,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
       _controller.forward(from: 0);
       _previousXP = widget.xp;
     }
@@ -65,10 +66,12 @@ class _XPCounterState extends State<XPCounter> with SingleTickerProviderStateMix
       builder: (context, child) {
         return Text(
           '${_animation.value}',
-          style: widget.textStyle ?? AppDesignSystem.h3.copyWith(
-            fontWeight: FontWeight.bold,
-            color: AppDesignSystem.primaryAmber,
-          ),
+          style:
+              widget.textStyle ??
+              AppDesignSystem.h3.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppDesignSystem.primaryAmber,
+              ),
         );
       },
     );

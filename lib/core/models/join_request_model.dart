@@ -49,8 +49,8 @@ class JoinRequestModel {
       studentName: data['studentName'] as String,
       status: data['status'] as String,
       requestedAt: (data['requestedAt'] as Timestamp).toDate(),
-      resolvedAt: data['resolvedAt'] != null 
-          ? (data['resolvedAt'] as Timestamp).toDate() 
+      resolvedAt: data['resolvedAt'] != null
+          ? (data['resolvedAt'] as Timestamp).toDate()
           : null,
       resolvedBy: data['resolvedBy'] as String?,
       rejectReason: data['rejectReason'] as String?,
@@ -82,4 +82,3 @@ class JoinRequestModel {
     );
   }
 }
-

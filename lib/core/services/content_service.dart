@@ -5,29 +5,29 @@ import '../models/realm_model.dart';
 /// Service to manage learning content (realms and levels) from local JSON files
 class ContentService {
   List<RealmModel>? _cachedRealms;
-  Map<String, List<LevelModel>> _cachedLevels = {};
-  Map<String, Map<String, dynamic>> _cachedQuizzes = {};
+  final Map<String, List<LevelModel>> _cachedLevels = {};
+  final Map<String, Map<String, dynamic>> _cachedQuizzes = {};
 
   /// Get all realms from JSON
   Future<List<RealmModel>> getAllRealms() async {
     if (_cachedRealms != null) return _cachedRealms!;
-    
+
     try {
-      final jsonString = await rootBundle.loadString('content/realms_v1.0.0.json');
+      final jsonString = await rootBundle.loadString(
+        'content/realms_v1.0.0.json',
+      );
       final jsonData = json.decode(jsonString);
-      
-      final realms = (jsonData['realms'] as List)
-          .map((r) {
-            try {
-              return RealmModel.fromJson(r as Map<String, dynamic>);
-            } catch (e) {
-              print('Error parsing realm: $e');
-              print('Realm data: $r');
-              rethrow;
-            }
-          })
-          .toList();
-      
+
+      final realms = (jsonData['realms'] as List).map((r) {
+        try {
+          return RealmModel.fromJson(r as Map<String, dynamic>);
+        } catch (e) {
+          print('Error parsing realm: $e');
+          print('Realm data: $r');
+          rethrow;
+        }
+      }).toList();
+
       _cachedRealms = realms;
       return realms;
     } catch (e, stackTrace) {
@@ -50,13 +50,15 @@ class ContentService {
       // Return null and let caller handle async loading
       return null;
     }
-    
+
     try {
       return _cachedRealms!.firstWhere(
         (r) => r.id == realmId,
         orElse: () {
           print('⚠️ Realm not found: $realmId');
-          print('Available realms: ${_cachedRealms!.map((r) => r.id).join(", ")}');
+          print(
+            'Available realms: ${_cachedRealms!.map((r) => r.id).join(", ")}',
+          );
           throw Exception('Realm not found');
         },
       );
@@ -75,7 +77,7 @@ class ContentService {
     try {
       // Load all level files for this realm
       final levels = <LevelModel>[];
-      
+
       // Try to load 10 levels (adjust based on your content)
       for (int i = 1; i <= 10; i++) {
         try {
@@ -91,7 +93,7 @@ class ContentService {
           break;
         }
       }
-      
+
       _cachedLevels[realmId] = levels;
       return levels;
     } catch (e) {
@@ -105,30 +107,34 @@ class ContentService {
   Future<LevelModel?> getLevelById(String levelId) async {
     try {
       print('📚 Loading level: $levelId');
-      
+
       // Load level content
-      final jsonString = await rootBundle.loadString('content/levels/$levelId.json');
+      final jsonString = await rootBundle.loadString(
+        'content/levels/$levelId.json',
+      );
       print('✅ Level JSON loaded successfully');
-      
+
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       print('✅ Level JSON parsed. Keys: ${jsonData.keys.join(", ")}');
-      
+
       // Ensure required fields exist with proper defaults
       if (!jsonData.containsKey('content')) {
         jsonData['content'] = jsonData['description'] ?? '';
       }
-      
+
       // Load quiz questions from separate file and randomly select 5
       // This happens on EVERY load so retaking quiz gives different questions
       List<Map<String, dynamic>> quizQuestions = [];
       try {
         print('📝 Loading quiz for: $levelId');
-        final quizString = await rootBundle.loadString('content/quizzes/$levelId.json');
+        final quizString = await rootBundle.loadString(
+          'content/quizzes/$levelId.json',
+        );
         final quizData = json.decode(quizString) as Map<String, dynamic>;
         final questions = quizData['questions'] as List<dynamic>?;
         if (questions != null) {
           print('✅ Found ${questions.length} quiz questions');
-          
+
           // Convert all questions to map format
           final allQuestions = questions.map((q) {
             final question = q as Map<String, dynamic>;
@@ -141,7 +147,7 @@ class ContentService {
               'explanation': question['explanation'] as String,
             };
           }).toList();
-          
+
           // Randomly shuffle and select 5 questions (different each time!)
           allQuestions.shuffle();
           quizQuestions = allQuestions.take(5).toList();
@@ -150,16 +156,20 @@ class ContentService {
       } catch (e) {
         print('⚠️ Error loading quiz for $levelId: $e');
       }
-      
+
       // Merge quiz into level data
       jsonData['quiz'] = quizQuestions;
-      
-      print('✅ Creating LevelModel with ${quizQuestions.length} quiz questions');
-      print('Level data: id=${jsonData['id']}, realmId=${jsonData['realmId']}, levelNumber=${jsonData['levelNumber']}');
-      
+
+      print(
+        '✅ Creating LevelModel with ${quizQuestions.length} quiz questions',
+      );
+      print(
+        'Level data: id=${jsonData['id']}, realmId=${jsonData['realmId']}, levelNumber=${jsonData['levelNumber']}',
+      );
+
       final level = LevelModel.fromJson(jsonData);
       print('✅ Level loaded successfully: ${level.name}');
-      
+
       return level;
     } catch (e, stackTrace) {
       print('❌ Error loading level $levelId: $e');
@@ -167,11 +177,13 @@ class ContentService {
       return null;
     }
   }
-  
+
   /// Get level content as JSON (for backward compatibility)
   Future<Map<String, dynamic>?> getLevelContent(String levelId) async {
     try {
-      final jsonString = await rootBundle.loadString('content/levels/$levelId.json');
+      final jsonString = await rootBundle.loadString(
+        'content/levels/$levelId.json',
+      );
       return json.decode(jsonString) as Map<String, dynamic>;
     } catch (e) {
       print('Error loading level content $levelId: $e');
@@ -186,7 +198,9 @@ class ContentService {
     }
 
     try {
-      final jsonString = await rootBundle.loadString('content/quizzes/$levelId.json');
+      final jsonString = await rootBundle.loadString(
+        'content/quizzes/$levelId.json',
+      );
       final jsonData = json.decode(jsonString);
       _cachedQuizzes[levelId] = jsonData;
       return jsonData;
@@ -236,4 +250,3 @@ class ContentService {
     }
   }
 }
-

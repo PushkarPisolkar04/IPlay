@@ -49,7 +49,8 @@ class LeaderboardCacheModel {
   final String scope; // 'national' | 'state' | 'school' | 'classroom'
   final String type; // 'all' | 'solo' (solo learners = not in any classroom)
   final String period; // 'week' | 'month' | 'allTime'
-  final String? identifier; // stateCode, schoolId, or classroomId (null for national)
+  final String?
+  identifier; // stateCode, schoolId, or classroomId (null for national)
   final List<LeaderboardEntry> entries;
   final DateTime lastUpdatedAt;
 
@@ -105,4 +106,3 @@ class LeaderboardCacheModel {
     return parts.join('_');
   }
 }
-

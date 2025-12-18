@@ -7,7 +7,7 @@ class LeaderboardService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Get leaderboard with LIVE data (reactive to all XP changes)
-  /// 
+  ///
   /// Scopes: 'national', 'state', 'school', 'classroom'
   /// Types: 'all' (all learners), 'solo' (learners not in any classroom)
   /// Periods: 'week', 'month', 'allTime'
@@ -20,7 +20,7 @@ class LeaderboardService {
     try {
       // Build query based on scope
       Query query = _firestore.collection('users');
-      
+
       // Apply filters
       if (scope == 'state' && identifier != null) {
         query = query.where('state', isEqualTo: identifier);
@@ -29,20 +29,20 @@ class LeaderboardService {
       } else if (scope == 'classroom' && identifier != null) {
         query = query.where('classroomIds', arrayContains: identifier);
       }
-      
+
       // Solo learners filter
       if (type == 'solo') {
         query = query.where('classroomIds', isEqualTo: []);
       }
-      
+
       // Period filter (for future - currently allTime only)
       // TODO: Add weekly/monthly filtering based on lastActiveDate
-      
+
       // Order by XP and get top 100
       query = query.orderBy('totalXP', descending: true).limit(100);
-      
+
       final snapshot = await query.get();
-      
+
       // Build entries
       final entries = snapshot.docs.asMap().entries.map((entry) {
         final data = entry.value.data() as Map<String, dynamic>;
@@ -54,9 +54,10 @@ class LeaderboardService {
           'rank': entry.key + 1,
         };
       }).toList();
-      
+
       return LeaderboardCacheModel.fromFirestore({
-        'id': '${scope}_${type}_$period${identifier != null ? "_$identifier" : ""}',
+        'id':
+            '${scope}_${type}_$period${identifier != null ? "_$identifier" : ""}',
         'scope': scope,
         'type': type,
         'period': period,
@@ -74,11 +75,7 @@ class LeaderboardService {
     String type = 'all',
     String period = 'allTime',
   }) async {
-    return getLeaderboard(
-      scope: 'national',
-      type: type,
-      period: period,
-    );
+    return getLeaderboard(scope: 'national', type: type, period: period);
   }
 
   /// Get state leaderboard
@@ -143,12 +140,8 @@ class LeaderboardService {
       // Find user in entries
       final userEntry = leaderboard.entries.firstWhere(
         (entry) => entry.userId == userId,
-        orElse: () => LeaderboardEntry(
-          userId: '',
-          displayName: '',
-          totalXP: 0,
-          rank: -1,
-        ),
+        orElse: () =>
+            LeaderboardEntry(userId: '', displayName: '', totalXP: 0, rank: -1),
       );
 
       if (userEntry.rank == -1) return null;
@@ -193,10 +186,7 @@ class LeaderboardService {
   /// Returns list of available scopes based on user's affiliations
   Future<List<String>> getAvailableScopes(String userId) async {
     try {
-      final userDoc = await _firestore
-          .collection('users')
-          .doc(userId)
-          .get();
+      final userDoc = await _firestore.collection('users').doc(userId).get();
 
       if (!userDoc.exists) return ['national'];
 
@@ -265,11 +255,17 @@ class LeaderboardService {
       }
 
       // Get users above
-      final startIndex = (userIndex - contextSize).clamp(0, leaderboard.entries.length);
+      final startIndex = (userIndex - contextSize).clamp(
+        0,
+        leaderboard.entries.length,
+      );
       final above = leaderboard.entries.sublist(startIndex, userIndex);
 
       // Get users below
-      final endIndex = (userIndex + contextSize + 1).clamp(0, leaderboard.entries.length);
+      final endIndex = (userIndex + contextSize + 1).clamp(
+        0,
+        leaderboard.entries.length,
+      );
       final below = leaderboard.entries.sublist(userIndex + 1, endIndex);
 
       return {
@@ -368,9 +364,9 @@ class LeaderboardService {
         .doc(docId)
         .snapshots()
         .map((snapshot) {
-      if (!snapshot.exists) return null;
-      return LeaderboardCacheModel.fromFirestore(snapshot.data()!);
-    });
+          if (!snapshot.exists) return null;
+          return LeaderboardCacheModel.fromFirestore(snapshot.data()!);
+        });
   }
 
   /// Check for rank changes and send notifications
@@ -402,24 +398,28 @@ class LeaderboardService {
       if (rankChange != 0 && oldRank != 999) {
         String title;
         String body;
-        
+
         if (rankChange > 0) {
           // Moved up
           if (rankChange == 1) {
             title = '📈 You moved up!';
-            body = 'You climbed 1 position to rank #$newRank in ${_getScopeName(scope)}!';
+            body =
+                'You climbed 1 position to rank #$newRank in ${_getScopeName(scope)}!';
           } else {
             title = '🎉 You climbed the leaderboard!';
-            body = 'You moved up $rankChange positions to rank #$newRank in ${_getScopeName(scope)}!';
+            body =
+                'You moved up $rankChange positions to rank #$newRank in ${_getScopeName(scope)}!';
           }
         } else {
           // Moved down
           if (rankChange == -1) {
             title = '📉 Rank update';
-            body = 'You moved down 1 position to rank #$newRank in ${_getScopeName(scope)}.';
+            body =
+                'You moved down 1 position to rank #$newRank in ${_getScopeName(scope)}.';
           } else {
             title = '📉 Leaderboard update';
-            body = 'You moved down ${rankChange.abs()} positions to rank #$newRank in ${_getScopeName(scope)}. Keep learning to climb back up!';
+            body =
+                'You moved down ${rankChange.abs()} positions to rank #$newRank in ${_getScopeName(scope)}. Keep learning to climb back up!';
           }
         }
 
@@ -463,9 +463,7 @@ class LeaderboardService {
 
   /// Monitor user's rank and send notifications for significant changes
   /// This should be called periodically or after XP updates
-  Future<void> monitorUserRankChanges({
-    required String userId,
-  }) async {
+  Future<void> monitorUserRankChanges({required String userId}) async {
     try {
       // Get user's current affiliations
       final userDoc = await _firestore.collection('users').doc(userId).get();
@@ -612,4 +610,3 @@ class LeaderboardService {
     }
   }
 }
-

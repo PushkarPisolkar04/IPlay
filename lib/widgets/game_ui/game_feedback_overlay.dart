@@ -46,16 +46,12 @@ class _GameFeedbackOverlayState extends State<GameFeedbackOverlay>
       ),
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _controller.forward();
-
-
 
     // Auto-dismiss after duration
     Future.delayed(widget.duration, () {
@@ -87,7 +83,9 @@ class _GameFeedbackOverlayState extends State<GameFeedbackOverlay>
             animation: _fadeAnimation,
             builder: (context, child) {
               return Container(
-                color: Colors.black.withValues(alpha: 0.5 * _fadeAnimation.value),
+                color: Colors.black.withValues(
+                  alpha: 0.5 * _fadeAnimation.value,
+                ),
               );
             },
           ),
@@ -131,16 +129,14 @@ class _GameFeedbackOverlayState extends State<GameFeedbackOverlay>
                         children: [
                           // Icon
                           Container(
-                            padding: const EdgeInsets.all(AppDesignSystem.spacingMD),
+                            padding: const EdgeInsets.all(
+                              AppDesignSystem.spacingMD,
+                            ),
                             decoration: BoxDecoration(
                               color: color.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              icon,
-                              size: 64,
-                              color: color,
-                            ),
+                            child: Icon(icon, size: 64, color: color),
                           ),
                           const SizedBox(height: AppDesignSystem.spacingLG),
 

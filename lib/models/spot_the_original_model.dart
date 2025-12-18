@@ -100,16 +100,18 @@ class ProductSet {
 
   void _validate() {
     if (id.isEmpty) throw ArgumentError('Product set id cannot be empty');
-    if (productName.isEmpty) throw ArgumentError('Product name cannot be empty');
+    if (productName.isEmpty) {
+      throw ArgumentError('Product name cannot be empty');
+    }
     if (images.length != 4) {
       throw ArgumentError('Product set must have exactly 4 images');
     }
-    
+
     final originalCount = images.where((img) => img.isOriginal).length;
     if (originalCount != 1) {
       throw ArgumentError('Product set must have exactly 1 original image');
     }
-    
+
     if (points < 0) throw ArgumentError('Points cannot be negative');
   }
 
@@ -193,7 +195,9 @@ class SpotTheOriginalGame extends GameModel {
       throw ArgumentError('Comparisons per game must be positive');
     }
     if (comparisonsPerGame > productSets.length) {
-      throw ArgumentError('Comparisons per game exceeds available product sets');
+      throw ArgumentError(
+        'Comparisons per game exceeds available product sets',
+      );
     }
   }
 
@@ -235,7 +239,9 @@ class SpotTheOriginalGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,
@@ -245,7 +251,8 @@ class SpotTheOriginalGame extends GameModel {
       comparisonsPerGame: json['comparisonsPerGame'] as int,
       timeLimit: json['timeLimit'] as int?,
       randomSelection: json['randomSelection'] as bool? ?? true,
-      showHintsAfterWrongAnswer: json['showHintsAfterWrongAnswer'] as bool? ?? true,
+      showHintsAfterWrongAnswer:
+          json['showHintsAfterWrongAnswer'] as bool? ?? true,
     );
   }
 

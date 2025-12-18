@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import '../core/design/app_design_system.dart';
 
 /// Full-screen celebration animation for certificate unlock
 class CertificateUnlockAnimation extends StatefulWidget {
@@ -39,12 +37,10 @@ class _CertificateUnlockAnimationState extends State<CertificateUnlockAnimation>
     );
 
     // Scale animation for certificate
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     // Fade animation for text
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -128,10 +124,7 @@ class _CertificateUnlockAnimationState extends State<CertificateUnlockAnimation>
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFFFFD700),
-                                  Color(0xFFFFA500),
-                                ],
+                                colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -169,10 +162,7 @@ class _CertificateUnlockAnimationState extends State<CertificateUnlockAnimation>
                               fontWeight: FontWeight.bold,
                               color: Colors.amber,
                               shadows: [
-                                Shadow(
-                                  color: Colors.amber,
-                                  blurRadius: 20,
-                                ),
+                                Shadow(color: Colors.amber, blurRadius: 20),
                               ],
                             ),
                           ),
@@ -213,10 +203,7 @@ class _CertificateUnlockAnimationState extends State<CertificateUnlockAnimation>
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: Colors.amber,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.amber, width: 2),
                             ),
                             child: Column(
                               children: [
@@ -309,11 +296,7 @@ class _CertificateUnlockAnimationState extends State<CertificateUnlockAnimation>
             right: 16,
             child: IconButton(
               onPressed: widget.onDismiss,
-              icon: const Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 32,
-              ),
+              icon: const Icon(Icons.close, color: Colors.white, size: 32),
             ),
           ),
         ],

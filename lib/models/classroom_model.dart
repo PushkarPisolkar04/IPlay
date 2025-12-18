@@ -51,7 +51,7 @@ class ClassroomModel {
 
   factory ClassroomModel.fromMap(Map<String, dynamic> map) {
     final now = DateTime.now();
-    
+
     // Handle grade as both String and int
     int gradeValue = 6;
     if (map['grade'] != null) {
@@ -61,26 +61,29 @@ class ClassroomModel {
         gradeValue = int.tryParse(map['grade']) ?? 6;
       }
     }
-    
+
     return ClassroomModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       teacherId: map['teacherId'] ?? '',
       teacherName: map['teacherName'] ?? '',
-      joinCode: map['joinCode'] ?? map['classCode'] ?? '',  // Support both for backwards compatibility
+      joinCode:
+          map['joinCode'] ??
+          map['classCode'] ??
+          '', // Support both for backwards compatibility
       studentIds: List<String>.from(map['studentIds'] ?? []),
       pendingStudentIds: List<String>.from(map['pendingStudentIds'] ?? []),
       school: map['school'],
       grade: gradeValue,
       requiresApproval: map['requiresApproval'] ?? true,
-      codeExpiresAt: map['codeExpiresAt'] != null 
-          ? (map['codeExpiresAt'] as Timestamp).toDate() 
+      codeExpiresAt: map['codeExpiresAt'] != null
+          ? (map['codeExpiresAt'] as Timestamp).toDate()
           : now.add(const Duration(days: 365)),
-      createdAt: map['createdAt'] != null 
-          ? (map['createdAt'] as Timestamp).toDate() 
+      createdAt: map['createdAt'] != null
+          ? (map['createdAt'] as Timestamp).toDate()
           : now,
-      updatedAt: map['updatedAt'] != null 
-          ? (map['updatedAt'] as Timestamp).toDate() 
+      updatedAt: map['updatedAt'] != null
+          ? (map['updatedAt'] as Timestamp).toDate()
           : now,
     );
   }
@@ -117,4 +120,3 @@ class ClassroomModel {
     );
   }
 }
-

@@ -18,7 +18,9 @@ class _OfflineIndicatorState extends State<OfflineIndicator> {
   void initState() {
     super.initState();
     _checkConnectivity();
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((result) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      result,
+    ) {
       setState(() {
         _isOffline = result.contains(ConnectivityResult.none);
       });
@@ -52,11 +54,7 @@ class _OfflineIndicatorState extends State<OfflineIndicator> {
         bottom: false,
         child: Row(
           children: [
-            const Icon(
-              Icons.cloud_off,
-              color: Colors.white,
-              size: 18,
-            ),
+            const Icon(Icons.cloud_off, color: Colors.white, size: 18),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

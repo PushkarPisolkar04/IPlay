@@ -32,8 +32,8 @@ class ActionCard extends StatelessWidget {
     this.subtitle,
     required this.color,
     required this.onTap,
-  })  : isListStyle = false,
-        showArrow = false;
+  }) : isListStyle = false,
+       showArrow = false;
 
   /// List style action card (for action lists)
   const ActionCard.list({
@@ -44,7 +44,7 @@ class ActionCard extends StatelessWidget {
     required this.color,
     required this.onTap,
     this.showArrow = true,
-  })  : isListStyle = true;
+  }) : isListStyle = true;
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +93,7 @@ class ActionCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: AppDesignSystem.h6.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppDesignSystem.h6.copyWith(fontWeight: FontWeight.w600),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -129,11 +127,7 @@ class ActionCard extends StatelessWidget {
             color: color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 32,
-          ),
+          child: Icon(icon, color: color, size: 32),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
@@ -209,11 +203,7 @@ class FeaturedActionCard extends StatelessWidget {
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
-                        icon,
-                        color: Colors.white,
-                        size: 28,
-                      ),
+                      child: Icon(icon, color: Colors.white, size: 28),
                     ),
                     const Spacer(),
                     if (badge != null)

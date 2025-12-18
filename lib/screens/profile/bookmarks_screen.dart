@@ -103,9 +103,8 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LevelDetailScreen(
-                          levelId: levelId,
-                        ),
+                        builder: (context) =>
+                            LevelDetailScreen(levelId: levelId),
                       ),
                     );
                   },
@@ -117,7 +116,9 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                            color: AppDesignSystem.primaryIndigo.withValues(
+                              alpha: 0.1,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
@@ -131,10 +132,7 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                levelName,
-                                style: AppTextStyles.cardTitle,
-                              ),
+                              Text(levelName, style: AppTextStyles.cardTitle),
                               const SizedBox(height: 4),
                               Text(
                                 realmName,

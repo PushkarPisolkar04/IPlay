@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Splash Screen - Clean design without gradients
 class SplashScreen extends StatefulWidget {
@@ -11,7 +10,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> 
+class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _bounceAnimation;
@@ -20,27 +19,23 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1800),
       vsync: this,
     );
 
     // Bounce from top to center
-    _bounceAnimation = Tween<double>(begin: -0.5, end: 0.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.bounceOut,
-      ),
-    );
+    _bounceAnimation = Tween<double>(
+      begin: -0.5,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.bounceOut));
 
     // Scale pop effect
-    _scaleAnimation = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _controller.forward();
 
@@ -50,15 +45,15 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _navigateToNextScreen() async {
     // Optimized duration - 2 seconds for better UX (target <3s to home screen)
     await Future.delayed(const Duration(milliseconds: 2000));
-    
+
     if (!mounted) return;
 
     try {
       // Check if user is logged in
       final user = FirebaseAuth.instance.currentUser;
-      
+
       // print('🔍 Splash: User authentication status: ${user != null ? "Logged in" : "Not logged in"}');
-      
+
       if (user != null) {
         // User is logged in, go to main screen
         // print('📱 Splash: Navigating to main screen');
@@ -102,7 +97,10 @@ class _SplashScreenState extends State<SplashScreen>
                   Positioned(
                     left: 0,
                     right: 0,
-                    top: MediaQuery.of(context).size.height * (0.5 + _bounceAnimation.value) - 100,
+                    top:
+                        MediaQuery.of(context).size.height *
+                            (0.5 + _bounceAnimation.value) -
+                        100,
                     child: Center(
                       child: ScaleTransition(
                         scale: _scaleAnimation,

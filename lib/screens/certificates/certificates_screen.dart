@@ -19,7 +19,7 @@ class CertificatesScreen extends StatefulWidget {
 
 class _CertificatesScreenState extends State<CertificatesScreen> {
   final CertificateService _certificateService = CertificateService();
-  
+
   List<CertificateModel> _certificates = [];
   bool _isLoading = true;
   String? _error;
@@ -40,8 +40,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       final userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) throw Exception('User not logged in');
 
-      final certificates = await _certificateService.getUserCertificates(userId);
-      
+      final certificates = await _certificateService.getUserCertificates(
+        userId,
+      );
+
       setState(() {
         _certificates = certificates;
         _isLoading = false;
@@ -78,8 +80,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       );
 
       // Get PDF bytes from Firestore
-      final pdfBytes = await _certificateService.getCertificatePdfBytes(certificate.id);
-      
+      final pdfBytes = await _certificateService.getCertificatePdfBytes(
+        certificate.id,
+      );
+
       if (pdfBytes == null) {
         throw Exception('Certificate PDF not found');
       }
@@ -155,8 +159,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       );
 
       // Get PDF bytes from Firestore
-      final pdfBytes = await _certificateService.getCertificatePdfBytes(certificate.id);
-      
+      final pdfBytes = await _certificateService.getCertificatePdfBytes(
+        certificate.id,
+      );
+
       if (pdfBytes == null) {
         throw Exception('Certificate PDF not found');
       }
@@ -173,7 +179,8 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       // Share the file with text
       await Share.shareXFiles(
         [XFile(filePath)],
-        text: 'I completed the ${certificate.realmName} realm on IPlay! 🎉\n\n'
+        text:
+            'I completed the ${certificate.realmName} realm on IPlay! 🎉\n\n'
             'Certificate #${certificate.certificateNumber}\n'
             'Verify at: https://iplay.app/verify/${certificate.certificateNumber}\n\n'
             'Download IPlay to learn IPR the fun way!',
@@ -193,8 +200,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
 
   Future<void> _viewCertificate(CertificateModel certificate) async {
     try {
-      final url = await _certificateService.getCertificateDownloadUrl(certificate.id);
-      
+      final url = await _certificateService.getCertificateDownloadUrl(
+        certificate.id,
+      );
+
       // Show certificate details dialog
       showDialog(
         context: context,
@@ -206,7 +215,9 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
             children: [
               Text('Certificate Number: ${certificate.certificateNumber}'),
               const SizedBox(height: 8),
-              Text('Issued: ${DateFormat('MMM dd, yyyy').format(certificate.issuedAt)}'),
+              Text(
+                'Issued: ${DateFormat('MMM dd, yyyy').format(certificate.issuedAt)}',
+              ),
               const SizedBox(height: 8),
               Text('Type: ${certificate.certificateType.toUpperCase()}'),
             ],
@@ -227,9 +238,9 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
@@ -237,7 +248,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Certificates', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'My Certificates',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -245,10 +259,10 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
       body: _isLoading
           ? const GridSkeleton(itemCount: 6, crossAxisCount: 1)
           : _error != null
-              ? _buildErrorState()
-              : _certificates.isEmpty
-                  ? _buildEmptyState()
-                  : _buildCertificatesList(),
+          ? _buildErrorState()
+          : _certificates.isEmpty
+          ? _buildEmptyState()
+          : _buildCertificatesList(),
     );
   }
 
@@ -259,7 +273,11 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: AppDesignSystem.textSecondary,
+            ),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -290,10 +308,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
               color: AppDesignSystem.textSecondary,
             ),
             const SizedBox(height: 24),
-            Text(
-              'No Certificates Yet',
-              style: AppTextStyles.h1,
-            ),
+            Text('No Certificates Yet', style: AppTextStyles.h1),
             const SizedBox(height: 16),
             Text(
               'Complete realms to earn certificates!\nEach completed realm awards you a certificate of achievement.',
@@ -376,7 +391,9 @@ class _CertificateCard extends StatelessWidget {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                      color: AppDesignSystem.primaryIndigo.withValues(
+                        alpha: 0.1,
+                      ),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
@@ -393,16 +410,13 @@ class _CertificateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  
+
                   // Certificate info
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          certificate.realmName,
-                          style: AppTextStyles.h3,
-                        ),
+                        Text(certificate.realmName, style: AppTextStyles.h3),
                         const SizedBox(height: 4),
                         Text(
                           'Certificate #${certificate.certificateNumber}',
@@ -420,10 +434,13 @@ class _CertificateCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Type badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppDesignSystem.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -439,7 +456,7 @@ class _CertificateCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Action buttons
               Row(
                 children: [
@@ -453,7 +470,10 @@ class _CertificateCard extends StatelessWidget {
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -468,7 +488,10 @@ class _CertificateCard extends StatelessWidget {
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
                       ),
                     ),
                   ),
@@ -481,4 +504,3 @@ class _CertificateCard extends StatelessWidget {
     );
   }
 }
-

@@ -43,7 +43,9 @@ class GameModel {
     if (id.isEmpty) throw ArgumentError('Game id cannot be empty');
     if (name.isEmpty) throw ArgumentError('Game name cannot be empty');
     if (xpReward < 0) throw ArgumentError('XP reward cannot be negative');
-    if (estimatedMinutes < 0) throw ArgumentError('Estimated minutes cannot be negative');
+    if (estimatedMinutes < 0) {
+      throw ArgumentError('Estimated minutes cannot be negative');
+    }
   }
 
   /// Create from JSON
@@ -60,7 +62,9 @@ class GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,
@@ -75,7 +79,8 @@ class GameModel {
       'description': description,
       'summary': summary,
       'iconPath': iconPath,
-      'color': '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
+      'color':
+          '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
       'difficulty': difficulty,
       'gameType': gameType,
       'xpReward': xpReward,
@@ -107,10 +112,18 @@ class GameRewards {
 
   /// Validate reward values
   void _validate() {
-    if (completion < 0) throw ArgumentError('Completion reward cannot be negative');
-    if (perfectScore < 0) throw ArgumentError('Perfect score reward cannot be negative');
-    if (firstTime < 0) throw ArgumentError('First time reward cannot be negative');
-    if (highScore < 0) throw ArgumentError('High score reward cannot be negative');
+    if (completion < 0) {
+      throw ArgumentError('Completion reward cannot be negative');
+    }
+    if (perfectScore < 0) {
+      throw ArgumentError('Perfect score reward cannot be negative');
+    }
+    if (firstTime < 0) {
+      throw ArgumentError('First time reward cannot be negative');
+    }
+    if (highScore < 0) {
+      throw ArgumentError('High score reward cannot be negative');
+    }
   }
 
   /// Create from JSON
@@ -139,10 +152,7 @@ class LeaderboardConfig {
   final bool enabled;
   final List<String> scope;
 
-  LeaderboardConfig({
-    required this.enabled,
-    required this.scope,
-  }) {
+  LeaderboardConfig({required this.enabled, required this.scope}) {
     _validate();
   }
 
@@ -163,9 +173,6 @@ class LeaderboardConfig {
 
   /// Convert to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'enabled': enabled,
-      'scope': scope,
-    };
+    return {'enabled': enabled, 'scope': scope};
   }
 }

@@ -25,7 +25,7 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null && !user.emailVerified) {
         await user.sendEmailVerification();
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -49,7 +49,7 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
       }
     } catch (e) {
       // print('Error resending verification email: $e');
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -85,7 +85,7 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
       if (user != null) {
         await user.reload();
         final updatedUser = FirebaseAuth.instance.currentUser;
-        
+
         if (updatedUser != null && updatedUser.emailVerified) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -106,7 +106,7 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
                 duration: const Duration(seconds: 3),
               ),
             );
-            
+
             setState(() {
               _isDismissed = true;
             });
@@ -134,7 +134,7 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     // Don't show if user is null, email is verified, or banner is dismissed
     if (user == null || user.emailVerified || _isDismissed) {
       return const SizedBox.shrink();
@@ -261,15 +261,12 @@ class _EmailVerificationBannerState extends State<EmailVerificationBanner> {
 class CompactEmailVerificationIndicator extends StatelessWidget {
   final VoidCallback? onTap;
 
-  const CompactEmailVerificationIndicator({
-    super.key,
-    this.onTap,
-  });
+  const CompactEmailVerificationIndicator({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     if (user == null || user.emailVerified) {
       return const SizedBox.shrink();
     }

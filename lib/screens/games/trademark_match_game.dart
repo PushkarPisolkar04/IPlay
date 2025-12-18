@@ -6,7 +6,6 @@ import 'dart:math';
 import '../../core/design/app_design_system.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../core/services/progress_service.dart';
 import '../../services/game_content_service.dart';
 import '../../services/game_integration_service.dart';
 import '../../models/trademark_match_model.dart';
@@ -20,21 +19,21 @@ class TrademarkMatchScreen extends StatefulWidget {
   State<TrademarkMatchScreen> createState() => _TrademarkMatchScreenState();
 }
 
-class _TrademarkMatchScreenState extends State<TrademarkMatchScreen> 
+class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     with TickerProviderStateMixin {
   final GameContentService _gameService = GameContentService();
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
-  
+
   TrademarkMatchGame? _gameData;
   bool _loading = true;
   String? _error;
-  
+
   // Game state
   List<MemoryCard> _cards = [];
-  List<int> _flippedIndices = [];
-  Set<int> _matchedIndices = {};
+  final List<int> _flippedIndices = [];
+  final Set<int> _matchedIndices = {};
   bool _canFlip = true;
   int _score = 0;
   int _matches = 0;
@@ -44,13 +43,12 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
   Timer? _timer;
   bool _gameStarted = false;
   bool _gameEnded = false;
-  
+
   @override
   void initState() {
     super.initState();
     _loadGameContent();
   }
-
 
   Future<void> _loadGameContent() async {
     try {
@@ -76,32 +74,36 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
 
   void _initializeGame() {
     if (_gameData == null) return;
-    
+
     final selectedPairs = _gameData!.selectRandomPairs();
     final cards = <MemoryCard>[];
-    
+
     for (var pair in selectedPairs) {
-      cards.add(MemoryCard(
-        id: pair.id,
-        type: CardType.logo,
-        content: pair.company,
-        imageUrl: pair.imageUrl,
-        pairId: pair.id,
-        points: pair.points,
-      ));
-      
-      cards.add(MemoryCard(
-        id: '${pair.id}_name',
-        type: CardType.name,
-        content: pair.company,
-        imageUrl: '',
-        pairId: pair.id,
-        points: pair.points,
-      ));
+      cards.add(
+        MemoryCard(
+          id: pair.id,
+          type: CardType.logo,
+          content: pair.company,
+          imageUrl: pair.imageUrl,
+          pairId: pair.id,
+          points: pair.points,
+        ),
+      );
+
+      cards.add(
+        MemoryCard(
+          id: '${pair.id}_name',
+          type: CardType.name,
+          content: pair.company,
+          imageUrl: '',
+          pairId: pair.id,
+          points: pair.points,
+        ),
+      );
     }
-    
+
     cards.shuffle(Random());
-    
+
     setState(() {
       _cards = cards;
       _flippedIndices.clear();
@@ -127,7 +129,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
         setState(() {
           _timeRemaining--;
         });
-        
+
         if (_timeRemaining == 0) {
           _endGame(timeUp: true);
         }
@@ -136,7 +138,8 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
   }
 
   void _onCardTapped(int index) {
-    if (!_canFlip || _matchedIndices.contains(index) || 
+    if (!_canFlip ||
+        _matchedIndices.contains(index) ||
         _flippedIndices.contains(index)) {
       return;
     }
@@ -163,14 +166,14 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     if (card1.pairId == card2.pairId) {
       // Calculate bonus points based on performance
       int matchPoints = card1.points;
-      
+
       // Time bonus: +5 points if more than 2 minutes remaining
       if (_timeRemaining > 120) {
         matchPoints += 5;
       } else if (_timeRemaining > 60) {
         matchPoints += 3;
       }
-      
+
       // Efficiency bonus: fewer flips = more points
       final perfectFlips = (_matches + 1) * 2; // Minimum flips needed
       if (_totalFlips <= perfectFlips + 2) {
@@ -178,7 +181,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
       } else if (_totalFlips <= perfectFlips + 4) {
         matchPoints += 3; // Good memory
       }
-      
+
       setState(() {
         _matchedIndices.add(index1);
         _matchedIndices.add(index2);
@@ -205,15 +208,15 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
 
   void _endGame({bool timeUp = false}) {
     _timer?.cancel();
-    
+
     setState(() {
       _gameEnded = true;
     });
-    
+
     if (!timeUp) {
       _confettiController.play();
     }
-    
+
     _saveScore();
   }
 
@@ -222,12 +225,12 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     if (user != null && _gameData != null) {
       try {
         final gameIntegrationService = GameIntegrationService();
-        
+
         final isFirstCompletion = await gameIntegrationService
             .isFirstCompletion(_gameData!.id);
-        final isPerfectScore = _matches == (_cards.length ~/ 2) && 
-            _timeRemaining > 60;
-        
+        final isPerfectScore =
+            _matches == (_cards.length ~/ 2) && _timeRemaining > 60;
+
         // Save progress first (creates the document)
         await gameIntegrationService.saveGameProgress(
           gameId: _gameData!.id,
@@ -235,7 +238,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
           timeSpentSeconds: (_gameData!.timeLimit ?? 120) - _timeRemaining,
           completed: _matches == (_cards.length ~/ 2),
         );
-        
+
         // Then award XP and check for badges
         final result = await gameIntegrationService.awardGameXP(
           gameId: _gameData!.id,
@@ -244,20 +247,20 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
-        
+
         final xpEarned = result['xp'] as int;
         final newBadges = result['newBadges'] as List<String>;
-        
+
         // Show badge animations if any badges were unlocked
         if (newBadges.isNotEmpty && mounted) {
           await gameIntegrationService.showBadgeAnimations(context, newBadges);
         }
-        
+
         // Store XP for result screen
         setState(() {
           _earnedXP = xpEarned;
         });
-        
+
         await gameIntegrationService.submitToLeaderboards(
           gameId: _gameData!.id,
           score: _score,
@@ -277,7 +280,6 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_loading) return _buildLoadingScreen();
@@ -291,7 +293,10 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Trademark Match', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Trademark Match',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -372,12 +377,14 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     );
   }
 
-
   Widget _buildStartScreen() {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Trademark Match', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Trademark Match',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFF2196F3),
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -454,10 +461,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Game Rules:',
-                      style: AppTextStyles.cardTitle,
-                    ),
+                    Text('Game Rules:', style: AppTextStyles.cardTitle),
                     const SizedBox(height: AppSpacing.sm),
                     _buildRuleItem('🃏', '12 cards - 6 brand pairs'),
                     _buildRuleItem('⏱️', '2 minutes to complete'),
@@ -497,9 +501,6 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     );
   }
 
-
-
-
   Widget _buildGameScreen() {
     return Scaffold(
       body: Container(
@@ -521,12 +522,13 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 0.75,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.75,
+                        ),
                     itemCount: _cards.length,
                     itemBuilder: (context, index) => _buildCard(index),
                   ),
@@ -542,18 +544,17 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
   Widget _buildTopBar() {
     final minutes = _timeRemaining ~/ 60;
     final seconds = _timeRemaining % 60;
-    final timeColor = _timeRemaining < 30 ? Colors.red : const Color(0xFF2196F3);
-    
+    final timeColor = _timeRemaining < 30
+        ? Colors.red
+        : const Color(0xFF2196F3);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            Colors.grey.shade50,
-          ],
+          colors: [Colors.white, Colors.grey.shade50],
         ),
         boxShadow: [
           BoxShadow(
@@ -593,9 +594,9 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
               constraints: const BoxConstraints(),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Stats badges
           Expanded(
             child: Row(
@@ -604,112 +605,125 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                 // Timer
                 Flexible(
                   child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [timeColor, timeColor.withValues(alpha: 0.8)],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: timeColor.withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.timer, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [timeColor, timeColor.withValues(alpha: 0.8)],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: timeColor.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.timer, color: Colors.white, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-                ),
-          
-          // Matches
-          Flexible(
-            child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFEC4899).withValues(alpha: 0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  '$_matches/${_cards.length ~/ 2}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+
+                // Matches
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFFEC4899), Color(0xFFF472B6)],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFEC4899).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$_matches/${_cards.length ~/ 2}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-                ),
-          
+
                 // Score
                 Flexible(
                   child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
                     ),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFBBF24).withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star, color: Colors.white, size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$_score',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFFBBF24).withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.star, color: Colors.white, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$_score',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 ),
               ],
             ),
@@ -719,11 +733,10 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     );
   }
 
-
   Widget _buildCard(int index) {
     final card = _cards[index];
-    final isFlipped = _flippedIndices.contains(index) || 
-        _matchedIndices.contains(index);
+    final isFlipped =
+        _flippedIndices.contains(index) || _matchedIndices.contains(index);
     final isMatched = _matchedIndices.contains(index);
 
     return GestureDetector(
@@ -734,7 +747,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
         builder: (context, value, child) {
           final angle = value * pi;
           final isBack = angle > pi / 2;
-          
+
           return Transform(
             alignment: Alignment.center,
             transform: Matrix4.identity()
@@ -759,11 +772,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF2196F3),
-            Color(0xFF1976D2),
-            Color(0xFF1565C0),
-          ],
+          colors: [Color(0xFF2196F3), Color(0xFF1976D2), Color(0xFF1565C0)],
           stops: [0.0, 0.5, 1.0],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -821,10 +830,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                 ),
               ),
               padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'assets/logos/logo.png',
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset('assets/logos/logo.png', fit: BoxFit.contain),
             ),
           ),
         ],
@@ -839,20 +845,12 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isMatched
-              ? [
-                  Colors.white,
-                  const Color(0xFF10B981).withValues(alpha: 0.05),
-                ]
-              : [
-                  Colors.white,
-                  Colors.grey.shade50,
-                ],
+              ? [Colors.white, const Color(0xFF10B981).withValues(alpha: 0.05)]
+              : [Colors.white, Colors.grey.shade50],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isMatched 
-              ? const Color(0xFF10B981) 
-              : const Color(0xFFE5E7EB),
+          color: isMatched ? const Color(0xFF10B981) : const Color(0xFFE5E7EB),
           width: isMatched ? 3 : 2,
         ),
         boxShadow: [
@@ -933,15 +931,14 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     );
   }
 
-
   Widget _buildResultScreen() {
     final isWin = _matches == (_cards.length ~/ 2);
     final isPerfect = isWin && _timeRemaining > 60;
     final accuracy = _matches / (_cards.length ~/ 2) * 100;
-    
+
     // Use actual XP earned from Firebase
     final xpEarned = _earnedXP;
-    
+
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
@@ -958,7 +955,7 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
               child: Column(
                 children: [
                   const Spacer(flex: 1),
-                  
+
                   // Animated Result icon with gradient
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 600),
@@ -977,7 +974,9 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                               colors: isWin
                                   ? [
                                       AppDesignSystem.success,
-                                      AppDesignSystem.success.withValues(alpha: 0.7),
+                                      AppDesignSystem.success.withValues(
+                                        alpha: 0.7,
+                                      ),
                                     ]
                                   : [
                                       Colors.orange,
@@ -987,8 +986,10 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: isWin 
-                                    ? AppDesignSystem.success.withValues(alpha: 0.4)
+                                color: isWin
+                                    ? AppDesignSystem.success.withValues(
+                                        alpha: 0.4,
+                                      )
                                     : Colors.orange.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 5,
@@ -1019,11 +1020,15 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                           child: Column(
                             children: [
                               Text(
-                                isWin 
-                                    ? (isPerfect ? 'Perfect Match!' : 'Great Job!') 
+                                isWin
+                                    ? (isPerfect
+                                          ? 'Perfect Match!'
+                                          : 'Great Job!')
                                     : 'Time\'s Up!',
                                 style: AppTextStyles.h1.copyWith(
-                                  color: isWin ? AppDesignSystem.success : Colors.orange,
+                                  color: isWin
+                                      ? AppDesignSystem.success
+                                      : Colors.orange,
                                   fontSize: 26,
                                 ),
                                 textAlign: TextAlign.center,
@@ -1053,130 +1058,147 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
                     tween: Tween(begin: 0.0, end: 1.0),
                     curve: Curves.easeOut,
                     builder: (context, value, child) {
-                        return Opacity(
-                          opacity: value,
-                          child: Transform.translate(
-                            offset: Offset(0, 30 * (1 - value)),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    const Color(0xFF2196F3).withValues(alpha: 0.1),
-                                    const Color(0xFFEC4899).withValues(alpha: 0.1),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(AppSpacing.cardRadius + 2),
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 30 * (1 - value)),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(
+                                    0xFF2196F3,
+                                  ).withValues(alpha: 0.1),
+                                  const Color(
+                                    0xFFEC4899,
+                                  ).withValues(alpha: 0.1),
+                                ],
                               ),
-                              padding: const EdgeInsets.all(2),
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF2196F3).withValues(alpha: 0.1),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 10),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.cardRadius + 2,
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(2),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.cardRadius,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(
+                                      0xFF2196F3,
+                                    ).withValues(alpha: 0.1),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 10),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildFancyStatRow(
+                                    Icons.star,
+                                    'Score',
+                                    '$_score points',
+                                    const Color(0xFFFBBF24),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.check_circle,
+                                    'Matches',
+                                    '$_matches/${_cards.length ~/ 2}',
+                                    const Color(0xFF10B981),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.touch_app,
+                                    'Total Flips',
+                                    '$_totalFlips flips',
+                                    const Color(0xFF8B5CF6),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  _buildFancyStatRow(
+                                    Icons.speed,
+                                    'Efficiency',
+                                    '${accuracy.toStringAsFixed(0)}%',
+                                    const Color(0xFF2196F3),
+                                  ),
+                                  if (isWin) ...[
+                                    const SizedBox(height: 12),
+                                    _buildFancyStatRow(
+                                      Icons.military_tech,
+                                      'XP Earned',
+                                      '+$xpEarned XP',
+                                      const Color(0xFFEC4899),
+                                      isHighlight: true,
                                     ),
                                   ],
-                                ),
-                                child: Column(
-                                  children: [
-                                    _buildFancyStatRow(
-                                      Icons.star,
-                                      'Score',
-                                      '$_score points',
-                                      const Color(0xFFFBBF24),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    _buildFancyStatRow(
-                                      Icons.check_circle,
-                                      'Matches',
-                                      '$_matches/${_cards.length ~/ 2}',
-                                      const Color(0xFF10B981),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    _buildFancyStatRow(
-                                      Icons.touch_app,
-                                      'Total Flips',
-                                      '$_totalFlips flips',
-                                      const Color(0xFF8B5CF6),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    _buildFancyStatRow(
-                                      Icons.speed,
-                                      'Efficiency',
-                                      '${accuracy.toStringAsFixed(0)}%',
-                                      const Color(0xFF2196F3),
-                                    ),
-                                    if (isWin) ...[
-                                      const SizedBox(height: 12),
-                                      _buildFancyStatRow(
-                                        Icons.military_tech,
-                                        'XP Earned',
-                                        '+$xpEarned XP',
-                                        const Color(0xFFEC4899),
-                                        isHighlight: true,
-                                      ),
-                                    ],
-                                  ],
-                                ),
+                                ],
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
+                  ),
 
-                    const Spacer(flex: 1),
+                  const Spacer(flex: 1),
 
-                    // Animated Buttons
-                    TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 800),
-                      tween: Tween(begin: 0.0, end: 1.0),
-                      builder: (context, value, child) {
-                        return Opacity(
-                          opacity: value,
-                          child: Column(
-                            children: [
-                              PrimaryButton(
-                                text: 'Play Again',
-                                onPressed: _restartGame,
-                                fullWidth: true,
-                                icon: Icons.refresh,
-                                color: const Color(0xFF2196F3),
-                              ),
-                              const SizedBox(height: 12),
-                              OutlinedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                                  side: const BorderSide(color: Color(0xFF2196F3), width: 2),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                  // Animated Buttons
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 800),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Column(
+                          children: [
+                            PrimaryButton(
+                              text: 'Play Again',
+                              onPressed: _restartGame,
+                              fullWidth: true,
+                              icon: Icons.refresh,
+                              color: const Color(0xFF2196F3),
+                            ),
+                            const SizedBox(height: 12),
+                            OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.md,
+                                ),
+                                side: const BorderSide(
+                                  color: Color(0xFF2196F3),
+                                  width: 2,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.cardRadius,
                                   ),
                                 ),
-                                child: const SizedBox(
-                                  width: double.infinity,
-                                  child: Text(
-                                    'Back to Games',
-                                    style: TextStyle(color: Color(0xFF2196F3)),
-                                    textAlign: TextAlign.center,
-                                  ),
+                              ),
+                              child: const SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  'Back to Games',
+                                  style: TextStyle(color: Color(0xFF2196F3)),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
             ),
-          
+          ),
+
           // Confetti overlay
           if (isWin)
             Align(
@@ -1195,7 +1217,13 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
     );
   }
 
-  Widget _buildFancyStatRow(IconData icon, String label, String value, Color color, {bool isHighlight = false}) {
+  Widget _buildFancyStatRow(
+    IconData icon,
+    String label,
+    String value,
+    Color color, {
+    bool isHighlight = false,
+  }) {
     return Row(
       children: [
         Container(
@@ -1262,7 +1290,9 @@ class _TrademarkMatchScreenState extends State<TrademarkMatchScreen>
           style: AppTextStyles.h3.copyWith(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: isHighlight ? const Color(0xFF2196F3) : AppDesignSystem.textPrimary,
+            color: isHighlight
+                ? const Color(0xFF2196F3)
+                : AppDesignSystem.textPrimary,
           ),
         ),
       ],

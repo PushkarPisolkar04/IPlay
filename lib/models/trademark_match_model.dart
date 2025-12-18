@@ -126,15 +126,14 @@ class TrademarkMatchGame extends GameModel {
   }
 
   /// Shuffle pairs for matching game
-  Map<String, List<TrademarkPair>> shufflePairsForGame(List<TrademarkPair> pairs) {
+  Map<String, List<TrademarkPair>> shufflePairsForGame(
+    List<TrademarkPair> pairs,
+  ) {
     final random = Random();
     final logos = List<TrademarkPair>.from(pairs)..shuffle(random);
     final companies = List<TrademarkPair>.from(pairs)..shuffle(random);
-    
-    return {
-      'logos': logos,
-      'companies': companies,
-    };
+
+    return {'logos': logos, 'companies': companies};
   }
 
   /// Get pairs by difficulty
@@ -172,7 +171,9 @@ class TrademarkMatchGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,
@@ -182,7 +183,8 @@ class TrademarkMatchGame extends GameModel {
       pairsPerGame: json['pairsPerGame'] as int,
       timeLimit: json['timeLimit'] as int?,
       randomSelection: json['randomSelection'] as bool? ?? true,
-      showHintsAfterWrongAnswer: json['showHintsAfterWrongAnswer'] as bool? ?? true,
+      showHintsAfterWrongAnswer:
+          json['showHintsAfterWrongAnswer'] as bool? ?? true,
     );
   }
 

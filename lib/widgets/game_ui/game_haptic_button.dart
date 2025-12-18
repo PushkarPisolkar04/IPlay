@@ -47,9 +47,10 @@ class _GameHapticButtonState extends State<GameHapticButton>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -78,8 +79,8 @@ class _GameHapticButtonState extends State<GameHapticButton>
   @override
   Widget build(BuildContext context) {
     final buttonColor = widget.color ?? GameColors.quizMaster;
-    final buttonTextColor = widget.textColor ??
-        GameColors.getTextColorForBackground(buttonColor);
+    final buttonTextColor =
+        widget.textColor ?? GameColors.getTextColorForBackground(buttonColor);
 
     return GestureDetector(
       onTapDown: _handleTapDown,
@@ -94,7 +95,8 @@ class _GameHapticButtonState extends State<GameHapticButton>
             child: Container(
               width: widget.width,
               height: widget.height ?? 50,
-              padding: widget.padding ??
+              padding:
+                  widget.padding ??
                   const EdgeInsets.symmetric(
                     horizontal: AppDesignSystem.spacingLG,
                     vertical: AppDesignSystem.spacingMD,
@@ -103,8 +105,8 @@ class _GameHapticButtonState extends State<GameHapticButton>
                 color: widget.isOutlined
                     ? Colors.transparent
                     : (widget.isDisabled
-                        ? AppDesignSystem.backgroundGrey
-                        : buttonColor),
+                          ? AppDesignSystem.backgroundGrey
+                          : buttonColor),
                 borderRadius: AppDesignSystem.borderRadiusLG,
                 border: widget.isOutlined
                     ? Border.all(
@@ -127,11 +129,11 @@ class _GameHapticButtonState extends State<GameHapticButton>
                       widget.icon,
                       color: widget.isOutlined
                           ? (widget.isDisabled
-                              ? AppDesignSystem.textTertiary
-                              : buttonColor)
+                                ? AppDesignSystem.textTertiary
+                                : buttonColor)
                           : (widget.isDisabled
-                              ? AppDesignSystem.textTertiary
-                              : buttonTextColor),
+                                ? AppDesignSystem.textTertiary
+                                : buttonTextColor),
                       size: 20,
                     ),
                     const SizedBox(width: AppDesignSystem.spacingSM),
@@ -141,11 +143,11 @@ class _GameHapticButtonState extends State<GameHapticButton>
                     style: AppDesignSystem.button.copyWith(
                       color: widget.isOutlined
                           ? (widget.isDisabled
-                              ? AppDesignSystem.textTertiary
-                              : buttonColor)
+                                ? AppDesignSystem.textTertiary
+                                : buttonColor)
                           : (widget.isDisabled
-                              ? AppDesignSystem.textTertiary
-                              : buttonTextColor),
+                                ? AppDesignSystem.textTertiary
+                                : buttonTextColor),
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -181,16 +183,11 @@ class GameHapticIconButton extends StatelessWidget {
     final button = IconButton(
       icon: Icon(icon, size: size),
       color: color ?? AppDesignSystem.textPrimary,
-      onPressed: onPressed == null
-          ? null
-          : onPressed,
+      onPressed: onPressed,
     );
 
     if (tooltip != null) {
-      return Tooltip(
-        message: tooltip!,
-        child: button,
-      );
+      return Tooltip(message: tooltip!, child: button);
     }
 
     return button;
@@ -232,9 +229,10 @@ class _GameHapticFABState extends State<GameHapticFAB>
       vsync: this,
       duration: const Duration(milliseconds: 100),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.9).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.9,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

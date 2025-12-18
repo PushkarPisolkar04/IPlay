@@ -25,17 +25,28 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 96, color: AppDesignSystem.textSecondary.withValues(alpha: 0.5)),
+            Icon(
+              icon,
+              size: 96,
+              color: AppDesignSystem.textSecondary.withValues(alpha: 0.5),
+            ),
             const SizedBox(height: 24),
             Text(
               title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppDesignSystem.textPrimary),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppDesignSystem.textPrimary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               message,
-              style: const TextStyle(fontSize: 16, color: AppDesignSystem.textSecondary),
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppDesignSystem.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             if (actionText != null && onAction != null) ...[
@@ -46,7 +57,10 @@ class EmptyState extends StatelessWidget {
                 label: Text(actionText!),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppDesignSystem.primaryIndigo,
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ],
@@ -128,4 +142,3 @@ class EmptyAssignments extends StatelessWidget {
     );
   }
 }
-

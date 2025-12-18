@@ -50,7 +50,9 @@ class AssignmentModel {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isActive': isActive,
-      'createdBy': createdBy ?? teacherId, // Default to teacherId for backwards compatibility
+      'createdBy':
+          createdBy ??
+          teacherId, // Default to teacherId for backwards compatibility
       'schoolId': schoolId,
     };
   }
@@ -66,8 +68,8 @@ class AssignmentModel {
       description: data['description'] as String,
       dueDate: (data['dueDate'] as Timestamp).toDate(),
       maxPoints: data['maxPoints'] as int,
-      attachmentUrls: data['attachmentUrls'] != null 
-          ? List<String>.from(data['attachmentUrls']) 
+      attachmentUrls: data['attachmentUrls'] != null
+          ? List<String>.from(data['attachmentUrls'])
           : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -167,14 +169,14 @@ class AssignmentSubmissionModel {
       studentId: data['studentId'] as String,
       studentName: data['studentName'] as String,
       submissionText: data['submissionText'] as String,
-      attachmentUrls: data['attachmentUrls'] != null 
-          ? List<String>.from(data['attachmentUrls']) 
+      attachmentUrls: data['attachmentUrls'] != null
+          ? List<String>.from(data['attachmentUrls'])
           : null,
       submittedAt: (data['submittedAt'] as Timestamp).toDate(),
       score: data['score'] as int?,
       feedback: data['feedback'] as String?,
-      gradedAt: data['gradedAt'] != null 
-          ? (data['gradedAt'] as Timestamp).toDate() 
+      gradedAt: data['gradedAt'] != null
+          ? (data['gradedAt'] as Timestamp).toDate()
           : null,
       gradedBy: data['gradedBy'] as String?,
     );
@@ -209,4 +211,3 @@ class AssignmentSubmissionModel {
     );
   }
 }
-

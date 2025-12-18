@@ -16,8 +16,10 @@ class ReportModel {
   final DateTime? reviewedAt;
   final String? reviewedBy; // Admin/principal ID who reviewed
   final String? resolution;
-  final String? contentCreatorId; // For Firebase security rules - allows teachers to see reports about their content
-  final String? schoolId; // For Firebase security rules - allows principals to filter by school
+  final String?
+  contentCreatorId; // For Firebase security rules - allows teachers to see reports about their content
+  final String?
+  schoolId; // For Firebase security rules - allows principals to filter by school
 
   ReportModel({
     required this.id,
@@ -71,8 +73,8 @@ class ReportModel {
       screenshotUrl: data['screenshotUrl'] as String?,
       status: data['status'] as String,
       reportedAt: (data['reportedAt'] as Timestamp).toDate(),
-      reviewedAt: data['reviewedAt'] != null 
-          ? (data['reviewedAt'] as Timestamp).toDate() 
+      reviewedAt: data['reviewedAt'] != null
+          ? (data['reviewedAt'] as Timestamp).toDate()
           : null,
       reviewedBy: data['reviewedBy'] as String?,
       resolution: data['resolution'] as String?,
@@ -173,8 +175,8 @@ class FeedbackModel {
       message: data['message'] as String,
       status: data['status'] as String,
       submittedAt: (data['submittedAt'] as Timestamp).toDate(),
-      reviewedAt: data['reviewedAt'] != null 
-          ? (data['reviewedAt'] as Timestamp).toDate() 
+      reviewedAt: data['reviewedAt'] != null
+          ? (data['reviewedAt'] as Timestamp).toDate()
           : null,
       response: data['response'] as String?,
     );
@@ -207,4 +209,3 @@ class FeedbackModel {
     );
   }
 }
-

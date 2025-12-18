@@ -9,6 +9,7 @@ class GameProgress {
   final int averageScore;
   final int totalScore;
   final int totalTimeSpent; // in seconds
+  final int totalXPEarned; // Total XP earned from this game (cumulative)
   final bool completed;
   final DateTime? lastPlayedAt;
   final DateTime? firstCompletedAt;
@@ -22,6 +23,7 @@ class GameProgress {
     required this.averageScore,
     required this.totalScore,
     required this.totalTimeSpent,
+    required this.totalXPEarned,
     required this.completed,
     this.lastPlayedAt,
     this.firstCompletedAt,
@@ -38,9 +40,14 @@ class GameProgress {
       'averageScore': averageScore,
       'totalScore': totalScore,
       'totalTimeSpent': totalTimeSpent,
+      'totalXPEarned': totalXPEarned,
       'completed': completed,
-      'lastPlayedAt': lastPlayedAt != null ? Timestamp.fromDate(lastPlayedAt!) : null,
-      'firstCompletedAt': firstCompletedAt != null ? Timestamp.fromDate(firstCompletedAt!) : null,
+      'lastPlayedAt': lastPlayedAt != null
+          ? Timestamp.fromDate(lastPlayedAt!)
+          : null,
+      'firstCompletedAt': firstCompletedAt != null
+          ? Timestamp.fromDate(firstCompletedAt!)
+          : null,
       'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
@@ -55,6 +62,7 @@ class GameProgress {
       averageScore: map['averageScore'] ?? 0,
       totalScore: map['totalScore'] ?? 0,
       totalTimeSpent: map['totalTimeSpent'] ?? 0,
+      totalXPEarned: (map['totalXPEarned'] as num?)?.toInt() ?? 0,
       completed: map['completed'] ?? false,
       lastPlayedAt: (map['lastPlayedAt'] as Timestamp?)?.toDate(),
       firstCompletedAt: (map['firstCompletedAt'] as Timestamp?)?.toDate(),

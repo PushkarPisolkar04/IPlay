@@ -41,10 +41,7 @@ class _GameScoreDisplayState extends State<GameScoreDisplay>
     _animation = Tween<double>(
       begin: _previousScore.toDouble(),
       end: widget.score.toDouble(),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -55,10 +52,7 @@ class _GameScoreDisplayState extends State<GameScoreDisplay>
       _animation = Tween<double>(
         begin: _previousScore.toDouble(),
         end: widget.score.toDouble(),
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
       _controller.forward(from: 0);
     }
   }
@@ -90,11 +84,7 @@ class _GameScoreDisplayState extends State<GameScoreDisplay>
         mainAxisSize: MainAxisSize.min,
         children: [
           if (widget.showStar) ...[
-            Icon(
-              Icons.stars,
-              color: displayColor,
-              size: widget.size,
-            ),
+            Icon(Icons.stars, color: displayColor, size: widget.size),
             const SizedBox(width: AppDesignSystem.spacingSM),
           ],
           AnimatedBuilder(

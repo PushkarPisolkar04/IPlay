@@ -32,7 +32,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.fullWidth = false,
     this.padding,
-  })  : type = AppButtonType.primary;
+  }) : type = AppButtonType.primary;
 
   /// Secondary button with solid color and white text
   const AppButton.secondary({
@@ -43,7 +43,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.fullWidth = false,
     this.padding,
-  })  : type = AppButtonType.secondary;
+  }) : type = AppButtonType.secondary;
 
   /// Accent button with accent color and white text
   const AppButton.accent({
@@ -54,7 +54,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.fullWidth = false,
     this.padding,
-  })  : type = AppButtonType.accent;
+  }) : type = AppButtonType.accent;
 
   /// Outline button with border only and colored text
   const AppButton.outline({
@@ -65,7 +65,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.fullWidth = false,
     this.padding,
-  })  : type = AppButtonType.outline;
+  }) : type = AppButtonType.outline;
 
   /// Text button with no background and colored text
   const AppButton.text({
@@ -76,11 +76,12 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.fullWidth = false,
     this.padding,
-  })  : type = AppButtonType.text;
+  }) : type = AppButtonType.text;
 
   @override
   Widget build(BuildContext context) {
-    final effectivePadding = padding ??
+    final effectivePadding =
+        padding ??
         const EdgeInsets.symmetric(
           horizontal: AppDesignSystem.spacingLG,
           vertical: AppDesignSystem.spacingMD,
@@ -104,10 +105,7 @@ class AppButton extends StatelessWidget {
             Icon(icon, size: 20),
             const SizedBox(width: AppDesignSystem.spacingSM),
           ],
-          Text(
-            text,
-            style: AppDesignSystem.button,
-          ),
+          Text(text, style: AppDesignSystem.button),
         ],
       ],
     );
@@ -313,10 +311,4 @@ class AppButton extends StatelessWidget {
   }
 }
 
-enum AppButtonType {
-  primary,
-  secondary,
-  accent,
-  outline,
-  text,
-}
+enum AppButtonType { primary, secondary, accent, outline, text }

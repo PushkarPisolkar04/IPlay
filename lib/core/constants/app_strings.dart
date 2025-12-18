@@ -12,7 +12,7 @@ class AppStrings {
   static const String student = 'Student';
   static const String teacher = 'Teacher';
   static const String principal = 'Principal';
-  
+
   // Onboarding
   static const String welcome = 'Welcome to IPlay!';
   static const String setupProfile = 'Setup Your Profile';
@@ -23,20 +23,20 @@ class AppStrings {
   static const String enterClassCode = 'Enter Class Code';
   static const String skipForNow = 'Skip for Now';
   static const String letsGo = "Let's Go!";
-  
+
   // Navigation
   static const String home = 'Home';
   static const String learn = 'Learn';
   static const String quiz = 'Quiz';
   static const String leaderboard = 'Leaderboard';
   static const String profile = 'Profile';
-  
+
   // Home
   static const String newsAndUpdates = 'News & Updates';
   static const String continueLearn = 'Continue Learning';
   static const String dailyChallenge = 'Daily Challenge';
   static const String yourProgress = 'Your Progress';
-  
+
   // Learn
   static const String realms = 'IPR Realms';
   static const String locked = 'Locked';
@@ -48,13 +48,13 @@ class AppStrings {
   static const String replayLevel = 'Replay';
   static const String downloadRealm = 'Download Realm';
   static const String downloaded = 'Downloaded';
-  
+
   // Quiz
   static const String miniGames = 'Mini Games';
   static const String playNow = 'Play Now';
   static const String highScore = 'High Score';
   static const String attempts = 'Attempts';
-  
+
   // Leaderboard
   static const String classLeaderboard = 'Class Leaderboard';
   static const String schoolLeaderboard = 'School Leaderboard';
@@ -66,7 +66,7 @@ class AppStrings {
   static const String rank = 'Rank';
   static const String xp = 'XP';
   static const String accuracy = 'Accuracy';
-  
+
   // Profile
   static const String myProfile = 'My Profile';
   static const String myBadges = 'My Badges';
@@ -75,7 +75,7 @@ class AppStrings {
   static const String settings = 'Settings';
   static const String logout = 'Logout';
   static const String editProfile = 'Edit Profile';
-  
+
   // Teacher Dashboard
   static const String dashboard = 'Dashboard';
   static const String myClassrooms = 'My Classrooms';
@@ -91,7 +91,7 @@ class AppStrings {
   static const String exportData = 'Export Data';
   static const String announcements = 'Announcements';
   static const String postAnnouncement = 'Post Announcement';
-  
+
   // Gamification
   static const String badges = 'Badges';
   static const String achievements = 'Achievements';
@@ -103,7 +103,7 @@ class AppStrings {
   static const String newBadge = 'New Badge Unlocked!';
   static const String certificate = 'Certificate';
   static const String downloadCertificate = 'Download Certificate';
-  
+
   // Errors & Messages
   static const String errorOccurred = 'An error occurred';
   static const String noInternet = 'No internet connection';
@@ -113,7 +113,7 @@ class AppStrings {
   static const String codeCopied = 'Code copied to clipboard';
   static const String success = 'Success!';
   static const String failed = 'Failed';
-  
+
   // General
   static const String loading = 'Loading...';
   static const String retry = 'Retry';
@@ -130,4 +130,3 @@ class AppStrings {
   static const String yes = 'Yes';
   static const String no = 'No';
 }
-

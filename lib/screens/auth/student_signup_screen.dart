@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
+import '../../core/utils/auth_error_handler.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -22,16 +23,16 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
   final _confirmPasswordController = TextEditingController();
   final _classroomCodeController = TextEditingController();
   final _schoolNameController = TextEditingController();
-  
+
   String? _selectedAvatar;
   String? _selectedState;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
   bool _hasClassroomCode = false;
-  
+
   final AuthService _authService = AuthService();
-  
+
   final List<String> _avatarOptions = [
     'assets/stu_avatars/avatar1.png',
     'assets/stu_avatars/avatar2.png',
@@ -50,15 +51,44 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
     'assets/stu_avatars/avatar15.png',
     'assets/stu_avatars/avatar16.png',
   ];
-  
+
   final List<String> _states = [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
-    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
-    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
-    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
-    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
-    'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
-    'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+    'Andhra Pradesh',
+    'Arunachal Pradesh',
+    'Assam',
+    'Bihar',
+    'Chhattisgarh',
+    'Goa',
+    'Gujarat',
+    'Haryana',
+    'Himachal Pradesh',
+    'Jharkhand',
+    'Karnataka',
+    'Kerala',
+    'Madhya Pradesh',
+    'Maharashtra',
+    'Manipur',
+    'Meghalaya',
+    'Mizoram',
+    'Nagaland',
+    'Odisha',
+    'Punjab',
+    'Rajasthan',
+    'Sikkim',
+    'Tamil Nadu',
+    'Telangana',
+    'Tripura',
+    'Uttar Pradesh',
+    'Uttarakhand',
+    'West Bengal',
+    'Andaman and Nicobar Islands',
+    'Chandigarh',
+    'Dadra and Nagar Haveli and Daman and Diu',
+    'Delhi',
+    'Jammu and Kashmir',
+    'Ladakh',
+    'Lakshadweep',
+    'Puducherry',
   ];
 
   @override
@@ -102,33 +132,36 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
       String? classroomId;
       String? fetchedState;
       String? fetchedSchool;
-      
+
       // If classroom code provided, verify and fetch data
-      if (_hasClassroomCode && _classroomCodeController.text.trim().isNotEmpty) {
+      if (_hasClassroomCode &&
+          _classroomCodeController.text.trim().isNotEmpty) {
         final code = _classroomCodeController.text.trim().toUpperCase();
-        
+
         // Find classroom by code
         final classroomQuery = await FirebaseFirestore.instance
             .collection('classrooms')
             .where('joinCode', isEqualTo: code)
             .limit(1)
             .get();
-        
+
         if (classroomQuery.docs.isEmpty) {
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Invalid classroom code. Continuing as solo learner...'),
+              content: Text(
+                'Invalid classroom code. Continuing as solo learner...',
+              ),
               backgroundColor: Colors.orange,
             ),
           );
           setState(() => _isLoading = false);
           return;
         }
-        
+
         final classroomDoc = classroomQuery.docs.first;
         classroomId = classroomDoc.id;
-        
+
         // Fetch school data
         final schoolId = classroomDoc.data()['schoolId'];
         if (schoolId != null) {
@@ -136,7 +169,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
               .collection('schools')
               .doc(schoolId)
               .get();
-          
+
           if (schoolDoc.exists) {
             fetchedState = schoolDoc.data()?['state'];
             fetchedSchool = schoolDoc.data()?['name'];
@@ -156,10 +189,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
       }
 
       // Create user document
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'uid': user.uid,
         'email': user.email,
         'displayName': _nameController.text.trim(),
@@ -188,8 +218,8 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
             .collection('classrooms')
             .doc(classroomId)
             .update({
-          'studentIds': FieldValue.arrayUnion([user.uid]),
-        });
+              'studentIds': FieldValue.arrayUnion([user.uid]),
+            });
       }
 
       if (!mounted) return;
@@ -208,7 +238,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString()}'),
+          content: Text(AuthErrorHandler.getErrorMessage(e)),
           backgroundColor: Colors.red,
         ),
       );
@@ -259,286 +289,359 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                const SizedBox(height: AppSpacing.md),
-                
-                // Title
-                Text('Create Your Account', style: AppTextStyles.h2),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Start your IPR learning journey!',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppDesignSystem.textSecondary,
-                  ),
-                ),
-                
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Name
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Full Name',
-                    hintText: 'Enter your name',
-                    prefixIcon: Icon(Icons.person, color: AppDesignSystem.primaryIndigo),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your name';
-                    }
-                    return null;
-                  },
-                ),
-                
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Email
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'your@email.com',
-                    prefixIcon: Icon(Icons.email, color: AppDesignSystem.primaryAmber),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Password
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    hintText: 'Min 8 characters',
-                    prefixIcon: const Icon(Icons.lock, color: AppDesignSystem.primaryPink),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppDesignSystem.primaryPink,
+                      const SizedBox(height: AppSpacing.md),
+
+                      // Title
+                      Text('Create Your Account', style: AppTextStyles.h2),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Start your IPR learning journey!',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppDesignSystem.textSecondary,
+                        ),
                       ),
-                      onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 8) {
-                      return 'Password must be at least 8 characters';
-                    }
-                    return null;
-                  },
-                ),
-                
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Confirm Password
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: _obscureConfirmPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Re-enter password',
-                    prefixIcon: const Icon(Icons.lock_outline, color: AppDesignSystem.primaryPink),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppDesignSystem.primaryPink,
-                      ),
-                      onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value != _passwordController.text) {
-                      return 'Passwords do not match';
-                    }
-                    return null;
-                  },
-                ),
-                
-                const SizedBox(height: AppSpacing.xl),
-                
-                // Avatar Selection
-                Row(
-                  children: [
-                    Icon(Icons.face, size: 20, color: AppDesignSystem.primaryIndigo),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Select Avatar',
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: AppDesignSystem.primaryIndigo,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: _avatarOptions.map((avatar) {
-                    final isSelected = _selectedAvatar == avatar;
-                    return GestureDetector(
-                      onTap: () => setState(() => _selectedAvatar = avatar),
-                      child: Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: isSelected ? AppDesignSystem.primaryIndigo.withValues(alpha: 0.2) : Colors.grey[100],
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: isSelected ? AppDesignSystem.primaryIndigo : Colors.grey[300]!,
-                            width: isSelected ? 3 : 1,
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Name
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Full Name',
+                          hintText: 'Enter your name',
+                          prefixIcon: Icon(
+                            Icons.person,
+                            color: AppDesignSystem.primaryIndigo,
                           ),
-                          boxShadow: isSelected ? [
-                            BoxShadow(
-                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Email
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'your@email.com',
+                          prefixIcon: Icon(
+                            Icons.email,
+                            color: AppDesignSystem.primaryAmber,
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value)) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Password
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Min 8 characters',
+                          prefixIcon: const Icon(
+                            Icons.lock,
+                            color: AppDesignSystem.primaryPink,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: AppDesignSystem.primaryPink,
                             ),
-                          ] : null,
+                            onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
+                          ),
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(28),
-                          child: Image.asset(
-                            avatar,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: Icon(Icons.person, color: Colors.grey[600], size: 30),
-                              );
-                            },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          if (value.length < 8) {
+                            return 'Password must be at least 8 characters';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Confirm Password
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: _obscureConfirmPassword,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          hintText: 'Re-enter password',
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: AppDesignSystem.primaryPink,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirmPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: AppDesignSystem.primaryPink,
+                            ),
+                            onPressed: () => setState(
+                              () => _obscureConfirmPassword =
+                                  !_obscureConfirmPassword,
+                            ),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value != _passwordController.text) {
+                            return 'Passwords do not match';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // Avatar Selection
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.face,
+                            size: 20,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Select Avatar',
+                            style: AppTextStyles.cardTitle.copyWith(
+                              color: AppDesignSystem.primaryIndigo,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: _avatarOptions.map((avatar) {
+                          final isSelected = _selectedAvatar == avatar;
+                          return GestureDetector(
+                            onTap: () =>
+                                setState(() => _selectedAvatar = avatar),
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppDesignSystem.primaryIndigo.withValues(
+                                        alpha: 0.2,
+                                      )
+                                    : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppDesignSystem.primaryIndigo
+                                      : Colors.grey[300]!,
+                                  width: isSelected ? 3 : 1,
+                                ),
+                                boxShadow: isSelected
+                                    ? [
+                                        BoxShadow(
+                                          color: AppDesignSystem.primaryIndigo
+                                              .withValues(alpha: 0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ]
+                                    : null,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(28),
+                                child: Image.asset(
+                                  avatar,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      child: Icon(
+                                        Icons.person,
+                                        color: Colors.grey[600],
+                                        size: 30,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // Classroom Code Toggle
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppDesignSystem.info.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppDesignSystem.info.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: CheckboxListTile(
+                          value: _hasClassroomCode,
+                          onChanged: (value) => setState(
+                            () => _hasClassroomCode = value ?? false,
+                          ),
+                          title: Text(
+                            'I have a classroom code',
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppDesignSystem.primaryIndigo,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            _hasClassroomCode
+                                ? 'School & state will be auto-fetched'
+                                : 'You\'ll learn solo',
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppDesignSystem.textSecondary,
+                            ),
+                          ),
+                          activeColor: AppDesignSystem.primaryIndigo,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
                           ),
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
-                
-                const SizedBox(height: AppSpacing.xl),
-                
-                // Classroom Code Toggle
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppDesignSystem.info.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppDesignSystem.info.withValues(alpha: 0.3)),
-                  ),
-                  child: CheckboxListTile(
-                    value: _hasClassroomCode,
-                    onChanged: (value) => setState(() => _hasClassroomCode = value ?? false),
-                    title: Text(
-                      'I have a classroom code',
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppDesignSystem.primaryIndigo,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      _hasClassroomCode ? 'School & state will be auto-fetched' : 'You\'ll learn solo',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppDesignSystem.textSecondary,
-                      ),
-                    ),
-                    activeColor: AppDesignSystem.primaryIndigo,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                ),
-                
-                if (_hasClassroomCode) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  
-                  // Classroom Code
-                  TextFormField(
-                    controller: _classroomCodeController,
-                    textCapitalization: TextCapitalization.characters,
-                    decoration: const InputDecoration(
-                      labelText: 'Classroom Code',
-                      hintText: 'CLS-XXXXX',
-                      prefixIcon: Icon(Icons.class_, color: AppDesignSystem.success),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.sm),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppDesignSystem.info.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.info, color: AppDesignSystem.info, size: 20),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Your school and state will be auto-fetched from the classroom',
-                            style: AppTextStyles.bodySmall,
+
+                      if (_hasClassroomCode) ...[
+                        const SizedBox(height: AppSpacing.md),
+
+                        // Classroom Code
+                        TextFormField(
+                          controller: _classroomCodeController,
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: const InputDecoration(
+                            labelText: 'Classroom Code',
+                            hintText: 'CLS-XXXXX',
+                            prefixIcon: Icon(
+                              Icons.class_,
+                              color: AppDesignSystem.success,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.sm),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.info.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info,
+                                color: AppDesignSystem.info,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Your school and state will be auto-fetched from the classroom',
+                                  style: AppTextStyles.bodySmall,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                ],
-                
-                if (!_hasClassroomCode) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  
-                  // State Dropdown
-                  DropdownButtonFormField<String>(
-                    value: _selectedState,
-                    isExpanded: true,
-                    decoration: const InputDecoration(
-                      labelText: 'State',
-                      prefixIcon: Icon(Icons.location_on, color: AppDesignSystem.info),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    ),
-                    items: _states.map((state) {
-                      return DropdownMenuItem(
-                        value: state,
-                        child: Text(state, overflow: TextOverflow.ellipsis),
-                      );
-                    }).toList(),
-                    onChanged: (value) => setState(() => _selectedState = value),
-                    validator: (value) {
-                      if (value == null) return 'Please select your state';
-                      return null;
-                    },
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.md),
-                  
-                  // School Name (Optional)
-                  TextFormField(
-                    controller: _schoolNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'School Name (Optional)',
-                      hintText: 'Enter your school name',
-                      prefixIcon: Icon(Icons.school, color: AppDesignSystem.warning),
-                    ),
-                  ),
-                ],
-                
-                const SizedBox(height: AppSpacing.sm),
-                
-                // Sign Up Button
-                PrimaryButton(
-                  text: _isLoading ? 'Creating Account...' : 'Create Account',
-                  onPressed: _isLoading ? null : () => _handleSignUp(),
-                  fullWidth: true,
-                ),
-                
+
+                      if (!_hasClassroomCode) ...[
+                        const SizedBox(height: AppSpacing.md),
+
+                        // State Dropdown
+                        DropdownButtonFormField<String>(
+                          value: _selectedState,
+                          isExpanded: true,
+                          decoration: const InputDecoration(
+                            labelText: 'State',
+                            prefixIcon: Icon(
+                              Icons.location_on,
+                              color: AppDesignSystem.info,
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 14,
+                            ),
+                          ),
+                          items: _states.map((state) {
+                            return DropdownMenuItem(
+                              value: state,
+                              child: Text(
+                                state,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (value) =>
+                              setState(() => _selectedState = value),
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select your state';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: AppSpacing.md),
+
+                        // School Name (Optional)
+                        TextFormField(
+                          controller: _schoolNameController,
+                          decoration: const InputDecoration(
+                            labelText: 'School Name (Optional)',
+                            hintText: 'Enter your school name',
+                            prefixIcon: Icon(
+                              Icons.school,
+                              color: AppDesignSystem.warning,
+                            ),
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: AppSpacing.sm),
+
+                      // Sign Up Button
+                      PrimaryButton(
+                        text: _isLoading
+                            ? 'Creating Account...'
+                            : 'Create Account',
+                        onPressed: _isLoading ? null : () => _handleSignUp(),
+                        fullWidth: true,
+                      ),
+
                       const SizedBox(height: AppSpacing.xl),
                     ],
                   ),
@@ -551,5 +654,3 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
     );
   }
 }
-
-

@@ -26,7 +26,8 @@ class OptimizedParticleEffect extends StatefulWidget {
   });
 
   @override
-  State<OptimizedParticleEffect> createState() => _OptimizedParticleEffectState();
+  State<OptimizedParticleEffect> createState() =>
+      _OptimizedParticleEffectState();
 }
 
 class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
@@ -41,14 +42,11 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
   @override
   void initState() {
     super.initState();
-    
+
     // Adjust particle count based on performance level
     _actualParticleCount = _getAdjustedParticleCount();
-    
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
+
+    _controller = AnimationController(vsync: this, duration: widget.duration);
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -63,7 +61,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
 
   int _getAdjustedParticleCount() {
     final level = _performanceMonitor.performanceLevel;
-    
+
     switch (level) {
       case PerformanceLevel.high:
         return widget.maxParticleCount;
@@ -76,10 +74,10 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
 
   void _generateParticles() {
     _particles = [];
-    
+
     for (int i = 0; i < _actualParticleCount; i++) {
       final particle = _particlePool.acquire();
-      
+
       switch (widget.effectType) {
         case ParticleEffectType.confetti:
           _initConfettiParticle(particle);
@@ -91,7 +89,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
           _initExplosionParticle(particle);
           break;
       }
-      
+
       _particles.add(particle);
     }
   }
@@ -112,7 +110,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
   void _initSparkleParticle(PooledParticle particle) {
     final angle = _random.nextDouble() * 2 * pi;
     final speed = _random.nextDouble() * 0.5 + 0.5;
-    
+
     particle.x = 0.5;
     particle.y = 0.5;
     particle.velocityX = cos(angle) * speed;
@@ -128,7 +126,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
   void _initExplosionParticle(PooledParticle particle) {
     final angle = _random.nextDouble() * 2 * pi;
     final speed = _random.nextDouble() * 1.5 + 0.5;
-    
+
     particle.x = 0.5;
     particle.y = 0.5;
     particle.velocityX = cos(angle) * speed;
@@ -143,7 +141,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
 
   Color _getRandomColor() {
     if (widget.color != null) return widget.color!;
-    
+
     const colors = [
       Color(0xFFFF0000), // red
       Color(0xFF0000FF), // blue
@@ -188,11 +186,7 @@ class _OptimizedParticleEffectState extends State<OptimizedParticleEffect>
 }
 
 /// Particle effect type enum
-enum ParticleEffectType {
-  confetti,
-  sparkle,
-  explosion,
-}
+enum ParticleEffectType { confetti, sparkle, explosion }
 
 /// Optimized particle painter using pooled particles
 class OptimizedParticlePainter extends CustomPainter {
@@ -210,7 +204,9 @@ class OptimizedParticlePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final particle in particles) {
       final paint = Paint()
-        ..color = Color(particle.colorValue).withValues(alpha: _getAlpha(particle))
+        ..color = Color(
+          particle.colorValue,
+        ).withValues(alpha: _getAlpha(particle))
         ..style = PaintingStyle.fill;
 
       final x = _calculateX(particle, size);
@@ -233,17 +229,20 @@ class OptimizedParticlePainter extends CustomPainter {
         return size.width * particle.x + particle.velocityX * progress * 100;
       case ParticleEffectType.sparkle:
       case ParticleEffectType.explosion:
-        return size.width * particle.x + particle.velocityX * progress * size.width * 0.5;
+        return size.width * particle.x +
+            particle.velocityX * progress * size.width * 0.5;
     }
   }
 
   double _calculateY(PooledParticle particle, Size size) {
     switch (effectType) {
       case ParticleEffectType.confetti:
-        return size.height * particle.y + particle.velocityY * progress * size.height;
+        return size.height * particle.y +
+            particle.velocityY * progress * size.height;
       case ParticleEffectType.sparkle:
       case ParticleEffectType.explosion:
-        return size.height * particle.y + particle.velocityY * progress * size.height * 0.5;
+        return size.height * particle.y +
+            particle.velocityY * progress * size.height * 0.5;
     }
   }
 

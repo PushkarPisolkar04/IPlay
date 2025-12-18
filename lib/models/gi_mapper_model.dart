@@ -67,12 +67,16 @@ class GIProduct {
       name: json['name'] as String,
       state: json['state'] as String,
       stateCode: json['stateCode'] as String,
-      coordinates: GeoCoordinates.fromJson(json['coordinates'] as Map<String, dynamic>),
+      coordinates: GeoCoordinates.fromJson(
+        json['coordinates'] as Map<String, dynamic>,
+      ),
       category: json['category'] as String,
       imageUrl: json['imageUrl'] as String,
       description: json['description'] as String,
       registrationYear: json['registrationYear'] as int,
-      uniqueCharacteristics: List<String>.from(json['uniqueCharacteristics'] as List),
+      uniqueCharacteristics: List<String>.from(
+        json['uniqueCharacteristics'] as List,
+      ),
       hint: json['hint'] as String,
       difficulty: json['difficulty'] as String,
       points: json['points'] as int,
@@ -116,7 +120,9 @@ class StateData {
     return StateData(
       code: json['code'] as String,
       name: json['name'] as String,
-      svgPath: json['svgPath'] as String? ?? '', // Allow null, default to empty string
+      svgPath:
+          json['svgPath'] as String? ??
+          '', // Allow null, default to empty string
       color: Color(int.parse(json['color'] as String)),
     );
   }
@@ -126,7 +132,8 @@ class StateData {
       'code': code,
       'name': name,
       'svgPath': svgPath,
-      'color': '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
+      'color':
+          '0x${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
     };
   }
 }
@@ -136,10 +143,7 @@ class IndiaMapData {
   final List<StateData> states;
   final String? mapSvgUrl;
 
-  IndiaMapData({
-    required this.states,
-    this.mapSvgUrl,
-  });
+  IndiaMapData({required this.states, this.mapSvgUrl});
 
   /// Get state by code
   StateData? getStateByCode(String code) {
@@ -275,7 +279,9 @@ class GIMapperGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,
@@ -286,7 +292,8 @@ class GIMapperGame extends GameModel {
       pairsPerGame: json['pairsPerGame'] as int,
       timeLimit: json['timeLimit'] as int?,
       randomSelection: json['randomSelection'] as bool? ?? true,
-      showHintsAfterWrongAnswer: json['showHintsAfterWrongAnswer'] as bool? ?? true,
+      showHintsAfterWrongAnswer:
+          json['showHintsAfterWrongAnswer'] as bool? ?? true,
     );
   }
 

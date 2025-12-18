@@ -5,7 +5,7 @@ import '../services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
-  
+
   UserModel? _currentUser;
   bool _isLoading = false;
   String? _errorMessage;
@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
 
       _currentUser = await _authService.getUserData(uid);
-      
+
       // Update activity
       if (_currentUser != null) {
         await _authService.updateUserActivity(uid);
@@ -89,10 +89,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> signIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<bool> signIn({required String email, required String password}) async {
     try {
       _isLoading = true;
       _errorMessage = null;
@@ -150,7 +147,11 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<void> updateUserRole(String role, String state, String? schoolTag) async {
+  Future<void> updateUserRole(
+    String role,
+    String state,
+    String? schoolTag,
+  ) async {
     if (_currentUser == null) return;
 
     try {
@@ -200,4 +201,3 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 }
-

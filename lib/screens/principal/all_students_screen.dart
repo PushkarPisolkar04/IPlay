@@ -12,10 +12,7 @@ import '../student/my_progress_screen.dart';
 class AllStudentsScreen extends StatefulWidget {
   final String schoolId;
 
-  const AllStudentsScreen({
-    super.key,
-    required this.schoolId,
-  });
+  const AllStudentsScreen({super.key, required this.schoolId});
 
   @override
   State<AllStudentsScreen> createState() => _AllStudentsScreenState();
@@ -23,11 +20,11 @@ class AllStudentsScreen extends StatefulWidget {
 
 class _AllStudentsScreenState extends State<AllStudentsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   List<Map<String, dynamic>> _students = [];
   List<Map<String, dynamic>> _filteredStudents = [];
   bool _isLoading = true;
-  
+
   // Filter and sort options
   String _searchQuery = '';
   String _sortBy = 'name'; // name, xp, streak, classroom
@@ -43,30 +40,30 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       // Load all classrooms in the school
       final classroomsSnapshot = await _firestore
           .collection('classrooms')
           .where('schoolId', isEqualTo: widget.schoolId)
           .get();
-      
+
       _classrooms = classroomsSnapshot.docs.map((doc) {
         return {
           'id': doc.id,
           'name': doc.data()['name'] ?? 'Unnamed Classroom',
         };
       }).toList();
-      
+
       // Collect all unique student IDs from all classrooms
       Set<String> studentIds = {};
       Map<String, String> studentClassrooms = {}; // studentId -> classroomName
-      
+
       for (var classroomDoc in classroomsSnapshot.docs) {
         final data = classroomDoc.data();
         final classroomName = data['name'] ?? 'Unnamed Classroom';
         final ids = List<String>.from(data['studentIds'] ?? []);
-        
+
         for (var id in ids) {
           studentIds.add(id);
           // Store first classroom (students might be in multiple)
@@ -75,7 +72,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           }
         }
       }
-      
+
       // Load student data
       _students = [];
       for (var studentId in studentIds) {
@@ -83,7 +80,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
             .collection('users')
             .doc(studentId)
             .get();
-        
+
         if (studentDoc.exists) {
           final userData = studentDoc.data()!;
           _students.add({
@@ -95,18 +92,19 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
             'badges': (userData['badges'] as List?)?.length ?? 0,
             'classroom': studentClassrooms[studentId] ?? 'No Classroom',
             'progressSummary': userData['progressSummary'] ?? {},
-            'lastActiveDate': (userData['lastActiveDate'] as Timestamp?)?.toDate(),
+            'lastActiveDate': (userData['lastActiveDate'] as Timestamp?)
+                ?.toDate(),
           });
         }
       }
-      
+
       _applyFiltersAndSort();
     } catch (e) {
       // print('Error loading students: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading students: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading students: $e')));
       }
     } finally {
       if (mounted) {
@@ -125,21 +123,21 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           return false;
         }
       }
-      
+
       // Classroom filter
       if (_filterClassroom != null && _filterClassroom!.isNotEmpty) {
         if (student['classroom'] != _filterClassroom) {
           return false;
         }
       }
-      
+
       return true;
     }).toList();
-    
+
     // Apply sorting
     _filteredStudents.sort((a, b) {
       int comparison = 0;
-      
+
       switch (_sortBy) {
         case 'name':
           comparison = a['name'].toString().compareTo(b['name'].toString());
@@ -148,32 +146,36 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
           comparison = (a['totalXP'] as int).compareTo(b['totalXP'] as int);
           break;
         case 'streak':
-          comparison = (a['currentStreak'] as int).compareTo(b['currentStreak'] as int);
+          comparison = (a['currentStreak'] as int).compareTo(
+            b['currentStreak'] as int,
+          );
           break;
         case 'classroom':
-          comparison = a['classroom'].toString().compareTo(b['classroom'].toString());
+          comparison = a['classroom'].toString().compareTo(
+            b['classroom'].toString(),
+          );
           break;
       }
-      
+
       return _sortAscending ? comparison : -comparison;
     });
-    
+
     setState(() {});
   }
 
   int _calculateProgress(Map<String, dynamic> progressSummary) {
     if (progressSummary.isEmpty) return 0;
-    
+
     int totalLevels = 0;
     int completedLevels = 0;
-    
+
     for (var entry in progressSummary.values) {
       if (entry is Map<String, dynamic>) {
         totalLevels += (entry['totalLevels'] as int?) ?? 0;
         completedLevels += (entry['levelsCompleted'] as int?) ?? 0;
       }
     }
-    
+
     if (totalLevels == 0) return 0;
     return ((completedLevels / totalLevels) * 100).round();
   }
@@ -229,7 +231,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                
+
                 // Filter and Sort Row
                 Row(
                   children: [
@@ -267,7 +269,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // Sort Button
                     Container(
                       decoration: BoxDecoration(
@@ -282,7 +284,8 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                               _sortAscending = !_sortAscending;
                             } else {
                               _sortBy = value;
-                              _sortAscending = false; // Default to descending for XP/streak
+                              _sortAscending =
+                                  false; // Default to descending for XP/streak
                             }
                           });
                           _applyFiltersAndSort();
@@ -293,7 +296,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                             child: Row(
                               children: [
                                 Icon(
-                                  _sortBy == 'name' ? Icons.check : Icons.person,
+                                  _sortBy == 'name'
+                                      ? Icons.check
+                                      : Icons.person,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -319,7 +324,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                             child: Row(
                               children: [
                                 Icon(
-                                  _sortBy == 'streak' ? Icons.check : Icons.local_fire_department,
+                                  _sortBy == 'streak'
+                                      ? Icons.check
+                                      : Icons.local_fire_department,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -332,7 +339,9 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                             child: Row(
                               children: [
                                 Icon(
-                                  _sortBy == 'classroom' ? Icons.check : Icons.class_,
+                                  _sortBy == 'classroom'
+                                      ? Icons.check
+                                      : Icons.class_,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -348,7 +357,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               ],
             ),
           ),
-          
+
           // Student Count
           Padding(
             padding: const EdgeInsets.all(16),
@@ -374,45 +383,45 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               ],
             ),
           ),
-          
+
           // Students List
           Expanded(
             child: _isLoading
                 ? const ListSkeleton(itemCount: 8)
                 : _filteredStudents.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.people_outline,
-                              size: 64,
-                              color: Colors.grey[400],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              _searchQuery.isNotEmpty || _filterClassroom != null
-                                  ? 'No students found'
-                                  : 'No students in school',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.people_outline,
+                          size: 64,
+                          color: Colors.grey[400],
                         ),
-                      )
-                    : RefreshIndicator(
-                        onRefresh: _loadData,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _filteredStudents.length,
-                          itemBuilder: (context, index) {
-                            final student = _filteredStudents[index];
-                            return _buildStudentCard(student);
-                          },
+                        const SizedBox(height: 16),
+                        Text(
+                          _searchQuery.isNotEmpty || _filterClassroom != null
+                              ? 'No students found'
+                              : 'No students in school',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _loadData,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _filteredStudents.length,
+                      itemBuilder: (context, index) {
+                        final student = _filteredStudents[index];
+                        return _buildStudentCard(student);
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -428,12 +437,12 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
         .take(2)
         .join()
         .toUpperCase();
-    
+
     final lastActive = student['lastActiveDate'] as DateTime?;
     final daysInactive = lastActive != null
         ? DateTime.now().difference(lastActive).inDays
         : null;
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: CleanCard(
@@ -458,7 +467,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
               imageUrl: student['avatarUrl'],
             ),
             const SizedBox(width: 16),
-            
+
             // Student Info
             Expanded(
               child: Column(
@@ -508,7 +517,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Stats Row
                   Row(
                     children: [
@@ -532,7 +541,7 @@ class _AllStudentsScreenState extends State<AllStudentsScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Progress Bar
                   Row(
                     children: [

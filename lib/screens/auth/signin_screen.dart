@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/design/app_design_system.dart';
+import '../../core/utils/auth_error_handler.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
@@ -79,7 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text(AuthErrorHandler.getErrorMessage(e)),
           backgroundColor: Colors.red,
         ),
       );
@@ -111,10 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       if (!userDoc.exists) {
         // Create new user document for Google sign-in
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .set({
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
           'uid': user.uid,
           'email': user.email,
           'displayName': user.displayName ?? 'User',
@@ -157,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text(AuthErrorHandler.getErrorMessage(e)),
           backgroundColor: Colors.red,
         ),
       );
@@ -173,10 +171,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -208,22 +203,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Title
-                      Text(
-                        'Welcome Back!',
-                        style: AppTextStyles.h1,
-                      ),
-                      
+                      Text('Welcome Back!', style: AppTextStyles.h1),
+
                       const SizedBox(height: AppSpacing.sm),
-                      
+
                       Text(
                         'Sign in to continue learning',
                         style: AppTextStyles.bodyLarge.copyWith(
                           color: AppDesignSystem.textSecondary,
                         ),
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.xl),
-                      
+
                       // Email field
                       TextFormField(
                         controller: _emailController,
@@ -231,7 +223,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           hintText: 'Enter your email',
-                          prefixIcon: Icon(Icons.email_outlined, color: AppDesignSystem.primaryIndigo),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -240,9 +235,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.md),
-                      
+
                       // Password field
                       TextFormField(
                         controller: _passwordController,
@@ -250,7 +245,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           hintText: 'Enter your password',
-                          prefixIcon: const Icon(Icons.lock_outline, color: AppDesignSystem.primaryPink),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline,
+                            color: AppDesignSystem.primaryPink,
+                          ),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
@@ -272,9 +270,9 @@ class _SignInScreenState extends State<SignInScreen> {
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.sm),
-                      
+
                       // Forgot password
                       Align(
                         alignment: Alignment.centerRight,
@@ -291,18 +289,18 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.lg),
-                      
+
                       // Sign In button
                       PrimaryButton(
                         text: _isLoading ? 'Signing In...' : 'Sign In',
                         onPressed: _isLoading ? () {} : _handleSignIn,
                         fullWidth: true,
                       ),
-                      
+
                       const SizedBox(height: AppSpacing.xl),
-                      
+
                       // Sign up link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

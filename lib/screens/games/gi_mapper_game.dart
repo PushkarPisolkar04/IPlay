@@ -19,20 +19,22 @@ class GIMapperGame extends StatefulWidget {
   State<GIMapperGame> createState() => _GIMapperGameState();
 }
 
-class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMixin {
+class _GIMapperGameState extends State<GIMapperGame>
+    with TickerProviderStateMixin {
   final GameIntegrationService _gameService = GameIntegrationService();
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
-  
+
   bool _gameStarted = false;
   bool _gameEnded = false;
   bool _loading = true;
-  
+
   List<GIProduct> _allProducts = [];
   List<GIProduct> _selectedProducts = [];
   final Map<String, GIProduct?> _placements = {}; // productId -> placed product
-  Map<String, Map<String, double>> _statePlaceholders = {}; // stateCode -> {x, y}
+  final Map<String, Map<String, double>> _statePlaceholders =
+      {}; // stateCode -> {x, y}
   double _referenceImageWidth = 500; // Default reference size
   double _referenceImageHeight = 800;
   int _score = 0;
@@ -56,28 +58,32 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
 
   Future<void> _loadGameData() async {
     try {
-      final String jsonString = await rootBundle.loadString('content/games/gi_mapper.json');
+      final String jsonString = await rootBundle.loadString(
+        'content/games/gi_mapper.json',
+      );
       final Map<String, dynamic> data = json.decode(jsonString);
-      
+
       final List<dynamic> productsJson = data['giProducts'] ?? [];
-      _allProducts = productsJson.map((json) => GIProduct.fromJson(json)).toList();
-      
+      _allProducts = productsJson
+          .map((json) => GIProduct.fromJson(json))
+          .toList();
+
       // Load state placeholder positions
       final Map<String, dynamic> mapData = data['mapData'] ?? {};
-      
+
       // Load reference image size if provided
       final Map<String, dynamic>? refSize = mapData['referenceImageSize'];
       if (refSize != null) {
         _referenceImageWidth = (refSize['width'] as num).toDouble();
         _referenceImageHeight = (refSize['height'] as num).toDouble();
       }
-      
+
       final List<dynamic> statesJson = mapData['states'] ?? [];
-      
+
       for (var state in statesJson) {
         final String code = state['code'] ?? '';
         final Map<String, dynamic>? position = state['placeholderPosition'];
-        
+
         if (code.isNotEmpty && position != null) {
           _statePlaceholders[code] = {
             'x': (position['x'] as num).toDouble(),
@@ -85,7 +91,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           };
         }
       }
-      
+
       setState(() {
         _loading = false;
       });
@@ -102,13 +108,13 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
     final random = Random();
     final shuffled = List<GIProduct>.from(_allProducts)..shuffle(random);
     _selectedProducts = shuffled.take(8).toList();
-    
+
     // Initialize placements - use product ID as key instead of state code
     _placements.clear();
     for (var product in _selectedProducts) {
       _placements[product.id] = null;
     }
-    
+
     setState(() {
       _score = 0;
       _correctPlacements = 0;
@@ -130,7 +136,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         setState(() {
           _timeRemaining--;
         });
-        
+
         if (_timeRemaining == 0) {
           _endGame(timeUp: true);
         }
@@ -140,22 +146,23 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
 
   void _submitAnswers() {
     _timer?.cancel();
-    
+
     // Calculate score - check if placed products match their correct states
     int correctCount = 0;
     for (var product in _selectedProducts) {
       final placedProduct = _placements[product.id];
       // Check if product is placed AND in the correct state
-      if (placedProduct != null && placedProduct.stateCode == product.stateCode) {
+      if (placedProduct != null &&
+          placedProduct.stateCode == product.stateCode) {
         correctCount++;
       }
     }
-    
+
     setState(() {
       _correctPlacements = correctCount;
       _score = correctCount * 10; // 10 points per correct placement
     });
-    
+
     // End game immediately
     _endGame();
   }
@@ -175,7 +182,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
 
   void _endGame({bool timeUp = false}) {
     _timer?.cancel();
-    
+
     if (timeUp) {
       // Auto-calculate score if time ran out
       int correctCount = 0;
@@ -190,7 +197,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         _score = correctCount * 10;
       });
     }
-    
+
     setState(() {
       _gameEnded = true;
     });
@@ -203,10 +210,10 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
       try {
         const gameId = 'gi_mapper';
         final baseXP = _score;
-        
+
         final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
         final isPerfectScore = _correctPlacements == _selectedProducts.length;
-        
+
         // Award XP with automatic bonuses and check for badges
         final result = await _gameService.awardGameXP(
           gameId: gameId,
@@ -215,20 +222,20 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
-        
+
         final xpEarned = result['xp'] as int;
         final newBadges = result['newBadges'] as List<String>;
-        
+
         // Show badge animations if any badges were unlocked
         if (newBadges.isNotEmpty && mounted) {
           await _gameService.showBadgeAnimations(context, newBadges);
         }
-        
+
         // Store XP for result screen
         setState(() {
           _earnedXP = xpEarned;
         });
-        
+
         // Save progress
         await _gameService.saveGameProgress(
           gameId: gameId,
@@ -236,7 +243,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           timeSpentSeconds: 120 - _timeRemaining,
           completed: true,
         );
-        
+
         print('Game score saved: $_score');
       } catch (e) {
         print('Error saving game score: $e');
@@ -259,9 +266,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
     if (_loading) {
       return Scaffold(
         backgroundColor: AppDesignSystem.backgroundLight,
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -357,12 +362,12 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Game Rules:',
-                      style: AppTextStyles.cardTitle,
-                    ),
+                    Text('Game Rules:', style: AppTextStyles.cardTitle),
                     const SizedBox(height: AppSpacing.sm),
-                    _buildRuleItem('🎯', 'Fill placeholders with correct products'),
+                    _buildRuleItem(
+                      '🎯',
+                      'Fill placeholders with correct products',
+                    ),
                     _buildRuleItem('⏱️', '5 minutes to complete'),
                     _buildRuleItem('✅', 'Only correct products fit each slot'),
                     _buildRuleItem('⭐', '10 points per correct match'),
@@ -390,11 +395,11 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
     );
   }
 
-    Widget _buildGameScreen() {
+  Widget _buildGameScreen() {
     final minutes = _timeRemaining ~/ 60;
     final seconds = _timeRemaining % 60;
     final placedCount = _placements.values.where((p) => p != null).length;
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -414,7 +419,10 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                 children: [
                   // Top bar with back button and stats
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     child: Row(
                       children: [
                         // Back button
@@ -431,7 +439,10 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             ],
                           ),
                           child: IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Color(0xFF1A1A1A),
+                            ),
                             onPressed: () {
                               _timer?.cancel();
                               Navigator.pop(context);
@@ -440,9 +451,9 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             constraints: const BoxConstraints(),
                           ),
                         ),
-                        
+
                         const SizedBox(width: 12),
-                        
+
                         // Stats badges
                         Expanded(
                           child: Row(
@@ -451,13 +462,17 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                               // Timer badge
                               _buildModernStatBadge(
                                 icon: Icons.timer_outlined,
-                                value: '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                                color: _timeRemaining < 60 ? const Color(0xFFEF5350) : const Color(0xFFF59E0B),
+                                value:
+                                    '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                                color: _timeRemaining < 60
+                                    ? const Color(0xFFEF5350)
+                                    : const Color(0xFFF59E0B),
                               ),
                               // Placed badge
                               _buildModernStatBadge(
                                 icon: Icons.check_circle_outline,
-                                value: '$placedCount/${_selectedProducts.length}',
+                                value:
+                                    '$placedCount/${_selectedProducts.length}',
                                 color: const Color(0xFFE91E63),
                               ),
                               // Score badge
@@ -502,7 +517,11 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                           padding: const EdgeInsets.fromLTRB(12, 6, 12, 2),
                           child: Row(
                             children: [
-                              const Icon(Icons.inventory_2, color: Color(0xFFFFC107), size: 18),
+                              const Icon(
+                                Icons.inventory_2,
+                                color: Color(0xFFFFC107),
+                                size: 18,
+                              ),
                               const SizedBox(width: 6),
                               Text(
                                 'Drag Products to Placeholders',
@@ -523,8 +542,10 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             child: Row(
                               children: _selectedProducts.map((product) {
                                 // Check if THIS product is placed somewhere (not if something is in its slot)
-                                final isPlaced = _placements.values.any((p) => p?.id == product.id);
-                                
+                                final isPlaced = _placements.values.any(
+                                  (p) => p?.id == product.id,
+                                );
+
                                 // Make all chips draggable, even if placed
                                 return Padding(
                                   padding: const EdgeInsets.only(right: 8),
@@ -534,13 +555,25 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                       elevation: 8,
                                       borderRadius: BorderRadius.circular(16),
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
                                         decoration: BoxDecoration(
-                                          gradient: const LinearGradient(colors: [Color(0xFFFFC107), Color(0xFFFF9800)]),
-                                          borderRadius: BorderRadius.circular(16),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFFFFC107),
+                                              Color(0xFFFF9800),
+                                            ],
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: const Color(0xFFFFC107).withOpacity(0.5),
+                                              color: const Color(
+                                                0xFFFFC107,
+                                              ).withOpacity(0.5),
                                               blurRadius: 8,
                                               spreadRadius: 2,
                                             ),
@@ -549,7 +582,11 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            const Icon(Icons.location_on, color: Colors.white, size: 14),
+                                            const Icon(
+                                              Icons.location_on,
+                                              color: Colors.white,
+                                              size: 14,
+                                            ),
                                             const SizedBox(width: 4),
                                             Text(
                                               product.name,
@@ -592,8 +629,8 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                       ],
                     ),
                     child: PrimaryButton(
-                      text: placedCount == _selectedProducts.length 
-                          ? 'Submit Answers' 
+                      text: placedCount == _selectedProducts.length
+                          ? 'Submit Answers'
                           : 'Submit ($placedCount/${_selectedProducts.length})',
                       onPressed: placedCount > 0 ? _submitAnswers : null,
                       fullWidth: true,
@@ -618,10 +655,10 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                 gravity: 0.1,
               ),
             ),
-          ], 
-        ), 
-      ), 
-    ); 
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildModernStatBadge({
@@ -662,10 +699,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
 
   Widget _buildProductChip(GIProduct product, bool isPlaced) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFFC107), Color(0xFFFF9800)],
@@ -708,10 +742,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.grey[300]!,
-              width: 2,
-            ),
+            border: Border.all(color: Colors.grey[300]!, width: 2),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -728,7 +759,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                     },
                   ),
                 ),
-                
+
                 // Show placeholder drop zones for selected products
                 ..._buildPlaceholderDropZones(mapConstraints),
               ],
@@ -741,63 +772,68 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
 
   List<Widget> _buildPlaceholderDropZones(BoxConstraints constraints) {
     final List<Widget> dropZones = [];
-    
+
     // If constraints are invalid, return empty list
     if (constraints.maxWidth <= 0 || constraints.maxHeight <= 0) {
       return dropZones;
     }
-    
+
     // Track how many products per state to offset overlapping placeholders
     final Map<String, int> stateProductCount = {};
     final Map<String, int> stateProductIndex = {};
-    
+
     for (var product in _selectedProducts) {
-      stateProductCount[product.stateCode] = (stateProductCount[product.stateCode] ?? 0) + 1;
+      stateProductCount[product.stateCode] =
+          (stateProductCount[product.stateCode] ?? 0) + 1;
     }
-    
+
     for (var product in _selectedProducts) {
       final stateCode = product.stateCode;
       final position = _statePlaceholders[stateCode];
-      
+
       if (position == null) {
         continue;
       }
-      
+
       // Calculate position - center the placeholder
       final double placeholderWidth = 100;
       final double placeholderHeight = 32;
-      
+
       // Get index for this product in its state
       final int index = stateProductIndex[stateCode] ?? 0;
       stateProductIndex[stateCode] = index + 1;
-      
+
       // Offset if multiple products from same state
       final int totalForState = stateProductCount[stateCode] ?? 1;
-      final double offsetY = totalForState > 1 ? (index - (totalForState - 1) / 2) * 36 : 0;
-      
+      final double offsetY = totalForState > 1
+          ? (index - (totalForState - 1) / 2) * 36
+          : 0;
+
       // Convert position based on type
       final double posX = position['x']!;
       final double posY = position['y']!;
-      
+
       double left, top;
-      
+
       if (posX > 1) {
         // Pixel coordinates - scale from reference image to actual display size
         final double scaleX = constraints.maxWidth / _referenceImageWidth;
         final double scaleY = constraints.maxHeight / _referenceImageHeight;
-        
+
         left = (posX * scaleX) - (placeholderWidth / 2);
         top = (posY * scaleY) - (placeholderHeight / 2) + offsetY;
       } else {
         // Percentage coordinates (0-1)
         left = (constraints.maxWidth * posX) - (placeholderWidth / 2);
-        top = (constraints.maxHeight * posY) - (placeholderHeight / 2) + offsetY;
+        top =
+            (constraints.maxHeight * posY) - (placeholderHeight / 2) + offsetY;
       }
-      
+
       final placedProduct = _placements[product.id];
       final bool isFilled = placedProduct != null;
-      final bool isCorrect = isFilled && placedProduct?.stateCode == product.stateCode;
-      
+      final bool isCorrect =
+          isFilled && placedProduct.stateCode == product.stateCode;
+
       dropZones.add(
         Positioned(
           left: left,
@@ -811,14 +847,14 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                     _placements[key] = null;
                   }
                 });
-                
+
                 // Place in this slot (allow any product)
                 _placements[product.id] = details.data;
               });
             },
             builder: (context, candidateData, rejectedData) {
               final isHovering = candidateData.isNotEmpty;
-              
+
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 width: placeholderWidth,
@@ -827,22 +863,25 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                   color: isFilled
                       ? const Color(0xFFFFC107).withOpacity(0.9)
                       : isHovering
-                          ? const Color(0xFFFFC107).withOpacity(0.5)
-                          : Colors.white.withOpacity(0.85),
+                      ? const Color(0xFFFFC107).withOpacity(0.5)
+                      : Colors.white.withOpacity(0.85),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isFilled
                         ? const Color(0xFFFF9800)
                         : isHovering
-                            ? const Color(0xFFFFC107)
-                            : Colors.grey[400]!,
+                        ? const Color(0xFFFFC107)
+                        : Colors.grey[400]!,
                     width: 2,
                   ),
                   boxShadow: isFilled || isHovering
                       ? [
                           BoxShadow(
-                            color: (isFilled ? const Color(0xFFFFC107) : Colors.grey)
-                                .withOpacity(0.4),
+                            color:
+                                (isFilled
+                                        ? const Color(0xFFFFC107)
+                                        : Colors.grey)
+                                    .withOpacity(0.4),
                             blurRadius: 8,
                             spreadRadius: 1,
                           ),
@@ -863,7 +902,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             const SizedBox(width: 4),
                             Flexible(
                               child: Text(
-                                placedProduct!.name.length > 10
+                                placedProduct.name.length > 10
                                     ? '${placedProduct.name.substring(0, 8)}..'
                                     : placedProduct.name,
                                 style: const TextStyle(
@@ -895,12 +934,13 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         ),
       );
     }
-    
+
     return dropZones;
   }
 
   Widget _buildResultScreen() {
-    final percentage = (_correctPlacements / _selectedProducts.length * 100).round();
+    final percentage = (_correctPlacements / _selectedProducts.length * 100)
+        .round();
     final isPerfect = _correctPlacements == _selectedProducts.length;
     final passed = percentage >= 60;
     final timeSpent = 120 - _timeRemaining;
@@ -931,7 +971,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 1),
-                  
+
                   // Animated Result icon
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 600),
@@ -953,24 +993,25 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                       const Color(0xFFFF9800),
                                     ]
                                   : passed
-                                      ? [
-                                          AppDesignSystem.success,
-                                          AppDesignSystem.success.withOpacity(0.7),
-                                        ]
-                                      : [
-                                          Colors.orange,
-                                          Colors.orange.withOpacity(0.7),
-                                        ],
+                                  ? [
+                                      AppDesignSystem.success,
+                                      AppDesignSystem.success.withOpacity(0.7),
+                                    ]
+                                  : [
+                                      Colors.orange,
+                                      Colors.orange.withOpacity(0.7),
+                                    ],
                             ),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: (isPerfect
-                                        ? const Color(0xFFFFC107)
-                                        : passed
+                                color:
+                                    (isPerfect
+                                            ? const Color(0xFFFFC107)
+                                            : passed
                                             ? AppDesignSystem.success
                                             : Colors.orange)
-                                    .withOpacity(0.4),
+                                        .withOpacity(0.4),
                                 blurRadius: 20,
                                 spreadRadius: 5,
                               ),
@@ -980,8 +1021,8 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             isPerfect
                                 ? Icons.emoji_events
                                 : passed
-                                    ? Icons.check_circle
-                                    : Icons.refresh,
+                                ? Icons.check_circle
+                                : Icons.refresh,
                             size: 50,
                             color: Colors.white,
                           ),
@@ -1007,14 +1048,14 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                 isPerfect
                                     ? 'Perfect Score!'
                                     : passed
-                                        ? 'Great Job!'
-                                        : 'Good Try!',
+                                    ? 'Great Job!'
+                                    : 'Good Try!',
                                 style: AppTextStyles.h1.copyWith(
                                   color: isPerfect
                                       ? const Color(0xFFFFC107)
                                       : passed
-                                          ? AppDesignSystem.success
-                                          : Colors.orange,
+                                      ? AppDesignSystem.success
+                                      : Colors.orange,
                                   fontSize: 28,
                                 ),
                                 textAlign: TextAlign.center,
@@ -1066,7 +1107,9 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                                 borderRadius: BorderRadius.circular(14),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFFFC107).withOpacity(0.1),
+                                    color: const Color(
+                                      0xFFFFC107,
+                                    ).withOpacity(0.1),
                                     blurRadius: 20,
                                     offset: const Offset(0, 10),
                                   ),
@@ -1133,8 +1176,13 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                             OutlinedButton(
                               onPressed: () => Navigator.pop(context),
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                side: const BorderSide(color: Color(0xFFFFC107), width: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                side: const BorderSide(
+                                  color: Color(0xFFFFC107),
+                                  width: 2,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -1153,13 +1201,13 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
-          
+
           // Confetti overlay
           if (passed)
             Align(
@@ -1178,17 +1226,20 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
     );
   }
 
-  Widget _buildFancyStatRow(IconData icon, String label, String value, Color color, {bool isHighlight = false}) {
+  Widget _buildFancyStatRow(
+    IconData icon,
+    String label,
+    String value,
+    Color color, {
+    bool isHighlight = false,
+  }) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                color.withOpacity(0.2),
-                color.withOpacity(0.1),
-              ],
+              colors: [color.withOpacity(0.2), color.withOpacity(0.1)],
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
@@ -1227,9 +1278,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [color, color.withOpacity(0.8)],
-              ),
+              gradient: LinearGradient(colors: [color, color.withOpacity(0.8)]),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(Icons.star, color: Colors.white, size: 16),
@@ -1248,9 +1297,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
           Expanded(
             child: Text(
               text,
-              style: AppTextStyles.bodyMedium.copyWith(
-                height: 1.4,
-              ),
+              style: AppTextStyles.bodyMedium.copyWith(height: 1.4),
             ),
           ),
         ],
@@ -1264,10 +1311,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.orange[50]!,
-            Colors.amber[50]!,
-          ],
+          colors: [Colors.orange[50]!, Colors.amber[50]!],
         ),
         borderRadius: BorderRadius.circular(8),
       ),
@@ -1289,10 +1333,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
             SizedBox(height: 8),
             Text(
               'Drop GI Products Here',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
           ],
         ),
@@ -1306,10 +1347,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.orange[50]!,
-            Colors.amber[50]!,
-          ],
+          colors: [Colors.orange[50]!, Colors.amber[50]!],
         ),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -1333,10 +1371,7 @@ class _GIMapperGameState extends State<GIMapperGame> with TickerProviderStateMix
               SizedBox(height: 8),
               Text(
                 'Drop GI Products Here',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ],
           ),
@@ -1353,7 +1388,7 @@ class IndiaMapPainter extends CustomPainter {
     final paint = Paint()
       ..color = const Color(0xFFFFC107).withOpacity(0.2)
       ..style = PaintingStyle.fill;
-    
+
     final borderPaint = Paint()
       ..color = const Color(0xFFFFC107).withOpacity(0.4)
       ..style = PaintingStyle.stroke
@@ -1361,34 +1396,34 @@ class IndiaMapPainter extends CustomPainter {
 
     // Simplified India shape (approximate)
     final path = Path();
-    
+
     // Starting from top (Kashmir)
     path.moveTo(size.width * 0.3, size.height * 0.1);
     path.lineTo(size.width * 0.35, size.height * 0.05);
     path.lineTo(size.width * 0.4, size.height * 0.1);
-    
+
     // Northeast
     path.lineTo(size.width * 0.7, size.height * 0.25);
     path.lineTo(size.width * 0.75, size.height * 0.35);
-    
+
     // East coast
     path.lineTo(size.width * 0.7, size.height * 0.5);
     path.lineTo(size.width * 0.65, size.height * 0.7);
-    
+
     // South (Tamil Nadu)
     path.lineTo(size.width * 0.55, size.height * 0.85);
     path.lineTo(size.width * 0.45, size.height * 0.9);
     path.lineTo(size.width * 0.35, size.height * 0.85);
-    
+
     // West coast (Kerala, Goa, Gujarat)
     path.lineTo(size.width * 0.3, size.height * 0.75);
     path.lineTo(size.width * 0.25, size.height * 0.6);
     path.lineTo(size.width * 0.2, size.height * 0.4);
     path.lineTo(size.width * 0.25, size.height * 0.25);
-    
+
     // Back to Kashmir
     path.close();
-    
+
     canvas.drawPath(path, paint);
     canvas.drawPath(path, borderPaint);
   }

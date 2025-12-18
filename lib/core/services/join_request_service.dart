@@ -124,14 +124,11 @@ class JoinRequestService {
       final batch = _firestore.batch();
 
       // Update join request status
-      batch.update(
-        _firestore.collection('join_requests').doc(requestId),
-        {
-          'status': 'approved',
-          'resolvedAt': Timestamp.now(),
-          'resolvedBy': teacherId,
-        },
-      );
+      batch.update(_firestore.collection('join_requests').doc(requestId), {
+        'status': 'approved',
+        'resolvedAt': Timestamp.now(),
+        'resolvedBy': teacherId,
+      });
 
       // Get classroom's schoolId and schoolTag
       final classroomDoc = await _firestore
@@ -154,7 +151,9 @@ class JoinRequestService {
       // Add classroom, schoolId, and schoolTag to user's profile
       final updateData = {
         'classroomIds': FieldValue.arrayUnion([request.classroomId]),
-        'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
+        'pendingClassroomRequests': FieldValue.arrayRemove([
+          request.classroomId,
+        ]),
         'updatedAt': Timestamp.now(),
       };
       if (schoolId != null) {
@@ -163,7 +162,7 @@ class JoinRequestService {
       if (schoolTag != null) {
         updateData['schoolTag'] = schoolTag;
       }
-      
+
       batch.update(
         _firestore.collection('users').doc(request.studentId),
         updateData,
@@ -201,15 +200,12 @@ class JoinRequestService {
       final batch = _firestore.batch();
 
       // Update join request status
-      batch.update(
-        _firestore.collection('join_requests').doc(requestId),
-        {
-          'status': 'rejected',
-          'resolvedAt': Timestamp.now(),
-          'resolvedBy': teacherId,
-          'rejectReason': reason,
-        },
-      );
+      batch.update(_firestore.collection('join_requests').doc(requestId), {
+        'status': 'rejected',
+        'resolvedAt': Timestamp.now(),
+        'resolvedBy': teacherId,
+        'rejectReason': reason,
+      });
 
       // Remove from classroom's pending list and user's pending requests
       batch.update(
@@ -219,14 +215,13 @@ class JoinRequestService {
           'updatedAt': Timestamp.now(),
         },
       );
-      
-      batch.update(
-        _firestore.collection('users').doc(request.studentId),
-        {
-          'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
-          'updatedAt': Timestamp.now(),
-        },
-      );
+
+      batch.update(_firestore.collection('users').doc(request.studentId), {
+        'pendingClassroomRequests': FieldValue.arrayRemove([
+          request.classroomId,
+        ]),
+        'updatedAt': Timestamp.now(),
+      });
 
       await batch.commit();
     } catch (e) {
@@ -270,14 +265,13 @@ class JoinRequestService {
           'updatedAt': Timestamp.now(),
         },
       );
-      
-      batch.update(
-        _firestore.collection('users').doc(studentId),
-        {
-          'pendingClassroomRequests': FieldValue.arrayRemove([request.classroomId]),
-          'updatedAt': Timestamp.now(),
-        },
-      );
+
+      batch.update(_firestore.collection('users').doc(studentId), {
+        'pendingClassroomRequests': FieldValue.arrayRemove([
+          request.classroomId,
+        ]),
+        'updatedAt': Timestamp.now(),
+      });
 
       await batch.commit();
     } catch (e) {
@@ -302,7 +296,9 @@ class JoinRequestService {
   }
 
   /// Get count of pending requests for multiple classrooms (for teacher dashboard)
-  Future<Map<String, int>> getPendingRequestCounts(List<String> classroomIds) async {
+  Future<Map<String, int>> getPendingRequestCounts(
+    List<String> classroomIds,
+  ) async {
     try {
       final counts = <String, int>{};
 
@@ -317,4 +313,3 @@ class JoinRequestService {
     }
   }
 }
-

@@ -18,15 +18,16 @@ class InnovationLabGame extends StatefulWidget {
   State<InnovationLabGame> createState() => _InnovationLabGameState();
 }
 
-class _InnovationLabGameState extends State<InnovationLabGame> with TickerProviderStateMixin {
+class _InnovationLabGameState extends State<InnovationLabGame>
+    with TickerProviderStateMixin {
   final GameIntegrationService _gameService = GameIntegrationService();
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
-  
+
   Map<String, dynamic>? gameData;
   Map<String, dynamic>? currentChallenge;
-  
+
   // Game state
   bool gameStarted = false;
   String currentPhase = 'brief';
@@ -34,7 +35,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   int score = 0;
   int timeRemaining = 30; // Start with brief phase time
   Timer? gameTimer;
-  
+
   // Phase time limits (in seconds)
   final Map<String, int> phaseTimeLimits = {
     'brief': 30,
@@ -43,7 +44,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     'ip_strategy': 60,
     'filing': 60,
   };
-  
+
   // Drawing state
   List<DrawingStroke> strokes = [];
   DrawingStroke? currentStroke;
@@ -52,20 +53,20 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   double strokeWidth = 2.0;
   bool isToolbarExpanded = false;
   bool fillShape = false;
-  
+
   // Shape drawing state
   Offset? shapeStartPoint;
   Offset? shapeEndPoint;
-  
+
   // Phase-specific state
   Map<String, List<String>> ipSelections = {};
   Map<String, String> filingAnswers = {};
   List<bool> priorArtAnswers = [];
-  
+
   // Track what has been scored to prevent duplicate scoring
   Set<String> scoredIPSelections = {};
   Set<String> scoredFilingAnswers = {};
-  
+
   // Preset color palette (20 colors)
   final List<Color> colorPalette = [
     Colors.black,
@@ -89,9 +90,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     const Color(0xFFFF5722), // Deep Orange
     const Color(0xFF795548), // Brown
   ];
-  
 
-  
   @override
   void initState() {
     super.initState();
@@ -99,14 +98,16 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   }
 
   Future<void> _loadGameData() async {
-    final String jsonString = await rootBundle.loadString('content/games/innovation_lab.json');
+    final String jsonString = await rootBundle.loadString(
+      'content/games/innovation_lab.json',
+    );
     final data = json.decode(jsonString);
-    
+
     // Randomly select 1 challenge from all available challenges
     final challenges = data['challenges'] as List;
     final random = Random();
     final selectedChallenge = challenges[random.nextInt(challenges.length)];
-    
+
     setState(() {
       gameData = data;
       currentChallenge = selectedChallenge;
@@ -125,10 +126,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       }
     });
   }
-  
+
   void _handlePhaseTimeout() {
     gameTimer?.cancel();
-    
+
     // Show timeout message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -137,7 +138,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
         duration: const Duration(seconds: 2),
       ),
     );
-    
+
     // Auto-advance to next phase or end game
     final phases = ['brief', 'creation', 'prior_art', 'ip_strategy', 'filing'];
     if (phaseIndex < phases.length - 1) {
@@ -150,26 +151,30 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       _endGame();
     }
   }
-  
+
   String _getPhaseDisplayName(String phase) {
     switch (phase) {
-      case 'brief': return 'The Brief';
-      case 'creation': return 'Creation Studio';
-      case 'prior_art': return 'Prior Art Challenge';
-      case 'ip_strategy': return 'IP Strategy';
-      case 'filing': return 'IP Filing';
-      default: return phase;
+      case 'brief':
+        return 'The Brief';
+      case 'creation':
+        return 'Creation Studio';
+      case 'prior_art':
+        return 'Prior Art Challenge';
+      case 'ip_strategy':
+        return 'IP Strategy';
+      case 'filing':
+        return 'IP Filing';
+      default:
+        return phase;
     }
   }
 
-
-
   void _nextPhase() {
     final phases = ['brief', 'creation', 'prior_art', 'ip_strategy', 'filing'];
-    
+
     // Stop current phase timer
     gameTimer?.cancel();
-    
+
     if (phaseIndex < phases.length - 1) {
       setState(() {
         phaseIndex++;
@@ -177,7 +182,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
         // Reset timer for new phase
         timeRemaining = phaseTimeLimits[currentPhase]!;
       });
-      
+
       // Start timer for new phase
       _startTimer();
     } else {
@@ -188,11 +193,11 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   Future<void> _endGame() async {
     gameTimer?.cancel();
     _calculateFinalScore();
-    
+
     // Check if first completion
     final isFirstTime = await _gameService.isFirstCompletion('innovation_lab');
     final isPerfect = score >= 900;
-    
+
     // Save game progress
     await _gameService.saveGameProgress(
       gameId: 'innovation_lab',
@@ -200,11 +205,11 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       timeSpentSeconds: 360 - timeRemaining,
       completed: true,
     );
-    
+
     // Award XP - capped at 100-200 range
     // Calculate base XP based on score (score is 0-1000, normalize to 50-80 base XP)
     int baseXP = 50 + ((score / 1000) * 30).round();
-    
+
     // With bonuses: 50-80 base + 50% perfect + 100% first time = max ~200 XP
     // Example: 930 score = 50 + (0.93 * 30) = 50 + 28 = 78 base
     // Perfect: 78 + 39 = 117 XP
@@ -217,15 +222,15 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       isPerfectScore: isPerfect,
       isFirstCompletion: isFirstTime,
     );
-    
+
     final xpEarned = result['xp'] as int;
     final newBadges = result['newBadges'] as List<String>;
-    
+
     // Show badge animations if any badges were unlocked
     if (newBadges.isNotEmpty && mounted) {
       await _gameService.showBadgeAnimations(context, newBadges);
     }
-    
+
     // Log analytics
     await _gameService.logGameComplete(
       gameId: 'innovation_lab',
@@ -233,7 +238,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       timeSpentSeconds: 360 - timeRemaining,
       isPerfectScore: isPerfect,
     );
-    
+
     _confettiController.play();
     _showResultsScreen(xpEarned);
   }
@@ -241,20 +246,28 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   void _calculateFinalScore() {
     // Drawing phase scoring (30%)
     int drawingScore = 0;
-    drawingScore += (strokes.length * 3).clamp(0, 300); // Tool variety & complexity
-    
+    drawingScore += (strokes.length * 3).clamp(
+      0,
+      300,
+    ); // Tool variety & complexity
+
     // IP Knowledge scoring (70%)
     int ipScore = 0;
-    ipScore += (priorArtAnswers.where((a) => a).length * 50); // Prior art analysis
-    ipScore += (ipSelections.values.expand((e) => e).length * 50); // IP type selection
+    ipScore +=
+        (priorArtAnswers.where((a) => a).length * 50); // Prior art analysis
+    ipScore +=
+        (ipSelections.values.expand((e) => e).length * 50); // IP type selection
     ipScore += (filingAnswers.length * 40); // Filing answers
-    
+
     // Bonus multipliers
     double multiplier = 1.0;
     if (timeRemaining > 60) multiplier += 0.1; // Speed bonus
     if (strokes.length >= 10) multiplier += 0.1; // Creativity bonus
-    
-    score = ((drawingScore * 0.3 + ipScore * 0.7) * multiplier).round().clamp(0, 1000);
+
+    score = ((drawingScore * 0.3 + ipScore * 0.7) * multiplier).round().clamp(
+      0,
+      1000,
+    );
   }
 
   void _showResultsScreen(int xpEarned) {
@@ -368,11 +381,20 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
+              LoadingSkeleton(
+                height: 200,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 150,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 100,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
             ],
           ),
         ),
@@ -411,7 +433,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white),
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
                               onPressed: () => Navigator.pop(context),
                             ),
                             Expanded(
@@ -446,12 +471,22 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildStatChip(
-                              Icons.timer, 
-                              '${timeRemaining ~/ 60}:${(timeRemaining % 60).toString().padLeft(2, '0')}', 
-                              timeRemaining <= 10 ? Colors.red : const Color(0xFF0277BD),
+                              Icons.timer,
+                              '${timeRemaining ~/ 60}:${(timeRemaining % 60).toString().padLeft(2, '0')}',
+                              timeRemaining <= 10
+                                  ? Colors.red
+                                  : const Color(0xFF0277BD),
                             ),
-                            _buildStatChip(Icons.stars, '$score', const Color(0xFFFFA726)),
-                            _buildStatChip(Icons.brush, '${strokes.length}', const Color(0xFF00838F)),
+                            _buildStatChip(
+                              Icons.stars,
+                              '$score',
+                              const Color(0xFFFFA726),
+                            ),
+                            _buildStatChip(
+                              Icons.brush,
+                              '${strokes.length}',
+                              const Color(0xFF00838F),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -463,12 +498,14 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                             return Expanded(
                               child: Container(
                                 height: 4,
-                                margin: EdgeInsets.only(right: index < 4 ? 4 : 0),
+                                margin: EdgeInsets.only(
+                                  right: index < 4 ? 4 : 0,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: isCompleted 
-                                    ? Colors.white 
-                                    : isCurrent 
-                                      ? Colors.white70 
+                                  color: isCompleted
+                                      ? Colors.white
+                                      : isCurrent
+                                      ? Colors.white70
                                       : Colors.white30,
                                   borderRadius: BorderRadius.circular(2),
                                 ),
@@ -503,7 +540,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
 
   Widget _buildStatChip(IconData icon, String text, Color color) {
     final isTimerLow = icon == Icons.timer && timeRemaining <= 10;
-    
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -541,7 +578,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Innovation Lab', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Innovation Lab',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFF00ACC1),
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -588,7 +628,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
 
                   Text(
                     'Innovation Lab',
-                    style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.bold),
+                    style: AppTextStyles.h2.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
 
@@ -614,10 +656,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Game Rules:',
-                      style: AppTextStyles.cardTitle,
-                    ),
+                    Text('Game Rules:', style: AppTextStyles.cardTitle),
                     const SizedBox(height: 12),
                     _buildRuleItem('🎨', 'Use drawing tools to create designs'),
                     _buildRuleItem('🔍', 'Compare with prior art'),
@@ -686,12 +725,17 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [const Color(0xFF00ACC1).withValues(alpha: 0.1), Colors.white],
+                colors: [
+                  const Color(0xFF00ACC1).withValues(alpha: 0.1),
+                  Colors.white,
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: const Color(0xFF00ACC1).withValues(alpha: 0.3)),
+              border: Border.all(
+                color: const Color(0xFF00ACC1).withValues(alpha: 0.3),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,7 +748,11 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                         color: const Color(0xFF00ACC1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.lightbulb, color: Colors.white, size: 28),
+                      child: const Icon(
+                        Icons.lightbulb,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -764,12 +812,17 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             child: ElevatedButton.icon(
               onPressed: _nextPhase,
               icon: const Icon(Icons.brush),
-              label: const Text('Start Creating', style: TextStyle(fontSize: 18)),
+              label: const Text(
+                'Start Creating',
+                style: TextStyle(fontSize: 18),
+              ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(18),
                 backgroundColor: const Color(0xFF00ACC1),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -839,7 +892,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                 children: [
                   Text(
                     'Strokes: ${strokes.length}',
-                    style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   ElevatedButton.icon(
                     onPressed: strokes.isEmpty ? null : _nextPhase,
@@ -848,7 +903,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00ACC1),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -856,7 +914,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             ),
           ],
         ),
-        
+
         // Floating toolbar button - overlaying canvas
         Positioned(
           right: 24,
@@ -871,7 +929,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       ],
     );
   }
-  
+
   void _showToolsModal() {
     showModalBottomSheet(
       context: context,
@@ -932,30 +990,72 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Expanded(child: _buildModalToolButton('pencil', Icons.edit, 'Pencil')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'pencil',
+                              Icons.edit,
+                              'Pencil',
+                            ),
+                          ),
                           const SizedBox(width: 8),
-                          Expanded(child: _buildModalToolButton('brush', Icons.brush, 'Brush')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'brush',
+                              Icons.brush,
+                              'Brush',
+                            ),
+                          ),
                           const SizedBox(width: 8),
-                          Expanded(child: _buildModalToolButton('eraser', Icons.auto_fix_high, 'Eraser')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'eraser',
+                              Icons.auto_fix_high,
+                              'Eraser',
+                            ),
+                          ),
                           const SizedBox(width: 8),
-                          Expanded(child: _buildModalToolButton('fill', Icons.format_color_fill, 'Fill')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'fill',
+                              Icons.format_color_fill,
+                              'Fill',
+                            ),
+                          ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 20),
                       _buildSectionLabel('Shapes'),
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Expanded(child: _buildModalToolButton('line', Icons.remove, 'Line')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'line',
+                              Icons.remove,
+                              'Line',
+                            ),
+                          ),
                           const SizedBox(width: 8),
-                          Expanded(child: _buildModalToolButton('rectangle', Icons.crop_square, 'Rectangle')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'rectangle',
+                              Icons.crop_square,
+                              'Rectangle',
+                            ),
+                          ),
                           const SizedBox(width: 8),
-                          Expanded(child: _buildModalToolButton('circle', Icons.circle_outlined, 'Circle')),
+                          Expanded(
+                            child: _buildModalToolButton(
+                              'circle',
+                              Icons.circle_outlined,
+                              'Circle',
+                            ),
+                          ),
                           const Expanded(child: SizedBox()),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 24),
                       _buildSectionLabel('Brush Size: ${strokeWidth.round()}'),
                       Slider(
@@ -969,40 +1069,50 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           setModalState(() {});
                         },
                       ),
-                      
+
                       const SizedBox(height: 20),
                       _buildSectionLabel('Colors'),
                       const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: colorPalette.map((color) => InkWell(
-                          onTap: () {
-                            setState(() => selectedColor = color);
-                            setModalState(() {});
-                          },
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: color,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: selectedColor == color ? const Color(0xFF00ACC1) : Colors.grey.shade300,
-                                width: selectedColor == color ? 3 : 1,
-                              ),
-                              boxShadow: selectedColor == color ? [
-                                BoxShadow(
-                                  color: const Color(0xFF00ACC1).withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
+                        children: colorPalette
+                            .map(
+                              (color) => InkWell(
+                                onTap: () {
+                                  setState(() => selectedColor = color);
+                                  setModalState(() {});
+                                },
+                                child: Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: selectedColor == color
+                                          ? const Color(0xFF00ACC1)
+                                          : Colors.grey.shade300,
+                                      width: selectedColor == color ? 3 : 1,
+                                    ),
+                                    boxShadow: selectedColor == color
+                                        ? [
+                                            BoxShadow(
+                                              color: const Color(
+                                                0xFF00ACC1,
+                                              ).withValues(alpha: 0.3),
+                                              blurRadius: 8,
+                                              spreadRadius: 1,
+                                            ),
+                                          ]
+                                        : null,
+                                  ),
                                 ),
-                              ] : null,
-                            ),
-                          ),
-                        )).toList(),
+                              ),
+                            )
+                            .toList(),
                       ),
-                      
+
                       const SizedBox(height: 24),
                       _buildSectionLabel('Actions'),
                       const SizedBox(height: 12),
@@ -1010,16 +1120,18 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                         children: [
                           Expanded(
                             child: OutlinedButton.icon(
-                              onPressed: strokes.isEmpty ? null : () {
-                                setState(() {
-                                  strokes.removeLast();
-                                  // Only decrease if we haven't hit the cap yet
-                                  if (strokes.length < 100) {
-                                    score = (score - 3).clamp(0, 1000);
-                                  }
-                                });
-                                Navigator.pop(context);
-                              },
+                              onPressed: strokes.isEmpty
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        strokes.removeLast();
+                                        // Only decrease if we haven't hit the cap yet
+                                        if (strokes.length < 100) {
+                                          score = (score - 3).clamp(0, 1000);
+                                        }
+                                      });
+                                      Navigator.pop(context);
+                                    },
                               icon: const Icon(Icons.undo),
                               label: const Text('Undo'),
                               style: OutlinedButton.styleFrom(
@@ -1030,10 +1142,12 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           const SizedBox(width: 12),
                           Expanded(
                             child: OutlinedButton.icon(
-                              onPressed: strokes.isEmpty ? null : () {
-                                setState(() => strokes.clear());
-                                Navigator.pop(context);
-                              },
+                              onPressed: strokes.isEmpty
+                                  ? null
+                                  : () {
+                                      setState(() => strokes.clear());
+                                      Navigator.pop(context);
+                                    },
                               icon: const Icon(Icons.delete_outline),
                               label: const Text('Clear'),
                               style: OutlinedButton.styleFrom(
@@ -1054,20 +1168,28 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       ),
     );
   }
-  
+
   IconData _getToolIcon(String tool) {
     switch (tool) {
-      case 'pencil': return Icons.edit;
-      case 'brush': return Icons.brush;
-      case 'eraser': return Icons.auto_fix_high;
-      case 'fill': return Icons.format_color_fill;
-      case 'line': return Icons.remove;
-      case 'rectangle': return Icons.crop_square;
-      case 'circle': return Icons.circle_outlined;
-      default: return Icons.edit;
+      case 'pencil':
+        return Icons.edit;
+      case 'brush':
+        return Icons.brush;
+      case 'eraser':
+        return Icons.auto_fix_high;
+      case 'fill':
+        return Icons.format_color_fill;
+      case 'line':
+        return Icons.remove;
+      case 'rectangle':
+        return Icons.crop_square;
+      case 'circle':
+        return Icons.circle_outlined;
+      default:
+        return Icons.edit;
     }
   }
-  
+
   Widget _buildSectionLabel(String text) {
     return Text(
       text,
@@ -1078,7 +1200,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       ),
     );
   }
-  
+
   Widget _buildModalToolButton(String tool, IconData icon, String label) {
     final isSelected = selectedTool == tool;
     return InkWell(
@@ -1120,7 +1242,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
       ),
     );
   }
-  
+
   Widget _buildColorButton(Color color) {
     final isSelected = selectedColor == color;
     return InkWell(
@@ -1135,39 +1257,41 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             color: isSelected ? const Color(0xFF00ACC1) : Colors.grey.shade300,
             width: isSelected ? 3 : 1,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: const Color(0xFF00ACC1).withValues(alpha: 0.3),
-              blurRadius: 8,
-              spreadRadius: 1,
-            ),
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF00ACC1).withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
         ),
       ),
     );
   }
 
-
-
-
-
   void _onPanStart(DragStartDetails details) {
     if (selectedTool == 'fill') {
       // Fill bucket - instant fill on tap
       setState(() {
-        strokes.add(DrawingStroke(
-          tool: 'fill',
-          color: selectedColor,
-          strokeWidth: strokeWidth,
-          points: [details.localPosition],
-          filled: true,
-        ));
+        strokes.add(
+          DrawingStroke(
+            tool: 'fill',
+            color: selectedColor,
+            strokeWidth: strokeWidth,
+            points: [details.localPosition],
+            filled: true,
+          ),
+        );
         // Cap drawing score at 300 (100 strokes max)
         if (strokes.length <= 100) {
           score += 3;
         }
       });
-    } else if (selectedTool == 'rectangle' || selectedTool == 'circle' || selectedTool == 'line') {
+    } else if (selectedTool == 'rectangle' ||
+        selectedTool == 'circle' ||
+        selectedTool == 'line') {
       // Shape tools - store start point
       setState(() {
         shapeStartPoint = details.localPosition;
@@ -1190,7 +1314,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     if (selectedTool == 'fill') {
       // Fill bucket doesn't need update
       return;
-    } else if (selectedTool == 'rectangle' || selectedTool == 'circle' || selectedTool == 'line') {
+    } else if (selectedTool == 'rectangle' ||
+        selectedTool == 'circle' ||
+        selectedTool == 'line') {
       // Update shape end point
       setState(() {
         shapeEndPoint = details.localPosition;
@@ -1207,17 +1333,21 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
     if (selectedTool == 'fill') {
       // Fill bucket already added stroke in onPanStart
       return;
-    } else if (selectedTool == 'rectangle' || selectedTool == 'circle' || selectedTool == 'line') {
+    } else if (selectedTool == 'rectangle' ||
+        selectedTool == 'circle' ||
+        selectedTool == 'line') {
       // Finalize shape
       if (shapeStartPoint != null && shapeEndPoint != null) {
         setState(() {
-          strokes.add(DrawingStroke(
-            tool: selectedTool,
-            color: selectedColor,
-            strokeWidth: strokeWidth,
-            points: [shapeStartPoint!, shapeEndPoint!],
-            filled: fillShape,
-          ));
+          strokes.add(
+            DrawingStroke(
+              tool: selectedTool,
+              color: selectedColor,
+              strokeWidth: strokeWidth,
+              points: [shapeStartPoint!, shapeEndPoint!],
+              filled: fillShape,
+            ),
+          );
           shapeStartPoint = null;
           shapeEndPoint = null;
           // Cap drawing score at 300 (100 strokes max)
@@ -1244,7 +1374,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   Widget _buildPriorArtPhase() {
     final priorArt = currentChallenge!['priorArtDescriptions'] as List;
     final priorArtImages = currentChallenge!['priorArtImages'] as List;
-    
+
     return Column(
       children: [
         Container(
@@ -1277,7 +1407,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
               const SizedBox(height: 8),
               Text(
                 'Compare your design with existing products',
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade700),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: Colors.grey.shade700,
+                ),
               ),
             ],
           ),
@@ -1294,7 +1426,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: answered ? Colors.green.shade300 : Colors.grey.shade300,
+                    color: answered
+                        ? Colors.green.shade300
+                        : Colors.grey.shade300,
                     width: answered ? 2 : 1,
                   ),
                   boxShadow: [
@@ -1315,7 +1449,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                              color: AppDesignSystem.primaryIndigo.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -1330,7 +1466,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           Expanded(
                             child: Text(
                               priorArt[index],
-                              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+                              style: AppTextStyles.bodyMedium.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ],
@@ -1354,11 +1492,18 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.image_not_supported, size: 40, color: Colors.grey.shade400),
+                                    Icon(
+                                      Icons.image_not_supported,
+                                      size: 40,
+                                      color: Colors.grey.shade400,
+                                    ),
                                     const SizedBox(height: 8),
                                     Text(
                                       'Image not available',
-                                      style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                                      style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1370,21 +1515,25 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                       const SizedBox(height: 12),
                       Text(
                         'Is your design too similar to this?',
-                        style: AppTextStyles.bodySmall.copyWith(color: Colors.grey.shade600),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: answered ? null : () {
-                                setState(() {
-                                  if (priorArtAnswers.length == index) {
-                                    priorArtAnswers.add(false);
-                                    score += 20;
-                                  }
-                                });
-                              },
+                              onPressed: answered
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        if (priorArtAnswers.length == index) {
+                                          priorArtAnswers.add(false);
+                                          score += 20;
+                                        }
+                                      });
+                                    },
                               icon: const Icon(Icons.check_circle),
                               label: const Text('Different'),
                               style: ElevatedButton.styleFrom(
@@ -1396,13 +1545,15 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                           const SizedBox(width: 8),
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: answered ? null : () {
-                                setState(() {
-                                  if (priorArtAnswers.length == index) {
-                                    priorArtAnswers.add(true);
-                                  }
-                                });
-                              },
+                              onPressed: answered
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        if (priorArtAnswers.length == index) {
+                                          priorArtAnswers.add(true);
+                                        }
+                                      });
+                                    },
                               icon: const Icon(Icons.warning),
                               label: const Text('Similar'),
                               style: ElevatedButton.styleFrom(
@@ -1435,7 +1586,9 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
           child: SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: priorArtAnswers.length >= priorArt.length ? _nextPhase : null,
+              onPressed: priorArtAnswers.length >= priorArt.length
+                  ? _nextPhase
+                  : null,
               icon: const Icon(Icons.arrow_forward),
               label: const Text('Continue to IP Strategy'),
               style: ElevatedButton.styleFrom(
@@ -1453,7 +1606,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
   Widget _buildIPStrategyPhase() {
     final ipElements = currentChallenge!['ipElements'] as List;
     final ipTypes = gameData!['ipTypes'] as List;
-    
+
     return Column(
       children: [
         // Scrollable content
@@ -1467,10 +1620,15 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [const Color(0xFF00ACC1).withValues(alpha: 0.1), Colors.white],
+                      colors: [
+                        const Color(0xFF00ACC1).withValues(alpha: 0.1),
+                        Colors.white,
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0xFF00ACC1).withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: const Color(0xFF00ACC1).withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -1482,7 +1640,11 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                               color: const Color(0xFF00ACC1),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.shield, color: Colors.white, size: 28),
+                            child: const Icon(
+                              Icons.shield,
+                              color: Colors.white,
+                              size: 28,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -1499,14 +1661,16 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                       const SizedBox(height: 8),
                       Text(
                         'Choose the best IP protection for each element',
-                        style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade700),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: Colors.grey.shade700,
+                        ),
                       ),
                     ],
                   ),
                 ),
-        
+
                 const SizedBox(height: 8),
-        
+
                 // Elements list with improved cards
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1528,23 +1692,25 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                         final element = ipElements[index];
                         final elementId = element['id'];
                         final selected = ipSelections[elementId] ?? [];
-                        
+
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: selected.isNotEmpty 
-                                ? const Color(0xFF00ACC1) 
-                                : Colors.grey.shade300,
+                              color: selected.isNotEmpty
+                                  ? const Color(0xFF00ACC1)
+                                  : Colors.grey.shade300,
                               width: selected.isNotEmpty ? 2 : 1,
                             ),
                             boxShadow: [
                               BoxShadow(
                                 color: selected.isNotEmpty
-                                  ? const Color(0xFF00ACC1).withValues(alpha: 0.15)
-                                  : Colors.black.withValues(alpha: 0.05),
+                                    ? const Color(
+                                        0xFF00ACC1,
+                                      ).withValues(alpha: 0.15)
+                                    : Colors.black.withValues(alpha: 0.05),
                                 blurRadius: selected.isNotEmpty ? 12 : 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -1563,8 +1729,14 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                       decoration: BoxDecoration(
                                         gradient: LinearGradient(
                                           colors: selected.isNotEmpty
-                                            ? [const Color(0xFF00ACC1), const Color(0xFF26C6DA)]
-                                            : [Colors.grey.shade300, Colors.grey.shade400],
+                                              ? [
+                                                  const Color(0xFF00ACC1),
+                                                  const Color(0xFF26C6DA),
+                                                ]
+                                              : [
+                                                  Colors.grey.shade300,
+                                                  Colors.grey.shade400,
+                                                ],
                                         ),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -1582,7 +1754,8 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             element['name'],
@@ -1624,33 +1797,51 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: ipTypes.map<Widget>((type) {
                                     final typeId = type['id'];
-                                    final isSelected = selected.contains(typeId);
+                                    final isSelected = selected.contains(
+                                      typeId,
+                                    );
                                     final colorValue = int.parse(
-                                      type['color'].toString().replaceAll('0x', ''),
+                                      type['color'].toString().replaceAll(
+                                        '0x',
+                                        '',
+                                      ),
                                       radix: 16,
                                     );
                                     final typeColor = Color(colorValue);
-                                    
+
                                     return Container(
                                       margin: const EdgeInsets.only(bottom: 10),
                                       child: InkWell(
                                         onTap: () {
                                           setState(() {
-                                            final selectionKey = '${elementId}_$typeId';
+                                            final selectionKey =
+                                                '${elementId}_$typeId';
                                             if (isSelected) {
                                               // Unselecting - remove from list and decrease score
-                                              ipSelections[elementId] = 
-                                                selected.where((id) => id != typeId).toList();
-                                              if (scoredIPSelections.contains(selectionKey)) {
+                                              ipSelections[elementId] = selected
+                                                  .where((id) => id != typeId)
+                                                  .toList();
+                                              if (scoredIPSelections.contains(
+                                                selectionKey,
+                                              )) {
                                                 score -= 25;
-                                                scoredIPSelections.remove(selectionKey);
+                                                scoredIPSelections.remove(
+                                                  selectionKey,
+                                                );
                                               }
                                             } else {
                                               // Selecting - add to list and increase score
-                                              ipSelections[elementId] = [...selected, typeId];
-                                              if (!scoredIPSelections.contains(selectionKey)) {
+                                              ipSelections[elementId] = [
+                                                ...selected,
+                                                typeId,
+                                              ];
+                                              if (!scoredIPSelections.contains(
+                                                selectionKey,
+                                              )) {
                                                 score += 25;
-                                                scoredIPSelections.add(selectionKey);
+                                                scoredIPSelections.add(
+                                                  selectionKey,
+                                                );
                                               }
                                             }
                                           });
@@ -1659,23 +1850,38 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                           padding: const EdgeInsets.all(14),
                                           decoration: BoxDecoration(
                                             gradient: isSelected
-                                              ? LinearGradient(
-                                                  colors: [typeColor, typeColor.withValues(alpha: 0.8)],
-                                                )
-                                              : null,
-                                            color: isSelected ? null : Colors.white,
-                                            borderRadius: BorderRadius.circular(12),
+                                                ? LinearGradient(
+                                                    colors: [
+                                                      typeColor,
+                                                      typeColor.withValues(
+                                                        alpha: 0.8,
+                                                      ),
+                                                    ],
+                                                  )
+                                                : null,
+                                            color: isSelected
+                                                ? null
+                                                : Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
                                             border: Border.all(
-                                              color: isSelected 
-                                                ? typeColor 
-                                                : typeColor.withValues(alpha: 0.3),
+                                              color: isSelected
+                                                  ? typeColor
+                                                  : typeColor.withValues(
+                                                      alpha: 0.3,
+                                                    ),
                                               width: 2,
                                             ),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: isSelected 
-                                                  ? typeColor.withValues(alpha: 0.3)
-                                                  : Colors.black.withValues(alpha: 0.05),
+                                                color: isSelected
+                                                    ? typeColor.withValues(
+                                                        alpha: 0.3,
+                                                      )
+                                                    : Colors.black.withValues(
+                                                        alpha: 0.05,
+                                                      ),
                                                 blurRadius: isSelected ? 12 : 4,
                                                 offset: const Offset(0, 2),
                                               ),
@@ -1684,34 +1890,45 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                           child: Row(
                                             children: [
                                               Container(
-                                                padding: const EdgeInsets.all(10),
+                                                padding: const EdgeInsets.all(
+                                                  10,
+                                                ),
                                                 decoration: BoxDecoration(
-                                                  color: isSelected 
-                                                    ? Colors.white.withValues(alpha: 0.2)
-                                                    : typeColor.withValues(alpha: 0.15),
-                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: isSelected
+                                                      ? Colors.white.withValues(
+                                                          alpha: 0.2,
+                                                        )
+                                                      : typeColor.withValues(
+                                                          alpha: 0.15,
+                                                        ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
                                                 child: Text(
                                                   type['icon'],
                                                   style: TextStyle(
                                                     fontSize: 20,
-                                                    color: isSelected ? Colors.white : typeColor,
+                                                    color: isSelected
+                                                        ? Colors.white
+                                                        : typeColor,
                                                   ),
                                                 ),
                                               ),
                                               const SizedBox(width: 12),
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       type['name'],
                                                       style: TextStyle(
                                                         fontSize: 15,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: isSelected 
-                                                          ? Colors.white 
-                                                          : typeColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: isSelected
+                                                            ? Colors.white
+                                                            : typeColor,
                                                       ),
                                                     ),
                                                     const SizedBox(height: 4),
@@ -1719,9 +1936,12 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                                       type['description'],
                                                       style: TextStyle(
                                                         fontSize: 12,
-                                                        color: isSelected 
-                                                          ? Colors.white.withValues(alpha: 0.9)
-                                                          : Colors.black87,
+                                                        color: isSelected
+                                                            ? Colors.white
+                                                                  .withValues(
+                                                                    alpha: 0.9,
+                                                                  )
+                                                            : Colors.black87,
                                                       ),
                                                     ),
                                                   ],
@@ -1729,9 +1949,12 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                                               ),
                                               if (isSelected)
                                                 Container(
-                                                  padding: const EdgeInsets.all(6),
+                                                  padding: const EdgeInsets.all(
+                                                    6,
+                                                  ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.white.withValues(alpha: 0.3),
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.3),
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: const Icon(
@@ -1760,7 +1983,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             ),
           ),
         ),
-        
+
         // Bottom bar
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
@@ -1778,7 +2001,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF00ACC1).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -1812,7 +2038,10 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                 child: ElevatedButton.icon(
                   onPressed: ipSelections.isNotEmpty ? _nextPhase : null,
                   icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Continue to Filing', style: TextStyle(fontSize: 16)),
+                  label: const Text(
+                    'Continue to Filing',
+                    style: TextStyle(fontSize: 16),
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(18),
                     backgroundColor: const Color(0xFF00ACC1),
@@ -1833,7 +2062,7 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
 
   Widget _buildFilingPhase() {
     final questions = currentChallenge!['filingQuestions'] as List;
-    
+
     return Column(
       children: [
         // Scrollable content - starts from top
@@ -1849,218 +2078,256 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                 children: [
                   // Header
                   Container(
-            padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.green.shade50, Colors.white],
-            ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.green.shade200),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.green.shade600,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.description, color: Colors.white, size: 28),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'IP FILING SIMULATOR',
-                      style: AppTextStyles.h3.copyWith(
-                        color: Colors.green.shade900,
-                        fontWeight: FontWeight.bold,
+                      gradient: LinearGradient(
+                        colors: [Colors.green.shade50, Colors.white],
                       ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.green.shade200),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Answer questions to complete your IP application',
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.grey.shade700),
-              ),
-            ],
-          ),
-        ),
-        
-        // Questions
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: List.generate(questions.length, (index) {
-              final question = questions[index];
-              final isAnswered = filingAnswers.containsKey(question['id']);
-              
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isAnswered ? Colors.green.shade300 : Colors.grey.shade300,
-                    width: isAnswered ? 2 : 1,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Q${index + 1}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green.shade700,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade600,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.description,
+                                color: Colors.white,
+                                size: 28,
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              question['question'],
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                                height: 1.4,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      // All questions are multiple choice now
-                        Column(
-                          children: (question['options'] as List).asMap().entries.map((entry) {
-                            final isSelected = filingAnswers[question['id']] == entry.key.toString();
-                            final correctIndex = question['correctIndex'] as int;
-                            final isCorrect = entry.key == correctIndex;
-                            final isAnswered = filingAnswers.containsKey(question['id']);
-                            
-                            // Determine colors based on correctness
-                            Color bgColor = Colors.grey.shade50;
-                            Color borderColor = Colors.grey.shade300;
-                            Color iconColor = Colors.grey.shade400;
-                            Color textColor = Colors.black87;
-                            IconData icon = Icons.circle_outlined;
-                            
-                            if (isSelected) {
-                              if (isCorrect) {
-                                // Correct answer - green
-                                bgColor = Colors.green.shade50;
-                                borderColor = Colors.green.shade400;
-                                iconColor = Colors.green.shade600;
-                                textColor = Colors.green.shade900;
-                                icon = Icons.check;
-                              } else {
-                                // Wrong answer - red
-                                bgColor = Colors.red.shade50;
-                                borderColor = Colors.red.shade400;
-                                iconColor = Colors.red.shade600;
-                                textColor = Colors.red.shade900;
-                                icon = Icons.close;
-                              }
-                            }
-                            
-                            return InkWell(
-                              onTap: () {
-                                // Don't allow changing answer once selected
-                                if (isAnswered) return;
-                                
-                                setState(() {
-                                  final questionId = question['id'];
-                                  filingAnswers[questionId] = entry.key.toString();
-                                  // Only score if correct answer
-                                  if (!scoredFilingAnswers.contains(questionId)) {
-                                    if (isCorrect) {
-                                      score += 25;
-                                    }
-                                    scoredFilingAnswers.add(questionId);
-                                  }
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 8),
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: bgColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: borderColor,
-                                    width: isSelected ? 2 : 1,
-                                  ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'IP FILING SIMULATOR',
+                                style: AppTextStyles.h3.copyWith(
+                                  color: Colors.green.shade900,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: Row(
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Answer questions to complete your IP application',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Questions
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: List.generate(questions.length, (index) {
+                        final question = questions[index];
+                        final isAnswered = filingAnswers.containsKey(
+                          question['id'],
+                        );
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isAnswered
+                                  ? Colors.green.shade300
+                                  : Colors.grey.shade300,
+                              width: isAnswered ? 2 : 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 20,
-                                      height: 20,
+                                      padding: const EdgeInsets.all(8),
                                       decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: iconColor,
-                                          width: 2,
-                                        ),
-                                        color: isSelected ? iconColor : Colors.transparent,
+                                        color: Colors.green.shade100,
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: isSelected
-                                        ? Icon(icon, size: 14, color: Colors.white)
-                                        : null,
+                                      child: Text(
+                                        'Q${index + 1}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green.shade700,
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
                                       child: Text(
-                                        entry.value,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                          color: textColor,
-                                        ),
+                                        question['question'],
+                                        style: AppTextStyles.bodyMedium
+                                            .copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              height: 1.4,
+                                            ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                    ],
+                                const SizedBox(height: 16),
+
+                                // All questions are multiple choice now
+                                Column(
+                                  children: (question['options'] as List)
+                                      .asMap()
+                                      .entries
+                                      .map((entry) {
+                                        final isSelected =
+                                            filingAnswers[question['id']] ==
+                                            entry.key.toString();
+                                        final correctIndex =
+                                            question['correctIndex'] as int;
+                                        final isCorrect =
+                                            entry.key == correctIndex;
+                                        final isAnswered = filingAnswers
+                                            .containsKey(question['id']);
+
+                                        // Determine colors based on correctness
+                                        Color bgColor = Colors.grey.shade50;
+                                        Color borderColor =
+                                            Colors.grey.shade300;
+                                        Color iconColor = Colors.grey.shade400;
+                                        Color textColor = Colors.black87;
+                                        IconData icon = Icons.circle_outlined;
+
+                                        if (isSelected) {
+                                          if (isCorrect) {
+                                            // Correct answer - green
+                                            bgColor = Colors.green.shade50;
+                                            borderColor = Colors.green.shade400;
+                                            iconColor = Colors.green.shade600;
+                                            textColor = Colors.green.shade900;
+                                            icon = Icons.check;
+                                          } else {
+                                            // Wrong answer - red
+                                            bgColor = Colors.red.shade50;
+                                            borderColor = Colors.red.shade400;
+                                            iconColor = Colors.red.shade600;
+                                            textColor = Colors.red.shade900;
+                                            icon = Icons.close;
+                                          }
+                                        }
+
+                                        return InkWell(
+                                          onTap: () {
+                                            // Don't allow changing answer once selected
+                                            if (isAnswered) return;
+
+                                            setState(() {
+                                              final questionId = question['id'];
+                                              filingAnswers[questionId] = entry
+                                                  .key
+                                                  .toString();
+                                              // Only score if correct answer
+                                              if (!scoredFilingAnswers.contains(
+                                                questionId,
+                                              )) {
+                                                if (isCorrect) {
+                                                  score += 25;
+                                                }
+                                                scoredFilingAnswers.add(
+                                                  questionId,
+                                                );
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              bottom: 8,
+                                            ),
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              color: bgColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                color: borderColor,
+                                                width: isSelected ? 2 : 1,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: iconColor,
+                                                      width: 2,
+                                                    ),
+                                                    color: isSelected
+                                                        ? iconColor
+                                                        : Colors.transparent,
+                                                  ),
+                                                  child: isSelected
+                                                      ? Icon(
+                                                          icon,
+                                                          size: 14,
+                                                          color: Colors.white,
+                                                        )
+                                                      : null,
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: Text(
+                                                    entry.value,
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight: isSelected
+                                                          ? FontWeight.w600
+                                                          : FontWeight.normal,
+                                                      color: textColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      })
+                                      .toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
-                ),
-              );
-            }),
-          ),
-        ),
-        const SizedBox(height: 16),
-              ],
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
-            ),
         ),
-        
+
         // Submit button
         Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
@@ -2081,14 +2348,21 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    filingAnswers.length >= questions.length ? Icons.check_circle : Icons.pending,
-                    color: filingAnswers.length >= questions.length ? Colors.green : Colors.orange,
+                    filingAnswers.length >= questions.length
+                        ? Icons.check_circle
+                        : Icons.pending,
+                    color: filingAnswers.length >= questions.length
+                        ? Colors.green
+                        : Colors.orange,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Answered: ${filingAnswers.length}/${questions.length}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
@@ -2096,9 +2370,14 @@ class _InnovationLabGameState extends State<InnovationLabGame> with TickerProvid
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: filingAnswers.length >= questions.length ? _endGame : null,
+                  onPressed: filingAnswers.length >= questions.length
+                      ? _endGame
+                      : null,
                   icon: const Icon(Icons.send),
-                  label: const Text('Submit Application', style: TextStyle(fontSize: 16)),
+                  label: const Text(
+                    'Submit Application',
+                    style: TextStyle(fontSize: 16),
+                  ),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16),
                     backgroundColor: Colors.green.shade600,
@@ -2218,35 +2497,34 @@ class DrawingPainter extends CustomPainter {
       canvas.drawCircle(center, radius, paint);
     } else if (stroke.tool == 'line' && stroke.points.length == 2) {
       canvas.drawLine(stroke.points[0], stroke.points[1], paint);
-    } else if (stroke.tool == 'fill' && stroke.points.length >= 1) {
+    } else if (stroke.tool == 'fill' && stroke.points.isNotEmpty) {
       // Fill bucket - draw a filled rectangle at tap point
       final tapPoint = stroke.points[0];
-      final fillRect = Rect.fromCenter(
-        center: tapPoint,
-        width: 50,
-        height: 50,
-      );
+      final fillRect = Rect.fromCenter(center: tapPoint, width: 50, height: 50);
       canvas.drawRect(fillRect, paint..style = PaintingStyle.fill);
     } else if (stroke.points.length > 1) {
       // Freehand path
       final path = Path();
       path.moveTo(stroke.points[0].dx, stroke.points[0].dy);
-      
+
       for (int i = 1; i < stroke.points.length; i++) {
         path.lineTo(stroke.points[i].dx, stroke.points[i].dy);
       }
-      
+
       canvas.drawPath(path, paint);
     } else if (stroke.points.length == 1) {
       // Single point
-      canvas.drawCircle(stroke.points[0], stroke.strokeWidth / 2, paint..style = PaintingStyle.fill);
+      canvas.drawCircle(
+        stroke.points[0],
+        stroke.strokeWidth / 2,
+        paint..style = PaintingStyle.fill,
+      );
     }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
-
 
 // Full-screen Results Screen - Matches other games style
 class _ResultsScreen extends StatefulWidget {
@@ -2283,27 +2561,37 @@ class _ResultsScreenState extends State<_ResultsScreen> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
     // Trigger confetti multiple times if good score (like other games)
     if (widget.score >= 600) {
       _playConfettiMultipleTimes();
     }
   }
-  
+
   void _playConfettiMultipleTimes() {
     // Play confetti 4 times with delays using Timers so we can cancel them
-    _confettiTimers.add(Timer(const Duration(milliseconds: 500), () {
-      if (mounted) _confettiController.play();
-    }));
-    _confettiTimers.add(Timer(const Duration(milliseconds: 2000), () {
-      if (mounted) _confettiController.play();
-    }));
-    _confettiTimers.add(Timer(const Duration(milliseconds: 3500), () {
-      if (mounted) _confettiController.play();
-    }));
-    _confettiTimers.add(Timer(const Duration(milliseconds: 5000), () {
-      if (mounted) _confettiController.play();
-    }));
+    _confettiTimers.add(
+      Timer(const Duration(milliseconds: 500), () {
+        if (mounted) _confettiController.play();
+      }),
+    );
+    _confettiTimers.add(
+      Timer(const Duration(milliseconds: 2000), () {
+        if (mounted) _confettiController.play();
+      }),
+    );
+    _confettiTimers.add(
+      Timer(const Duration(milliseconds: 3500), () {
+        if (mounted) _confettiController.play();
+      }),
+    );
+    _confettiTimers.add(
+      Timer(const Duration(milliseconds: 5000), () {
+        if (mounted) _confettiController.play();
+      }),
+    );
   }
 
   @override
@@ -2332,7 +2620,9 @@ class _ResultsScreenState extends State<_ResultsScreen> {
 
   String _getPerformanceMessage() {
     if (widget.score >= 800) return 'Outstanding! You\'re an IP expert!';
-    if (widget.score >= 600) return 'Great job! You understand IP protection well!';
+    if (widget.score >= 600) {
+      return 'Great job! You understand IP protection well!';
+    }
     if (widget.score >= 400) return 'Good effort! Keep learning about IP!';
     return 'Keep practicing! Try again to improve!';
   }
@@ -2347,7 +2637,7 @@ class _ResultsScreenState extends State<_ResultsScreen> {
   @override
   Widget build(BuildContext context) {
     final isGoodScore = widget.score >= 600;
-    
+
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       body: Stack(
@@ -2360,156 +2650,185 @@ class _ResultsScreenState extends State<_ResultsScreen> {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                  const SizedBox(height: 32),
+                      const SizedBox(height: 32),
 
-                  // Animated Trophy Icon
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 600),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    curve: Curves.elasticOut,
-                    builder: (context, value, child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                _getPerformanceColor(),
-                                _getPerformanceColor().withValues(alpha: 0.7),
-                              ],
-                            ),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: _getPerformanceColor().withValues(alpha: 0.4),
-                                blurRadius: 20,
-                                spreadRadius: 3,
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            _getPerformanceIcon(),
-                            size: 56,
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  // Title
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 800),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Text(
-                          _getPerformanceTitle(),
-                          style: AppTextStyles.h1.copyWith(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: _getPerformanceColor(),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  Text(
-                    widget.challengeTitle,
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      color: AppDesignSystem.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Score Card
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 1000),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    curve: Curves.easeOut,
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: Container(
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '${widget.xpEarned}',
-                                  style: AppTextStyles.h1.copyWith(
-                                    fontSize: 64,
-                                    fontWeight: FontWeight.bold,
-                                    color: _getPerformanceColor(),
-                                    height: 1,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'XP Earned',
-                                  style: AppTextStyles.bodyLarge.copyWith(
-                                    color: AppDesignSystem.textSecondary,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: _getPerformanceColor().withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    _getPerformanceMessage(),
-                                    style: AppTextStyles.bodyMedium.copyWith(
-                                      color: _getPerformanceColor(),
-                                      fontWeight: FontWeight.w600,
+                      // Animated Trophy Icon
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 600),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        curve: Curves.elasticOut,
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale: value,
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    _getPerformanceColor(),
+                                    _getPerformanceColor().withValues(
+                                      alpha: 0.7,
                                     ),
-                                    textAlign: TextAlign.center,
-                                  ),
+                                  ],
                                 ),
-                                const SizedBox(height: 24),
-                                _buildStatRow(Icons.brush, 'Strokes Used', '${widget.strokesUsed}', const Color(0xFF8B5CF6)),
-                                const SizedBox(height: 12),
-                                _buildStatRow(Icons.search, 'Prior Art Analyzed', '${widget.priorArtAnalyzed}', const Color(0xFFF59E0B)),
-                                const SizedBox(height: 12),
-                                _buildStatRow(Icons.shield, 'IP Protections', '${widget.ipProtections}', const Color(0xFF2196F3)),
-                                const SizedBox(height: 12),
-                                _buildStatRow(Icons.description, 'Questions Answered', '${widget.questionsAnswered}', const Color(0xFF10B981)),
-                              ],
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: _getPerformanceColor().withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    blurRadius: 20,
+                                    spreadRadius: 3,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                _getPerformanceIcon(),
+                                size: 56,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
 
+                      const SizedBox(height: 20),
+
+                      // Title
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 800),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Text(
+                              _getPerformanceTitle(),
+                              style: AppTextStyles.h1.copyWith(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: _getPerformanceColor(),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        widget.challengeTitle,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Score Card
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1000),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        curve: Curves.easeOut,
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Transform.translate(
+                              offset: Offset(0, 20 * (1 - value)),
+                              child: Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.cardRadius,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '${widget.xpEarned}',
+                                      style: AppTextStyles.h1.copyWith(
+                                        fontSize: 64,
+                                        fontWeight: FontWeight.bold,
+                                        color: _getPerformanceColor(),
+                                        height: 1,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'XP Earned',
+                                      style: AppTextStyles.bodyLarge.copyWith(
+                                        color: AppDesignSystem.textSecondary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: _getPerformanceColor()
+                                            .withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        _getPerformanceMessage(),
+                                        style: AppTextStyles.bodyMedium
+                                            .copyWith(
+                                              color: _getPerformanceColor(),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 24),
+                                    _buildStatRow(
+                                      Icons.brush,
+                                      'Strokes Used',
+                                      '${widget.strokesUsed}',
+                                      const Color(0xFF8B5CF6),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildStatRow(
+                                      Icons.search,
+                                      'Prior Art Analyzed',
+                                      '${widget.priorArtAnalyzed}',
+                                      const Color(0xFFF59E0B),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildStatRow(
+                                      Icons.shield,
+                                      'IP Protections',
+                                      '${widget.ipProtections}',
+                                      const Color(0xFF2196F3),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildStatRow(
+                                      Icons.description,
+                                      'Questions Answered',
+                                      '${widget.questionsAnswered}',
+                                      const Color(0xFF10B981),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
               ),
-              
+
               // Fixed Buttons at bottom
               SafeArea(
                 top: false,
@@ -2545,10 +2864,17 @@ class _ResultsScreenState extends State<_ResultsScreen> {
                             OutlinedButton(
                               onPressed: widget.onExit,
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                                side: const BorderSide(color: Color(0xFF00ACC1), width: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.md,
+                                ),
+                                side: const BorderSide(
+                                  color: Color(0xFF00ACC1),
+                                  width: 2,
+                                ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.cardRadius,
+                                  ),
                                 ),
                               ),
                               child: const SizedBox(

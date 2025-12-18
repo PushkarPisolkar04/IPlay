@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../core/models/user_model.dart';
+import 'package:flutter/foundation.dart';
 
 /// Service to manage user streak tracking
 /// Tracks consecutive days of user activity and XP gains
@@ -11,15 +12,17 @@ class StreakService {
   Future<void> updateStreakOnActivity(String userId) async {
     try {
       final userDoc = await _firestore.collection('users').doc(userId).get();
-      
+
       if (!userDoc.exists) {
-        print('⚠️ User document not found for streak update: $userId');
+        if (kDebugMode) {
+          print('⚠️ User document not found for streak update: $userId');
+        }
         return;
       }
 
       final userData = userDoc.data()!;
       final now = DateTime.now();
-      
+
       // Get lastActiveDate - handle both Timestamp and DateTime
       DateTime lastActive;
       final lastActiveField = userData['lastActiveDate'];
@@ -29,19 +32,25 @@ class StreakService {
         lastActive = lastActiveField;
       } else {
         // If no lastActiveDate, this is first activity
-        print('🆕 First activity for user - initializing streak');
-        lastActive = DateTime.now().subtract(const Duration(days: 2)); // Force new streak
+        if (kDebugMode) {
+          print('🆕 First activity for user - initializing streak');
+        }
+        lastActive = DateTime.now().subtract(
+          const Duration(days: 2),
+        ); // Force new streak
       }
-      
+
       final currentStreak = userData['currentStreak'] ?? 0;
       final currentLongestStreak = userData['longestStreak'] ?? 0;
 
-      print('📊 Streak Check:');
-      print('   Last Active: ${lastActive.toString().split('.')[0]}');
-      print('   Now: ${now.toString().split('.')[0]}');
-      print('   Current Streak: $currentStreak days');
-      print('   Same Day: ${_isSameDay(lastActive, now)}');
-      print('   Hours Diff: ${now.difference(lastActive).inHours}h');
+      if (kDebugMode) {
+        print('📊 Streak Check:');
+        print('   Last Active: ${lastActive.toString().split('.')[0]}');
+        print('   Now: ${now.toString().split('.')[0]}');
+        print('   Current Streak: $currentStreak days');
+        print('   Same Day: ${_isSameDay(lastActive, now)}');
+        print('   Hours Diff: ${now.difference(lastActive).inHours}h');
+      }
 
       // Check if we should reset or increment the streak
       final newStreak = _calculateNewStreak(lastActive, now, currentStreak);
@@ -53,21 +62,25 @@ class StreakService {
           'lastActiveDate': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         };
-        
+
         // Update longestStreak if current streak is higher
         if (newStreak > currentLongestStreak) {
           updateData['longestStreak'] = newStreak;
-          print('🏆 New longest streak: $newStreak days!');
+          if (kDebugMode) print('🏆 New longest streak: $newStreak days!');
         }
-        
+
         await _firestore.collection('users').doc(userId).update(updateData);
-        print('✅ Streak updated: $currentStreak → $newStreak days');
+        if (kDebugMode) {
+          print('✅ Streak updated: $currentStreak → $newStreak days');
+        }
       } else {
-        print('ℹ️ Streak unchanged: $currentStreak days (same day activity)');
+        if (kDebugMode) {
+          print('ℹ️ Streak unchanged: $currentStreak days (same day activity)');
+        }
       }
     } catch (e) {
       // Log error but don't throw - streak updates shouldn't block main functionality
-      print('❌ Error updating streak: $e');
+      if (kDebugMode) print('❌ Error updating streak: $e');
     }
   }
 
@@ -86,11 +99,11 @@ class StreakService {
   Future<int> getCurrentStreak(String userId) async {
     try {
       final userDoc = await _firestore.collection('users').doc(userId).get();
-      
+
       if (!userDoc.exists) return 0;
 
       final user = UserModel.fromMap(userDoc.data()!);
-      
+
       // Check if streak should be reset
       if (shouldResetStreak(user.lastActiveDate)) {
         return 0;
@@ -104,7 +117,11 @@ class StreakService {
   }
 
   /// Calculate the new streak value based on last activity and current streak
-  int _calculateNewStreak(DateTime lastActive, DateTime now, int currentStreak) {
+  int _calculateNewStreak(
+    DateTime lastActive,
+    DateTime now,
+    int currentStreak,
+  ) {
     final hoursDiff = now.difference(lastActive).inHours;
 
     // If this is the first activity (currentStreak is 0), start at 1
@@ -129,7 +146,7 @@ class StreakService {
   /// Check if two dates are on the same day
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

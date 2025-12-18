@@ -9,7 +9,7 @@ class RealmModel {
   final int totalXP;
   final List<String> levelIds;
   final int estimatedMinutes;
-  
+
   RealmModel({
     required this.id,
     required this.name,
@@ -27,12 +27,15 @@ class RealmModel {
     int colorValue = 0xFFFF6B35;
     if (map['color'] != null) {
       if (map['color'] is String) {
-        colorValue = int.parse((map['color'] as String).replaceFirst('0x', ''), radix: 16);
+        colorValue = int.parse(
+          (map['color'] as String).replaceFirst('0x', ''),
+          radix: 16,
+        );
       } else if (map['color'] is int) {
         colorValue = map['color'];
       }
     }
-    
+
     return RealmModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
@@ -47,7 +50,8 @@ class RealmModel {
   }
 
   // Alias for fromMap
-  factory RealmModel.fromJson(Map<String, dynamic> json) => RealmModel.fromMap(json);
+  factory RealmModel.fromJson(Map<String, dynamic> json) =>
+      RealmModel.fromMap(json);
 
   Map<String, dynamic> toMap() {
     return {
@@ -79,7 +83,7 @@ class LevelModel {
   final List<QuizQuestion> quiz;
   final int xpReward;
   final int estimatedMinutes;
-  
+
   LevelModel({
     required this.id,
     required this.realmId,
@@ -104,14 +108,19 @@ class LevelModel {
       videoUrl: map['videoUrl'],
       content: map['content'] ?? '',
       keyPoints: List<String>.from(map['keyPoints'] ?? []),
-      quiz: (map['quiz'] as List?)?.map((q) => QuizQuestion.fromMap(q)).toList() ?? [],
+      quiz:
+          (map['quiz'] as List?)
+              ?.map((q) => QuizQuestion.fromMap(q))
+              .toList() ??
+          [],
       xpReward: map['xpReward'] ?? 0,
       estimatedMinutes: map['estimatedMinutes'] ?? 0,
     );
   }
 
   // Alias for fromMap
-  factory LevelModel.fromJson(Map<String, dynamic> json) => LevelModel.fromMap(json);
+  factory LevelModel.fromJson(Map<String, dynamic> json) =>
+      LevelModel.fromMap(json);
 
   Map<String, dynamic> toMap() {
     return {
@@ -136,7 +145,7 @@ class QuizQuestion {
   final List<String> options;
   final int correctIndex;
   final String explanation;
-  
+
   QuizQuestion({
     required this.question,
     required this.options,
@@ -162,4 +171,3 @@ class QuizQuestion {
     };
   }
 }
-

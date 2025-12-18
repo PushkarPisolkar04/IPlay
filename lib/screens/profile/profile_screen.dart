@@ -54,8 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _setupBookmarkListener() {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      _bookmarkSubscription =
-          BookmarkService().getBookmarksStream().listen((snapshot) {
+      _bookmarkSubscription = BookmarkService().getBookmarksStream().listen((
+        snapshot,
+      ) {
         if (mounted) {
           setState(() {
             _bookmarkCount = snapshot.docs.length;
@@ -73,14 +74,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .doc(currentUser.uid)
           .snapshots()
           .listen((snapshot) {
-        if (snapshot.exists && mounted) {
-          final userData = snapshot.data()!;
-          setState(() {
-            _user = UserModel.fromMap(userData);
-            _progressSummary = userData['progressSummary'] ?? {};
+            if (snapshot.exists && mounted) {
+              final userData = snapshot.data()!;
+              setState(() {
+                _user = UserModel.fromMap(userData);
+                _progressSummary = userData['progressSummary'] ?? {};
+              });
+            }
           });
-        }
-      });
     }
   }
 
@@ -90,12 +91,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _certificateSubscription = _certificateService
           .watchUserCertificates(currentUser.uid)
           .listen((certificates) {
-        if (mounted) {
-          setState(() {
-            _certificateCount = certificates.length;
+            if (mounted) {
+              setState(() {
+                _certificateCount = certificates.length;
+              });
+            }
           });
-        }
-      });
     }
   }
 
@@ -227,10 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Profile', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppDesignSystem.primaryIndigo,
         foregroundColor: Colors.white,
@@ -299,8 +297,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   // State badge
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
@@ -308,8 +308,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.location_on,
-                            size: 16, color: Colors.white),
+                        const Icon(
+                          Icons.location_on,
+                          size: 16,
+                          color: Colors.white,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           _user!.state,
@@ -344,15 +347,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 6),
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.stars,
-                                      size: 16, color: Colors.amber),
+                                  const Icon(
+                                    Icons.stars,
+                                    size: 16,
+                                    color: Colors.amber,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     '${_user!.totalXP} XP',
@@ -370,8 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProgressBar(
                           progress: levelProgress,
                           color: Colors.white,
-                          backgroundColor:
-                              Colors.white.withValues(alpha: 0.3),
+                          backgroundColor: Colors.white.withValues(alpha: 0.3),
                           height: 6,
                         ),
                         const SizedBox(height: 6),
@@ -397,7 +404,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 8),
+                      vertical: 12,
+                      horizontal: 8,
+                    ),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [Color(0xFFF59E0B), Color(0xFFEF4444)],
@@ -448,7 +457,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 8),
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFFEC4899), Color(0xFFDB2777)],
@@ -458,7 +469,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFEC4899).withValues(alpha: 0.3),
+                            color: const Color(
+                              0xFFEC4899,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -496,12 +509,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Certificates
                 Expanded(
                   child: InkWell(
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/certificates'),
+                    onTap: () => Navigator.pushNamed(context, '/certificates'),
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 8),
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
@@ -511,7 +525,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                            color: const Color(
+                              0xFF8B5CF6,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -553,7 +569,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     borderRadius: BorderRadius.circular(12),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 8),
+                        vertical: 12,
+                        horizontal: 8,
+                      ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFF10B981), Color(0xFF059669)],
@@ -563,7 +581,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF10B981).withValues(alpha: 0.3),
+                            color: const Color(
+                              0xFF10B981,
+                            ).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -620,18 +640,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                  child: Column(
-                    children: [
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.primaryIndigo.withValues(
+                              alpha: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.school,
+                            color: AppDesignSystem.primaryIndigo,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Classroom',
+                                style: AppTextStyles.caption.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _classroomInfo!['name'] ?? '-',
+                                style: AppTextStyles.h4.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (_schoolInfo != null) ...[
+                      const SizedBox(height: 16),
+                      const Divider(),
+                      const SizedBox(height: 16),
                       Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                              color: AppDesignSystem.primaryGreen.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.school,
-                                color: AppDesignSystem.primaryIndigo, size: 24),
+                            child: const Icon(
+                              Icons.business,
+                              color: AppDesignSystem.primaryGreen,
+                              size: 24,
+                            ),
                           ),
                           const SizedBox(width: 14),
                           Expanded(
@@ -639,7 +709,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Classroom',
+                                  'School',
                                   style: AppTextStyles.caption.copyWith(
                                     color: AppDesignSystem.textSecondary,
                                     fontSize: 11,
@@ -647,7 +717,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  _classroomInfo!['name'] ?? '-',
+                                  _schoolInfo!['name'] ?? '-',
                                   style: AppTextStyles.h4.copyWith(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -658,54 +728,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
-                      if (_schoolInfo != null) ...[
-                        const SizedBox(height: 16),
-                        const Divider(),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: AppDesignSystem.primaryGreen.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(Icons.business,
-                                  color: AppDesignSystem.primaryGreen, size: 24),
-                            ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'School',
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppDesignSystem.textSecondary,
-                                      fontSize: 11,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    _schoolInfo!['name'] ?? '-',
-                                    style: AppTextStyles.h4.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
+              ),
               const SizedBox(height: AppSpacing.md),
             ],
-
-
 
             // ---------- My Realms ----------
             Align(
@@ -724,13 +752,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                        color: AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.2,
+                        ),
                         width: 1.5,
                       ),
                     ),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   );
                 }
 
@@ -741,7 +769,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                      color: AppDesignSystem.primaryIndigo.withValues(
+                        alpha: 0.2,
+                      ),
                       width: 1.5,
                     ),
                     boxShadow: [
@@ -753,15 +783,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   child: Column(
-                    children:
-                        realms.asMap().entries.map((entry) {
+                    children: realms.asMap().entries.map((entry) {
                       final index = entry.key;
                       final realm = entry.value;
                       final realmProgress = _progressSummary[realm.id];
-                      final progress = realmProgress != null &&
-                              realmProgress is Map
+                      final progress =
+                          realmProgress != null && realmProgress is Map
                           ? (realmProgress['levelsCompleted'] ?? 0) /
-                              (realmProgress['totalLevels'] ?? 1)
+                                (realmProgress['totalLevels'] ?? 1)
                           : 0.0;
 
                       return Column(
@@ -783,8 +812,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height: AppSpacing.lg),
 
-
-
             if (_user!.role == 'teacher') ...[
               InkWell(
                 onTap: () => Navigator.pushNamed(context, '/main'),
@@ -798,14 +825,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.primaryGreen
-                                .withValues(alpha: 0.15),
+                            color: AppDesignSystem.primaryGreen.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Icon(Icons.dashboard,
-                                size: 32,
-                                color: AppDesignSystem.primaryGreen),
+                            child: Icon(
+                              Icons.dashboard,
+                              size: 32,
+                              color: AppDesignSystem.primaryGreen,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -830,8 +860,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        const Icon(Icons.arrow_forward_ios,
-                            size: 16, color: AppDesignSystem.textSecondary),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
+                        ),
                       ],
                     ),
                   ),
@@ -844,8 +877,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               InkWell(
                 onTap: () => Navigator.pushNamed(context, '/main'),
                 child: CleanCard(
-                  color:
-                      AppDesignSystem.secondaryPurple.withValues(alpha: 0.1),
+                  color: AppDesignSystem.secondaryPurple.withValues(alpha: 0.1),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.md),
                     child: Row(
@@ -854,14 +886,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: AppDesignSystem.secondaryPurple
-                                .withValues(alpha: 0.15),
+                            color: AppDesignSystem.secondaryPurple.withValues(
+                              alpha: 0.15,
+                            ),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Center(
-                            child: Icon(Icons.admin_panel_settings,
-                                size: 32,
-                                color: AppDesignSystem.secondaryPurple),
+                            child: Icon(
+                              Icons.admin_panel_settings,
+                              size: 32,
+                              color: AppDesignSystem.secondaryPurple,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -886,8 +921,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        const Icon(Icons.arrow_forward_ios,
-                            size: 16, color: AppDesignSystem.textSecondary),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: AppDesignSystem.textSecondary,
+                        ),
                       ],
                     ),
                   ),
@@ -918,8 +956,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
 
-            _BadgeGridWidget(
-                userId: _user!.uid, unlockedBadges: _user!.badges),
+            _BadgeGridWidget(userId: _user!.uid, unlockedBadges: _user!.badges),
 
             const SizedBox(height: AppSpacing.lg),
 
@@ -1010,15 +1047,12 @@ class _RealmProgress extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: AppTextStyles.bodyMedium
-                    .copyWith(fontWeight: FontWeight.w600),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 6),
-              ProgressBar(
-                progress: progress,
-                color: color,
-                height: 6,
-              ),
+              ProgressBar(progress: progress, color: color, height: 6),
             ],
           ),
         ),
@@ -1042,10 +1076,7 @@ class _BadgeGridWidget extends StatefulWidget {
   final String userId;
   final List<String> unlockedBadges;
 
-  const _BadgeGridWidget({
-    required this.userId,
-    required this.unlockedBadges,
-  });
+  const _BadgeGridWidget({required this.userId, required this.unlockedBadges});
 
   @override
   State<_BadgeGridWidget> createState() => _BadgeGridWidgetState();
@@ -1145,7 +1176,7 @@ class _BadgeGridWidgetState extends State<_BadgeGridWidget> {
 
     // Show max 6 badges for preview (3 per row)
     final badgesToShow = _allBadges.take(6).toList();
-    
+
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
@@ -1209,7 +1240,7 @@ class _BadgeItem extends StatelessWidget {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
@@ -1220,10 +1251,7 @@ class _BadgeItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: rarityColor.withValues(alpha: 0.3),
-          width: 2,
-        ),
+        border: Border.all(color: rarityColor.withValues(alpha: 0.3), width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -1252,10 +1280,7 @@ class _BadgeItem extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
                 _formatDate(unlockDate!),
-                style: const TextStyle(
-                  fontSize: 9,
-                  color: Color(0xFF6B7280),
-                ),
+                style: const TextStyle(fontSize: 9, color: Color(0xFF6B7280)),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -1267,7 +1292,6 @@ class _BadgeItem extends StatelessWidget {
   }
 }
 
-
 // ---------------------------------------------------------------------
 // Certificate Preview Widget
 // ---------------------------------------------------------------------
@@ -1277,7 +1301,8 @@ class _CertificatePreviewWidget extends StatefulWidget {
   const _CertificatePreviewWidget({required this.userId});
 
   @override
-  State<_CertificatePreviewWidget> createState() => _CertificatePreviewWidgetState();
+  State<_CertificatePreviewWidget> createState() =>
+      _CertificatePreviewWidgetState();
 }
 
 class _CertificatePreviewWidgetState extends State<_CertificatePreviewWidget> {
@@ -1293,7 +1318,9 @@ class _CertificatePreviewWidgetState extends State<_CertificatePreviewWidget> {
 
   Future<void> _loadCertificates() async {
     try {
-      final certificates = await _certificateService.getUserCertificates(widget.userId);
+      final certificates = await _certificateService.getUserCertificates(
+        widget.userId,
+      );
       if (mounted) {
         setState(() {
           _certificates = certificates;
@@ -1344,80 +1371,87 @@ class _CertificatePreviewWidgetState extends State<_CertificatePreviewWidget> {
 
     return Column(
       children: [
-        ...certsToShow.map((cert) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: InkWell(
-            onTap: () => Navigator.pushNamed(context, '/certificates'),
-            borderRadius: BorderRadius.circular(16),
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+        ...certsToShow.map(
+          (cert) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: InkWell(
+              onTap: () => Navigator.pushNamed(context, '/certificates'),
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+                    width: 1.5,
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // Realm logo
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image.asset(
-                        _getRealmLogo(cert.realmId),
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.workspace_premium,
-                          size: 24,
-                          color: AppDesignSystem.primaryIndigo,
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    // Realm logo
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.1,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          _getRealmLogo(cert.realmId),
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.workspace_premium,
+                            size: 24,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          cert.realmName,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            fontWeight: FontWeight.bold,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            cert.realmName,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          cert.certificateNumber,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppDesignSystem.textSecondary,
-                            fontSize: 10,
+                          const SizedBox(height: 2),
+                          Text(
+                            cert.certificateNumber,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppDesignSystem.textSecondary,
+                              fontSize: 10,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const Icon(Icons.arrow_forward_ios,
-                      size: 14, color: AppDesignSystem.textSecondary),
-                ],
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14,
+                      color: AppDesignSystem.textSecondary,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        )),
+        ),
         if (_certificates.length > 3)
           TextButton(
             onPressed: () => Navigator.pushNamed(context, '/certificates'),

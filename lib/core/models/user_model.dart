@@ -5,39 +5,39 @@ class UserModel {
   final String uid;
   final String email;
   final String role; // 'student' | 'teacher' | 'admin'
-  
+
   // Profile
   final String displayName;
   final String? username;
   final String? avatarUrl;
   final String state;
   final String? schoolTag;
-  
+
   // Role-specific
   final bool isPrincipal;
   final String? principalOfSchool;
-  
+
   // Classroom memberships
   final List<String> classroomIds;
   final List<String> pendingClassroomRequests;
-  
+
   // Gamification
   final int totalXP;
   final int currentStreak;
   final int longestStreak;
   final DateTime lastActiveDate;
   final List<String> badges;
-  
+
   // Progress summary
   final Map<String, RealmProgress> progressSummary;
-  
+
   // Settings
   final bool hideFromPublicLeaderboard;
   final NotificationSettings notificationSettings;
-  
+
   // Storage (for teachers)
   final double storageUsedMB;
-  
+
   // Metadata
   final bool isActive;
   final DateTime createdAt;
@@ -101,14 +101,16 @@ class UserModel {
       'isActive': isActive,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'lastSyncedAt': lastSyncedAt != null ? Timestamp.fromDate(lastSyncedAt!) : null,
+      'lastSyncedAt': lastSyncedAt != null
+          ? Timestamp.fromDate(lastSyncedAt!)
+          : null,
     };
   }
 
   /// Create from Firestore document
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return UserModel(
       uid: doc.id,
       email: data['email'] ?? '',
@@ -121,15 +123,23 @@ class UserModel {
       isPrincipal: data['isPrincipal'] ?? false,
       principalOfSchool: data['principalOfSchool'],
       classroomIds: List<String>.from(data['classroomIds'] ?? []),
-      pendingClassroomRequests: List<String>.from(data['pendingClassroomRequests'] ?? []),
+      pendingClassroomRequests: List<String>.from(
+        data['pendingClassroomRequests'] ?? [],
+      ),
       totalXP: data['totalXP'] ?? 0,
       currentStreak: data['currentStreak'] ?? 0,
       longestStreak: data['longestStreak'] ?? 0,
-      lastActiveDate: (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastActiveDate:
+          (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       badges: List<String>.from(data['badges'] ?? []),
-      progressSummary: (data['progressSummary'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, RealmProgress.fromMap(value as Map<String, dynamic>)),
-          ) ?? {},
+      progressSummary:
+          (data['progressSummary'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(
+              key,
+              RealmProgress.fromMap(value as Map<String, dynamic>),
+            ),
+          ) ??
+          {},
       hideFromPublicLeaderboard: data['hideFromPublicLeaderboard'] ?? false,
       notificationSettings: NotificationSettings.fromMap(
         data['notificationSettings'] as Map<String, dynamic>? ?? {},
@@ -156,15 +166,23 @@ class UserModel {
       isPrincipal: data['isPrincipal'] ?? false,
       principalOfSchool: data['principalOfSchool'],
       classroomIds: List<String>.from(data['classroomIds'] ?? []),
-      pendingClassroomRequests: List<String>.from(data['pendingClassroomRequests'] ?? []),
+      pendingClassroomRequests: List<String>.from(
+        data['pendingClassroomRequests'] ?? [],
+      ),
       totalXP: data['totalXP'] ?? 0,
       currentStreak: data['currentStreak'] ?? 0,
       longestStreak: data['longestStreak'] ?? 0,
-      lastActiveDate: (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastActiveDate:
+          (data['lastActiveDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       badges: List<String>.from(data['badges'] ?? []),
-      progressSummary: (data['progressSummary'] as Map<String, dynamic>?)?.map(
-            (key, value) => MapEntry(key, RealmProgress.fromMap(value as Map<String, dynamic>)),
-          ) ?? {},
+      progressSummary:
+          (data['progressSummary'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(
+              key,
+              RealmProgress.fromMap(value as Map<String, dynamic>),
+            ),
+          ) ??
+          {},
       hideFromPublicLeaderboard: data['hideFromPublicLeaderboard'] ?? false,
       notificationSettings: NotificationSettings.fromMap(
         data['notificationSettings'] as Map<String, dynamic>? ?? {},
@@ -211,7 +229,8 @@ class UserModel {
       lastActiveDate: lastActiveDate ?? this.lastActiveDate,
       badges: badges ?? this.badges,
       progressSummary: progressSummary,
-      hideFromPublicLeaderboard: hideFromPublicLeaderboard ?? this.hideFromPublicLeaderboard,
+      hideFromPublicLeaderboard:
+          hideFromPublicLeaderboard ?? this.hideFromPublicLeaderboard,
       notificationSettings: notificationSettings,
       storageUsedMB: storageUsedMB,
       isActive: isActive,
@@ -244,7 +263,9 @@ class RealmProgress {
       'levelsCompleted': levelsCompleted,
       'totalLevels': totalLevels,
       'xpEarned': xpEarned,
-      'lastAccessedAt': lastAccessedAt != null ? Timestamp.fromDate(lastAccessedAt!) : null,
+      'lastAccessedAt': lastAccessedAt != null
+          ? Timestamp.fromDate(lastAccessedAt!)
+          : null,
     };
   }
 
@@ -287,4 +308,3 @@ class NotificationSettings {
     );
   }
 }
-

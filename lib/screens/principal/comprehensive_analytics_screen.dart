@@ -14,33 +14,32 @@ import '../../widgets/loading_skeleton.dart';
 class ComprehensiveAnalyticsScreen extends StatefulWidget {
   final String schoolId;
 
-  const ComprehensiveAnalyticsScreen({
-    super.key,
-    required this.schoolId,
-  });
+  const ComprehensiveAnalyticsScreen({super.key, required this.schoolId});
 
   @override
-  State<ComprehensiveAnalyticsScreen> createState() => _ComprehensiveAnalyticsScreenState();
+  State<ComprehensiveAnalyticsScreen> createState() =>
+      _ComprehensiveAnalyticsScreenState();
 }
 
-class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScreen> {
+class _ComprehensiveAnalyticsScreenState
+    extends State<ComprehensiveAnalyticsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   bool _isLoading = true;
   bool _isExporting = false;
-  
+
   // Analytics Data
   int _totalStudents = 0;
   int _activeStudents = 0;
   double _avgXP = 0;
   double _avgStreak = 0;
   double _avgProgress = 0;
-  
+
   List<Map<String, dynamic>> _topClassrooms = [];
   List<Map<String, dynamic>> _topStudents = [];
   Map<String, double> _realmCompletionRates = {};
   Map<String, int> _weeklyActivity = {};
-  
+
   @override
   void initState() {
     super.initState();
@@ -49,57 +48,58 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
 
   Future<void> _loadAnalytics() async {
     setState(() => _isLoading = true);
-    
+
     try {
       // Get all classrooms in school
       final classroomsSnapshot = await _firestore
           .collection('classrooms')
           .where('schoolId', isEqualTo: widget.schoolId)
           .get();
-      
+
       // Collect all student data
       Set<String> uniqueStudentIds = {};
       Map<String, Map<String, dynamic>> studentData = {};
       Map<String, List<String>> classroomStudents = {};
       Map<String, String> classroomNames = {};
-      
+
       for (var classroomDoc in classroomsSnapshot.docs) {
         final data = classroomDoc.data();
         final classroomId = classroomDoc.id;
         final classroomName = data['name'] ?? 'Unnamed';
         classroomNames[classroomId] = classroomName;
-        
+
         final studentIds = List<String>.from(data['studentIds'] ?? []);
         classroomStudents[classroomId] = studentIds;
         uniqueStudentIds.addAll(studentIds);
       }
-      
+
       _totalStudents = uniqueStudentIds.length;
-      
+
       // Load student data
       int totalXP = 0;
       int totalStreak = 0;
       int totalProgress = 0;
       _activeStudents = 0;
-      
+
       Map<String, int> realmCompletions = {};
       Map<String, int> realmTotals = {};
-      
+
       for (var studentId in uniqueStudentIds) {
         final studentDoc = await _firestore
             .collection('users')
             .doc(studentId)
             .get();
-        
+
         if (studentDoc.exists) {
           final data = studentDoc.data()!;
           final xp = data['totalXP'] ?? 0;
           final streak = data['currentStreak'] ?? 0;
-          final progressSummary = data['progressSummary'] as Map<String, dynamic>? ?? {};
-          
+          final progressSummary =
+              data['progressSummary'] as Map<String, dynamic>? ?? {};
+
           totalXP += xp as int;
           totalStreak += streak as int;
-          
+
           // Calculate progress
           int levelsCompleted = 0;
           int totalLevels = 0;
@@ -107,7 +107,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
             if (entry is Map<String, dynamic>) {
               levelsCompleted += (entry['levelsCompleted'] as int?) ?? 0;
               totalLevels += (entry['totalLevels'] as int?) ?? 0;
-              
+
               // Track realm completions
               final realmId = progressSummary.keys.firstWhere(
                 (key) => progressSummary[key] == entry,
@@ -116,15 +116,18 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
               if (realmId.isNotEmpty) {
                 realmTotals[realmId] = (realmTotals[realmId] ?? 0) + 1;
                 if (entry['completed'] == true) {
-                  realmCompletions[realmId] = (realmCompletions[realmId] ?? 0) + 1;
+                  realmCompletions[realmId] =
+                      (realmCompletions[realmId] ?? 0) + 1;
                 }
               }
             }
           }
-          
-          final progress = totalLevels > 0 ? (levelsCompleted / totalLevels * 100).round() : 0;
+
+          final progress = totalLevels > 0
+              ? (levelsCompleted / totalLevels * 100).round()
+              : 0;
           totalProgress += progress;
-          
+
           // Check if active (last 7 days)
           final lastActive = (data['lastActiveDate'] as Timestamp?)?.toDate();
           if (lastActive != null) {
@@ -133,7 +136,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
               _activeStudents++;
             }
           }
-          
+
           studentData[studentId] = {
             'id': studentId,
             'name': data['displayName'] ?? 'Unknown',
@@ -144,14 +147,14 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
           };
         }
       }
-      
+
       // Calculate averages
       if (_totalStudents > 0) {
         _avgXP = totalXP / _totalStudents;
         _avgStreak = totalStreak / _totalStudents;
         _avgProgress = totalProgress / _totalStudents;
       }
-      
+
       // Calculate realm completion rates
       _realmCompletionRates = {};
       for (var realmId in realmCompletions.keys) {
@@ -159,33 +162,35 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
         final total = realmTotals[realmId] ?? 1;
         _realmCompletionRates[realmId] = (completions / total * 100);
       }
-      
+
       // Calculate top classrooms by average XP
       _topClassrooms = [];
       for (var classroomId in classroomStudents.keys) {
         final students = classroomStudents[classroomId] ?? [];
         if (students.isEmpty) continue;
-        
+
         int classroomXP = 0;
         for (var studentId in students) {
           classroomXP += (studentData[studentId]?['xp'] ?? 0) as int;
         }
-        
+
         _topClassrooms.add({
           'name': classroomNames[classroomId] ?? 'Unnamed',
           'avgXP': classroomXP / students.length,
           'studentCount': students.length,
         });
       }
-      
-      _topClassrooms.sort((a, b) => (b['avgXP'] as double).compareTo(a['avgXP'] as double));
+
+      _topClassrooms.sort(
+        (a, b) => (b['avgXP'] as double).compareTo(a['avgXP'] as double),
+      );
       _topClassrooms = _topClassrooms.take(5).toList();
-      
+
       // Get top students
       _topStudents = studentData.values.toList();
       _topStudents.sort((a, b) => (b['xp'] as int).compareTo(a['xp'] as int));
       _topStudents = _topStudents.take(10).toList();
-      
+
       // Calculate weekly activity (last 7 days)
       _weeklyActivity = {};
       final now = DateTime.now();
@@ -194,20 +199,19 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
         final dateKey = '${date.month}/${date.day}';
         _weeklyActivity[dateKey] = 0;
       }
-      
+
       // Count active students per day (simplified - would need activity logs)
       // For now, just show current active students distributed
       final dailyAvg = (_activeStudents / 7).round();
       for (var key in _weeklyActivity.keys) {
         _weeklyActivity[key] = dailyAvg;
       }
-      
     } catch (e) {
       // print('Error loading analytics: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading analytics: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading analytics: $e')));
       }
     } finally {
       if (mounted) {
@@ -218,23 +222,26 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
 
   Future<void> _exportToPDF() async {
     setState(() => _isExporting = true);
-    
+
     try {
       // Generate CSV data
       final csvData = _generateCSVData();
-      
+
       // Save to file
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/school_analytics_${DateTime.now().millisecondsSinceEpoch}.csv');
+      final file = File(
+        '${directory.path}/school_analytics_${DateTime.now().millisecondsSinceEpoch}.csv',
+      );
       await file.writeAsString(csvData);
-      
+
       // Share file
       await Share.shareXFiles(
         [XFile(file.path)],
         subject: 'School Analytics Report',
-        text: 'School analytics report generated on ${DateTime.now().toString().split('.')[0]}',
+        text:
+            'School analytics report generated on ${DateTime.now().toString().split('.')[0]}',
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Analytics exported successfully')),
@@ -243,9 +250,9 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     } catch (e) {
       // print('Error exporting analytics: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error exporting: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error exporting: $e')));
       }
     } finally {
       if (mounted) {
@@ -256,12 +263,12 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
 
   String _generateCSVData() {
     final buffer = StringBuffer();
-    
+
     // Header
     buffer.writeln('School Analytics Report');
     buffer.writeln('Generated: ${DateTime.now()}');
     buffer.writeln('');
-    
+
     // Overview
     buffer.writeln('Overview');
     buffer.writeln('Total Students,$_totalStudents');
@@ -270,32 +277,36 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     buffer.writeln('Average Streak,${_avgStreak.toStringAsFixed(1)}');
     buffer.writeln('Average Progress,${_avgProgress.toStringAsFixed(1)}%');
     buffer.writeln('');
-    
+
     // Top Classrooms
     buffer.writeln('Top Classrooms');
     buffer.writeln('Rank,Classroom,Avg XP,Students');
     for (int i = 0; i < _topClassrooms.length; i++) {
       final classroom = _topClassrooms[i];
-      buffer.writeln('${i + 1},${classroom['name']},${(classroom['avgXP'] as double).toStringAsFixed(1)},${classroom['studentCount']}');
+      buffer.writeln(
+        '${i + 1},${classroom['name']},${(classroom['avgXP'] as double).toStringAsFixed(1)},${classroom['studentCount']}',
+      );
     }
     buffer.writeln('');
-    
+
     // Top Students
     buffer.writeln('Top Students');
     buffer.writeln('Rank,Name,XP,Streak,Progress');
     for (int i = 0; i < _topStudents.length; i++) {
       final student = _topStudents[i];
-      buffer.writeln('${i + 1},${student['name']},${student['xp']},${student['streak']},${student['progress']}%');
+      buffer.writeln(
+        '${i + 1},${student['name']},${student['xp']},${student['streak']},${student['progress']}%',
+      );
     }
     buffer.writeln('');
-    
+
     // Realm Completion Rates
     buffer.writeln('Realm Completion Rates');
     buffer.writeln('Realm,Completion Rate');
     for (var entry in _realmCompletionRates.entries) {
       buffer.writeln('${entry.key},${entry.value.toStringAsFixed(1)}%');
     }
-    
+
     return buffer.toString();
   }
 
@@ -335,15 +346,31 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                 children: [
                   Row(
                     children: [
-                      Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                      Expanded(
+                        child: LoadingSkeleton(
+                          height: 100,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
                       SizedBox(width: 12),
-                      Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                      Expanded(
+                        child: LoadingSkeleton(
+                          height: 100,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 16),
-                  LoadingSkeleton(height: 250, borderRadius: BorderRadius.all(Radius.circular(12))),
+                  LoadingSkeleton(
+                    height: 250,
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
                   SizedBox(height: 16),
-                  LoadingSkeleton(height: 250, borderRadius: BorderRadius.all(Radius.circular(12))),
+                  LoadingSkeleton(
+                    height: 250,
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
                   SizedBox(height: 16),
                   ListSkeleton(itemCount: 3),
                 ],
@@ -393,9 +420,9 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Weekly Activity Chart
                     _buildSectionTitle('Weekly Activity'),
                     const SizedBox(height: 12),
@@ -405,9 +432,9 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                         child: _buildWeeklyActivityChart(),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Realm Completion Rates
                     _buildSectionTitle('Realm Completion Rates'),
                     const SizedBox(height: 12),
@@ -417,9 +444,9 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                         child: _buildRealmCompletionChart(),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Top Classrooms
                     _buildSectionTitle('Top Performing Classrooms'),
                     const SizedBox(height: 12),
@@ -444,9 +471,9 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                               }).toList(),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
-                    
+
                     // Top Students
                     _buildSectionTitle('Top Performing Students'),
                     const SizedBox(height: 12),
@@ -471,7 +498,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                               }).toList(),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -491,7 +518,12 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     );
   }
 
-  Widget _buildMetricCard(String label, String value, IconData icon, Color color) {
+  Widget _buildMetricCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return CleanCard(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -509,10 +541,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF6B7280),
-            ),
+            style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -524,11 +553,11 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     if (_weeklyActivity.isEmpty) {
       return const Center(child: Text('No activity data'));
     }
-    
+
     final spots = _weeklyActivity.entries.toList().asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.value.toDouble());
     }).toList();
-    
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: LineChart(
@@ -556,10 +585,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
                     final key = _weeklyActivity.keys.toList()[index];
                     return Padding(
                       padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        key,
-                        style: const TextStyle(fontSize: 10),
-                      ),
+                      child: Text(key, style: const TextStyle(fontSize: 10)),
                     );
                   }
                   return const Text('');
@@ -592,7 +618,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     if (_realmCompletionRates.isEmpty) {
       return const Center(child: Text('No realm data'));
     }
-    
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: BarChart(
@@ -637,31 +663,38 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
           borderData: FlBorderData(show: false),
-          barGroups: _realmCompletionRates.entries.toList().asMap().entries.map((entry) {
-            return BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: entry.value.value,
-                  color: const Color(0xFF10B981),
-                  width: 20,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-                ),
-              ],
-            );
-          }).toList(),
+          barGroups: _realmCompletionRates.entries.toList().asMap().entries.map(
+            (entry) {
+              return BarChartGroupData(
+                x: entry.key,
+                barRods: [
+                  BarChartRodData(
+                    toY: entry.value.value,
+                    color: const Color(0xFF10B981),
+                    width: 20,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(4),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ).toList(),
         ),
       ),
     );
   }
 
-  Widget _buildClassroomTile(int rank, String name, double avgXP, int studentCount) {
+  Widget _buildClassroomTile(
+    int rank,
+    String name,
+    double avgXP,
+    int studentCount,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[200]!),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
       ),
       child: Row(
         children: [
@@ -706,9 +739,7 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[200]!),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
       ),
       child: Row(
         children: [
@@ -760,14 +791,11 @@ class _ComprehensiveAnalyticsScreenState extends State<ComprehensiveAnalyticsScr
     } else {
       color = const Color(0xFF9CA3AF); // Gray
     }
-    
+
     return Container(
       width: 32,
       height: 32,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       child: Center(
         child: Text(
           rank.toString(),

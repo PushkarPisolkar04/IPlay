@@ -38,12 +38,10 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
     );
 
     // Scale animation for badge
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     // Fade animation for text
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -88,10 +86,7 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
     final user = FirebaseAuth.instance.currentUser;
     final userName = user?.displayName ?? 'IPlay User';
 
-    await SocialShareHelper.shareBadge(
-      badge: widget.badge,
-      userName: userName,
-    );
+    await SocialShareHelper.shareBadge(badge: widget.badge, userName: userName);
   }
 
   @override
@@ -153,7 +148,9 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
                               color: _getRarityColor(),
                               boxShadow: [
                                 BoxShadow(
-                                  color: _getRarityColor().withValues(alpha: 0.5),
+                                  color: _getRarityColor().withValues(
+                                    alpha: 0.5,
+                                  ),
                                   blurRadius: 30,
                                   spreadRadius: 10,
                                 ),
@@ -197,7 +194,9 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
                               color: _getRarityColor(),
                               shadows: [
                                 Shadow(
-                                  color: _getRarityColor().withValues(alpha: 0.5),
+                                  color: _getRarityColor().withValues(
+                                    alpha: 0.5,
+                                  ),
                                   blurRadius: 10,
                                 ),
                               ],
@@ -328,11 +327,7 @@ class _BadgeUnlockAnimationState extends State<BadgeUnlockAnimation>
             right: 16,
             child: IconButton(
               onPressed: widget.onDismiss,
-              icon: const Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 32,
-              ),
+              icon: const Icon(Icons.close, color: Colors.white, size: 32),
             ),
           ),
         ],

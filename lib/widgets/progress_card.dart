@@ -49,21 +49,21 @@ class ProgressCard extends StatelessWidget {
                 height: 48,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [effectiveColor, effectiveColor.withValues(alpha: 0.7)],
+                    colors: [
+                      effectiveColor,
+                      effectiveColor.withValues(alpha: 0.7),
+                    ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: AppDesignSystem.borderRadiusMD,
                 ),
                 child: Center(
-                  child: Text(
-                    realmIcon,
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                  child: Text(realmIcon, style: const TextStyle(fontSize: 24)),
                 ),
               ),
               const SizedBox(width: AppDesignSystem.spacingMD),
-              
+
               // Realm name and level info
               Expanded(
                 child: Column(
@@ -88,7 +88,7 @@ class ProgressCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppDesignSystem.spacingLG),
-          
+
           // Progress bar
           ClipRRect(
             borderRadius: AppDesignSystem.borderRadiusFull,
@@ -100,7 +100,7 @@ class ProgressCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppDesignSystem.spacingMD),
-          
+
           // XP earned and continue button
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,7 +123,7 @@ class ProgressCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Continue button
               Material(
                 color: Colors.transparent,

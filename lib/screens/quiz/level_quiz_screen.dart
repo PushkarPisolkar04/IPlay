@@ -12,16 +12,14 @@ import '../../core/services/content_service.dart';
 import '../../core/services/badge_service.dart';
 import '../../services/app_rating_service.dart';
 import '../../widgets/certificate_unlock_animation.dart';
+import '../../widgets/game_ui/daily_xp_cap_popup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 /// Screen for taking a level quiz
 class LevelQuizScreen extends StatefulWidget {
   final LevelModel level;
 
-  const LevelQuizScreen({
-    super.key,
-    required this.level,
-  });
+  const LevelQuizScreen({super.key, required this.level});
 
   @override
   State<LevelQuizScreen> createState() => _LevelQuizScreenState();
@@ -58,10 +56,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
   }
 
   void _selectAnswer(int optionIndex) {
-    if (_showExplanation) return; // Don't allow changing answer after submission
+    if (_showExplanation) {
+      return; // Don't allow changing answer after submission
+    }
 
-
-    
     setState(() {
       _selectedAnswers[_currentQuestionIndex] = optionIndex;
     });
@@ -117,7 +115,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       if (user != null) {
         try {
           // Complete level and get newly unlocked badges
-          final newBadges = await _progressService.completeLevel(
+          final result = await _progressService.completeLevel(
             userId: user.uid,
             realmId: widget.level.realmId,
             levelNumber: widget.level.levelNumber,
@@ -126,9 +124,31 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             totalQuestions: widget.level.quiz.length,
           );
 
+          final newBadges =
+              (result['badges'] as List<dynamic>?)
+                  ?.map((e) => e.toString())
+                  .toList() ??
+              [];
+          final warning = (result['warning'] as bool?) ?? false;
+          final currentDailyXP = (result['currentDailyXP'] as int?) ?? 0;
+          final dailyCap = (result['dailyCap'] as int?) ?? 1000;
+          final cappedAmount = (result['cappedAmount'] as int?) ?? 0;
+          final isFullyCapped = (result['isFullyCapped'] as bool?) ?? false;
+
           // Show badge animations if any badges were unlocked
           if (newBadges.isNotEmpty && mounted) {
             await _showBadgeAnimations(newBadges);
+          }
+
+          // Show daily XP cap popup if warning is true
+          if (warning && mounted) {
+            await showDailyXPCapPopup(
+              context,
+              currentXP: currentDailyXP,
+              dailyCap: dailyCap,
+              cappedAmount: cappedAmount,
+              isFullyCapped: isFullyCapped,
+            );
           }
 
           // Check if realm is complete and generate certificate
@@ -149,7 +169,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     try {
       // Ensure realms are loaded first
       await _contentService.getAllRealms();
-      
+
       // Get realm info
       final realm = _contentService.getRealmById(widget.level.realmId);
       if (realm == null) {
@@ -169,8 +189,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       }
 
       final userData = userDoc.data()!;
-      final progressSummary = userData['progressSummary'] as Map<String, dynamic>? ?? {};
-      final realmProgress = progressSummary[widget.level.realmId] as Map<String, dynamic>? ?? {};
+      final progressSummary =
+          userData['progressSummary'] as Map<String, dynamic>? ?? {};
+      final realmProgress =
+          progressSummary[widget.level.realmId] as Map<String, dynamic>? ?? {};
 
       final levelsCompleted = realmProgress['levelsCompleted'] as int? ?? 0;
       final totalLevels = realm.totalLevels;
@@ -182,7 +204,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       // Check if all levels are completed
       if (levelsCompleted >= totalLevels) {
         print('✅ All levels completed! Checking for existing certificate...');
-        
+
         // Check if certificate already exists
         final existingCert = await _certificateService.getUserRealmCertificate(
           userId: userId,
@@ -191,12 +213,13 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
 
         if (existingCert == null) {
           print('🎓 Generating new certificate for ${realm.name}...');
-          
+
           // Generate certificate
-          final certificate = await _certificateService.generateRealmCertificate(
-            realmId: widget.level.realmId,
-            realmName: realm.name,
-          );
+          final certificate = await _certificateService
+              .generateRealmCertificate(
+                realmId: widget.level.realmId,
+                realmName: realm.name,
+              );
 
           print('✅ Certificate generated successfully!');
 
@@ -213,20 +236,23 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
             _bonusXP = bonusXP;
           });
 
-
-
           // Track realm completion for app rating
           await AppRatingService.incrementRealmsCompleted();
 
           // Show certificate celebration animation
           if (mounted) {
-            _showCertificateAnimation(certificate.certificateNumber, realm.name);
+            _showCertificateAnimation(
+              certificate.certificateNumber,
+              realm.name,
+            );
           }
         } else {
           print('ℹ️ Certificate already exists for this realm');
         }
       } else {
-        print('ℹ️ Realm not yet complete. Need ${totalLevels - levelsCompleted} more level(s)');
+        print(
+          'ℹ️ Realm not yet complete. Need ${totalLevels - levelsCompleted} more level(s)',
+        );
       }
     } catch (e) {
       print('❌ Error checking/generating certificate: $e');
@@ -242,7 +268,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
         if (badge != null && mounted) {
           // Show badge animation using the badge service
           _badgeService.showBadgeAnimation(context, badge);
-          
+
           // Wait a bit before showing next badge
           await Future.delayed(const Duration(milliseconds: 500));
         }
@@ -273,9 +299,7 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         contentPadding: const EdgeInsets.all(24),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -390,7 +414,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context); // Close dialog
-              Navigator.pushNamed(context, '/certificates'); // Navigate to certificates
+              Navigator.pushNamed(
+                context,
+                '/certificates',
+              ); // Navigate to certificates
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppDesignSystem.primaryIndigo,
@@ -467,7 +494,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
@@ -486,12 +516,14 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                 ),
               ),
             ),
-            
+
             // Progress bar
             LinearProgressIndicator(
               value: (_currentQuestionIndex + 1) / widget.level.quiz.length,
               backgroundColor: Colors.grey[300],
-              valueColor: const AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppDesignSystem.primaryIndigo,
+              ),
               minHeight: 4,
             ),
 
@@ -507,13 +539,12 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                       ),
-                      child: Text(
-                        question.question,
-                        style: AppTextStyles.h3,
-                      ),
+                      child: Text(question.question, style: AppTextStyles.h3),
                     ),
 
                     const SizedBox(height: AppSpacing.lg),
@@ -522,26 +553,32 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                     ...List.generate(question.options.length, (index) {
                       final isSelected = selectedAnswer == index;
                       final isCorrect = index == question.correctIndex;
-                      
+
                       Color bgColor = Colors.white;
                       Color borderColor = Colors.grey.shade300;
                       IconData? icon;
                       Color? iconColor;
-                      
+
                       if (_showExplanation) {
                         if (isCorrect) {
-                          bgColor = AppDesignSystem.success.withValues(alpha: 0.15);
+                          bgColor = AppDesignSystem.success.withValues(
+                            alpha: 0.15,
+                          );
                           borderColor = AppDesignSystem.success;
                           icon = Icons.check_circle_rounded;
                           iconColor = AppDesignSystem.success;
                         } else if (isSelected && !isCorrect) {
-                          bgColor = AppDesignSystem.error.withValues(alpha: 0.15);
+                          bgColor = AppDesignSystem.error.withValues(
+                            alpha: 0.15,
+                          );
                           borderColor = AppDesignSystem.error;
                           icon = Icons.cancel_rounded;
                           iconColor = AppDesignSystem.error;
                         }
                       } else if (isSelected) {
-                        bgColor = AppDesignSystem.primaryIndigo.withValues(alpha: 0.15);
+                        bgColor = AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.15,
+                        );
                         borderColor = AppDesignSystem.primaryIndigo;
                         icon = Icons.radio_button_checked;
                         iconColor = AppDesignSystem.primaryIndigo;
@@ -562,30 +599,34 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 color: bgColor,
-                                border: Border.all(color: borderColor, width: 2),
+                                border: Border.all(
+                                  color: borderColor,
+                                  width: 2,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: isSelected && !_showExplanation ? [
-                                  BoxShadow(
-                                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ] : null,
+                                boxShadow: isSelected && !_showExplanation
+                                    ? [
+                                        BoxShadow(
+                                          color: AppDesignSystem.primaryIndigo
+                                              .withValues(alpha: 0.2),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ]
+                                    : null,
                               ),
                               child: Row(
                                 children: [
                                   if (icon != null)
-                                    Icon(
-                                      icon,
-                                      color: iconColor,
-                                      size: 24,
-                                    ),
+                                    Icon(icon, color: iconColor, size: 24),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       question.options[index],
                                       style: AppTextStyles.bodyMedium.copyWith(
-                                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
                                       ),
                                     ),
                                   ),
@@ -605,7 +646,9 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         decoration: BoxDecoration(
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(AppSpacing.sm),
-                          border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: Colors.blue.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -667,8 +710,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                   child: Text(
                     _showExplanation
                         ? (_currentQuestionIndex < widget.level.quiz.length - 1
-                            ? 'Next Question'
-                            : 'Finish Quiz')
+                              ? 'Next Question'
+                              : 'Finish Quiz')
                         : 'Submit Answer',
                     style: AppTextStyles.buttonLarge,
                   ),
@@ -761,11 +804,15 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                                 vertical: AppSpacing.sm,
                               ),
                               decoration: BoxDecoration(
-                                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                                color: AppDesignSystem.primaryIndigo.withValues(
+                                  alpha: 0.1,
+                                ),
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.amber.withValues(alpha: 0.3 * value),
+                                    color: Colors.amber.withValues(
+                                      alpha: 0.3 * value,
+                                    ),
                                     blurRadius: 20 * value,
                                     spreadRadius: 5 * value,
                                   ),
@@ -780,7 +827,11 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                                     builder: (context, rotateValue, child) {
                                       return Transform.rotate(
                                         angle: rotateValue * 2 * 3.14159,
-                                        child: const Icon(Icons.star, color: Colors.amber, size: 28),
+                                        child: const Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                          size: 28,
+                                        ),
                                       );
                                     },
                                   ),
@@ -820,7 +871,9 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.amber.withValues(alpha: 0.3 * value),
+                                    color: Colors.amber.withValues(
+                                      alpha: 0.3 * value,
+                                    ),
                                     blurRadius: 15 * value,
                                     spreadRadius: 3 * value,
                                   ),
@@ -845,7 +898,8 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Certificate Earned!',
@@ -888,8 +942,14 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pop(context, true); // Back to level with result
-                            Navigator.pop(context, true); // Back to realm with result
+                            Navigator.pop(
+                              context,
+                              true,
+                            ); // Back to level with result
+                            Navigator.pop(
+                              context,
+                              true,
+                            ); // Back to realm with result
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppDesignSystem.primaryIndigo,
@@ -909,7 +969,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppDesignSystem.primaryIndigo,
                             backgroundColor: Colors.white,
-                            side: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+                            side: const BorderSide(
+                              color: AppDesignSystem.primaryIndigo,
+                              width: 2,
+                            ),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),
@@ -940,7 +1003,10 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppDesignSystem.primaryIndigo,
                             backgroundColor: Colors.white,
-                            side: const BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+                            side: const BorderSide(
+                              color: AppDesignSystem.primaryIndigo,
+                              width: 2,
+                            ),
                             padding: const EdgeInsets.symmetric(
                               vertical: AppSpacing.md,
                             ),
@@ -960,4 +1026,3 @@ class _LevelQuizScreenState extends State<LevelQuizScreen> {
     );
   }
 }
-

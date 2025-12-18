@@ -70,9 +70,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              newStatus ? 'Bookmark added' : 'Bookmark removed',
-            ),
+            content: Text(newStatus ? 'Bookmark added' : 'Bookmark removed'),
             backgroundColor: AppDesignSystem.success,
             duration: const Duration(seconds: 2),
           ),
@@ -103,10 +101,10 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
 
     try {
       print('🔍 Loading level: ${widget.levelId}');
-      
+
       // Load level using the updated service that merges quiz data
       final level = await _contentService.getLevelById(widget.levelId);
-      
+
       if (level != null) {
         print('✅ Level loaded, initializing UI');
         await _loadFromModel(level);
@@ -133,14 +131,14 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
     if (json['videoUrl'] != null) {
       final videoUrl = json['videoUrl'] as String;
       String? videoId;
-      
+
       // Check if it's already a video ID or a full URL
       if (videoUrl.length == 11 && !videoUrl.contains('/')) {
         videoId = videoUrl;
       } else {
         videoId = YoutubePlayer.convertUrlToId(videoUrl);
       }
-      
+
       if (videoId != null) {
         _youtubeController = YoutubePlayerController(
           initialVideoId: videoId,
@@ -150,7 +148,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
             enableCaption: true,
           ),
         );
-        
+
         // Listen to video progress
         _youtubeController!.addListener(_onVideoProgress);
       }
@@ -179,7 +177,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
             enableCaption: true,
           ),
         );
-        
+
         _youtubeController!.addListener(_onVideoProgress);
         print('✅ YouTube controller initialized');
       } else {
@@ -197,10 +195,10 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
 
   void _onVideoProgress() {
     if (_youtubeController == null) return;
-    
+
     final position = _youtubeController!.value.position.inSeconds;
     final duration = _youtubeController!.metadata.duration.inSeconds;
-    
+
     if (duration > 0) {
       final progress = position / duration;
       // Mark as completed if watched 90% or more
@@ -214,13 +212,15 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
 
   LevelModel _convertJsonToModel(Map<String, dynamic> json) {
     // Extract key takeaways
-    final keyTakeaways = (json['keyTakeaways'] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList() ?? [];
+    final keyTakeaways =
+        (json['keyTakeaways'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
 
     // Extract quiz questions
-    final quizQuestions = (json['quizQuestions'] as List<dynamic>?)
-        ?.map((q) {
+    final quizQuestions =
+        (json['quizQuestions'] as List<dynamic>?)?.map((q) {
           final question = q as Map<String, dynamic>;
           return QuizQuestion(
             question: question['question'] as String,
@@ -230,35 +230,38 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
             correctIndex: question['correctIndex'] as int,
             explanation: question['explanation'] as String,
           );
-        })
-        .toList() ?? [];
+        }).toList() ??
+        [];
 
     // Build content from content blocks
-    final contentBlocks = (json['contentBlocks'] as List<dynamic>?)
-        ?.map((block) {
-          final b = block as Map<String, dynamic>;
-          final type = b['type'] as String;
-          final content = b['content'] as String;
-          final caption = b['caption'] as String?;
-          
-          switch (type) {
-            case 'text':
-              return content;
-            case 'image':
-              return '![${caption ?? 'Image'}]($content)';
-            case 'example':
-              final title = b['metadata']?['title'] as String? ?? 'Example';
-              return '### 📝 $title\n\n$content';
-            case 'case_study':
-              final title = b['metadata']?['title'] as String? ?? 'Case Study';
-              return '### 📚 $title\n\n$content';
-            case 'summary':
-              return '### 📌 Summary\n\n$content';
-            default:
-              return content;
-          }
-        })
-        .join('\n\n') ?? '';
+    final contentBlocks =
+        (json['contentBlocks'] as List<dynamic>?)
+            ?.map((block) {
+              final b = block as Map<String, dynamic>;
+              final type = b['type'] as String;
+              final content = b['content'] as String;
+              final caption = b['caption'] as String?;
+
+              switch (type) {
+                case 'text':
+                  return content;
+                case 'image':
+                  return '![${caption ?? 'Image'}]($content)';
+                case 'example':
+                  final title = b['metadata']?['title'] as String? ?? 'Example';
+                  return '### 📝 $title\n\n$content';
+                case 'case_study':
+                  final title =
+                      b['metadata']?['title'] as String? ?? 'Case Study';
+                  return '### 📚 $title\n\n$content';
+                case 'summary':
+                  return '### 📌 Summary\n\n$content';
+                default:
+                  return content;
+              }
+            })
+            .join('\n\n') ??
+        '';
 
     return LevelModel(
       id: json['levelId'] as String,
@@ -301,10 +304,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                 color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.5),
               ),
               const SizedBox(height: AppSpacing.md),
-              Text(
-                'This level is locked',
-                style: AppTextStyles.h2,
-              ),
+              Text('This level is locked', style: AppTextStyles.h2),
               const SizedBox(height: AppSpacing.sm),
               Text(
                 'Complete previous levels to unlock',
@@ -329,11 +329,20 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 200,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 100,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 300, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 300,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
             ],
           ),
         ),
@@ -363,10 +372,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.md),
-              ElevatedButton(
-                onPressed: _loadLevel,
-                child: const Text('Retry'),
-              ),
+              ElevatedButton(onPressed: _loadLevel, child: const Text('Retry')),
             ],
           ),
         ),
@@ -502,7 +508,9 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                          color: AppDesignSystem.primaryIndigo.withValues(
+                            alpha: 0.1,
+                          ),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
@@ -519,10 +527,7 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              _level!.name,
-                              style: AppTextStyles.h2,
-                            ),
+                            Text(_level!.name, style: AppTextStyles.h2),
                             Text(
                               '${_level!.estimatedMinutes} min read',
                               style: AppTextStyles.caption.copyWith(
@@ -570,7 +575,9 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                       ),
                       child: Column(
@@ -593,24 +600,29 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                             ],
                           ),
                           const SizedBox(height: AppSpacing.sm),
-                          ..._level!.keyPoints.map((point) => Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 8,
-                                  left: 28,
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('• ', style: TextStyle(fontSize: 16)),
-                                    Expanded(
-                                      child: Text(
-                                        point,
-                                        style: AppTextStyles.bodyMedium,
-                                      ),
+                          ..._level!.keyPoints.map(
+                            (point) => Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 8,
+                                left: 28,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    '• ',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      point,
+                                      style: AppTextStyles.bodyMedium,
                                     ),
-                                  ],
-                                ),
-                              )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -625,12 +637,11 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
                         final result = await Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LevelQuizScreen(
-                              level: _level!,
-                            ),
+                            builder: (context) =>
+                                LevelQuizScreen(level: _level!),
                           ),
                         );
-                        
+
                         // If quiz was completed, return true to trigger realm reload
                         if (result == true && mounted) {
                           Navigator.pop(context, true);
@@ -670,4 +681,3 @@ class _LevelDetailScreenState extends State<LevelDetailScreen> {
     );
   }
 }
-

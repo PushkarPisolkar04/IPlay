@@ -16,7 +16,8 @@ import 'all_students_screen.dart';
 class PrincipalDashboardScreen extends StatefulWidget {
   const PrincipalDashboardScreen({super.key});
   @override
-  State<PrincipalDashboardScreen> createState() => _PrincipalDashboardScreenState();
+  State<PrincipalDashboardScreen> createState() =>
+      _PrincipalDashboardScreenState();
 }
 
 class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
@@ -36,19 +37,21 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
   }
 
   List<Widget> get _screens => [
-        _PrincipalOverviewTab(onNavigate: (index) {
-          setState(() => _selectedIndex = index);
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }),
-        const _SchoolClassroomsTab(),
-        const _SchoolAnalyticsTab(),
-        const _SchoolTeachersTab(),
-        const _PrincipalProfileTab(),
-      ];
+    _PrincipalOverviewTab(
+      onNavigate: (index) {
+        setState(() => _selectedIndex = index);
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      },
+    ),
+    const _SchoolClassroomsTab(),
+    const _SchoolAnalyticsTab(),
+    const _SchoolTeachersTab(),
+    const _PrincipalProfileTab(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +150,9 @@ class _PrincipalDashboardScreenState extends State<PrincipalDashboardScreen> {
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? const Color(0xFF8B5CF6) : const Color(0xFF9CA3AF),
+                color: isSelected
+                    ? const Color(0xFF8B5CF6)
+                    : const Color(0xFF9CA3AF),
               ),
             ),
           ],
@@ -213,7 +218,8 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
         if (schoolDoc.exists) {
           _schoolData = schoolDoc.data();
 
-          final teacherIdsCount = ((_schoolData?['teacherIds'] as List?)?.length ?? 0);
+          final teacherIdsCount =
+              ((_schoolData?['teacherIds'] as List?)?.length ?? 0);
           _totalTeachers = teacherIdsCount > 0 ? teacherIdsCount - 1 : 0;
 
           final pendingRequestsSnapshot = await FirebaseFirestore.instance
@@ -250,9 +256,12 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
               if (studentDoc.exists) {
                 existingStudents.add(studentId);
                 totalXP += (studentDoc.data()?['totalXP'] ?? 0) as int;
-                final lastActive = studentDoc.data()?['lastActiveDate'] as Timestamp?;
+                final lastActive =
+                    studentDoc.data()?['lastActiveDate'] as Timestamp?;
                 if (lastActive != null) {
-                  final daysSince = DateTime.now().difference(lastActive.toDate()).inDays;
+                  final daysSince = DateTime.now()
+                      .difference(lastActive.toDate())
+                      .inDays;
                   if (daysSince <= 7) {
                     _activeStudents++;
                   }
@@ -260,7 +269,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
               }
             }
           }
-          
+
           _totalStudents = existingStudents.length;
           if (existingStudents.isNotEmpty) {
             _avgSchoolXP = totalXP / existingStudents.length;
@@ -293,13 +302,26 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 100,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(child: LoadingSkeleton(height: 80, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  Expanded(
+                    child: LoadingSkeleton(
+                      height: 80,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
                   SizedBox(width: 12),
-                  Expanded(child: LoadingSkeleton(height: 80, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  Expanded(
+                    child: LoadingSkeleton(
+                      height: 80,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 16),
@@ -375,11 +397,19 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                               StreamBuilder<QuerySnapshot>(
                                 stream: FirebaseFirestore.instance
                                     .collection('notifications')
-                                    .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                    .where(
+                                      'toUserId',
+                                      isEqualTo: FirebaseAuth
+                                          .instance
+                                          .currentUser
+                                          ?.uid,
+                                    )
                                     .where('read', isEqualTo: false)
                                     .snapshots(),
                                 builder: (context, snapshot) {
-                                  final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
+                                  final unreadCount = snapshot.hasData
+                                      ? snapshot.data!.docs.length
+                                      : 0;
 
                                   return Stack(
                                     children: [
@@ -390,7 +420,10 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                           size: 26,
                                         ),
                                         onPressed: () {
-                                          Navigator.pushNamed(context, '/notifications');
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/notifications',
+                                          );
                                         },
                                       ),
                                       if (unreadCount > 0)
@@ -409,7 +442,9 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                             ),
                                             child: Center(
                                               child: Text(
-                                                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                                unreadCount > 99
+                                                    ? '99+'
+                                                    : unreadCount.toString(),
                                                 style: const TextStyle(
                                                   color: Color(0xFF6B46C1),
                                                   fontSize: 10,
@@ -426,13 +461,18 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                               ),
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.amber,
                                   borderRadius: BorderRadius.circular(20),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.amber.withValues(alpha: 0.3),
+                                      color: Colors.amber.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       blurRadius: 10,
                                       spreadRadius: 2,
                                     ),
@@ -463,7 +503,11 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.school, color: Colors.white, size: 20),
+                                const Icon(
+                                  Icons.school,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
@@ -483,7 +527,10 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
@@ -499,7 +546,10 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 ),
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(12),
@@ -557,7 +607,9 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             title: 'Teachers',
                             value: _totalTeachers.toString(),
                             color: const Color(0xFF10B981),
-                            subtitle: _pendingTeachers > 0 ? '$_pendingTeachers pending' : 'All approved',
+                            subtitle: _pendingTeachers > 0
+                                ? '$_pendingTeachers pending'
+                                : 'All approved',
                           ),
                           _buildStatCard(
                             icon: Icons.class_,
@@ -595,7 +647,9 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                                color: const Color(
+                                  0xFFF59E0B,
+                                ).withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -605,11 +659,16 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                             onTap: () => widget.onNavigate(3),
                             child: Row(
                               children: [
-                                const Icon(Icons.person_add_alt, color: Colors.white, size: 24),
+                                const Icon(
+                                  Icons.person_add_alt,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Pending Teacher Requests',
@@ -629,7 +688,11 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
+                                const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
                               ],
                             ),
                           ),
@@ -648,7 +711,8 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const UnifiedAnnouncementsScreen(),
+                                    builder: (context) =>
+                                        const UnifiedAnnouncementsScreen(),
                                   ),
                                 );
                               },
@@ -666,12 +730,17 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => PrincipalGenerateReportScreen(schoolId: _schoolId!),
+                                      builder: (context) =>
+                                          PrincipalGenerateReportScreen(
+                                            schoolId: _schoolId!,
+                                          ),
                                     ),
                                   );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('School ID not found')),
+                                    const SnackBar(
+                                      content: Text('School ID not found'),
+                                    ),
                                   );
                                 }
                               },
@@ -692,7 +761,8 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const UnifiedLeaderboardScreen(),
+                                    builder: (context) =>
+                                        const UnifiedLeaderboardScreen(),
                                   ),
                                 );
                               },
@@ -724,12 +794,16 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => AllStudentsScreen(schoolId: _schoolId!),
+                                      builder: (context) => AllStudentsScreen(
+                                        schoolId: _schoolId!,
+                                      ),
                                     ),
                                   );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('School ID not found')),
+                                    const SnackBar(
+                                      content: Text('School ID not found'),
+                                    ),
                                   );
                                 }
                               },
@@ -747,12 +821,17 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SchoolSettingsScreen(schoolId: _schoolId!),
+                                      builder: (context) =>
+                                          SchoolSettingsScreen(
+                                            schoolId: _schoolId!,
+                                          ),
                                     ),
                                   );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('School ID not found')),
+                                    const SnackBar(
+                                      content: Text('School ID not found'),
+                                    ),
                                   );
                                 }
                               },
@@ -802,11 +881,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-            size: 32,
-          ),
+          Icon(icon, color: Colors.white, size: 32),
           const SizedBox(height: 8),
           Text(
             value,
@@ -830,10 +905,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.white70,
-              ),
+              style: const TextStyle(fontSize: 11, color: Colors.white70),
               textAlign: TextAlign.center,
             ),
           ],
@@ -959,7 +1031,9 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
             });
           }
 
-          final approvedIds = List<String>.from(schoolData?['teacherIds'] ?? []);
+          final approvedIds = List<String>.from(
+            schoolData?['teacherIds'] ?? [],
+          );
           _approvedTeachers = [];
           for (var teacherId in approvedIds) {
             if (teacherId == currentUser.uid) continue;
@@ -968,10 +1042,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                 .doc(teacherId)
                 .get();
             if (teacherDoc.exists) {
-              _approvedTeachers.add({
-                'id': teacherId,
-                ...teacherDoc.data()!,
-              });
+              _approvedTeachers.add({'id': teacherId, ...teacherDoc.data()!});
             }
           }
         }
@@ -994,7 +1065,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
           .collection('schools')
           .doc(_schoolId)
           .get();
-      
+
       final schoolTag = schoolDoc.data()?['schoolTag'];
       final schoolName = schoolDoc.data()?['name'];
 
@@ -1002,30 +1073,24 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
       await FirebaseFirestore.instance
           .collection('teacher_join_requests')
           .doc(requestId)
-          .update({
-        'status': 'approved',
-        'approvedAt': Timestamp.now(),
-      });
+          .update({'status': 'approved', 'approvedAt': Timestamp.now()});
 
       // Add teacher to school's teacherIds
       await FirebaseFirestore.instance
           .collection('schools')
           .doc(_schoolId)
           .update({
-        'teacherIds': FieldValue.arrayUnion([teacherId]),
-        'updatedAt': Timestamp.now(),
-      });
+            'teacherIds': FieldValue.arrayUnion([teacherId]),
+            'updatedAt': Timestamp.now(),
+          });
 
       // CRITICAL FIX: Update teacher's user profile with schoolId and schoolTag
-      final updateData = {
-        'schoolId': _schoolId,
-        'updatedAt': Timestamp.now(),
-      };
-      
+      final updateData = {'schoolId': _schoolId, 'updatedAt': Timestamp.now()};
+
       if (schoolTag != null) {
         updateData['schoolTag'] = schoolTag;
       }
-      
+
       await FirebaseFirestore.instance
           .collection('users')
           .doc(teacherId)
@@ -1034,7 +1099,9 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Teacher approved and added to ${schoolName ?? 'school'}!'),
+          content: Text(
+            'Teacher approved and added to ${schoolName ?? 'school'}!',
+          ),
           backgroundColor: Colors.green,
         ),
       );
@@ -1043,7 +1110,10 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -1053,19 +1123,22 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
       await FirebaseFirestore.instance
           .collection('teacher_join_requests')
           .doc(requestId)
-          .update({
-        'status': 'rejected',
-        'rejectedAt': Timestamp.now(),
-      });
+          .update({'status': 'rejected', 'rejectedAt': Timestamp.now()});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Teacher request rejected'), backgroundColor: Colors.orange),
+        const SnackBar(
+          content: Text('Teacher request rejected'),
+          backgroundColor: Colors.orange,
+        ),
       );
 
       _loadTeachers();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -1075,9 +1148,14 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Remove Teacher'),
-        content: Text('Are you sure you want to remove $teacherName from the school?'),
+        content: Text(
+          'Are you sure you want to remove $teacherName from the school?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Remove', style: TextStyle(color: Colors.red)),
@@ -1091,17 +1169,23 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
             .collection('schools')
             .doc(_schoolId)
             .update({
-          'teacherIds': FieldValue.arrayRemove([teacherId]),
-        });
+              'teacherIds': FieldValue.arrayRemove([teacherId]),
+            });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Teacher removed from school'), backgroundColor: Colors.orange),
+          const SnackBar(
+            content: Text('Teacher removed from school'),
+            backgroundColor: Colors.orange,
+          ),
         );
 
         _loadTeachers();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -1120,7 +1204,9 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
       Set<String> uniqueStudents = {};
 
       for (var classroom in classroomsSnapshot.docs) {
-        final studentIds = List<String>.from(classroom.data()['studentIds'] ?? []);
+        final studentIds = List<String>.from(
+          classroom.data()['studentIds'] ?? [],
+        );
         uniqueStudents.addAll(studentIds);
       }
 
@@ -1136,10 +1222,7 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
         }
       }
 
-      return {
-        'classrooms': classroomCount,
-        'students': existingStudentCount,
-      };
+      return {'classrooms': classroomCount, 'students': existingStudentCount};
     } catch (e) {
       return {'classrooms': 0, 'students': 0};
     }
@@ -1211,14 +1294,21 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                           SizedBox(width: 12),
                           Text(
                             'Teacher Management',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '${_approvedTeachers.length} approved • ${_pendingTeachers.length} pending',
-                        style: const TextStyle(fontSize: 13, color: Colors.white70),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),
@@ -1231,7 +1321,11 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Pending Requests',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1F2937),
+                      ),
                     ),
                   ),
                 ),
@@ -1239,107 +1333,142 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final teacher = _pendingTeachers[index];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Colors.orange.withValues(alpha: 0.3), width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final teacher = _pendingTeachers[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.orange.withValues(alpha: 0.3),
+                            width: 2,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 24,
-                                    backgroundColor: Colors.orange.withValues(alpha: 0.1),
-                                    backgroundImage: teacher['avatarUrl'] != null ? AssetImage(teacher['avatarUrl']) : null,
-                                    child: teacher['avatarUrl'] == null ? const Icon(Icons.person, color: Colors.orange) : null,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 24,
+                                  backgroundColor: Colors.orange.withValues(
+                                    alpha: 0.1,
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          teacher['displayName'] ?? 'Unknown',
-                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                  backgroundImage: teacher['avatarUrl'] != null
+                                      ? AssetImage(teacher['avatarUrl'])
+                                      : null,
+                                  child: teacher['avatarUrl'] == null
+                                      ? const Icon(
+                                          Icons.person,
+                                          color: Colors.orange,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        teacher['displayName'] ?? 'Unknown',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        Text(
-                                          teacher['email'] ?? '',
-                                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      Text(
+                                        teacher['email'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
                                         ),
-                                      ],
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Text(
+                                    'Pending',
+                                    style: TextStyle(
+                                      color: Colors.orange,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.orange.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(12),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () => _approveTeacher(
+                                      teacher['id'],
+                                      teacher['requestId'],
                                     ),
-                                    child: const Text(
-                                      'Pending',
-                                      style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600, fontSize: 12),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton.icon(
-                                      onPressed: () => _approveTeacher(teacher['id'], teacher['requestId']),
-                                      icon: const Icon(Icons.check, size: 18),
-                                      label: const Text('Approve'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    icon: const Icon(Icons.check, size: 18),
+                                    label: const Text('Approve'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: OutlinedButton.icon(
-                                      onPressed: () => _rejectTeacher(teacher['requestId']),
-                                      icon: const Icon(Icons.close, size: 18),
-                                      label: const Text('Reject'),
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.red,
-                                        padding: const EdgeInsets.symmetric(vertical: 12),
-                                        side: const BorderSide(color: Colors.red),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: OutlinedButton.icon(
+                                    onPressed: () =>
+                                        _rejectTeacher(teacher['requestId']),
+                                    icon: const Icon(Icons.close, size: 18),
+                                    label: const Text('Reject'),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.red,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                      ),
+                                      side: const BorderSide(color: Colors.red),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      childCount: _pendingTeachers.length,
-                    ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }, childCount: _pendingTeachers.length),
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -1349,7 +1478,11 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
                     'Approved Teachers',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1F2937),
+                    ),
                   ),
                 ),
               ),
@@ -1358,102 +1491,130 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
                 const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: Center(child: Text('No approved teachers yet', style: TextStyle(color: Colors.grey))),
+                    child: Center(
+                      child: Text(
+                        'No approved teachers yet',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
                   ),
                 )
               else
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final teacher = _approvedTeachers[index];
-                        return FutureBuilder<Map<String, int>>(
-                          future: _getTeacherStats(teacher['id']),
-                          builder: (context, snapshot) {
-                            final stats = snapshot.data ?? {'classrooms': 0, 'students': 0};
-                            
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 24,
-                                        backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                        backgroundImage: teacher['avatarUrl'] != null ? AssetImage(teacher['avatarUrl']) : null,
-                                        child: teacher['avatarUrl'] == null ? const Icon(Icons.person, color: AppDesignSystem.primaryIndigo) : null,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              teacher['displayName'] ?? 'Unknown',
-                                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final teacher = _approvedTeachers[index];
+                      return FutureBuilder<Map<String, int>>(
+                        future: _getTeacherStats(teacher['id']),
+                        builder: (context, snapshot) {
+                          final stats =
+                              snapshot.data ?? {'classrooms': 0, 'students': 0};
+
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 24,
+                                      backgroundColor: AppDesignSystem
+                                          .primaryIndigo
+                                          .withValues(alpha: 0.1),
+                                      backgroundImage:
+                                          teacher['avatarUrl'] != null
+                                          ? AssetImage(teacher['avatarUrl'])
+                                          : null,
+                                      child: teacher['avatarUrl'] == null
+                                          ? const Icon(
+                                              Icons.person,
+                                              color:
+                                                  AppDesignSystem.primaryIndigo,
+                                            )
+                                          : null,
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            teacher['displayName'] ?? 'Unknown',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            Text(
-                                              teacher['email'] ?? '',
-                                              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Text(
+                                            teacher['email'] ?? '',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[600],
                                             ),
-                                          ],
-                                        ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
                                       ),
-                                      IconButton(
-                                        onPressed: () => _removeTeacher(teacher['id'], teacher['displayName'] ?? 'this teacher'),
-                                        icon: const Icon(Icons.delete_outline, color: Colors.red),
-                                        tooltip: 'Remove teacher',
+                                    ),
+                                    IconButton(
+                                      onPressed: () => _removeTeacher(
+                                        teacher['id'],
+                                        teacher['displayName'] ??
+                                            'this teacher',
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: _buildTeacherStatChip(
-                                          Icons.class_,
-                                          '${stats['classrooms']} Classrooms',
-                                          const Color(0xFF8B5CF6),
-                                        ),
+                                      icon: const Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.red,
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: _buildTeacherStatChip(
-                                          Icons.people,
-                                          '${stats['students']} Students',
-                                          const Color(0xFF3B82F6),
-                                        ),
+                                      tooltip: 'Remove teacher',
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _buildTeacherStatChip(
+                                        Icons.class_,
+                                        '${stats['classrooms']} Classrooms',
+                                        const Color(0xFF8B5CF6),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      childCount: _approvedTeachers.length,
-                    ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: _buildTeacherStatChip(
+                                        Icons.people,
+                                        '${stats['students']} Students',
+                                        const Color(0xFF3B82F6),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }, childCount: _approvedTeachers.length),
                   ),
                 ),
               const SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -1487,7 +1648,10 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
 
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
 
       _schoolId = userDoc.data()?['principalOfSchool'];
 
@@ -1503,16 +1667,20 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
           String teacherName = 'Unknown';
           final teacherId = data['teacherId'];
           if (teacherId != null) {
-            final teacherDoc = await FirebaseFirestore.instance.collection('users').doc(teacherId).get();
+            final teacherDoc = await FirebaseFirestore.instance
+                .collection('users')
+                .doc(teacherId)
+                .get();
             if (teacherDoc.exists) {
               teacherName = teacherDoc.data()?['displayName'] ?? 'Unknown';
             }
           }
 
           // Filter out deleted students
-          final studentIds = (data['studentIds'] as List?)?.cast<String>() ?? [];
+          final studentIds =
+              (data['studentIds'] as List?)?.cast<String>() ?? [];
           int existingStudentCount = 0;
-          
+
           for (var studentId in studentIds) {
             final studentDoc = await FirebaseFirestore.instance
                 .collection('users')
@@ -1579,14 +1747,21 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                           SizedBox(width: 12),
                           Text(
                             'School Classrooms',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '${_classrooms.length} classroom${_classrooms.length == 1 ? '' : 's'} across all teachers',
-                        style: const TextStyle(fontSize: 13, color: Colors.white70),
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),
@@ -1604,7 +1779,11 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                           SizedBox(height: 16),
                           Text(
                             'No classrooms yet',
-                            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           SizedBox(height: 8),
                           Text(
@@ -1620,146 +1799,189 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final classroom = _classrooms[index];
-                        final studentCount = classroom['existingStudentCount'] ?? 0;
-                        final pendingCount = (classroom['pendingStudentIds'] as List?)?.length ?? 0;
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final classroom = _classrooms[index];
+                      final studentCount =
+                          classroom['existingStudentCount'] ?? 0;
+                      final pendingCount =
+                          (classroom['pendingStudentIds'] as List?)?.length ??
+                          0;
 
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Icon(Icons.class_, color: AppDesignSystem.primaryIndigo, size: 24),
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppDesignSystem.primaryIndigo
+                                        .withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          classroom['name'] ?? 'Untitled Classroom',
-                                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.person, size: 14, color: Colors.grey),
-                                            const SizedBox(width: 4),
-                                            Expanded(
-                                              child: Text(
-                                                classroom['teacherName'],
-                                                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                  child: const Icon(
+                                    Icons.class_,
+                                    color: AppDesignSystem.primaryIndigo,
+                                    size: 24,
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: _buildClassroomStat(Icons.people, studentCount.toString(), 'Students', const Color(0xFF3B82F6)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    flex: 2,
-                                    child: _buildClassroomStat(Icons.access_time, pendingCount.toString(), 'Pending', const Color(0xFFF59E0B)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            const Color(0xFF8B5CF6).withValues(alpha: 0.15),
-                                            const Color(0xFFA78BFA).withValues(alpha: 0.15),
-                                          ],
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        classroom['name'] ??
+                                            'Untitled Classroom',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
-                                          width: 1.5,
-                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
+                                      const SizedBox(height: 4),
+                                      Row(
                                         children: [
-                                          const Icon(Icons.qr_code_2, size: 18, color: Color(0xFF8B5CF6)),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            classroom['joinCode'] ?? 'N/A',
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xFF8B5CF6),
-                                              letterSpacing: 0.5,
-                                            ),
-                                            textAlign: TextAlign.center,
+                                          const Icon(
+                                            Icons.person,
+                                            size: 14,
+                                            color: Colors.grey,
                                           ),
-                                          const SizedBox(height: 2),
-                                          const Text(
-                                            'Code',
-                                            style: TextStyle(
-                                              fontSize: 9,
-                                              color: Color(0xFF8B5CF6),
-                                              fontWeight: FontWeight.w500,
+                                          const SizedBox(width: 4),
+                                          Expanded(
+                                            child: Text(
+                                              classroom['teacherName'],
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey[600],
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              if (classroom['description'] != null && classroom['description'].toString().isNotEmpty) ...[
-                                const SizedBox(height: 8),
-                                Text(
-                                  classroom['description'],
-                                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildClassroomStat(
+                                    Icons.people,
+                                    studentCount.toString(),
+                                    'Students',
+                                    const Color(0xFF3B82F6),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  flex: 2,
+                                  child: _buildClassroomStat(
+                                    Icons.access_time,
+                                    pendingCount.toString(),
+                                    'Pending',
+                                    const Color(0xFFF59E0B),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          const Color(
+                                            0xFF8B5CF6,
+                                          ).withValues(alpha: 0.15),
+                                          const Color(
+                                            0xFFA78BFA,
+                                          ).withValues(alpha: 0.15),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: const Color(
+                                          0xFF8B5CF6,
+                                        ).withValues(alpha: 0.3),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(
+                                          Icons.qr_code_2,
+                                          size: 18,
+                                          color: Color(0xFF8B5CF6),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          classroom['joinCode'] ?? 'N/A',
+                                          style: const TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF8B5CF6),
+                                            letterSpacing: 0.5,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        const Text(
+                                          'Code',
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            color: Color(0xFF8B5CF6),
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (classroom['description'] != null &&
+                                classroom['description']
+                                    .toString()
+                                    .isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                classroom['description'],
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ],
-                          ),
-                        );
-                      },
-                      childCount: _classrooms.length,
-                    ),
+                          ],
+                        ),
+                      );
+                    }, childCount: _classrooms.length),
                   ),
                 ),
               const SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -1770,7 +1992,12 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
     );
   }
 
-  Widget _buildClassroomStat(IconData icon, String value, String label, Color color) {
+  Widget _buildClassroomStat(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -1784,12 +2011,20 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: TextStyle(fontSize: 9, color: color.withValues(alpha: 0.8), fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 9,
+              color: color.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
@@ -1822,7 +2057,10 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
 
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(currentUser.uid).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
 
       _schoolId = userDoc.data()?['principalOfSchool'];
 
@@ -1834,7 +2072,9 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
 
         Set<String> uniqueStudentIds = {};
         for (var classroom in classroomsSnapshot.docs) {
-          final studentIds = List<String>.from(classroom.data()['studentIds'] ?? []);
+          final studentIds = List<String>.from(
+            classroom.data()['studentIds'] ?? [],
+          );
           uniqueStudentIds.addAll(studentIds);
         }
 
@@ -1843,7 +2083,10 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
 
         // Only count existing students
         for (var studentId in uniqueStudentIds) {
-          final studentDoc = await FirebaseFirestore.instance.collection('users').doc(studentId).get();
+          final studentDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
 
           if (studentDoc.exists) {
             final studentData = studentDoc.data()!;
@@ -1859,7 +2102,9 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
 
             final lastActive = studentData['lastActiveDate'] as Timestamp?;
             if (lastActive != null) {
-              final daysSince = DateTime.now().difference(lastActive.toDate()).inDays;
+              final daysSince = DateTime.now()
+                  .difference(lastActive.toDate())
+                  .inDays;
               if (daysSince <= 7) {
                 _activeThisWeek++;
               }
@@ -1896,13 +2141,26 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
             children: [
               Row(
                 children: [
-                  Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  Expanded(
+                    child: LoadingSkeleton(
+                      height: 100,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
                   SizedBox(width: 12),
-                  Expanded(child: LoadingSkeleton(height: 100, borderRadius: BorderRadius.all(Radius.circular(12)))),
+                  Expanded(
+                    child: LoadingSkeleton(
+                      height: 100,
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 16),
-              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+              LoadingSkeleton(
+                height: 200,
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
               SizedBox(height: 16),
               ListSkeleton(itemCount: 3),
             ],
@@ -1942,7 +2200,11 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                           SizedBox(width: 12),
                           Text(
                             'School Analytics',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
@@ -1964,17 +2226,31 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                     children: [
                       const Text(
                         'Key Metrics',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1F2937),
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
                           Expanded(
-                            child: _buildMetricCard('Total Students', _totalStudents.toString(), Icons.people, const Color(0xFF3B82F6)),
+                            child: _buildMetricCard(
+                              'Total Students',
+                              _totalStudents.toString(),
+                              Icons.people,
+                              const Color(0xFF3B82F6),
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: _buildMetricCard('Avg XP', _avgXP.toStringAsFixed(0), Icons.stars, const Color(0xFFF59E0B)),
+                            child: _buildMetricCard(
+                              'Avg XP',
+                              _avgXP.toStringAsFixed(0),
+                              Icons.stars,
+                              const Color(0xFFF59E0B),
+                            ),
                           ),
                         ],
                       ),
@@ -1982,7 +2258,12 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                       Row(
                         children: [
                           Expanded(
-                            child: _buildMetricCard('Active This Week', _activeThisWeek.toString(), Icons.trending_up, const Color(0xFF10B981)),
+                            child: _buildMetricCard(
+                              'Active This Week',
+                              _activeThisWeek.toString(),
+                              Icons.trending_up,
+                              const Color(0xFF10B981),
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -2005,11 +2286,19 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      Icon(Icons.emoji_events, color: Color(0xFFF59E0B), size: 20),
+                      Icon(
+                        Icons.emoji_events,
+                        color: Color(0xFFF59E0B),
+                        size: 20,
+                      ),
                       SizedBox(width: 8),
                       Text(
                         'Top Performers',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1F2937),
+                        ),
                       ),
                     ],
                   ),
@@ -2020,106 +2309,141 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
                 const SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: Center(child: Text('No student data yet', style: TextStyle(color: Colors.grey))),
+                    child: Center(
+                      child: Text(
+                        'No student data yet',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ),
                   ),
                 )
               else
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final student = _topStudents[index];
-                        final rank = index + 1;
-                        Color rankColor;
-                        IconData rankIcon;
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final student = _topStudents[index];
+                      final rank = index + 1;
+                      Color rankColor;
+                      IconData rankIcon;
 
-                        if (rank == 1) {
-                          rankColor = const Color(0xFFFFD700);
-                          rankIcon = Icons.workspace_premium;
-                        } else if (rank == 2) {
-                          rankColor = const Color(0xFFC0C0C0);
-                          rankIcon = Icons.workspace_premium;
-                        } else if (rank == 3) {
-                          rankColor = const Color(0xFFCD7F32);
-                          rankIcon = Icons.workspace_premium;
-                        } else {
-                          rankColor = Colors.grey;
-                          rankIcon = Icons.star_border;
-                        }
+                      if (rank == 1) {
+                        rankColor = const Color(0xFFFFD700);
+                        rankIcon = Icons.workspace_premium;
+                      } else if (rank == 2) {
+                        rankColor = const Color(0xFFC0C0C0);
+                        rankIcon = Icons.workspace_premium;
+                      } else if (rank == 3) {
+                        rankColor = const Color(0xFFCD7F32);
+                        rankIcon = Icons.workspace_premium;
+                      } else {
+                        rankColor = Colors.grey;
+                        rankIcon = Icons.star_border;
+                      }
 
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: rank <= 3 ? Border.all(color: rankColor.withValues(alpha: 0.3), width: 2) : null,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: rank <= 3
+                              ? Border.all(
+                                  color: rankColor.withValues(alpha: 0.3),
+                                  width: 2,
+                                )
+                              : null,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: rankColor.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 32,
-                                height: 32,
-                                decoration: BoxDecoration(
-                                  color: rankColor.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: rank <= 3
-                                      ? Icon(rankIcon, color: rankColor, size: 20)
-                                      : Text(
-                                          '$rank',
-                                          style: TextStyle(fontWeight: FontWeight.bold, color: rankColor),
+                              child: Center(
+                                child: rank <= 3
+                                    ? Icon(rankIcon, color: rankColor, size: 20)
+                                    : Text(
+                                        '$rank',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: rankColor,
                                         ),
-                                ),
+                                      ),
                               ),
-                              const SizedBox(width: 12),
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                backgroundImage: student['avatarUrl'] != null ? AssetImage(student['avatarUrl']) : null,
-                                child: student['avatarUrl'] == null ? const Icon(Icons.person, color: AppDesignSystem.primaryIndigo, size: 20) : null,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  student['name'],
-                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(width: 12),
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: AppDesignSystem.primaryIndigo
+                                  .withValues(alpha: 0.1),
+                              backgroundImage: student['avatarUrl'] != null
+                                  ? AssetImage(student['avatarUrl'])
+                                  : null,
+                              child: student['avatarUrl'] == null
+                                  ? const Icon(
+                                      Icons.person,
+                                      color: AppDesignSystem.primaryIndigo,
+                                      size: 20,
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                student['name'],
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal:  12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.stars, color: Color(0xFFF59E0B), size: 16),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '${student['xp']} XP',
-                                      style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFF59E0B), fontSize: 13),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFF59E0B,
+                                ).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.stars,
+                                    color: Color(0xFFF59E0B),
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    '${student['xp']} XP',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFFF59E0B),
+                                      fontSize: 13,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                      childCount: _topStudents.length,
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }, childCount: _topStudents.length),
                   ),
                 ),
               const SliverToBoxAdapter(child: SizedBox(height: 20)),
@@ -2130,7 +2454,12 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
     );
   }
 
-  Widget _buildMetricCard(String label, String value, IconData icon, Color color) {
+  Widget _buildMetricCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -2151,13 +2480,14 @@ class _SchoolAnalyticsTabState extends State<_SchoolAnalyticsTab> {
           const SizedBox(height: 12),
           Text(
             value,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
           const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
         ],
       ),
     );
@@ -2192,7 +2522,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         _displayName = userData['displayName'];
@@ -2203,7 +2536,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
         _schoolId = schoolId;
 
         if (schoolId != null) {
-          final schoolDoc = await FirebaseFirestore.instance.collection('schools').doc(schoolId).get();
+          final schoolDoc = await FirebaseFirestore.instance
+              .collection('schools')
+              .doc(schoolId)
+              .get();
           if (schoolDoc.exists) {
             final schoolData = schoolDoc.data()!;
             _schoolName = schoolData['name'];
@@ -2252,17 +2588,27 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                         const Center(
                           child: Text(
                             'Profile',
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         Align(
                           alignment: Alignment.centerRight,
                           child: IconButton(
-                            icon: const Icon(Icons.settings, color: Colors.white, size: 24),
+                            icon: const Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                                MaterialPageRoute(
+                                  builder: (context) => const SettingsScreen(),
+                                ),
                               ).then((_) => _loadData());
                             },
                           ),
@@ -2287,7 +2633,9 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                         children: [
                           AvatarWidget(
                             imageUrl: _avatarUrl,
-                            initials: _displayName?.substring(0, 1).toUpperCase() ?? 'P',
+                            initials:
+                                _displayName?.substring(0, 1).toUpperCase() ??
+                                'P',
                             size: 60,
                           ),
                           const SizedBox(width: 12),
@@ -2297,23 +2645,36 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                               children: [
                                 Text(
                                   _displayName ?? 'Principal',
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
                                   _email ?? '',
-                                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                                 const SizedBox(height: 6),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.amber,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Text(
                                     'Principal',
-                                    style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 12),
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -2332,7 +2693,11 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                 delegate: SliverChildListDelegate([
                   const Text(
                     'School Information',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1F2937)),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1F2937),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   CleanCard(
@@ -2340,11 +2705,23 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         children: [
-                          _buildInfoRow(Icons.school, 'School Name', _schoolName ?? 'N/A'),
+                          _buildInfoRow(
+                            Icons.school,
+                            'School Name',
+                            _schoolName ?? 'N/A',
+                          ),
                           const Divider(height: 24),
-                          _buildInfoRow(Icons.qr_code, 'School Code', _schoolCode ?? 'N/A'),
+                          _buildInfoRow(
+                            Icons.qr_code,
+                            'School Code',
+                            _schoolCode ?? 'N/A',
+                          ),
                           const Divider(height: 24),
-                          _buildInfoRow(Icons.location_city, 'City', _city ?? 'N/A'),
+                          _buildInfoRow(
+                            Icons.location_city,
+                            'City',
+                            _city ?? 'N/A',
+                          ),
                           const Divider(height: 24),
                           _buildInfoRow(Icons.map, 'State', _state ?? 'N/A'),
                         ],
@@ -2384,7 +2761,10 @@ class _PrincipalProfileTabState extends State<_PrincipalProfileTab> {
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),

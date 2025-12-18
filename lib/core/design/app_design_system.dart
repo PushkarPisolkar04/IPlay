@@ -69,7 +69,7 @@ class AppDesignSystem {
   // ============================================================================
   // TYPOGRAPHY
   // ============================================================================
-  
+
   // Font Families
   static const String fontFamilyHeading = 'Poppins';
   static const String fontFamilyBody = 'Inter';
@@ -184,11 +184,21 @@ class AppDesignSystem {
   static const double radiusFull = 9999.0;
 
   // BorderRadius objects for convenience
-  static const BorderRadius borderRadiusSM = BorderRadius.all(Radius.circular(radiusSM));
-  static const BorderRadius borderRadiusMD = BorderRadius.all(Radius.circular(radiusMD));
-  static const BorderRadius borderRadiusLG = BorderRadius.all(Radius.circular(radiusLG));
-  static const BorderRadius borderRadiusXL = BorderRadius.all(Radius.circular(radiusXL));
-  static const BorderRadius borderRadiusFull = BorderRadius.all(Radius.circular(radiusFull));
+  static const BorderRadius borderRadiusSM = BorderRadius.all(
+    Radius.circular(radiusSM),
+  );
+  static const BorderRadius borderRadiusMD = BorderRadius.all(
+    Radius.circular(radiusMD),
+  );
+  static const BorderRadius borderRadiusLG = BorderRadius.all(
+    Radius.circular(radiusLG),
+  );
+  static const BorderRadius borderRadiusXL = BorderRadius.all(
+    Radius.circular(radiusXL),
+  );
+  static const BorderRadius borderRadiusFull = BorderRadius.all(
+    Radius.circular(radiusFull),
+  );
 
   // ============================================================================
   // SHADOWS
@@ -232,20 +242,20 @@ class AppDesignSystem {
   // ============================================================================
   // ROLE-BASED COLORS
   // ============================================================================
-  
+
   /// Get color for student role
   static Color getStudentColor() => primaryIndigo;
-  
+
   /// Get color for teacher role
   static Color getTeacherColor() => primaryPink;
-  
+
   /// Get color for principal role
   static Color getPrincipalColor() => primaryAmber;
-  
+
   /// Get color based on role string
   static Color getRoleColor(String role, {bool isPrincipal = false}) {
     if (isPrincipal) return getPrincipalColor();
-    
+
     switch (role.toLowerCase()) {
       case 'student':
         return getStudentColor();
@@ -257,7 +267,10 @@ class AppDesignSystem {
   }
 
   /// Get gradient for role
-  static LinearGradient getRoleGradient(String role, {bool isPrincipal = false}) {
+  static LinearGradient getRoleGradient(
+    String role, {
+    bool isPrincipal = false,
+  }) {
     if (isPrincipal) {
       return const LinearGradient(
         colors: [primaryAmber, Color(0xFFFBBF24)],
@@ -265,7 +278,7 @@ class AppDesignSystem {
         end: Alignment.bottomRight,
       );
     }
-    
+
     switch (role.toLowerCase()) {
       case 'student':
         return gradientPrimary;
@@ -283,7 +296,7 @@ class AppDesignSystem {
   // ============================================================================
   // HELPER METHODS
   // ============================================================================
-  
+
   /// Create a color with opacity
   static Color withOpacity(Color color, double opacity) {
     return color.withOpacity(opacity);
@@ -301,12 +314,12 @@ class AppDesignSystem {
   static Color getAccessibleButtonTextColor(Color backgroundColor) {
     // Calculate luminance
     final luminance = backgroundColor.computeLuminance();
-    
+
     // For very light backgrounds (amber, light green), use dark text
     if (luminance > 0.5) {
       return textPrimary;
     }
-    
+
     // For dark backgrounds, use white text
     return backgroundWhite;
   }
@@ -315,10 +328,10 @@ class AppDesignSystem {
   static bool meetsWCAGAA(Color foreground, Color background) {
     final luminance1 = foreground.computeLuminance();
     final luminance2 = background.computeLuminance();
-    
+
     final lighter = luminance1 > luminance2 ? luminance1 : luminance2;
     final darker = luminance1 > luminance2 ? luminance2 : luminance1;
-    
+
     final ratio = (lighter + 0.05) / (darker + 0.05);
     return ratio >= 4.5;
   }
@@ -361,24 +374,21 @@ class AppDesignSystem {
     return BoxDecoration(
       color: backgroundColor ?? backgroundWhite,
       borderRadius: borderRadius ?? borderRadiusMD,
-      border: Border.all(
-        color: borderColor,
-        width: borderWidth,
-      ),
+      border: Border.all(color: borderColor, width: borderWidth),
     );
   }
 
   // ============================================================================
   // THEME DATA
   // ============================================================================
-  
+
   /// Get ThemeData for the app
   static ThemeData getThemeData() {
     return ThemeData(
       primaryColor: primaryIndigo,
       scaffoldBackgroundColor: backgroundLight,
       fontFamily: fontFamilyBody,
-      
+
       // Color scheme
       colorScheme: const ColorScheme.light(
         primary: primaryIndigo,
@@ -386,7 +396,7 @@ class AppDesignSystem {
         error: error,
         surface: backgroundWhite,
       ),
-      
+
       // App bar theme
       appBarTheme: const AppBarTheme(
         backgroundColor: backgroundWhite,
@@ -395,7 +405,7 @@ class AppDesignSystem {
         centerTitle: true,
         titleTextStyle: h5,
       ),
-      
+
       // Text theme
       textTheme: const TextTheme(
         displayLarge: h1,
@@ -410,16 +420,14 @@ class AppDesignSystem {
         labelLarge: button,
         labelSmall: caption,
       ),
-      
+
       // Card theme
       cardTheme: CardThemeData(
         color: backgroundWhite,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadiusMD,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: borderRadiusMD),
       ),
-      
+
       // Elevated button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -430,13 +438,11 @@ class AppDesignSystem {
             horizontal: spacingLG,
             vertical: spacingMD,
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: borderRadiusMD),
           elevation: 0,
         ),
       ),
-      
+
       // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,

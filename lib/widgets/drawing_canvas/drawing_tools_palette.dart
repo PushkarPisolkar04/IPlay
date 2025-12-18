@@ -23,11 +23,7 @@ class DrawingToolsPalette extends StatelessWidget {
             icon: Icons.edit,
             label: 'Pencil',
           ),
-          _ToolItem(
-            tool: DrawingTool.brush,
-            icon: Icons.brush,
-            label: 'Brush',
-          ),
+          _ToolItem(tool: DrawingTool.brush, icon: Icons.brush, label: 'Brush'),
           _ToolItem(
             tool: DrawingTool.eraser,
             icon: Icons.auto_fix_high,
@@ -117,11 +113,7 @@ class _ToolItem {
   final IconData icon;
   final String label;
 
-  _ToolItem({
-    required this.tool,
-    required this.icon,
-    required this.label,
-  });
+  _ToolItem({required this.tool, required this.icon, required this.label});
 }
 
 /// Stroke width adjustment slider
@@ -151,17 +143,11 @@ class StrokeWidthSlider extends StatelessWidget {
               children: [
                 const Text(
                   'Stroke Width',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 Text(
                   '${controller.strokeWidth.toInt()}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -193,10 +179,7 @@ class StrokeWidthSlider extends StatelessWidget {
 class OpacitySlider extends StatelessWidget {
   final DrawingController controller;
 
-  const OpacitySlider({
-    super.key,
-    required this.controller,
-  });
+  const OpacitySlider({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -212,17 +195,11 @@ class OpacitySlider extends StatelessWidget {
               children: [
                 const Text(
                   'Opacity',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 Text(
                   '${(controller.opacity * 100).toInt()}%',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -254,10 +231,7 @@ class OpacitySlider extends StatelessWidget {
 class FillToggle extends StatelessWidget {
   final DrawingController controller;
 
-  const FillToggle({
-    super.key,
-    required this.controller,
-  });
+  const FillToggle({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +239,8 @@ class FillToggle extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         // Only show for shape tools
-        final isShapeTool = controller.currentTool == DrawingTool.rectangle ||
+        final isShapeTool =
+            controller.currentTool == DrawingTool.rectangle ||
             controller.currentTool == DrawingTool.circle ||
             controller.currentTool == DrawingTool.polygon;
 
@@ -277,10 +252,7 @@ class FillToggle extends StatelessWidget {
           children: [
             const Text(
               'Fill Shape',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const Spacer(),
             Switch(

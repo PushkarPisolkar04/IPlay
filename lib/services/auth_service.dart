@@ -26,11 +26,8 @@ class AuthService {
   }) async {
     try {
       // Create user in Firebase Auth
-      final UserCredential userCredential = 
-          await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       final User? user = userCredential.user;
       if (user == null) return null;
@@ -70,11 +67,8 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final UserCredential userCredential = 
-          await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final UserCredential userCredential = await _auth
+          .signInWithEmailAndPassword(email: email, password: password);
 
       final User? user = userCredential.user;
       if (user == null) return null;
@@ -140,14 +134,15 @@ class AuthService {
     try {
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
+
       if (googleUser == null) {
         // User cancelled the sign-in
         return null;
       }
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
@@ -156,8 +151,9 @@ class AuthService {
       );
 
       // Sign in to Firebase with the Google credential
-      final UserCredential userCredential = 
-          await _auth.signInWithCredential(credential);
+      final UserCredential userCredential = await _auth.signInWithCredential(
+        credential,
+      );
 
       final User? user = userCredential.user;
       if (user == null) return null;
@@ -205,10 +201,7 @@ class AuthService {
   // Sign out (including Google)
   Future<void> signOutCompletely() async {
     try {
-      await Future.wait([
-        _auth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
     } catch (e) {
       throw Exception('Sign out failed: $e');
     }
@@ -264,7 +257,7 @@ class AuthService {
       int newStreak = userData.currentStreak;
 
       final difference = now.difference(lastActive);
-      
+
       // If within grace period, maintain streak
       if (difference.inHours <= AppConstants.streakGracePeriodHours + 24) {
         // If it's a new day, increment streak
@@ -275,7 +268,7 @@ class AuthService {
         // Streak broken
         newStreak = 1;
       }
-    
+
       await updateUserData(uid, {
         'currentStreak': newStreak,
         'lastActiveDate': Timestamp.fromDate(now),
@@ -285,4 +278,3 @@ class AuthService {
     }
   }
 }
-

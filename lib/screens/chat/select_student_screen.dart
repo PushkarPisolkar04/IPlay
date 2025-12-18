@@ -34,7 +34,7 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
 
   Future<void> _loadStudents() async {
     setState(() => _isLoading = true);
-    
+
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       setState(() => _isLoading = false);
@@ -62,7 +62,9 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
         final classroomName = classroomData['name'] as String;
         final grade = classroomData['grade'] ?? '';
         final section = classroomData['section'] ?? '';
-        final studentIdsList = List<String>.from(classroomData['studentIds'] ?? []);
+        final studentIdsList = List<String>.from(
+          classroomData['studentIds'] ?? [],
+        );
 
         for (String studentId in studentIdsList) {
           studentIds.add(studentId);
@@ -86,12 +88,12 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
         if (!studentDoc.exists) continue;
 
         final studentData = studentDoc.data()!;
-        
+
         // Only include actual students (not teachers)
         if (studentData['role'] != 'student') continue;
 
         final classroomInfo = studentClassroomInfo[studentId]!;
-        
+
         students.add({
           'id': studentId,
           'displayName': studentData['displayName'] ?? 'Student',
@@ -104,7 +106,10 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
       }
 
       // Sort by name
-      students.sort((a, b) => (a['displayName'] as String).compareTo(b['displayName'] as String));
+      students.sort(
+        (a, b) =>
+            (a['displayName'] as String).compareTo(b['displayName'] as String),
+      );
 
       if (mounted) {
         setState(() {
@@ -121,7 +126,7 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
 
   List<Map<String, dynamic>> get _filteredStudents {
     if (_searchQuery.isEmpty) return _allStudents;
-    
+
     return _allStudents.where((student) {
       final name = (student['displayName'] as String).toLowerCase();
       final classroom = (student['classroomName'] as String).toLowerCase();
@@ -134,12 +139,12 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) return;
-      
+
       final chatId = await _chatService.createTeacherStudentChat(
         teacherId: currentUser.uid,
         studentId: student['id'],
       );
-      
+
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -183,7 +188,10 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -207,7 +215,7 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
                 ),
               ),
             ),
-            
+
             // Search bar
             Padding(
               padding: const EdgeInsets.all(16),
@@ -226,7 +234,10 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: AppDesignSystem.primaryIndigo, width: 2),
+                    borderSide: BorderSide(
+                      color: AppDesignSystem.primaryIndigo,
+                      width: 2,
+                    ),
                   ),
                   filled: true,
                   fillColor: Colors.white,
@@ -236,93 +247,95 @@ class _SelectStudentScreenState extends State<SelectStudentScreen> {
                 },
               ),
             ),
-            
+
             // Students list
             Expanded(
               child: _isLoading
                   ? const ListSkeleton(itemCount: 8)
                   : _filteredStudents.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.people_outline,
-                                size: 80,
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            size: 80,
+                            color: AppDesignSystem.textTertiary,
+                          ),
+                          const SizedBox(height: 24),
+                          Text(
+                            _searchQuery.isEmpty
+                                ? 'No students found'
+                                : 'No students match your search',
+                            style: AppDesignSystem.h4.copyWith(
+                              color: AppDesignSystem.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 48),
+                            child: Text(
+                              _searchQuery.isEmpty
+                                  ? 'Students from your classrooms will appear here'
+                                  : 'Try a different search term',
+                              style: AppDesignSystem.bodyMedium.copyWith(
                                 color: AppDesignSystem.textTertiary,
                               ),
-                              const SizedBox(height: 24),
-                              Text(
-                                _searchQuery.isEmpty
-                                    ? 'No students found'
-                                    : 'No students match your search',
-                                style: AppDesignSystem.h4.copyWith(
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 48),
-                                child: Text(
-                                  _searchQuery.isEmpty
-                                      ? 'Students from your classrooms will appear here'
-                                      : 'Try a different search term',
-                                  style: AppDesignSystem.bodyMedium.copyWith(
-                                    color: AppDesignSystem.textTertiary,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        )
-                      : ListView.separated(
-                          itemCount: _filteredStudents.length,
-                          separatorBuilder: (context, index) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final student = _filteredStudents[index];
-                            final avatarUrl = student['avatarUrl'];
-                            
-                            return ListTile(
-                              leading: CircleAvatar(
-                                radius: 24,
-                                backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                                backgroundImage: avatarUrl != null
-                                    ? (avatarUrl.startsWith('http')
-                                        ? NetworkImage(avatarUrl)
-                                        : AssetImage(avatarUrl) as ImageProvider)
-                                    : null,
-                                child: avatarUrl == null
-                                    ? Text(
-                                        student['displayName'][0].toUpperCase(),
-                                        style: AppDesignSystem.h6.copyWith(
-                                          color: AppDesignSystem.primaryIndigo,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                              title: Text(
-                                student['displayName'],
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                student['classroomName'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppDesignSystem.textSecondary,
-                                ),
-                              ),
-                              trailing: Icon(
-                                Icons.chat_bubble_outline,
-                                color: AppDesignSystem.primaryIndigo,
-                              ),
-                              onTap: () => _startChat(student),
-                            );
-                          },
-                        ),
+                        ],
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: _filteredStudents.length,
+                      separatorBuilder: (context, index) =>
+                          const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final student = _filteredStudents[index];
+                        final avatarUrl = student['avatarUrl'];
+
+                        return ListTile(
+                          leading: CircleAvatar(
+                            radius: 24,
+                            backgroundColor: AppDesignSystem.primaryIndigo
+                                .withValues(alpha: 0.1),
+                            backgroundImage: avatarUrl != null
+                                ? (avatarUrl.startsWith('http')
+                                      ? NetworkImage(avatarUrl)
+                                      : AssetImage(avatarUrl) as ImageProvider)
+                                : null,
+                            child: avatarUrl == null
+                                ? Text(
+                                    student['displayName'][0].toUpperCase(),
+                                    style: AppDesignSystem.h6.copyWith(
+                                      color: AppDesignSystem.primaryIndigo,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                          title: Text(
+                            student['displayName'],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            student['classroomName'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppDesignSystem.textSecondary,
+                            ),
+                          ),
+                          trailing: Icon(
+                            Icons.chat_bubble_outline,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
+                          onTap: () => _startChat(student),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

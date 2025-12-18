@@ -49,9 +49,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         ),
         centerTitle: true,
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: AppDesignSystem.gradientPrimary,
-          ),
+          decoration: BoxDecoration(gradient: AppDesignSystem.gradientPrimary),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -59,17 +57,17 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
       ),
       body: Stack(
         children: [
-          MobileScanner(
-            controller: cameraController,
-            onDetect: _onDetect,
-          ),
+          MobileScanner(controller: cameraController, onDetect: _onDetect),
           // Overlay with scanning frame
           Center(
             child: Container(
               width: 250,
               height: 250,
               decoration: BoxDecoration(
-                border: Border.all(color: AppDesignSystem.primaryIndigo, width: 3),
+                border: Border.all(
+                  color: AppDesignSystem.primaryIndigo,
+                  width: 3,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
@@ -88,10 +86,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
               ),
               child: const Text(
                 'Position the QR code within the frame',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ),

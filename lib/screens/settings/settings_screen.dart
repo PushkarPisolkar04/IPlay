@@ -41,7 +41,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        
+
         if (doc.exists && mounted) {
           final userData = UserModel.fromMap(doc.data()!);
           setState(() {
@@ -57,8 +57,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ),
@@ -109,12 +111,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             child: StreamBuilder<QuerySnapshot>(
                               stream: FirebaseFirestore.instance
                                   .collection('notifications')
-                                  .where('toUserId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                                  .where(
+                                    'toUserId',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser?.uid,
+                                  )
                                   .where('read', isEqualTo: false)
                                   .snapshots(),
                               builder: (context, snapshot) {
-                                final unreadCount = snapshot.hasData ? snapshot.data!.docs.length : 0;
-                                
+                                final unreadCount = snapshot.hasData
+                                    ? snapshot.data!.docs.length
+                                    : 0;
+
                                 return Stack(
                                   children: [
                                     IconButton(
@@ -124,7 +132,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         size: 26,
                                       ),
                                       onPressed: () {
-                                        Navigator.pushNamed(context, '/notifications');
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/notifications',
+                                        );
                                       },
                                     ),
                                     if (unreadCount > 0)
@@ -143,7 +154,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                              unreadCount > 99
+                                                  ? '99+'
+                                                  : unreadCount.toString(),
                                               style: const TextStyle(
                                                 color: Color(0xFF6B46C1),
                                                 fontSize: 10,
@@ -169,255 +182,292 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     padding: const EdgeInsets.all(20),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                  // Email Verification Banner (reload user to check latest status)
-                  FutureBuilder(
-                    future: FirebaseAuth.instance.currentUser?.reload(),
-                    builder: (context, snapshot) {
-                      final user = FirebaseAuth.instance.currentUser;
-                      if (user != null && !user.emailVerified) {
-                        return Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: AppDesignSystem.warning.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppDesignSystem.warning),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        // Email Verification Banner (reload user to check latest status)
+                        FutureBuilder(
+                          future: FirebaseAuth.instance.currentUser?.reload(),
+                          builder: (context, snapshot) {
+                            final user = FirebaseAuth.instance.currentUser;
+                            if (user != null && !user.emailVerified) {
+                              return Column(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(Icons.warning_amber, color: AppDesignSystem.warning),
-                                      const SizedBox(width: 8),
-                                      const Expanded(
-                                        child: Text(
-                                          'Email Not Verified',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
+                                  Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: AppDesignSystem.warning.withValues(
+                                        alpha: 0.1,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  const Text(
-                                    'Please verify your email to access all features.',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton.icon(
-                                      onPressed: () => _resendVerificationEmail(),
-                                      icon: const Icon(Icons.email, size: 18),
-                                      label: const Text('Resend Verification Email'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppDesignSystem.warning,
-                                        foregroundColor: Colors.white,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: AppDesignSystem.warning,
                                       ),
                                     ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.warning_amber,
+                                              color: AppDesignSystem.warning,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            const Expanded(
+                                              child: Text(
+                                                'Email Not Verified',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        const Text(
+                                          'Please verify your email to access all features.',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton.icon(
+                                            onPressed: () =>
+                                                _resendVerificationEmail(),
+                                            icon: const Icon(
+                                              Icons.email,
+                                              size: 18,
+                                            ),
+                                            label: const Text(
+                                              'Resend Verification Email',
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  AppDesignSystem.warning,
+                                              foregroundColor: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
+                                  const SizedBox(height: AppSpacing.lg),
                                 ],
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+
+                        // Account Section
+                        Text('Account', style: AppTextStyles.sectionHeader),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        CleanCard(
+                          child: _SettingsTile(
+                            icon: Icons.person,
+                            title: _user?.displayName ?? 'User',
+                            subtitle: _user?.email ?? '',
+                            trailing: const Icon(Icons.chevron_right, size: 20),
+                            onTap: () async {
+                              // Navigate to edit profile
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const EditProfileScreen(),
+                                ),
+                              );
+                              // Reload user data after editing
+                              _loadUserData();
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Privacy & Legal Section
+                        Text(
+                          'Privacy & Legal',
+                          style: AppTextStyles.sectionHeader,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        CleanCard(
+                          child: Column(
+                            children: [
+                              _SettingsTile(
+                                icon: Icons.privacy_tip,
+                                title: 'Privacy Policy',
+                                subtitle: 'Read our privacy policy',
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PrivacyPolicyScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(height: 1),
+                              _SettingsTile(
+                                icon: Icons.description,
+                                title: 'Terms & Conditions',
+                                subtitle: 'Read our terms and conditions',
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const TermsScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const Divider(height: 1),
+                              _SettingsTile(
+                                icon: Icons.shield,
+                                title: 'Data & Security',
+                                subtitle: 'How we protect your data',
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DataSecurityScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // About Section
+                        Text('About', style: AppTextStyles.sectionHeader),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        CleanCard(
+                          child: Column(
+                            children: [
+                              _SettingsTile(
+                                icon: Icons.info,
+                                title: 'About IPlay',
+                                subtitle: 'Learn more about the app',
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                ),
+                                onTap: () => _showAboutDialog(),
+                              ),
+                              const Divider(height: 1),
+                              _SettingsTile(
+                                icon: Icons.star,
+                                title: 'Rate App',
+                                subtitle:
+                                    'Enjoying IPlay? Rate us on the store',
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                ),
+                                onTap: () => _rateApp(),
+                              ),
+                              const Divider(height: 1),
+                              _SettingsTile(
+                                icon: Icons.code,
+                                title: 'Version',
+                                subtitle: '1.0.0',
+                                trailing: const SizedBox(),
+                                onTap: null,
+                              ),
+                              const Divider(height: 1),
+                              _SettingsTile(
+                                icon: Icons.email,
+                                title: 'Contact Support',
+                                subtitle: 'pushkarppisolkar@gmail.com',
+                                trailing: const Icon(
+                                  Icons.open_in_new,
+                                  size: 20,
+                                ),
+                                onTap: () => _launchURL(
+                                  'mailto:pushkarppisolkar@gmail.com',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Danger Zone
+                        Text(
+                          'Danger Zone',
+                          style: AppTextStyles.sectionHeader.copyWith(
+                            color: AppDesignSystem.error,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        CleanCard(
+                          child: Column(
+                            children: [
+                              _SettingsTile(
+                                icon: Icons.delete_forever,
+                                title: 'Delete Account',
+                                subtitle: 'Permanently delete your account',
+                                titleColor: AppDesignSystem.error,
+                                trailing: const Icon(
+                                  Icons.chevron_right,
+                                  size: 20,
+                                  color: AppDesignSystem.error,
+                                ),
+                                onTap: () => _showDeleteAccountDialog(),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.xl),
+
+                        // Logout Button
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: () => _showLogoutDialog(),
+                            icon: const Icon(Icons.logout),
+                            label: const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: AppSpacing.lg),
-                          ],
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  
-                  // Account Section
-                  Text(
-                    'Account',
-                    style: AppTextStyles.sectionHeader,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  
-                  CleanCard(
-                    child: _SettingsTile(
-                      icon: Icons.person,
-                      title: _user?.displayName ?? 'User',
-                      subtitle: _user?.email ?? '',
-                      trailing: const Icon(Icons.chevron_right, size: 20),
-                      onTap: () async {
-                        // Navigate to edit profile
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppDesignSystem.error,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
                           ),
-                        );
-                        // Reload user data after editing
-                        _loadUserData();
-                      },
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.lg),
-                  
-                  // Privacy & Legal Section
-                  Text(
-                    'Privacy & Legal',
-                    style: AppTextStyles.sectionHeader,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  
-                  CleanCard(
-                    child: Column(
-                      children: [
-                        _SettingsTile(
-                          icon: Icons.privacy_tip,
-                          title: 'Privacy Policy',
-                          subtitle: 'Read our privacy policy',
-                          trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const PrivacyPolicyScreen(),
-                              ),
-                            );
-                          },
                         ),
-                        const Divider(height: 1),
-                        _SettingsTile(
-                          icon: Icons.description,
-                          title: 'Terms & Conditions',
-                          subtitle: 'Read our terms and conditions',
-                          trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const TermsScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(height: 1),
-                        _SettingsTile(
-                          icon: Icons.shield,
-                          title: 'Data & Security',
-                          subtitle: 'How we protect your data',
-                          trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const DataSecurityScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.lg),
-                  
-                  // About Section
-                  Text(
-                    'About',
-                    style: AppTextStyles.sectionHeader,
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  
-                  CleanCard(
-                    child: Column(
-                      children: [
-                        _SettingsTile(
-                          icon: Icons.info,
-                          title: 'About IPlay',
-                          subtitle: 'Learn more about the app',
-                          trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () => _showAboutDialog(),
-                        ),
-                        const Divider(height: 1),
-                        _SettingsTile(
-                          icon: Icons.star,
-                          title: 'Rate App',
-                          subtitle: 'Enjoying IPlay? Rate us on the store',
-                          trailing: const Icon(Icons.chevron_right, size: 20),
-                          onTap: () => _rateApp(),
-                        ),
-                        const Divider(height: 1),
-                        _SettingsTile(
-                          icon: Icons.code,
-                          title: 'Version',
-                          subtitle: '1.0.0',
-                          trailing: const SizedBox(),
-                          onTap: null,
-                        ),
-                        const Divider(height: 1),
-                        _SettingsTile(
-                          icon: Icons.email,
-                          title: 'Contact Support',
-                          subtitle: 'pushkarppisolkar@gmail.com',
-                          trailing: const Icon(Icons.open_in_new, size: 20),
-                          onTap: () => _launchURL('mailto:pushkarppisolkar@gmail.com'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.lg),
-                  
-                  // Danger Zone
-                  Text(
-                    'Danger Zone',
-                    style: AppTextStyles.sectionHeader.copyWith(
-                      color: AppDesignSystem.error,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  
-                  CleanCard(
-                    child: Column(
-                      children: [
-                        _SettingsTile(
-                          icon: Icons.delete_forever,
-                          title: 'Delete Account',
-                          subtitle: 'Permanently delete your account',
-                          titleColor: AppDesignSystem.error,
-                          trailing: const Icon(Icons.chevron_right, size: 20, color: AppDesignSystem.error),
-                          onTap: () => _showDeleteAccountDialog(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: AppSpacing.xl),
-                  
-                  // Logout Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showLogoutDialog(),
-                      icon: const Icon(Icons.logout),
-                      label: const Text(
-                        'Logout',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppDesignSystem.error,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
+
                         const SizedBox(height: 40),
                       ]),
                     ),
@@ -436,14 +486,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Reload user to get latest verification status
         await user.reload();
         final refreshedUser = FirebaseAuth.instance.currentUser;
-        
+
         if (refreshedUser != null && !refreshedUser.emailVerified) {
           await refreshedUser.sendEmailVerification();
-          
+
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Verification email sent! Please check your inbox.'),
+                content: Text(
+                  'Verification email sent! Please check your inbox.',
+                ),
                 backgroundColor: AppDesignSystem.success,
                 duration: Duration(seconds: 4),
               ),
@@ -475,8 +527,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-
-
   // Launch URL
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -499,7 +549,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     try {
       await AppRatingService.openAppStore();
       await AppRatingService.markAsRated();
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -551,12 +601,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(height: 12),
                 Text(
                   'Version: 1.0.0',
-                  style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppDesignSystem.textSecondary,
+                  ),
                 ),
                 SizedBox(height: 4),
                 Text(
                   'Made with ❤️ in India',
-                  style: TextStyle(fontSize: 12, color: AppDesignSystem.textSecondary),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppDesignSystem.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -630,15 +686,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
 
       if (!mounted) return;
-      
+
       // Close loading dialog
       Navigator.of(context).pop();
 
       // Navigate to auth screen and clear all previous routes
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/auth',
-        (Route<dynamic> route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/auth', (Route<dynamic> route) => false);
 
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
@@ -650,12 +705,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       );
     } catch (e) {
       // print('Error during logout: $e');
-      
+
       // Close loading dialog
       if (mounted && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       if (!mounted) return;
 
       // Show error with retry option
@@ -677,7 +732,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   // Show Delete Account Dialog
   void _showDeleteAccountDialog() {
     final TextEditingController confirmController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -769,10 +824,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (!mounted) return;
       Navigator.of(context).pop(); // Close loading
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/auth',
-        (Route<dynamic> route) => false,
-      );
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil('/auth', (Route<dynamic> route) => false);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -790,7 +844,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       if (e.toString().contains('requires-recent-login')) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Please sign out and sign in again before deleting your account'),
+            content: Text(
+              'Please sign out and sign in again before deleting your account',
+            ),
             backgroundColor: AppDesignSystem.error,
             duration: Duration(seconds: 4),
           ),
@@ -835,7 +891,11 @@ class _SettingsTile extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
-              Icon(icon, color: titleColor ?? AppDesignSystem.textPrimary, size: 24),
+              Icon(
+                icon,
+                color: titleColor ?? AppDesignSystem.textPrimary,
+                size: 24,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -849,10 +909,7 @@ class _SettingsTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: AppTextStyles.bodySmall,
-                    ),
+                    Text(subtitle, style: AppTextStyles.bodySmall),
                   ],
                 ),
               ),
@@ -898,10 +955,7 @@ class _SettingsSwitchTile extends StatelessWidget {
                   style: AppTextStyles.cardTitle.copyWith(fontSize: 16),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: AppTextStyles.bodySmall,
-                ),
+                Text(subtitle, style: AppTextStyles.bodySmall),
               ],
             ),
           ),
@@ -915,4 +969,3 @@ class _SettingsSwitchTile extends StatelessWidget {
     );
   }
 }
-

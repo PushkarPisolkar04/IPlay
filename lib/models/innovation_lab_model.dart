@@ -44,7 +44,9 @@ class DrawingTool {
       name: json['name'] as String,
       icon: json['icon'] as String,
       type: json['type'] as String,
-      strokeWidthRange: json['strokeWidthRange'] != null ? List<int>.from(json['strokeWidthRange'] as List) : [1, 10],
+      strokeWidthRange: json['strokeWidthRange'] != null
+          ? List<int>.from(json['strokeWidthRange'] as List)
+          : [1, 10],
       defaultStrokeWidth: json['defaultStrokeWidth'] as int? ?? 2,
       supportsOpacity: json['supportsOpacity'] as bool? ?? true,
       supportsColor: json['supportsColor'] as bool? ?? true,
@@ -171,16 +173,28 @@ class TemplateGuide {
   factory TemplateGuide.fromJson(Map<String, dynamic> json) {
     return TemplateGuide(
       type: json['type'] as String,
-      position: json['position'] != null ? (json['position'] as num).toDouble() : null,
-      centerX: json['centerX'] != null ? (json['centerX'] as num).toDouble() : null,
-      centerY: json['centerY'] != null ? (json['centerY'] as num).toDouble() : null,
-      radius: json['radius'] != null ? (json['radius'] as num).toDouble() : null,
+      position: json['position'] != null
+          ? (json['position'] as num).toDouble()
+          : null,
+      centerX: json['centerX'] != null
+          ? (json['centerX'] as num).toDouble()
+          : null,
+      centerY: json['centerY'] != null
+          ? (json['centerY'] as num).toDouble()
+          : null,
+      radius: json['radius'] != null
+          ? (json['radius'] as num).toDouble()
+          : null,
       size: json['size'] != null ? (json['size'] as num).toDouble() : null,
-      cornerRadius: json['cornerRadius'] != null ? (json['cornerRadius'] as num).toDouble() : null,
+      cornerRadius: json['cornerRadius'] != null
+          ? (json['cornerRadius'] as num).toDouble()
+          : null,
       x: json['x'] != null ? (json['x'] as num).toDouble() : null,
       y: json['y'] != null ? (json['y'] as num).toDouble() : null,
       width: json['width'] != null ? (json['width'] as num).toDouble() : null,
-      height: json['height'] != null ? (json['height'] as num).toDouble() : null,
+      height: json['height'] != null
+          ? (json['height'] as num).toDouble()
+          : null,
     );
   }
 
@@ -230,8 +244,8 @@ class TemplateData {
           .toList(),
       guides: json['guides'] != null
           ? (json['guides'] as List)
-              .map((g) => TemplateGuide.fromJson(g as Map<String, dynamic>))
-              .toList()
+                .map((g) => TemplateGuide.fromJson(g as Map<String, dynamic>))
+                .toList()
           : null,
     );
   }
@@ -276,7 +290,9 @@ class DesignTemplate {
       description: json['description'] as String,
       thumbnailUrl: json['thumbnailUrl'] as String,
       difficulty: json['difficulty'] as String,
-      templateData: TemplateData.fromJson(json['templateData'] as Map<String, dynamic>),
+      templateData: TemplateData.fromJson(
+        json['templateData'] as Map<String, dynamic>,
+      ),
     );
   }
 
@@ -427,10 +443,16 @@ class InnovationLabGame extends GameModel {
   }
 
   void _validate() {
-    if (drawingTools.isEmpty) throw ArgumentError('Drawing tools cannot be empty');
-    if (colorPalette.isEmpty) throw ArgumentError('Color palette cannot be empty');
+    if (drawingTools.isEmpty) {
+      throw ArgumentError('Drawing tools cannot be empty');
+    }
+    if (colorPalette.isEmpty) {
+      throw ArgumentError('Color palette cannot be empty');
+    }
     if (templates.isEmpty) throw ArgumentError('Templates cannot be empty');
-    if (ipQuestions.isEmpty) throw ArgumentError('IP questions cannot be empty');
+    if (ipQuestions.isEmpty) {
+      throw ArgumentError('IP questions cannot be empty');
+    }
     if (questionsPerGame <= 0) {
       throw ArgumentError('Questions per game must be positive');
     }
@@ -477,7 +499,9 @@ class InnovationLabGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,

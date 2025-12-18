@@ -109,11 +109,7 @@ class CompactUploadProgress extends StatelessWidget {
   final double progress;
   final String? label;
 
-  const CompactUploadProgress({
-    super.key,
-    required this.progress,
-    this.label,
-  });
+  const CompactUploadProgress({super.key, required this.progress, this.label});
 
   @override
   Widget build(BuildContext context) {

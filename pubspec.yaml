@@ -49,9 +49,11 @@ dependencies:
   url_launcher: ^6.3.1
   timeago: ^3.7.0
   csv: ^6.0.0
+  excel: ^4.0.0
   share_plus: ^10.1.2
   device_info_plus: ^11.2.0
   package_info_plus: ^8.1.2
+  file_saver: ^0.2.14
 
   # PDF & Certificates
   pdf: ^3.11.1
@@ -60,7 +62,7 @@ dependencies:
   mobile_scanner: ^5.2.3
 
   # Animations
-  lottie: ^3.3.1
+  lottie: ^3.3.0
   animations: ^2.0.11
   confetti: ^0.8.0
   smooth_page_indicator: ^1.2.0+3
@@ -105,14 +107,12 @@ flutter:
     - assets/badges/
     - assets/games/
     - assets/products/
-    - assets/gi/
     - assets/stu_avatars/
     - assets/tea_avatars/
     - assets/towers/
     - assets/enemies/
     - assets/projectiles/
     - assets/maps/
-    - assets/patents/
     - assets/trademarks/
     - assets/prior_art/
     - content/

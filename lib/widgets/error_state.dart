@@ -14,7 +14,11 @@ class ErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.error),
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: AppDesignSystem.error,
+            ),
             const SizedBox(height: 16),
             Text(
               'Oops! Something went wrong',
@@ -33,7 +37,9 @@ class ErrorState extends StatelessWidget {
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
                 label: const Text('Retry'),
-                style: ElevatedButton.styleFrom(backgroundColor: AppDesignSystem.primaryIndigo),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppDesignSystem.primaryIndigo,
+                ),
               ),
             ],
           ],
@@ -42,4 +48,3 @@ class ErrorState extends StatelessWidget {
     );
   }
 }
-

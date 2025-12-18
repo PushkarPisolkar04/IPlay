@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'dart:async';
 import 'dart:math';
@@ -21,13 +20,13 @@ class SpotTheOriginalGame extends StatefulWidget {
   State<SpotTheOriginalGame> createState() => _SpotTheOriginalGameState();
 }
 
-class _SpotTheOriginalGameState extends State<SpotTheOriginalGame> 
+class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
     with TickerProviderStateMixin {
   final ConfettiController _confettiController = ConfettiController(
     duration: const Duration(seconds: 3),
   );
   final GameIntegrationService _gameService = GameIntegrationService();
-  
+
   int _currentRound = 0;
   int _score = 0;
   int _timeRemaining = 120; // 2 minutes
@@ -55,41 +54,51 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
   Future<void> _loadRounds() async {
     // Load from JSON file
     try {
-      final String jsonString = await rootBundle.loadString('content/games/spot_the_original.json');
+      final String jsonString = await rootBundle.loadString(
+        'content/games/spot_the_original.json',
+      );
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       final List<dynamic> productSets = jsonData['productSets'] ?? [];
-      
+
       // Shuffle and select 10 random products
       productSets.shuffle(Random());
       final selectedProducts = productSets.take(10).toList();
-      
+
       setState(() {
         _rounds = selectedProducts.map((product) {
           final images = product['images'] as List<dynamic>;
-          final imageOptions = images.map((img) => ImageOption(
-            icon: Icons.image,
-            label: img['label'] as String,
-            imagePath: img['url'] as String,
-          )).toList();
-          
+          final imageOptions = images
+              .map(
+                (img) => ImageOption(
+                  icon: Icons.image,
+                  label: img['label'] as String,
+                  imagePath: img['url'] as String,
+                ),
+              )
+              .toList();
+
           // Find correct index before shuffling
-          final correctIndex = images.indexWhere((img) => img['isOriginal'] == true);
-          
+          final correctIndex = images.indexWhere(
+            (img) => img['isOriginal'] == true,
+          );
+
           // Shuffle the options to randomize position
           final shuffledOptions = List<ImageOption>.from(imageOptions);
           shuffledOptions.shuffle(Random());
-          
+
           // Find new correct index after shuffle
           final newCorrectIndex = shuffledOptions.indexWhere(
-            (option) => option.imagePath == imageOptions[correctIndex].imagePath
+            (option) =>
+                option.imagePath == imageOptions[correctIndex].imagePath,
           );
-          
+
           return GameRound(
             type: product['productName'] as String,
             question: 'Which is the original ${product['productName']}?',
             options: shuffledOptions,
             correctIndex: newCorrectIndex,
-            explanation: product['educationalInfo']['identificationTips'][0] as String,
+            explanation:
+                product['educationalInfo']['identificationTips'][0] as String,
           );
         }).toList();
       });
@@ -125,7 +134,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
 
   void _selectAnswer(int index) {
     if (_answerLocked || _gameEnded) return;
-    
+
     setState(() {
       _selectedAnswer = index;
       _answerLocked = true;
@@ -136,10 +145,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
       setState(() {
         _score++;
       });
-
-    } else {
-
-    }
+    } else {}
 
     // Move to next round after delay
     Future.delayed(const Duration(milliseconds: 1500), () {
@@ -157,11 +163,11 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
 
   void _endGame() {
     _timer?.cancel();
-    
+
     setState(() {
       _gameEnded = true;
     });
-    
+
     // Trigger confetti if passed
     final percentage = (_score / _rounds.length * 100).round();
     if (percentage >= 60) {
@@ -177,10 +183,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
       try {
         const gameId = 'spot_original';
         const baseXP = 150; // 15 XP per round * 10 rounds
-        
+
         final isFirstCompletion = await _gameService.isFirstCompletion(gameId);
         final isPerfectScore = _score == 10;
-        
+
         // Award XP with automatic bonuses and check for badges
         final result = await _gameService.awardGameXP(
           gameId: gameId,
@@ -189,20 +195,20 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
           isPerfectScore: isPerfectScore,
           isFirstCompletion: isFirstCompletion,
         );
-        
+
         final xpEarned = result['xp'] as int;
         final newBadges = result['newBadges'] as List<String>;
-        
+
         // Show badge animations if any badges were unlocked
         if (newBadges.isNotEmpty && mounted) {
           await _gameService.showBadgeAnimations(context, newBadges);
         }
-        
+
         // Store XP for result screen
         setState(() {
           _earnedXP = xpEarned;
         });
-        
+
         // Save progress
         await _gameService.saveGameProgress(
           gameId: gameId,
@@ -210,7 +216,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
           timeSpentSeconds: 120 - _timeRemaining,
           completed: true,
         );
-        
+
         // Track game completion for app rating
         await AppRatingService.incrementGamesPlayed();
       } catch (e) {
@@ -250,7 +256,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
-        title: const Text('Spot the Original', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Spot the Original',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color(0xFFF59E0B),
         foregroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -327,14 +336,14 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Game Rules:',
-                      style: AppTextStyles.cardTitle,
-                    ),
+                    Text('Game Rules:', style: AppTextStyles.cardTitle),
                     const SizedBox(height: AppSpacing.sm),
                     _buildRuleItem('🎯', '10 rounds with different brands'),
                     _buildRuleItem('⏱️', '2 minutes to complete'),
-                    _buildRuleItem('🖼️', '2 images per round (1 original, 1 fake)'),
+                    _buildRuleItem(
+                      '🖼️',
+                      '2 images per round (1 original, 1 fake)',
+                    ),
                     _buildRuleItem('⭐', '15 XP per correct answer'),
                   ],
                 ),
@@ -359,7 +368,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
 
   Widget _buildGameScreen() {
     final round = _rounds[_currentRound];
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -377,7 +386,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
             children: [
               // Top Stats Bar (matching Quiz Master style)
               _buildTopBar(),
-              
+
               // Progress bar
               Container(
                 height: 6,
@@ -387,7 +396,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                   child: LinearProgressIndicator(
                     value: (_currentRound + 1) / _rounds.length,
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF59E0B)),
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Color(0xFFF59E0B),
+                    ),
                   ),
                 ),
               ),
@@ -407,15 +418,14 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                           gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [
-                              Color(0xFFF59E0B),
-                              Color(0xFFFBBF24),
-                            ],
+                            colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)],
                           ),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                              color: const Color(
+                                0xFFF59E0B,
+                              ).withValues(alpha: 0.3),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -424,7 +434,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                         child: Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(20),
@@ -461,21 +474,25 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                           final isSelected = _selectedAnswer == index;
                           final isCorrect = index == round.correctIndex;
                           final showResult = _answerLocked;
-                          
+
                           Color? gradientStart;
                           Color? gradientEnd;
                           Color borderColor = Colors.grey[300]!;
                           double borderWidth = 2;
-                          
+
                           if (showResult) {
                             if (isCorrect) {
                               gradientStart = AppDesignSystem.success;
-                              gradientEnd = AppDesignSystem.success.withValues(alpha: 0.8);
+                              gradientEnd = AppDesignSystem.success.withValues(
+                                alpha: 0.8,
+                              );
                               borderColor = AppDesignSystem.success;
                               borderWidth = 4;
                             } else if (isSelected) {
                               gradientStart = AppDesignSystem.error;
-                              gradientEnd = AppDesignSystem.error.withValues(alpha: 0.8);
+                              gradientEnd = AppDesignSystem.error.withValues(
+                                alpha: 0.8,
+                              );
                               borderColor = AppDesignSystem.error;
                               borderWidth = 4;
                             }
@@ -488,10 +505,14 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                             child: Padding(
                               padding: EdgeInsets.only(
                                 left: index == 0 ? 0 : 6,
-                                right: index == round.options.length - 1 ? 0 : 6,
+                                right: index == round.options.length - 1
+                                    ? 0
+                                    : 6,
                               ),
                               child: GestureDetector(
-                                onTap: _answerLocked ? null : () => _selectAnswer(index),
+                                onTap: _answerLocked
+                                    ? null
+                                    : () => _selectAnswer(index),
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 200),
                                   height: 300,
@@ -500,7 +521,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                                         ? LinearGradient(
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight,
-                                            colors: [gradientStart, gradientEnd!],
+                                            colors: [
+                                              gradientStart,
+                                              gradientEnd!,
+                                            ],
                                           )
                                         : null,
                                     border: Border.all(
@@ -511,13 +535,16 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                                     boxShadow: [
                                       if (isSelected && !showResult)
                                         BoxShadow(
-                                          color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                                          color: const Color(
+                                            0xFFF59E0B,
+                                          ).withValues(alpha: 0.3),
                                           blurRadius: 12,
                                           offset: const Offset(0, 4),
                                         ),
                                       if (showResult && isCorrect)
                                         BoxShadow(
-                                          color: AppDesignSystem.success.withValues(alpha: 0.4),
+                                          color: AppDesignSystem.success
+                                              .withValues(alpha: 0.4),
                                           blurRadius: 16,
                                           offset: const Offset(0, 6),
                                         ),
@@ -529,89 +556,124 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                                       Container(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                           child: Center(
                                             child: Image.asset(
                                               round.options[index].imagePath,
                                               width: double.infinity,
                                               height: double.infinity,
                                               fit: BoxFit.contain,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  color: Colors.grey[200],
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.image_not_supported,
-                                                        size: 48,
-                                                        color: Colors.grey[400],
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.grey[200],
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .image_not_supported,
+                                                            size: 48,
+                                                            color: Colors
+                                                                .grey[400],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          Text(
+                                                            'Image not found',
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
                                                       ),
-                                                      const SizedBox(height: 8),
-                                                      Text(
-                                                        'Image not found',
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.grey[600],
-                                                        ),
-                                                        textAlign: TextAlign.center,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
+                                                    );
+                                                  },
                                             ),
                                           ),
                                         ),
                                       ),
-                                      
+
                                       // Gradient overlay for result
                                       if (showResult && gradientStart != null)
                                         ClipRRect(
-                                          borderRadius: BorderRadius.circular(14),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               gradient: LinearGradient(
                                                 begin: Alignment.topCenter,
                                                 end: Alignment.bottomCenter,
                                                 colors: [
-                                                  gradientStart.withValues(alpha: 0.7),
-                                                  gradientEnd!.withValues(alpha: 0.9),
+                                                  gradientStart.withValues(
+                                                    alpha: 0.7,
+                                                  ),
+                                                  gradientEnd!.withValues(
+                                                    alpha: 0.9,
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                           ),
                                         ),
-                                      
+
                                       // Result indicator with animation
-                                      if (showResult && (isCorrect || isSelected))
+                                      if (showResult &&
+                                          (isCorrect || isSelected))
                                         Center(
                                           child: TweenAnimationBuilder<double>(
-                                            duration: const Duration(milliseconds: 400),
+                                            duration: const Duration(
+                                              milliseconds: 400,
+                                            ),
                                             tween: Tween(begin: 0.0, end: 1.0),
                                             curve: Curves.elasticOut,
                                             builder: (context, value, child) {
                                               return Transform.scale(
                                                 scale: value,
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(16),
+                                                  padding: const EdgeInsets.all(
+                                                    16,
+                                                  ),
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     shape: BoxShape.circle,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: Colors.black.withValues(alpha: 0.2),
+                                                        color: Colors.black
+                                                            .withValues(
+                                                              alpha: 0.2,
+                                                            ),
                                                         blurRadius: 12,
-                                                        offset: const Offset(0, 4),
+                                                        offset: const Offset(
+                                                          0,
+                                                          4,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                   child: Icon(
-                                                    isCorrect ? Icons.check : Icons.close,
-                                                    color: isCorrect ? AppDesignSystem.success : AppDesignSystem.error,
+                                                    isCorrect
+                                                        ? Icons.check
+                                                        : Icons.close,
+                                                    color: isCorrect
+                                                        ? AppDesignSystem
+                                                              .success
+                                                        : AppDesignSystem.error,
                                                     size: 48,
                                                   ),
                                                 ),
@@ -660,8 +722,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
   // (kept exactly as you originally posted – including every single line, emoji, comment, etc.)
 
   Widget _buildTopBar() {
-    final timeColor = _timeRemaining <= 20 ? Colors.red : const Color(0xFFF59E0B);
-    
+    final timeColor = _timeRemaining <= 20
+        ? Colors.red
+        : const Color(0xFFF59E0B);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -705,7 +769,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
               padding: EdgeInsets.zero,
             ),
           ),
-          
+
           // Timer
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -739,7 +803,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
               ],
             ),
           ),
-          
+
           // Score
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -801,7 +865,7 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Spacer(flex: 1),
-                  
+
                   // Animated Result icon with gradient
                   TweenAnimationBuilder<double>(
                     duration: const Duration(milliseconds: 600),
@@ -820,7 +884,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                               colors: passed
                                   ? [
                                       AppDesignSystem.success,
-                                      AppDesignSystem.success.withValues(alpha: 0.7),
+                                      AppDesignSystem.success.withValues(
+                                        alpha: 0.7,
+                                      ),
                                     ]
                                   : [
                                       Colors.orange,
@@ -830,8 +896,10 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: passed 
-                                    ? AppDesignSystem.success.withValues(alpha: 0.4)
+                                color: passed
+                                    ? AppDesignSystem.success.withValues(
+                                        alpha: 0.4,
+                                      )
                                     : Colors.orange.withValues(alpha: 0.4),
                                 blurRadius: 20,
                                 spreadRadius: 5,
@@ -862,11 +930,15 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                           child: Column(
                             children: [
                               Text(
-                                passed 
-                                    ? (isPerfect ? 'Perfect Score!' : 'Great Job!') 
+                                passed
+                                    ? (isPerfect
+                                          ? 'Perfect Score!'
+                                          : 'Great Job!')
                                     : 'Good Try!',
                                 style: AppTextStyles.h1.copyWith(
-                                  color: passed ? AppDesignSystem.success : Colors.orange,
+                                  color: passed
+                                      ? AppDesignSystem.success
+                                      : Colors.orange,
                                   fontSize: 28,
                                 ),
                                 textAlign: TextAlign.center,
@@ -904,8 +976,12 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  const Color(0xFFF59E0B).withValues(alpha: 0.2),
-                                  const Color(0xFFEC4899).withValues(alpha: 0.2),
+                                  const Color(
+                                    0xFFF59E0B,
+                                  ).withValues(alpha: 0.2),
+                                  const Color(
+                                    0xFFEC4899,
+                                  ).withValues(alpha: 0.2),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(16),
@@ -918,7 +994,9 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                                 borderRadius: BorderRadius.circular(14),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFF59E0B).withValues(alpha: 0.1),
+                                    color: const Color(
+                                      0xFFF59E0B,
+                                    ).withValues(alpha: 0.1),
                                     blurRadius: 20,
                                     offset: const Offset(0, 10),
                                   ),
@@ -978,8 +1056,13 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                             OutlinedButton(
                               onPressed: () => Navigator.pop(context),
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                side: const BorderSide(color: Color(0xFFF59E0B), width: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                side: const BorderSide(
+                                  color: Color(0xFFF59E0B),
+                                  width: 2,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -998,13 +1081,13 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
                       );
                     },
                   ),
-                  
+
                   const SizedBox(height: 8),
                 ],
               ),
             ),
           ),
-          
+
           // Confetti overlay
           if (passed)
             Align(
@@ -1036,7 +1119,13 @@ class _SpotTheOriginalGameState extends State<SpotTheOriginalGame>
     );
   }
 
-  Widget _buildFancyStatRow(IconData icon, String label, String value, Color color, {bool isHighlight = false}) {
+  Widget _buildFancyStatRow(
+    IconData icon,
+    String label,
+    String value,
+    Color color, {
+    bool isHighlight = false,
+  }) {
     return Row(
       children: [
         Container(

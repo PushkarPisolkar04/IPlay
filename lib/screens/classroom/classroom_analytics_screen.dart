@@ -11,13 +11,11 @@ import '../../models/classroom_model.dart';
 class ClassroomAnalyticsScreen extends StatefulWidget {
   final ClassroomModel classroom;
 
-  const ClassroomAnalyticsScreen({
-    super.key,
-    required this.classroom,
-  });
+  const ClassroomAnalyticsScreen({super.key, required this.classroom});
 
   @override
-  State<ClassroomAnalyticsScreen> createState() => _ClassroomAnalyticsScreenState();
+  State<ClassroomAnalyticsScreen> createState() =>
+      _ClassroomAnalyticsScreenState();
 }
 
 class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
@@ -41,31 +39,31 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
 
       // Fetch all student data
       final studentDocs = await Future.wait(
-        studentIds.map((id) => 
-          FirebaseFirestore.instance.collection('users').doc(id).get()
+        studentIds.map(
+          (id) => FirebaseFirestore.instance.collection('users').doc(id).get(),
         ),
       );
 
-      final studentData = studentDocs
-          .where((doc) => doc.exists)
-          .map((doc) {
-            final data = doc.data()!;
-            return {
-              'userId': doc.id,
-              'displayName': data['displayName'] ?? 'Unknown',
-              'avatarUrl': data['avatarUrl'],
-              'totalXP': data['totalXP'] ?? 0,
-              'currentStreak': data['currentStreak'] ?? 0,
-              'badges': List<String>.from(data['badges'] ?? []),
-              'lastActiveDate': data['lastActiveDate'],
-            };
-          })
-          .toList();
+      final studentData = studentDocs.where((doc) => doc.exists).map((doc) {
+        final data = doc.data()!;
+        return {
+          'userId': doc.id,
+          'displayName': data['displayName'] ?? 'Unknown',
+          'avatarUrl': data['avatarUrl'],
+          'totalXP': data['totalXP'] ?? 0,
+          'currentStreak': data['currentStreak'] ?? 0,
+          'badges': List<String>.from(data['badges'] ?? []),
+          'lastActiveDate': data['lastActiveDate'],
+        };
+      }).toList();
 
       // Calculate analytics
-      final totalXP = studentData.fold<int>(0, (sum, student) => sum + (student['totalXP'] as int));
+      final totalXP = studentData.fold<int>(
+        0,
+        (sum, student) => sum + (student['totalXP'] as int),
+      );
       final avgXP = studentData.isEmpty ? 0 : totalXP ~/ studentData.length;
-      
+
       final activeStudents = studentData.where((student) {
         final lastActive = student['lastActiveDate'] as Timestamp?;
         if (lastActive == null) return false;
@@ -73,11 +71,18 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
         return daysSince <= 7;
       }).length;
 
-      final totalBadges = studentData.fold<int>(0, (sum, student) => sum + (student['badges'] as List).length);
-      final avgBadges = studentData.isEmpty ? 0.0 : totalBadges / studentData.length;
+      final totalBadges = studentData.fold<int>(
+        0,
+        (sum, student) => sum + (student['badges'] as List).length,
+      );
+      final avgBadges = studentData.isEmpty
+          ? 0.0
+          : totalBadges / studentData.length;
 
       // Sort by totalXP for leaderboard
-      studentData.sort((a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int));
+      studentData.sort(
+        (a, b) => (b['totalXP'] as int).compareTo(a['totalXP'] as int),
+      );
 
       setState(() {
         _analytics = {
@@ -152,7 +157,8 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                         Expanded(
                           child: _buildStatCard(
                             'Avg Badges',
-                            (_analytics['averageBadges'] as double).toStringAsFixed(1),
+                            (_analytics['averageBadges'] as double)
+                                .toStringAsFixed(1),
                             Icons.emoji_events,
                             AppDesignSystem.error,
                           ),
@@ -163,10 +169,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                     const SizedBox(height: 24),
 
                     // Student Progress List
-                    Text(
-                      'Student Progress',
-                      style: AppTextStyles.h3,
-                    ),
+                    Text('Student Progress', style: AppTextStyles.h3),
                     const SizedBox(height: 12),
 
                     if (_studentProgress.isEmpty)
@@ -204,16 +207,18 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
     );
   }
 
-  Widget _buildStatCard(String label, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return CleanCard(
       child: Column(
         children: [
           Icon(icon, size: 32, color: color),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: AppTextStyles.h2.copyWith(color: color),
-          ),
+          Text(value, style: AppTextStyles.h2.copyWith(color: color)),
           const SizedBox(height: 4),
           Text(
             label,
@@ -232,7 +237,7 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
     final currentStreak = student['currentStreak'] as int;
     final badgeCount = (student['badges'] as List).length;
     final lastActive = student['lastActiveDate'] as Timestamp?;
-    
+
     String lastActiveText = 'Never';
     if (lastActive != null) {
       final days = DateTime.now().difference(lastActive.toDate()).inDays;
@@ -255,7 +260,9 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: rank <= 3 ? AppDesignSystem.warning.withValues(alpha: 0.2) : AppDesignSystem.backgroundGrey,
+              color: rank <= 3
+                  ? AppDesignSystem.warning.withValues(alpha: 0.2)
+                  : AppDesignSystem.backgroundGrey,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Center(
@@ -263,7 +270,9 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                 '#$rank',
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: rank <= 3 ? AppDesignSystem.warning : AppDesignSystem.textSecondary,
+                  color: rank <= 3
+                      ? AppDesignSystem.warning
+                      : AppDesignSystem.textSecondary,
                 ),
               ),
             ),
@@ -273,14 +282,20 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
           // Avatar
           CircleAvatar(
             radius: 24,
-            backgroundColor: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
+            backgroundColor: AppDesignSystem.primaryIndigo.withValues(
+              alpha: 0.2,
+            ),
             backgroundImage: student['avatarUrl'] != null
                 ? NetworkImage(student['avatarUrl'])
                 : null,
             child: student['avatarUrl'] == null
                 ? Text(
-                    (student['displayName'] as String).substring(0, 1).toUpperCase(),
-                    style: AppTextStyles.h3.copyWith(color: AppDesignSystem.primaryIndigo),
+                    (student['displayName'] as String)
+                        .substring(0, 1)
+                        .toUpperCase(),
+                    style: AppTextStyles.h3.copyWith(
+                      color: AppDesignSystem.primaryIndigo,
+                    ),
                   )
                 : null,
           ),
@@ -299,15 +314,27 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.star, size: 14, color: AppDesignSystem.warning),
+                    const Icon(
+                      Icons.star,
+                      size: 14,
+                      color: AppDesignSystem.warning,
+                    ),
                     const SizedBox(width: 4),
                     Text('$totalXP XP', style: AppTextStyles.bodySmall),
                     const SizedBox(width: 12),
-                    const Icon(Icons.local_fire_department, size: 14, color: AppDesignSystem.error),
+                    const Icon(
+                      Icons.local_fire_department,
+                      size: 14,
+                      color: AppDesignSystem.error,
+                    ),
                     const SizedBox(width: 4),
                     Text('$currentStreak', style: AppTextStyles.bodySmall),
                     const SizedBox(width: 12),
-                    const Icon(Icons.emoji_events, size: 14, color: AppDesignSystem.primaryIndigo),
+                    const Icon(
+                      Icons.emoji_events,
+                      size: 14,
+                      color: AppDesignSystem.primaryIndigo,
+                    ),
                     const SizedBox(width: 4),
                     Text('$badgeCount', style: AppTextStyles.bodySmall),
                   ],
@@ -327,4 +354,3 @@ class _ClassroomAnalyticsScreenState extends State<ClassroomAnalyticsScreen> {
     );
   }
 }
-

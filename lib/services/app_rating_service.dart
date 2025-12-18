@@ -13,7 +13,7 @@ class AppRatingService {
   /// Check if rating prompt should be shown
   static Future<bool> shouldShowRatingPrompt() async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     // Don't show if user has already rated
     final hasRated = prefs.getBool(_hasRatedKey) ?? false;
     if (hasRated) return false;
@@ -41,11 +41,11 @@ class AppRatingService {
   static Future<void> showRatingPrompt() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Check if in-app review is available
       if (await _inAppReview.isAvailable()) {
         await _inAppReview.requestReview();
-        
+
         // Update last prompt date
         await prefs.setString(
           _lastRatingPromptKey,
@@ -61,7 +61,8 @@ class AppRatingService {
   static Future<void> openAppStore() async {
     try {
       await _inAppReview.openStoreListing(
-        appStoreId: 'YOUR_APP_STORE_ID', // TODO: Replace with actual App Store ID
+        appStoreId:
+            'YOUR_APP_STORE_ID', // TODO: Replace with actual App Store ID
       );
     } catch (e) {
       // print('Error opening app store: $e');
@@ -73,7 +74,7 @@ class AppRatingService {
     final prefs = await SharedPreferences.getInstance();
     final currentCount = prefs.getInt(_realmsCompletedKey) ?? 0;
     await prefs.setInt(_realmsCompletedKey, currentCount + 1);
-    
+
     // Check if we should show rating prompt
     if (await shouldShowRatingPrompt()) {
       await showRatingPrompt();
@@ -85,7 +86,7 @@ class AppRatingService {
     final prefs = await SharedPreferences.getInstance();
     final currentCount = prefs.getInt(_gamesPlayedKey) ?? 0;
     await prefs.setInt(_gamesPlayedKey, currentCount + 1);
-    
+
     // Check if we should show rating prompt
     if (await shouldShowRatingPrompt()) {
       await showRatingPrompt();

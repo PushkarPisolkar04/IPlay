@@ -164,7 +164,9 @@ class QuizMasterGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       allowRetry: json['allowRetry'] as bool? ?? true,
@@ -175,7 +177,8 @@ class QuizMasterGame extends GameModel {
       passingScore: json['passingScore'] as int,
       timeLimit: json['timeLimit'] as int?,
       randomSelection: json['randomSelection'] as bool? ?? true,
-      showHintsAfterWrongAnswer: json['showHintsAfterWrongAnswer'] as bool? ?? true,
+      showHintsAfterWrongAnswer:
+          json['showHintsAfterWrongAnswer'] as bool? ?? true,
     );
   }
 

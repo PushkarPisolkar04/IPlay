@@ -12,21 +12,18 @@ class SvgToImage {
   }) async {
     // Load the SVG string
     final svgString = await rootBundle.loadString(assetPath);
-    
+
     // Parse the SVG
-    final pictureInfo = await vg.loadPicture(
-      SvgStringLoader(svgString),
-      null,
-    );
-    
+    final pictureInfo = await vg.loadPicture(SvgStringLoader(svgString), null);
+
     // Convert to image
     final image = await pictureInfo.picture.toImage(
       width.toInt(),
       height.toInt(),
     );
-    
+
     pictureInfo.picture.dispose();
-    
+
     return image;
   }
 
@@ -37,7 +34,7 @@ class SvgToImage {
     double height = 100,
   }) async {
     final Map<String, ui.Image> images = {};
-    
+
     for (final entry in assetPaths.entries) {
       try {
         images[entry.key] = await loadSvgAsImage(
@@ -50,7 +47,7 @@ class SvgToImage {
         print('Failed to load SVG ${entry.value}: $e');
       }
     }
-    
+
     return images;
   }
 }

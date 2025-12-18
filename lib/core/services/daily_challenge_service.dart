@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../models/daily_challenge_model.dart';
 import '../../services/streak_service.dart';
 import 'badge_service.dart';
+import 'xp_service.dart';
 
 /// Service for daily challenges (loads from local JSON)
 class DailyChallengeService {
@@ -13,28 +14,33 @@ class DailyChallengeService {
   final _uuid = const Uuid();
   final StreakService _streakService = StreakService();
   final BadgeService _badgeService = BadgeService();
-  
+  final XPService _xpService = XPService();
+
   List<Map<String, dynamic>>? _cachedChallenges;
 
   /// Load all challenges from local JSON
   Future<List<Map<String, dynamic>>> _loadChallenges() async {
     if (_cachedChallenges != null) return _cachedChallenges!;
-    
+
     try {
       print('📅 Loading daily challenges from JSON...');
-      final jsonString = await rootBundle.loadString('content/daily_challenges.json');
+      final jsonString = await rootBundle.loadString(
+        'content/daily_challenges.json',
+      );
       print('✅ Daily challenges JSON loaded');
-      
+
       final jsonData = json.decode(jsonString) as Map<String, dynamic>;
       print('✅ JSON parsed. Keys: ${jsonData.keys.join(", ")}');
-      
+
       final challengesList = jsonData['challenges'];
       if (challengesList == null) {
         print('❌ Error: challenges field is null in JSON');
         return [];
       }
-      
-      _cachedChallenges = List<Map<String, dynamic>>.from(challengesList as List);
+
+      _cachedChallenges = List<Map<String, dynamic>>.from(
+        challengesList as List,
+      );
       print('✅ Loaded ${_cachedChallenges!.length} daily challenges');
       return _cachedChallenges!;
     } catch (e, stackTrace) {
@@ -54,9 +60,9 @@ class DailyChallengeService {
       final today = DateTime.now();
       final dayOfYear = today.difference(DateTime(today.year, 1, 1)).inDays;
       final challengeIndex = dayOfYear % challenges.length;
-      
+
       final challengeData = challenges[challengeIndex];
-      
+
       // Convert to DailyChallengeModel
       final questions = (challengeData['questions'] as List).map((q) {
         return ChallengeQuestion(
@@ -97,7 +103,8 @@ class DailyChallengeService {
   }
 
   /// Submit challenge attempt (stores locally and in Firestore)
-  Future<ChallengeAttemptModel> submitAttempt({
+  /// Returns map with 'attempt' and 'xpCapWarning' info
+  Future<Map<String, dynamic>> submitAttempt({
     required String userId,
     required String challengeId,
     required int score,
@@ -108,7 +115,7 @@ class DailyChallengeService {
       final today = DateTime.now();
       final todayKey = 'challenge_${today.year}_${today.month}_${today.day}';
       final attemptedToday = prefs.getString(todayKey);
-      
+
       if (attemptedToday != null) {
         throw Exception('Challenge already attempted today');
       }
@@ -132,16 +139,34 @@ class DailyChallengeService {
       );
 
       // Save attempt locally
-      await prefs.setString(todayKey, json.encode({
-        'id': attempt.id,
-        'score': attempt.score,
-        'xpEarned': attempt.xpEarned,
-        'attemptedAt': attempt.attemptedAt.toIso8601String(),
-      }));
+      await prefs.setString(
+        todayKey,
+        json.encode({
+          'id': attempt.id,
+          'score': attempt.score,
+          'xpEarned': attempt.xpEarned,
+          'attemptedAt': attempt.attemptedAt.toIso8601String(),
+        }),
+      );
 
       // Also save to Firestore for persistence and leaderboard
       try {
         final batch = _firestore.batch();
+
+        // Enforce daily XP cap
+        final xpCapResult = await _xpService.calculateAwardedXP(
+          userId: userId,
+          earnedXP: xpEarned,
+        );
+        final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+        final warning = (xpCapResult['warning'] as bool?) ?? false;
+        final cappedAmount = (xpCapResult['cappedAmount'] as int?) ?? 0;
+
+        // Get current daily XP stats for popup
+        final xpStats = await _xpService.getTodayXPStats(userId);
+        final currentDailyXP = (xpStats['currentDailyXP'] as int?) ?? 0;
+        final dailyCap = (xpStats['dailyXPCap'] as int?) ?? 1000;
+        final isFullyCapped = (xpStats['hasReachedCap'] as bool?) ?? false;
 
         // Save attempt
         batch.set(
@@ -150,30 +175,42 @@ class DailyChallengeService {
         );
 
         // Award XP to user (DON'T update lastActiveDate - let StreakService handle it)
-        batch.update(
-          _firestore.collection('users').doc(userId),
-          {
-            'totalXP': FieldValue.increment(xpEarned),
-            'updatedAt': Timestamp.now(),
-          },
-        );
+        batch.update(_firestore.collection('users').doc(userId), {
+          'totalXP': FieldValue.increment(xpToAward),
+          'updatedAt': Timestamp.now(),
+        });
 
         await batch.commit();
 
         // Update streak after awarding XP - StreakService will update lastActiveDate
         await _streakService.updateStreakOnActivity(userId);
-        
+
         // Check for new badges
         final newBadges = await _badgeService.checkAndAwardBadges(userId);
         if (newBadges.isNotEmpty) {
           print('✅ New badges unlocked from daily challenge: $newBadges');
         }
+
+        return {
+          'attempt': attempt,
+          'warning': warning,
+          'currentDailyXP': currentDailyXP + xpToAward, // Updated after award
+          'dailyCap': dailyCap,
+          'cappedAmount': cappedAmount,
+          'isFullyCapped': isFullyCapped,
+        };
       } catch (e) {
         print('Error saving to Firestore: $e');
         // Continue even if Firestore fails - local save is enough
+        return {
+          'attempt': attempt,
+          'warning': false,
+          'currentDailyXP': 0,
+          'dailyCap': 1000,
+          'cappedAmount': 0,
+          'isFullyCapped': false,
+        };
       }
-
-      return attempt;
     } catch (e) {
       throw Exception('Failed to submit attempt: $e');
     }
@@ -190,7 +227,7 @@ class DailyChallengeService {
       final today = DateTime.now();
       final todayKey = 'challenge_${today.year}_${today.month}_${today.day}';
       final attemptData = prefs.getString(todayKey);
-      
+
       if (attemptData != null) {
         final data = json.decode(attemptData) as Map<String, dynamic>;
         return ChallengeAttemptModel(
@@ -226,7 +263,10 @@ class DailyChallengeService {
   }
 
   /// Get user's challenge history
-  Future<List<ChallengeAttemptModel>> getUserHistory(String userId, {int limit = 30}) async {
+  Future<List<ChallengeAttemptModel>> getUserHistory(
+    String userId, {
+    int limit = 30,
+  }) async {
     try {
       final query = await _firestore
           .collection('daily_challenge_attempts')
@@ -249,12 +289,18 @@ class DailyChallengeService {
       final history = await getUserHistory(userId);
 
       final totalAttempts = history.length;
-      final totalXP = history.fold<int>(0, (sum, attempt) => sum + attempt.xpEarned);
+      final totalXP = history.fold<int>(
+        0,
+        (sum, attempt) => sum + attempt.xpEarned,
+      );
       final perfectScores = history.where((a) => a.score == 5).length;
-      
+
       double averageScore = 0;
       if (totalAttempts > 0) {
-        final totalScore = history.fold<int>(0, (sum, attempt) => sum + attempt.score);
+        final totalScore = history.fold<int>(
+          0,
+          (sum, attempt) => sum + attempt.score,
+        );
         averageScore = totalScore / totalAttempts;
       }
 
@@ -268,7 +314,7 @@ class DailyChallengeService {
             attempt.attemptedAt.month,
             attempt.attemptedAt.day,
           );
-          
+
           if (lastDate == null) {
             currentStreak = 1;
             lastDate = attemptDate;
@@ -297,7 +343,9 @@ class DailyChallengeService {
   }
 
   /// Get challenge leaderboard (today)
-  Future<List<Map<String, dynamic>>> getTodayLeaderboard({int limit = 100}) async {
+  Future<List<Map<String, dynamic>>> getTodayLeaderboard({
+    int limit = 100,
+  }) async {
     try {
       final challenge = await getTodaysChallenge();
       if (challenge == null) return [];
@@ -318,7 +366,7 @@ class DailyChallengeService {
       final leaderboard = <Map<String, dynamic>>[];
       for (var i = 0; i < attempts.length; i++) {
         final attempt = attempts[i];
-        
+
         // Get user details
         final userDoc = await _firestore
             .collection('users')
@@ -345,4 +393,3 @@ class DailyChallengeService {
     }
   }
 }
-

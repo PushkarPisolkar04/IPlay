@@ -30,7 +30,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
   final ContentService _contentService = ContentService();
   final ProgressService _progressService = ProgressService();
   final BookmarkService _bookmarkService = BookmarkService();
-  
+
   LevelModel? _level;
   Map<String, dynamic>? _levelJson;
   bool _isLoading = true;
@@ -73,9 +73,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              newStatus ? 'Bookmark added' : 'Bookmark removed',
-            ),
+            content: Text(newStatus ? 'Bookmark added' : 'Bookmark removed'),
             backgroundColor: AppDesignSystem.success,
             duration: const Duration(seconds: 2),
           ),
@@ -102,10 +100,10 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
     try {
       print('🔍 Loading level preview: ${widget.levelId}');
       final userId = FirebaseAuth.instance.currentUser?.uid;
-      
+
       // Load level from JSON
       final level = await _contentService.getLevelById(widget.levelId);
-      
+
       if (level != null) {
         print('✅ Level preview loaded: ${level.name}');
         _level = level;
@@ -120,7 +118,10 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
 
       // Check if level is completed
       if (userId != null) {
-        final realmProgress = await _progressService.getRealmProgress(userId, widget.realmId);
+        final realmProgress = await _progressService.getRealmProgress(
+          userId,
+          widget.realmId,
+        );
         if (realmProgress != null) {
           // Extract level number from levelId (format: realmId_level_X)
           final levelNumber = int.tryParse(widget.levelId.split('_').last) ?? 0;
@@ -146,10 +147,10 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
 
   Future<List<String>> _getPrerequisiteLevels() async {
     if (_level == null) return [];
-    
+
     // Get all levels in the realm
     final allLevels = await _contentService.getLevelsForRealm(widget.realmId);
-    
+
     // Find levels that come before this one
     final prerequisites = <String>[];
     for (final level in allLevels) {
@@ -157,17 +158,19 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
         prerequisites.add(level.name);
       }
     }
-    
+
     return prerequisites;
   }
 
   LevelModel _convertJsonToModel(Map<String, dynamic> json) {
-    final keyTakeaways = (json['keyTakeaways'] as List<dynamic>?)
-        ?.map((e) => e.toString())
-        .toList() ?? [];
+    final keyTakeaways =
+        (json['keyTakeaways'] as List<dynamic>?)
+            ?.map((e) => e.toString())
+            .toList() ??
+        [];
 
-    final quizQuestions = (json['quizQuestions'] as List<dynamic>?)
-        ?.map((q) {
+    final quizQuestions =
+        (json['quizQuestions'] as List<dynamic>?)?.map((q) {
           final question = q as Map<String, dynamic>;
           return QuizQuestion(
             question: question['question'] as String,
@@ -177,8 +180,8 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
             correctIndex: question['correctIndex'] as int,
             explanation: question['explanation'] as String,
           );
-        })
-        .toList() ?? [];
+        }).toList() ??
+        [];
 
     return LevelModel(
       id: json['levelId'] as String,
@@ -218,7 +221,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
 
   List<String> _getTopicsCovered() {
     if (_level == null) return [];
-    
+
     // Extract topics from key points
     return _level!.keyPoints.take(5).toList();
   }
@@ -227,9 +230,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => LevelDetailScreen(
-          levelId: widget.levelId,
-        ),
+        builder: (context) => LevelDetailScreen(levelId: widget.levelId),
       ),
     );
   }
@@ -248,15 +249,32 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
+              LoadingSkeleton(
+                height: 200,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(width: 150, height: 24, borderRadius: BorderRadius.all(Radius.circular(4))),
+              LoadingSkeleton(
+                width: 150,
+                height: 24,
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
               SizedBox(height: 12),
-              LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(8))),
+              LoadingSkeleton(
+                height: 60,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
               SizedBox(height: 16),
-              LoadingSkeleton(width: 120, height: 20, borderRadius: BorderRadius.all(Radius.circular(4))),
+              LoadingSkeleton(
+                width: 120,
+                height: 20,
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
               SizedBox(height: 12),
-              LoadingSkeleton(height: 150, borderRadius: BorderRadius.all(Radius.circular(8))),
+              LoadingSkeleton(
+                height: 150,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
             ],
           ),
         ),
@@ -373,16 +391,14 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  
+
                   // Level Title
                   Text(
                     _level!.name,
-                    style: AppTextStyles.h1.copyWith(
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.h1.copyWith(color: Colors.white),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  
+
                   // Completion Status
                   if (_isCompleted)
                     Row(
@@ -446,10 +462,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
                   const SizedBox(height: AppSpacing.lg),
 
                   // Topics Covered
-                  Text(
-                    'What You\'ll Learn',
-                    style: AppTextStyles.h2,
-                  ),
+                  Text('What You\'ll Learn', style: AppTextStyles.h2),
                   const SizedBox(height: AppSpacing.sm),
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.md),
@@ -495,18 +508,19 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
 
                   // Prerequisites
                   if (_prerequisiteLevels.isNotEmpty) ...[
-                    Text(
-                      'Prerequisites',
-                      style: AppTextStyles.h2,
-                    ),
+                    Text('Prerequisites', style: AppTextStyles.h2),
                     const SizedBox(height: AppSpacing.sm),
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                        color: AppDesignSystem.primaryIndigo.withValues(
+                          alpha: 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                         border: Border.all(
-                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                          color: AppDesignSystem.primaryIndigo.withValues(
+                            alpha: 0.3,
+                          ),
                         ),
                       ),
                       child: Column(
@@ -553,7 +567,9 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        color: AppDesignSystem.secondaryBlue.withValues(alpha: 0.1),
+                        color: AppDesignSystem.secondaryBlue.withValues(
+                          alpha: 0.1,
+                        ),
                         borderRadius: BorderRadius.circular(AppSpacing.sm),
                       ),
                       child: Row(
@@ -653,10 +669,7 @@ class _LevelPreviewScreenState extends State<LevelPreviewScreen> {
         children: [
           Icon(icon, color: color, size: 28),
           const SizedBox(height: 4),
-          Text(
-            value,
-            style: AppTextStyles.h3.copyWith(color: color),
-          ),
+          Text(value, style: AppTextStyles.h3.copyWith(color: color)),
           Text(
             label,
             style: AppTextStyles.caption.copyWith(

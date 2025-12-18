@@ -72,7 +72,12 @@ class DeepLinkService {
         break;
       case 'chat':
         if (resourceId != null && queryParams.containsKey('userName')) {
-          _navigateToChat(context, resourceId, queryParams['userName']!, queryParams['userAvatar']);
+          _navigateToChat(
+            context,
+            resourceId,
+            queryParams['userName']!,
+            queryParams['userAvatar'],
+          );
         }
         break;
       case 'classroom':
@@ -99,7 +104,9 @@ class DeepLinkService {
 
   void _navigateToRealm(BuildContext context, String realmId) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pushNamed('/realm', arguments: {'realmId': realmId});
+      Navigator.of(
+        context,
+      ).pushNamed('/realm', arguments: {'realmId': realmId});
     });
   }
 
@@ -111,7 +118,9 @@ class DeepLinkService {
 
   void _navigateToCertificate(BuildContext context, String certId) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pushNamed('/certificate/verify', arguments: {'certId': certId});
+      Navigator.of(
+        context,
+      ).pushNamed('/certificate/verify', arguments: {'certId': certId});
     });
   }
 
@@ -121,22 +130,34 @@ class DeepLinkService {
     });
   }
 
-  void _navigateToChat(BuildContext context, String chatId, String userName, String? userAvatar) {
+  void _navigateToChat(
+    BuildContext context,
+    String chatId,
+    String userName,
+    String? userAvatar,
+  ) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pushNamed('/chat', arguments: {
-        'chatId': chatId,
-        'otherUserName': userName,
-        'otherUserAvatar': userAvatar,
-      });
+      Navigator.of(context).pushNamed(
+        '/chat',
+        arguments: {
+          'chatId': chatId,
+          'otherUserName': userName,
+          'otherUserAvatar': userAvatar,
+        },
+      );
     });
   }
 
-  void _navigateToJoinClassroom(BuildContext context, String classroomCode, String source) {
+  void _navigateToJoinClassroom(
+    BuildContext context,
+    String classroomCode,
+    String source,
+  ) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pushNamed('/join-classroom', arguments: {
-        'code': classroomCode,
-        'source': source,
-      });
+      Navigator.of(context).pushNamed(
+        '/join-classroom',
+        arguments: {'code': classroomCode, 'source': source},
+      );
     });
   }
 

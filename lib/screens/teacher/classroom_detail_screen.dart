@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -28,7 +29,6 @@ class ClassroomDetailScreen extends StatefulWidget {
 }
 
 class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
-  
   Future<int> _getActiveStudentCount() async {
     int count = 0;
     for (String studentId in widget.classroom.studentIds) {
@@ -37,7 +37,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
             .collection('users')
             .doc(studentId)
             .get();
-        
+
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
           final isDeleted = data['isDeleted'] == true;
@@ -52,7 +52,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     }
     return count;
   }
-  
+
   Future<int> _getActivePendingCount() async {
     int count = 0;
     for (String studentId in widget.classroom.pendingStudentIds) {
@@ -61,7 +61,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
             .collection('users')
             .doc(studentId)
             .get();
-        
+
         if (doc.exists) {
           final data = doc.data() as Map<String, dynamic>;
           final isDeleted = data['isDeleted'] == true;
@@ -76,7 +76,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     }
     return count;
   }
-  
+
   void _showQRCode(BuildContext context) {
     showDialog(
       context: context,
@@ -97,10 +97,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF6366F1),
-                      const Color(0xFF8B5CF6),
-                    ],
+                    colors: [const Color(0xFF6366F1), const Color(0xFF8B5CF6)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -108,11 +105,7 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
                 ),
                 child: Column(
                   children: [
-                    const Icon(
-                      Icons.qr_code_2,
-                      color: Colors.white,
-                      size: 40,
-                    ),
+                    const Icon(Icons.qr_code_2, color: Colors.white, size: 40),
                     const SizedBox(height: 12),
                     Text(
                       'Scan to Join',
@@ -161,7 +154,10 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
               const SizedBox(height: 16),
               // Join Code
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -212,9 +208,11 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
   }
 
   void _shareInviteLink(BuildContext context) {
-    final inviteLink = 'iplay://classroom/join/${widget.classroom.joinCode}?source=link';
+    final inviteLink =
+        'iplay://classroom/join/${widget.classroom.joinCode}?source=link';
 
-    final message = '''
+    final message =
+        '''
 Join my classroom on IPlay!
 Classroom: ${widget.classroom.name}
 Teacher: ${widget.classroom.teacherName}
@@ -224,10 +222,7 @@ Click the link to join instantly:
 $inviteLink
 Or enter the code manually in the IPlay app.
 ''';
-    Share.share(
-      message,
-      subject: 'Join ${widget.classroom.name} on IPlay',
-    );
+    Share.share(message, subject: 'Join ${widget.classroom.name} on IPlay');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Row(
@@ -259,10 +254,10 @@ Or enter the code manually in the IPlay app.
             .collection('classrooms')
             .doc(widget.classroom.id)
             .update({
-          'name': result['name'],
-          'grade': result['grade'],
-          'updatedAt': Timestamp.now(),
-        });
+              'name': result['name'],
+              'grade': result['grade'],
+              'updatedAt': Timestamp.now(),
+            });
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -275,7 +270,9 @@ Or enter the code manually in the IPlay app.
             ),
             backgroundColor: AppDesignSystem.success,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
         Navigator.pop(context);
@@ -286,7 +283,9 @@ Or enter the code manually in the IPlay app.
             content: Text('Error: ${e.toString()}'),
             backgroundColor: AppDesignSystem.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
       }
@@ -299,7 +298,9 @@ Or enter the code manually in the IPlay app.
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Delete Classroom'),
-        content: Text('Are you sure you want to delete "${widget.classroom.name}"? This action cannot be undone.'),
+        content: Text(
+          'Are you sure you want to delete "${widget.classroom.name}"? This action cannot be undone.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -309,7 +310,9 @@ Or enter the code manually in the IPlay app.
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppDesignSystem.error,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             child: const Text('Delete'),
           ),
@@ -323,9 +326,9 @@ Or enter the code manually in the IPlay app.
             .collection('users')
             .doc(studentId)
             .update({
-          'classroomIds': FieldValue.arrayRemove([widget.classroom.id]),
-          'updatedAt': Timestamp.now(),
-        });
+              'classroomIds': FieldValue.arrayRemove([widget.classroom.id]),
+              'updatedAt': Timestamp.now(),
+            });
       }
       await FirebaseFirestore.instance
           .collection('classrooms')
@@ -343,7 +346,9 @@ Or enter the code manually in the IPlay app.
           ),
           backgroundColor: AppDesignSystem.success,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pop(context);
@@ -354,7 +359,9 @@ Or enter the code manually in the IPlay app.
           content: Text('Error: ${e.toString()}'),
           backgroundColor: AppDesignSystem.error,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     }
@@ -389,7 +396,10 @@ Or enter the code manually in the IPlay app.
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -434,7 +444,10 @@ Or enter the code manually in the IPlay app.
                           builder: (context, snapshot) {
                             final count = snapshot.data ?? 0;
                             return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
+                              ),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -447,7 +460,9 @@ Or enter the code manually in the IPlay app.
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF6366F1).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFF6366F1,
+                                    ).withOpacity(0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -456,10 +471,15 @@ Or enter the code manually in the IPlay app.
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.people, color: Colors.white, size: 24),
+                                  const Icon(
+                                    Icons.people,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
                                   const SizedBox(width: 8),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
@@ -490,7 +510,10 @@ Or enter the code manually in the IPlay app.
                           builder: (context, snapshot) {
                             final count = snapshot.data ?? 0;
                             return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 14,
+                              ),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -503,7 +526,9 @@ Or enter the code manually in the IPlay app.
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFF59E0B).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFFF59E0B,
+                                    ).withOpacity(0.3),
                                     blurRadius: 12,
                                     offset: const Offset(0, 4),
                                   ),
@@ -512,10 +537,15 @@ Or enter the code manually in the IPlay app.
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.pending, color: Colors.white, size: 24),
+                                  const Icon(
+                                    Icons.pending,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
                                   const SizedBox(width: 8),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
@@ -600,7 +630,9 @@ Or enter the code manually in the IPlay app.
                             ),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: AppDesignSystem.primaryIndigo.withOpacity(0.2),
+                              color: AppDesignSystem.primaryIndigo.withOpacity(
+                                0.2,
+                              ),
                               width: 2,
                             ),
                           ),
@@ -622,13 +654,18 @@ Or enter the code manually in the IPlay app.
                               InkWell(
                                 onTap: () {
                                   Clipboard.setData(
-                                    ClipboardData(text: widget.classroom.joinCode),
+                                    ClipboardData(
+                                      text: widget.classroom.joinCode,
+                                    ),
                                   );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: const Row(
                                         children: [
-                                          Icon(Icons.check_circle, color: Colors.white),
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: Colors.white,
+                                          ),
                                           SizedBox(width: 12),
                                           Text('Code copied!'),
                                         ],
@@ -674,12 +711,15 @@ Or enter the code manually in the IPlay app.
                                 icon: const Icon(Icons.qr_code_2, size: 18),
                                 label: const Text('QR Code'),
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: AppDesignSystem.primaryIndigo,
+                                  foregroundColor:
+                                      AppDesignSystem.primaryIndigo,
                                   side: const BorderSide(
                                     color: AppDesignSystem.primaryIndigo,
                                     width: 2,
                                   ),
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -693,9 +733,12 @@ Or enter the code manually in the IPlay app.
                                 icon: const Icon(Icons.share, size: 18),
                                 label: const Text('Share'),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppDesignSystem.primaryIndigo,
+                                  backgroundColor:
+                                      AppDesignSystem.primaryIndigo,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -730,7 +773,8 @@ Or enter the code manually in the IPlay app.
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UnifiedAnnouncementsScreen(),
+                                builder: (context) =>
+                                    const UnifiedAnnouncementsScreen(),
                               ),
                             );
                           },
@@ -748,7 +792,8 @@ Or enter the code manually in the IPlay app.
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const UnifiedLeaderboardScreen(),
+                                builder: (context) =>
+                                    const UnifiedLeaderboardScreen(),
                               ),
                             );
                           },
@@ -770,7 +815,9 @@ Or enter the code manually in the IPlay app.
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => JoinRequestsScreen(classroomId: widget.classroom.id),
+                                builder: (context) => JoinRequestsScreen(
+                                  classroomId: widget.classroom.id,
+                                ),
                               ),
                             );
                           },
@@ -820,7 +867,10 @@ Or enter the code manually in the IPlay app.
                         ),
                         const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -882,7 +932,10 @@ Or enter the code manually in the IPlay app.
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -934,7 +987,9 @@ Or enter the code manually in the IPlay app.
                             child: Icon(
                               Icons.people_outline,
                               size: 60,
-                              color: AppDesignSystem.primaryIndigo.withOpacity(0.5),
+                              color: AppDesignSystem.primaryIndigo.withOpacity(
+                                0.5,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -956,16 +1011,18 @@ Or enter the code manually in the IPlay app.
                       ),
                     )
                   else
-                    ...widget.classroom.studentIds.map(
-                      (studentId) => Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: _StudentCard(
-                          studentId: studentId,
-                          classroomId: widget.classroom.id,
-                          isPending: false,
-                        ),
-                      ),
-                    ).toList(),
+                    ...widget.classroom.studentIds
+                        .map(
+                          (studentId) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: _StudentCard(
+                              studentId: studentId,
+                              classroomId: widget.classroom.id,
+                              isPending: false,
+                            ),
+                          ),
+                        )
+                        ,
                   const SizedBox(height: 24),
                 ],
               ),
@@ -1056,7 +1113,9 @@ class _StudentCardState extends State<_StudentCard> {
     if (_isProcessing) return;
     setState(() => _isProcessing = true);
     try {
-      final requests = await _joinRequestService.getPendingRequests(widget.classroomId);
+      final requests = await _joinRequestService.getPendingRequests(
+        widget.classroomId,
+      );
       final request = requests.firstWhere(
         (r) => r.studentId == widget.studentId,
         orElse: () => throw Exception('Join request not found'),
@@ -1087,7 +1146,9 @@ class _StudentCardState extends State<_StudentCard> {
           ),
           backgroundColor: AppDesignSystem.success,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pop(context);
@@ -1098,7 +1159,9 @@ class _StudentCardState extends State<_StudentCard> {
           content: Text('Error approving student: ${e.toString()}'),
           backgroundColor: AppDesignSystem.error,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } finally {
@@ -1115,7 +1178,9 @@ class _StudentCardState extends State<_StudentCard> {
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text('Reject Student'),
-        content: const Text('Are you sure you want to reject this join request?'),
+        content: const Text(
+          'Are you sure you want to reject this join request?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -1125,7 +1190,9 @@ class _StudentCardState extends State<_StudentCard> {
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppDesignSystem.error,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
             child: const Text('Reject'),
           ),
@@ -1135,7 +1202,9 @@ class _StudentCardState extends State<_StudentCard> {
     if (confirmed != true) return;
     setState(() => _isProcessing = true);
     try {
-      final requests = await _joinRequestService.getPendingRequests(widget.classroomId);
+      final requests = await _joinRequestService.getPendingRequests(
+        widget.classroomId,
+      );
       final request = requests.firstWhere(
         (r) => r.studentId == widget.studentId,
         orElse: () => throw Exception('Join request not found'),
@@ -1167,7 +1236,9 @@ class _StudentCardState extends State<_StudentCard> {
           ),
           backgroundColor: AppDesignSystem.warning,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
       Navigator.pop(context);
@@ -1178,7 +1249,9 @@ class _StudentCardState extends State<_StudentCard> {
           content: Text('Error rejecting student: ${e.toString()}'),
           backgroundColor: AppDesignSystem.error,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } finally {
@@ -1191,35 +1264,40 @@ class _StudentCardState extends State<_StudentCard> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-      future: FirebaseFirestore.instance.collection('users').doc(widget.studentId).get(),
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.studentId)
+          .get(),
       builder: (context, snapshot) {
         // Don't show anything while loading
         if (!snapshot.hasData) {
           return const SizedBox.shrink();
         }
-        
+
         // Don't show deleted users
         if (!snapshot.data!.exists) {
           return const SizedBox.shrink();
         }
-        
+
         final userData = snapshot.data!.data() as Map<String, dynamic>;
-        
+
         // Check if user is deleted
         final isDeleted = userData['isDeleted'] == true;
         if (isDeleted) {
           return const SizedBox.shrink();
         }
-        
+
         String studentName = userData['displayName'] ?? 'Student';
         String? avatarUrl = userData['avatarUrl'] as String?;
         int totalXP = userData['totalXP'] ?? 0;
-        
+
         // Debug: Print avatar URL to check
-        if (avatarUrl != null && avatarUrl.isNotEmpty) {
-          print('Student $studentName has avatar: $avatarUrl');
+        if (kDebugMode) {
+          if (avatarUrl != null && avatarUrl.isNotEmpty) {
+            print('Student $studentName has avatar: $avatarUrl');
+          }
         }
-        
+
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -1256,44 +1334,52 @@ class _StudentCardState extends State<_StudentCard> {
                 child: ClipOval(
                   child: avatarUrl != null && avatarUrl.isNotEmpty
                       ? (avatarUrl.startsWith('http')
-                          ? Image.network(
-                              avatarUrl,
-                              fit: BoxFit.cover,
-                              width: 48,
-                              height: 48,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        const Color(0xFF6366F1),
-                                        const Color(0xFF8B5CF6),
-                                      ],
+                            ? Image.network(
+                                avatarUrl,
+                                fit: BoxFit.cover,
+                                width: 48,
+                                height: 48,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          const Color(0xFF6366F1),
+                                          const Color(0xFF8B5CF6),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  child: const Icon(Icons.person, color: Colors.white, size: 24),
-                                );
-                              },
-                            )
-                          : Image.asset(
-                              avatarUrl,
-                              fit: BoxFit.cover,
-                              width: 48,
-                              height: 48,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        const Color(0xFF6366F1),
-                                        const Color(0xFF8B5CF6),
-                                      ],
+                                    child: const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 24,
                                     ),
-                                  ),
-                                  child: const Icon(Icons.person, color: Colors.white, size: 24),
-                                );
-                              },
-                            ))
+                                  );
+                                },
+                              )
+                            : Image.asset(
+                                avatarUrl,
+                                fit: BoxFit.cover,
+                                width: 48,
+                                height: 48,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          const Color(0xFF6366F1),
+                                          const Color(0xFF8B5CF6),
+                                        ],
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                  );
+                                },
+                              ))
                       : Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
@@ -1303,7 +1389,11 @@ class _StudentCardState extends State<_StudentCard> {
                               ],
                             ),
                           ),
-                          child: const Icon(Icons.person, color: Colors.white, size: 24),
+                          child: const Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
                 ),
               ),
@@ -1323,7 +1413,10 @@ class _StudentCardState extends State<_StudentCard> {
                       children: [
                         if (widget.isPending)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
@@ -1344,7 +1437,11 @@ class _StudentCardState extends State<_StudentCard> {
                         else
                           Row(
                             children: [
-                              const Icon(Icons.stars, size: 16, color: Color(0xFFF59E0B)),
+                              const Icon(
+                                Icons.stars,
+                                size: 16,
+                                color: Color(0xFFF59E0B),
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 '$totalXP XP',
@@ -1369,7 +1466,9 @@ class _StudentCardState extends State<_StudentCard> {
                           height: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppDesignSystem.primaryIndigo),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppDesignSystem.primaryIndigo,
+                            ),
                           ),
                         ),
                       )
@@ -1390,13 +1489,19 @@ class _StudentCardState extends State<_StudentCard> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFF10B981).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFF10B981,
+                                    ).withOpacity(0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              child: const Icon(Icons.check, color: Colors.white, size: 20),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -1415,13 +1520,19 @@ class _StudentCardState extends State<_StudentCard> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: const Color(0xFFEF4444).withOpacity(0.3),
+                                    color: const Color(
+                                      0xFFEF4444,
+                                    ).withOpacity(0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              child: const Icon(Icons.close, color: Colors.white, size: 20),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],
@@ -1433,17 +1544,21 @@ class _StudentCardState extends State<_StudentCard> {
                       onTap: () async {
                         try {
                           final chatService = SimplifiedChatService();
-                          final teacherId = FirebaseAuth.instance.currentUser!.uid;
-                          final chatId = await chatService.createTeacherStudentChat(
-                            teacherId: teacherId,
-                            studentId: widget.studentId,
-                          );
+                          final teacherId =
+                              FirebaseAuth.instance.currentUser!.uid;
+                          final chatId = await chatService
+                              .createTeacherStudentChat(
+                                teacherId: teacherId,
+                                studentId: widget.studentId,
+                              );
                           final studentDoc = await FirebaseFirestore.instance
                               .collection('users')
                               .doc(widget.studentId)
                               .get();
-                          final studentData = studentDoc.data() as Map<String, dynamic>;
-                          final studentName = studentData['displayName'] ?? 'Student';
+                          final studentData =
+                              studentDoc.data() as Map<String, dynamic>;
+                          final studentName =
+                              studentData['displayName'] ?? 'Student';
                           final studentAvatar = studentData['avatarUrl'];
                           if (!context.mounted) return;
                           Navigator.push(
@@ -1460,10 +1575,14 @@ class _StudentCardState extends State<_StudentCard> {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Error starting chat: ${e.toString()}'),
+                              content: Text(
+                                'Error starting chat: ${e.toString()}',
+                              ),
                               backgroundColor: AppDesignSystem.error,
                               behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
                           );
                         }
@@ -1480,7 +1599,11 @@ class _StudentCardState extends State<_StudentCard> {
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.message, color: AppDesignSystem.primaryIndigo, size:29),
+                        child: const Icon(
+                          Icons.message,
+                          color: AppDesignSystem.primaryIndigo,
+                          size: 29,
+                        ),
                       ),
                     ),
                   ],
@@ -1553,18 +1676,12 @@ class _EditClassroomDialogState extends State<_EditClassroomDialog> {
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  child: const Icon(Icons.edit, color: Colors.white, size: 24),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   'Edit Classroom',
-                  style: AppTextStyles.h3.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -1579,7 +1696,9 @@ class _EditClassroomDialogState extends State<_EditClassroomDialog> {
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Classroom Name',
-                      labelStyle: TextStyle(color: AppDesignSystem.textSecondary),
+                      labelStyle: TextStyle(
+                        color: AppDesignSystem.textSecondary,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.grey.shade300),
@@ -1610,7 +1729,9 @@ class _EditClassroomDialogState extends State<_EditClassroomDialog> {
                     controller: _gradeController,
                     decoration: InputDecoration(
                       labelText: 'Grade',
-                      labelStyle: TextStyle(color: AppDesignSystem.textSecondary),
+                      labelStyle: TextStyle(
+                        color: AppDesignSystem.textSecondary,
+                      ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.grey.shade300),

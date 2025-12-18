@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../../models/badge_model.dart';
 import 'badge_animation_queue.dart';
 import '../utils/rank_monitor.dart';
+import 'xp_service.dart';
 
 /// Service to manage badge unlocking and tracking
 /// Reads badge definitions from Firestore /badges collection
@@ -22,7 +23,9 @@ class BadgeService {
 
     try {
       // Load from local JSON file
-      final String jsonString = await rootBundle.loadString('content/badges.json');
+      final String jsonString = await rootBundle.loadString(
+        'content/badges.json',
+      );
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       final List<dynamic> badgesJson = jsonData['badges'] ?? [];
 
@@ -30,7 +33,8 @@ class BadgeService {
           .map((badgeData) {
             try {
               // Convert JSON structure to match BadgeModel
-              final unlockCondition = badgeData['unlockCondition'] as Map<String, dynamic>?;
+              final unlockCondition =
+                  badgeData['unlockCondition'] as Map<String, dynamic>?;
               return BadgeModel(
                 id: badgeData['id'] as String,
                 name: badgeData['name'] as String,
@@ -40,7 +44,10 @@ class BadgeService {
                 xpBonus: badgeData['xpBonus'] as int? ?? 0,
                 rarity: badgeData['rarity'] as String,
                 criteriaType: unlockCondition?['type'] as String? ?? 'manual',
-                criteriaValue: unlockCondition?['value'] ?? unlockCondition?['count'] ?? unlockCondition?['realmId'],
+                criteriaValue:
+                    unlockCondition?['value'] ??
+                    unlockCondition?['count'] ??
+                    unlockCondition?['realmId'],
                 displayOrder: badgeData['displayOrder'] as int? ?? 0,
                 isActive: badgeData['isActive'] as bool? ?? true,
               );
@@ -105,42 +112,60 @@ class BadgeService {
   }) async {
     final List<String> newBadges = [];
     final List<BadgeModel> newBadgeModels = [];
-    
+
     try {
       // Get user data
       final userDoc = await _firestore.collection('users').doc(userId).get();
       if (!userDoc.exists) return newBadges;
-      
+
       final userData = userDoc.data()!;
       final currentBadges = List<String>.from(userData['badges'] ?? []);
       final totalXP = userData['totalXP'] ?? 0;
       final streak = userData['currentStreak'] ?? 0;
       final classroomIds = List<String>.from(userData['classroomIds'] ?? []);
-      final progressSummary = Map<String, dynamic>.from(userData['progressSummary'] ?? {});
+      final progressSummary = Map<String, dynamic>.from(
+        userData['progressSummary'] ?? {},
+      );
 
       // Get all badge definitions
       final allBadges = await getAllBadges();
-      
+
       // Check each badge condition
       for (final badge in allBadges) {
         if (!currentBadges.contains(badge.id)) {
-          if (await _checkBadgeCondition(badge, userId, totalXP, streak, classroomIds, progressSummary)) {
+          if (await _checkBadgeCondition(
+            badge,
+            userId,
+            totalXP,
+            streak,
+            classroomIds,
+            progressSummary,
+          )) {
             newBadges.add(badge.id);
             newBadgeModels.add(badge);
 
-            // Award XP bonus for badge unlock
+            // Award XP bonus for badge unlock (enforce daily cap)
             if (badge.xpBonus > 0) {
-              await _firestore.collection('users').doc(userId).update({
-                'totalXP': FieldValue.increment(badge.xpBonus),
-              });
-              
-              // Check for rank changes after XP update
-              RankMonitor.checkRankChanges(userId);
+              final xpService = XPService();
+              final xpCapResult = await xpService.calculateAwardedXP(
+                userId: userId,
+                earnedXP: badge.xpBonus,
+              );
+              final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+
+              if (xpToAward > 0) {
+                await _firestore.collection('users').doc(userId).update({
+                  'totalXP': FieldValue.increment(xpToAward),
+                });
+
+                // Check for rank changes after XP update
+                RankMonitor.checkRankChanges(userId);
+              }
             }
           }
         }
       }
-      
+
       // Award new badges
       if (newBadges.isNotEmpty) {
         await _firestore.collection('users').doc(userId).update({
@@ -157,7 +182,7 @@ class BadgeService {
               .where('data.badgeId', isEqualTo: badge.id)
               .limit(1)
               .get();
-          
+
           // Only create notification if it doesn't exist
           if (existingNotif.docs.isEmpty) {
             final docRef = _firestore.collection('notifications').doc();
@@ -179,8 +204,6 @@ class BadgeService {
         }
         await batch.commit();
 
-
-
         // Queue badge animations if context provided
         if (context != null && newBadgeModels.isNotEmpty) {
           _animationQueue.queueBadges(newBadgeModels);
@@ -191,7 +214,7 @@ class BadgeService {
     } catch (e) {
       // print('Error checking badges: $e');
     }
-    
+
     return newBadges;
   }
 
@@ -245,7 +268,8 @@ class BadgeService {
       // Quiz badges
       case 'quiz_complete':
         final requiredCount = badge.criteriaValue as int? ?? 1;
-        return _getTotalLevelsCompleted(progressSummary) >= requiredCount; // Any level completion counts as quiz
+        return _getTotalLevelsCompleted(progressSummary) >=
+            requiredCount; // Any level completion counts as quiz
 
       case 'perfect_quiz':
         final requiredCount = badge.criteriaValue as int? ?? 1;
@@ -287,8 +311,10 @@ class BadgeService {
       // Special badges
       case 'early_adopter':
         // Check if user joined within first month of app launch
-        final userCreatedAt = (await _firestore.collection('users').doc(userId).get())
-            .data()?['createdAt'] as Timestamp?;
+        final userCreatedAt =
+            (await _firestore.collection('users').doc(userId).get())
+                    .data()?['createdAt']
+                as Timestamp?;
         if (userCreatedAt == null) return false;
         // This would need actual launch date - using placeholder
         return true; // TODO: Implement proper check with launch date
@@ -306,7 +332,7 @@ class BadgeService {
       case 'weekend_warrior':
         // Check if user has 10+ completions on weekends
         return await _countWeekendCompletions(userId) >= 10;
-      
+
       default:
         print('⚠️ Unknown badge type: $type for badge ${badge.id}');
         return false;
@@ -320,7 +346,8 @@ class BadgeService {
     var realmProgress = progressSummary[realmId] as Map<String, dynamic>?;
     if (realmProgress == null && !realmId.startsWith('realm_')) {
       // Try with realm_ prefix
-      realmProgress = progressSummary['realm_$realmId'] as Map<String, dynamic>?;
+      realmProgress =
+          progressSummary['realm_$realmId'] as Map<String, dynamic>?;
     }
     return realmProgress?['completed'] == true;
   }
@@ -374,7 +401,11 @@ class BadgeService {
     return snapshot.docs.length;
   }
 
-  Future<bool> _checkLeaderboardRank(String userId, String scope, int maxRank) async {
+  Future<bool> _checkLeaderboardRank(
+    String userId,
+    String scope,
+    int maxRank,
+  ) async {
     // This would need to query leaderboard_cache
     // Simplified implementation
     try {
@@ -473,7 +504,7 @@ class BadgeService {
 
       // Get all badge definitions
       final allBadges = await getAllBadges();
-      
+
       // Check which badges already have notifications
       final existingNotifications = await _firestore
           .collection('notifications')

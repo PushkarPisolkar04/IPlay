@@ -15,7 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final BadgeService _badgeService = BadgeService();
-  
+
   List<SearchResult> _results = [];
   bool _isSearching = false;
   String _query = '';
@@ -148,14 +148,16 @@ class _SearchScreenState extends State<SearchScreen> {
     for (final realm in _realms) {
       if (realm['name'].toString().toLowerCase().contains(lowerQuery) ||
           realm['description'].toString().toLowerCase().contains(lowerQuery)) {
-        results.add(SearchResult(
-          type: SearchResultType.realm,
-          id: realm['id'],
-          title: realm['name'],
-          subtitle: realm['description'],
-          icon: realm['icon'],
-          data: realm,
-        ));
+        results.add(
+          SearchResult(
+            type: SearchResultType.realm,
+            id: realm['id'],
+            title: realm['name'],
+            subtitle: realm['description'],
+            icon: realm['icon'],
+            data: realm,
+          ),
+        );
       }
     }
 
@@ -163,14 +165,16 @@ class _SearchScreenState extends State<SearchScreen> {
     for (final game in _games) {
       if (game['name'].toString().toLowerCase().contains(lowerQuery) ||
           game['description'].toString().toLowerCase().contains(lowerQuery)) {
-        results.add(SearchResult(
-          type: SearchResultType.game,
-          id: game['id'],
-          title: game['name'],
-          subtitle: game['description'],
-          icon: game['icon'],
-          data: game,
-        ));
+        results.add(
+          SearchResult(
+            type: SearchResultType.game,
+            id: game['id'],
+            title: game['name'],
+            subtitle: game['description'],
+            icon: game['icon'],
+            data: game,
+          ),
+        );
       }
     }
 
@@ -180,14 +184,16 @@ class _SearchScreenState extends State<SearchScreen> {
       for (final badge in badges) {
         if (badge.name.toLowerCase().contains(lowerQuery) ||
             badge.description.toLowerCase().contains(lowerQuery)) {
-          results.add(SearchResult(
-            type: SearchResultType.badge,
-            id: badge.id,
-            title: badge.name,
-            subtitle: badge.description,
-            icon: badge.icon,
-            data: badge,
-          ));
+          results.add(
+            SearchResult(
+              type: SearchResultType.badge,
+              id: badge.id,
+              title: badge.name,
+              subtitle: badge.description,
+              icon: badge.icon,
+              data: badge,
+            ),
+          );
         }
       }
     } catch (e) {
@@ -204,25 +210,13 @@ class _SearchScreenState extends State<SearchScreen> {
     // Navigate to appropriate screen based on result type
     switch (result.type) {
       case SearchResultType.realm:
-        Navigator.pushNamed(
-          context,
-          '/realm-detail',
-          arguments: result.id,
-        );
+        Navigator.pushNamed(context, '/realm-detail', arguments: result.id);
         break;
       case SearchResultType.level:
-        Navigator.pushNamed(
-          context,
-          '/level-detail',
-          arguments: result.id,
-        );
+        Navigator.pushNamed(context, '/level-detail', arguments: result.id);
         break;
       case SearchResultType.game:
-        Navigator.pushNamed(
-          context,
-          '/game',
-          arguments: result.id,
-        );
+        Navigator.pushNamed(context, '/game', arguments: result.id);
         break;
       case SearchResultType.badge:
         // Show badge detail dialog
@@ -240,10 +234,7 @@ class _SearchScreenState extends State<SearchScreen> {
             Text(badge.icon, style: const TextStyle(fontSize: 32)),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                badge.name,
-                style: const TextStyle(fontSize: 20),
-              ),
+              child: Text(badge.name, style: const TextStyle(fontSize: 20)),
             ),
           ],
         ),
@@ -344,26 +335,16 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
+          Icon(Icons.search, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             'Search for anything',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 20, color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           Text(
             'Realms, levels, games, or badges',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade400,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
           ),
         ],
       ),
@@ -375,26 +356,16 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_off,
-            size: 80,
-            color: Colors.grey.shade300,
-          ),
+          Icon(Icons.search_off, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
             'No results found',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 20, color: Colors.grey.shade600),
           ),
           const SizedBox(height: 8),
           Text(
             'Try a different search term',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade400,
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
           ),
         ],
       ),
@@ -411,17 +382,12 @@ class _SearchScreenState extends State<SearchScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
-          child: Text(
-            result.icon,
-            style: const TextStyle(fontSize: 24),
-          ),
+          child: Text(result.icon, style: const TextStyle(fontSize: 24)),
         ),
       ),
       title: Text(
         result.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
         result.subtitle,
@@ -470,12 +436,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 }
 
-enum SearchResultType {
-  realm,
-  level,
-  game,
-  badge,
-}
+enum SearchResultType { realm, level, game, badge }
 
 class SearchResult {
   final SearchResultType type;

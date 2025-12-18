@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Error handler for game content loading
 /// Provides retry mechanisms and error logging
 class GameErrorHandler {
@@ -18,7 +20,7 @@ class GameErrorHandler {
         if (attempt >= maxAttempts) {
           rethrow;
         }
-        
+
         // Wait before retrying with exponential backoff
         await Future.delayed(delay);
         delay *= 2; // Double the delay for next attempt
@@ -37,10 +39,12 @@ class GameErrorHandler {
   }) {
     final contextStr = context != null ? '[$context]' : '';
     final gameIdStr = gameId != null ? '[Game: $gameId]' : '';
-    
-    print('❌ Game Error $contextStr $gameIdStr: $error');
-    if (stackTrace != null) {
-      print('Stack trace: $stackTrace');
+
+    if (kDebugMode) {
+      print('❌ Game Error $contextStr $gameIdStr: $error');
+      if (stackTrace != null) {
+        print('Stack trace: $stackTrace');
+      }
     }
   }
 }

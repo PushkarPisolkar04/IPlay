@@ -78,8 +78,8 @@ app.*.map.json
 # Firebase sensitive files - DO NOT COMMIT
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
-lib/firebase_options.dart
-.firebaserc
+# Note: lib/firebase_options.dart is needed for Vercel deployment
+# Only exclude if using environment variables instead
 serviceAccountKey.json
 firebase-debug.log
 firestore-debug.log
@@ -135,7 +135,6 @@ test/.test_coverage.dart
 
 # Platform specific
 .fvm/
-pubspec.lock
 
 # Logs
 logs/
@@ -171,3 +170,27 @@ $RECYCLE.BIN/
 *~
 .directory
 .Trash-*
+
+# Deployment specific
+# Vercel
+.vercel
+.vercel_build_output/
+
+# Build outputs
+*.apk
+*.aab
+*.ipa
+*.app
+*.dSYM.zip
+*.dSYM
+
+# Release keys (NEVER COMMIT!)
+*.jks
+*.keystore
+*-key.jks
+*-release-key.*
+key.properties
+
+# Screenshots (add your own to screenshots/ folder)
+# Uncomment if you want to exclude screenshots
+# screenshots/

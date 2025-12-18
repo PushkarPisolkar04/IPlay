@@ -10,7 +10,7 @@ class CleanCard extends StatelessWidget {
   final VoidCallback? onTap;
   final double? borderRadius;
   final Border? border;
-  
+
   const CleanCard({
     super.key,
     required this.child,
@@ -20,24 +20,27 @@ class CleanCard extends StatelessWidget {
     this.borderRadius,
     this.border,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: color ?? AppDesignSystem.backgroundLight,
-        borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
-        boxShadow: AppDesignSystem.shadowMD,
-        border: border ?? Border.all(
-          color: AppDesignSystem.backgroundGrey,
-          width: 1,
+        borderRadius: BorderRadius.circular(
+          borderRadius ?? AppSpacing.cardRadius,
         ),
+        boxShadow: AppDesignSystem.shadowMD,
+        border:
+            border ??
+            Border.all(color: AppDesignSystem.backgroundGrey, width: 1),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
+          borderRadius: BorderRadius.circular(
+            borderRadius ?? AppSpacing.cardRadius,
+          ),
           child: Padding(
             padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
             child: child,
@@ -55,7 +58,7 @@ class ColoredCard extends StatelessWidget {
   final EdgeInsets? padding;
   final VoidCallback? onTap;
   final double? borderRadius;
-  
+
   const ColoredCard({
     super.key,
     required this.child,
@@ -64,20 +67,24 @@ class ColoredCard extends StatelessWidget {
     this.onTap,
     this.borderRadius,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
+        borderRadius: BorderRadius.circular(
+          borderRadius ?? AppSpacing.cardRadius,
+        ),
         boxShadow: AppDesignSystem.shadowMD,
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.cardRadius),
+          borderRadius: BorderRadius.circular(
+            borderRadius ?? AppSpacing.cardRadius,
+          ),
           child: Padding(
             padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
             child: child,
@@ -87,4 +94,3 @@ class ColoredCard extends StatelessWidget {
     );
   }
 }
-

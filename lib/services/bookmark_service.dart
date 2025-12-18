@@ -26,12 +26,12 @@ class BookmarkService {
         .collection('bookmarks')
         .doc(levelId)
         .set({
-      'levelId': levelId,
-      'levelName': levelName,
-      'realmId': realmId,
-      'realmName': realmName,
-      'bookmarkedAt': Timestamp.now(),
-    });
+          'levelId': levelId,
+          'levelName': levelName,
+          'realmId': realmId,
+          'realmName': realmName,
+          'bookmarkedAt': Timestamp.now(),
+        });
   }
 
   /// Remove a level from bookmarks

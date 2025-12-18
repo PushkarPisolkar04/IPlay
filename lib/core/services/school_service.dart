@@ -12,7 +12,10 @@ class SchoolService {
   String _generateSchoolCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     final random = Random();
-    final code = List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
+    final code = List.generate(
+      5,
+      (index) => chars[random.nextInt(chars.length)],
+    ).join();
     return 'SCH-$code';
   }
 
@@ -49,10 +52,7 @@ class SchoolService {
           .set(school.toFirestore());
 
       // Update user document to mark as principal of this school
-      await _firestore
-          .collection('users')
-          .doc(principalId)
-          .update({
+      await _firestore.collection('users').doc(principalId).update({
         'isPrincipal': true,
         'principalOfSchool': school.id,
       });
@@ -66,10 +66,7 @@ class SchoolService {
   /// Get school by ID
   Future<SchoolModel?> getSchool(String schoolId) async {
     try {
-      final doc = await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .get();
+      final doc = await _firestore.collection('schools').doc(schoolId).get();
 
       if (!doc.exists) return null;
 
@@ -133,14 +130,14 @@ class SchoolService {
   }
 
   /// Update school details
-  Future<void> updateSchool(String schoolId, Map<String, dynamic> updates) async {
+  Future<void> updateSchool(
+    String schoolId,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       updates['updatedAt'] = Timestamp.now();
-      
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update(updates);
+
+      await _firestore.collection('schools').doc(schoolId).update(updates);
     } catch (e) {
       throw Exception('Failed to update school: $e');
     }
@@ -149,19 +146,13 @@ class SchoolService {
   /// Add teacher to school
   Future<void> addTeacher(String schoolId, String teacherId) async {
     try {
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update({
+      await _firestore.collection('schools').doc(schoolId).update({
         'teacherIds': FieldValue.arrayUnion([teacherId]),
         'updatedAt': Timestamp.now(),
       });
 
       // Update teacher's user document
-      await _firestore
-          .collection('users')
-          .doc(teacherId)
-          .update({
+      await _firestore.collection('users').doc(teacherId).update({
         'schoolTag': schoolId,
       });
     } catch (e) {
@@ -172,19 +163,13 @@ class SchoolService {
   /// Remove teacher from school
   Future<void> removeTeacher(String schoolId, String teacherId) async {
     try {
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update({
+      await _firestore.collection('schools').doc(schoolId).update({
         'teacherIds': FieldValue.arrayRemove([teacherId]),
         'updatedAt': Timestamp.now(),
       });
 
       // Update teacher's user document
-      await _firestore
-          .collection('users')
-          .doc(teacherId)
-          .update({
+      await _firestore.collection('users').doc(teacherId).update({
         'schoolTag': FieldValue.delete(),
       });
     } catch (e) {
@@ -195,10 +180,7 @@ class SchoolService {
   /// Add classroom to school
   Future<void> addClassroom(String schoolId, String classroomId) async {
     try {
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update({
+      await _firestore.collection('schools').doc(schoolId).update({
         'classroomIds': FieldValue.arrayUnion([classroomId]),
         'updatedAt': Timestamp.now(),
       });
@@ -210,10 +192,7 @@ class SchoolService {
   /// Remove classroom from school
   Future<void> removeClassroom(String schoolId, String classroomId) async {
     try {
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update({
+      await _firestore.collection('schools').doc(schoolId).update({
         'classroomIds': FieldValue.arrayRemove([classroomId]),
         'updatedAt': Timestamp.now(),
       });
@@ -225,10 +204,7 @@ class SchoolService {
   /// Deactivate school (soft delete)
   Future<void> deactivateSchool(String schoolId) async {
     try {
-      await _firestore
-          .collection('schools')
-          .doc(schoolId)
-          .update({
+      await _firestore.collection('schools').doc(schoolId).update({
         'isActive': false,
         'updatedAt': Timestamp.now(),
       });
@@ -247,31 +223,22 @@ class SchoolService {
       final batch = _firestore.batch();
 
       // Update school document
-      batch.update(
-        _firestore.collection('schools').doc(schoolId),
-        {
-          'principalId': newPrincipalId,
-          'updatedAt': Timestamp.now(),
-        },
-      );
+      batch.update(_firestore.collection('schools').doc(schoolId), {
+        'principalId': newPrincipalId,
+        'updatedAt': Timestamp.now(),
+      });
 
       // Update old principal's user document
-      batch.update(
-        _firestore.collection('users').doc(oldPrincipalId),
-        {
-          'isPrincipal': false,
-          'principalOfSchool': FieldValue.delete(),
-        },
-      );
+      batch.update(_firestore.collection('users').doc(oldPrincipalId), {
+        'isPrincipal': false,
+        'principalOfSchool': FieldValue.delete(),
+      });
 
       // Update new principal's user document
-      batch.update(
-        _firestore.collection('users').doc(newPrincipalId),
-        {
-          'isPrincipal': true,
-          'principalOfSchool': schoolId,
-        },
-      );
+      batch.update(_firestore.collection('users').doc(newPrincipalId), {
+        'isPrincipal': true,
+        'principalOfSchool': schoolId,
+      });
 
       await batch.commit();
     } catch (e) {
@@ -294,7 +261,7 @@ class SchoolService {
             .collection('classrooms')
             .doc(classroomId)
             .get();
-        
+
         if (classroom.exists) {
           final studentIds = classroom.data()?['studentIds'] as List?;
           totalStudents += studentIds?.length ?? 0;
@@ -313,4 +280,3 @@ class SchoolService {
     }
   }
 }
-

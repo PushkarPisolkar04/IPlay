@@ -52,7 +52,7 @@ class LevelModel {
       isActive: map['isActive'] ?? true,
     );
   }
-  
+
   // Helper getters for compatibility
   String get description => difficulty;
   String get lessonContent => content;
@@ -60,7 +60,8 @@ class LevelModel {
   int get estimatedMinutes => (content.length / 100).ceil().clamp(5, 30);
   DateTime get createdAt => DateTime.now();
   DateTime get updatedAt => DateTime.now();
-  List<QuizQuestion> get quizQuestions => quiz.map((q) => QuizQuestion.fromMap(q)).toList();
+  List<QuizQuestion> get quizQuestions =>
+      quiz.map((q) => QuizQuestion.fromMap(q)).toList();
 }
 
 class QuizQuestion {
@@ -93,9 +94,8 @@ class QuizQuestion {
       explanation: map['explanation'] ?? '',
     );
   }
-  
+
   // Compatibility getter
   int get correctAnswerIndex => correctAnswer;
   int get timeLimit => 30;
 }
-

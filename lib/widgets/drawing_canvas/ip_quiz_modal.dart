@@ -25,7 +25,8 @@ class _IPQuizModalState extends State<IPQuizModal> {
   bool _showingResult = false;
 
   IPQuestion get _currentQuestion => widget.questions[_currentQuestionIndex];
-  bool get _isLastQuestion => _currentQuestionIndex == widget.questions.length - 1;
+  bool get _isLastQuestion =>
+      _currentQuestionIndex == widget.questions.length - 1;
   bool get _hasAnswered => _answers.containsKey(_currentQuestion.id);
 
   @override
@@ -130,9 +131,12 @@ class _IPQuizModalState extends State<IPQuizModal> {
                 children: [
                   Expanded(
                     child: LinearProgressIndicator(
-                      value: (_currentQuestionIndex + 1) / widget.questions.length,
+                      value:
+                          (_currentQuestionIndex + 1) / widget.questions.length,
                       backgroundColor: Colors.white.withValues(alpha: 0.3),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.white,
+                      ),
                       minHeight: 6,
                     ),
                   ),
@@ -175,12 +179,18 @@ class _IPQuizModalState extends State<IPQuizModal> {
                     decoration: BoxDecoration(
                       color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: Colors.blue.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline, size: 20, color: Colors.blue),
+                        const Icon(
+                          Icons.info_outline,
+                          size: 20,
+                          color: Colors.blue,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -223,9 +233,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Colors.grey[100],
-            border: Border(
-              top: BorderSide(color: Colors.grey[300]!),
-            ),
+            border: Border(top: BorderSide(color: Colors.grey[300]!)),
           ),
           child: Row(
             children: [
@@ -246,7 +254,9 @@ class _IPQuizModalState extends State<IPQuizModal> {
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: Text(_isLastQuestion ? 'Finish Quiz' : 'Next Question'),
+                  child: Text(
+                    _isLastQuestion ? 'Finish Quiz' : 'Next Question',
+                  ),
                 ),
               ),
             ],
@@ -308,7 +318,8 @@ class _IPQuizModalState extends State<IPQuizModal> {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: borderColor?.withValues(alpha: 0.2) ?? Colors.grey[200],
+                  color:
+                      borderColor?.withValues(alpha: 0.2) ?? Colors.grey[200],
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -328,7 +339,9 @@ class _IPQuizModalState extends State<IPQuizModal> {
                   style: TextStyle(
                     fontSize: 15,
                     color: borderColor ?? Colors.black,
-                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    fontWeight: isSelected
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
                 ),
               ),
@@ -390,10 +403,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
           const SizedBox(height: 8),
           Text(
             _currentQuestion.explanation,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[800],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[800]),
           ),
         ],
       ),
@@ -430,39 +440,32 @@ class _IPQuizModalState extends State<IPQuizModal> {
           const SizedBox(height: 8),
           Text(
             content.content,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[700],
-            ),
+            style: TextStyle(fontSize: 13, color: Colors.grey[700]),
           ),
           if (content.examples != null && content.examples!.isNotEmpty) ...[
             const SizedBox(height: 12),
             const Text(
               'Examples:',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
-            ...content.examples!.map((example) => Padding(
-                  padding: const EdgeInsets.only(left: 12, top: 4),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('• ', style: TextStyle(fontSize: 13)),
-                      Expanded(
-                        child: Text(
-                          example,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey[700],
-                          ),
-                        ),
+            ...content.examples!.map(
+              (example) => Padding(
+                padding: const EdgeInsets.only(left: 12, top: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('• ', style: TextStyle(fontSize: 13)),
+                    Expanded(
+                      child: Text(
+                        example,
+                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ],
       ),
@@ -531,10 +534,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
                       const SizedBox(height: 8),
                       Text(
                         '$percentage% Correct',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey[700],
-                        ),
+                        style: TextStyle(fontSize: 20, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -555,11 +555,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
                   Icons.check_circle,
                 ),
                 const SizedBox(height: 12),
-                _buildStatRow(
-                  'XP Earned',
-                  '+$_score XP',
-                  Icons.star,
-                ),
+                _buildStatRow('XP Earned', '+$_score XP', Icons.star),
 
                 const SizedBox(height: 24),
 
@@ -574,10 +570,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
                     passed
                         ? 'You have a good understanding of IP filing! Your design is ready for protection.'
                         : 'Review the educational content to improve your understanding of IP filing.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -621,12 +614,7 @@ class _IPQuizModalState extends State<IPQuizModal> {
         children: [
           Icon(icon, color: Colors.teal),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ),
+          Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
           Text(
             value,
             style: const TextStyle(

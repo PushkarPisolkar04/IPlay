@@ -6,7 +6,7 @@ import '../../widgets/loading_skeleton.dart';
 
 class SchoolSettingsScreen extends StatefulWidget {
   final String schoolId;
-  
+
   const SchoolSettingsScreen({super.key, required this.schoolId});
 
   @override
@@ -18,7 +18,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _cityController = TextEditingController();
-  
+
   bool _isLoading = true;
   bool _isSaving = false;
   String? _state;
@@ -74,11 +74,11 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
           .collection('schools')
           .doc(widget.schoolId)
           .update({
-        // Note: name, city, and state are not updatable to prevent data inconsistencies
-        'description': _descriptionController.text.trim(),
-        'isActive': _isActive,
-        'updatedAt': Timestamp.now(),
-      });
+            // Note: name, city, and state are not updatable to prevent data inconsistencies
+            'description': _descriptionController.text.trim(),
+            'isActive': _isActive,
+            'updatedAt': Timestamp.now(),
+          });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -91,10 +91,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -132,7 +129,11 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ),
@@ -171,13 +172,14 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // School Code (Read-only)
                               CleanCard(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'School Code',
@@ -186,61 +188,67 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    _schoolCode ?? '',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: const Text(
-                                      'Read Only',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Share this code with teachers to join your school',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.grey[600],
-                              ),
-                            ),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              _schoolCode ?? '',
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 2,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              child: const Text(
+                                                'Read Only',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Share this code with teachers to join your school',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // School Name
                               CleanCard(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'School Name',
@@ -251,29 +259,35 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                       ),
                                       const SizedBox(height: 8),
                                       TextFormField(
-                              controller: _nameController,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                hintText: 'Enter school name',
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
+                                        controller: _nameController,
+                                        enabled: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter school name',
+                                          filled: true,
+                                          fillColor: Colors.grey[200],
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          suffixIcon: const Icon(
+                                            Icons.lock,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty) {
+                                            return 'Please enter school name';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                suffixIcon: const Icon(Icons.lock, color: Colors.grey),
                               ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Please enter school name';
-                                }
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                               const SizedBox(height: 20),
 
                               // Location Section
@@ -286,80 +300,93 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               CleanCard(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       TextFormField(
-                              controller: _cityController,
-                              enabled: false,
-                              decoration: InputDecoration(
-                                labelText: 'City',
-                                hintText: 'Enter city',
-                                filled: true,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                suffixIcon: const Icon(Icons.lock, color: Colors.grey),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return 'Please enter city';
-                                }
-                                        return null;
-                                      },
-                                    ),
+                                        controller: _cityController,
+                                        enabled: false,
+                                        decoration: InputDecoration(
+                                          labelText: 'City',
+                                          hintText: 'Enter city',
+                                          filled: true,
+                                          fillColor: Colors.grey[200],
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          suffixIcon: const Icon(
+                                            Icons.lock,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null ||
+                                              value.trim().isEmpty) {
+                                            return 'Please enter city';
+                                          }
+                                          return null;
+                                        },
+                                      ),
                                       const SizedBox(height: 12),
                                       Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'State',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'State',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  _state ?? '',
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              child: const Text(
+                                                'Read Only',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Text(
-                                        _state ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: const Text(
-                                      'Read Only',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                      ],
-                                    ),
-                                  ),
                                     ],
                                   ),
                                 ),
@@ -376,12 +403,13 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               CleanCard(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Description',
@@ -392,22 +420,25 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                       ),
                                       const SizedBox(height: 8),
                                       TextFormField(
-                              controller: _descriptionController,
-                              decoration: InputDecoration(
-                                hintText: 'Brief description about your school...',
-                                filled: true,
-                                fillColor: Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
+                                        controller: _descriptionController,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              'Brief description about your school...',
+                                          filled: true,
+                                          fillColor: Colors.grey[100],
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                        ),
+                                        maxLines: 4,
                                       ),
-                                      maxLines: 4,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
                               const SizedBox(height: 20),
 
                               // Status Section
@@ -420,16 +451,18 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               CleanCard(
                                 child: Padding(
                                   padding: const EdgeInsets.all(16),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             const Text(
                                               'School Status',
@@ -440,7 +473,9 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                             ),
                                             const SizedBox(height: 4),
                                             Text(
-                                              _isActive == true ? 'Active and accepting new students' : 'Inactive',
+                                              _isActive == true
+                                                  ? 'Active and accepting new students'
+                                                  : 'Inactive',
                                               style: TextStyle(
                                                 fontSize: 13,
                                                 color: Colors.grey[600],
@@ -454,7 +489,8 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                         onChanged: (value) {
                                           setState(() => _isActive = value);
                                         },
-                                        activeColor: AppDesignSystem.primaryIndigo,
+                                        activeColor:
+                                            AppDesignSystem.primaryIndigo,
                                       ),
                                     ],
                                   ),
@@ -466,9 +502,12 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                               ElevatedButton(
                                 onPressed: _isSaving ? null : _saveSettings,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppDesignSystem.primaryIndigo,
+                                  backgroundColor:
+                                      AppDesignSystem.primaryIndigo,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -480,7 +519,10 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                         width: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : const Text(
@@ -491,7 +533,7 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                         ),
                                       ),
                               ),
-                              
+
                               const SizedBox(height: 40),
                             ],
                           ),
@@ -505,4 +547,3 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
     );
   }
 }
-

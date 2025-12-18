@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../core/services/crash_recovery_service.dart';
-import '../core/design/app_design_system.dart';
 import '../core/constants/app_constants.dart';
 
 /// Button widget for reporting problems
@@ -105,7 +105,8 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
               controller: _descriptionController,
               decoration: const InputDecoration(
                 labelText: 'Describe what happened',
-                hintText: 'What were you trying to do when this error occurred?',
+                hintText:
+                    'What were you trying to do when this error occurred?',
                 border: OutlineInputBorder(),
               ),
               maxLines: 4,
@@ -162,7 +163,7 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
       // Collect device and app information
       final deviceInfo = _includeDeviceInfo ? await _getDeviceInfo() : '';
       final errorDetails = _includeErrorDetails ? _getErrorDetails() : '';
-      
+
       // Build email content
       final emailBody = _buildEmailBody(
         description: _descriptionController.text,
@@ -177,8 +178,10 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
 
       if (success) {
         // Log to Crashlytics
-        await CrashRecoveryService().log('User reported problem: ${_descriptionController.text}');
-        
+        await CrashRecoveryService().log(
+          'User reported problem: ${_descriptionController.text}',
+        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Thank you! Your report has been sent.'),
@@ -189,12 +192,14 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
       } else {
         // Copy to clipboard as fallback
         await _copyToClipboard(emailBody);
-        
+
         if (!mounted) return;
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Report copied to clipboard. Please email it to support@iplay.com'),
+            content: Text(
+              'Report copied to clipboard. Please email it to support@iplay.com',
+            ),
             duration: Duration(seconds: 5),
           ),
         );
@@ -202,7 +207,7 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
       }
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error sending report: $e'),
@@ -220,13 +225,14 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
     try {
       final deviceInfo = DeviceInfoPlugin();
       final packageInfo = await PackageInfo.fromPlatform();
-      
+
       String info = '';
-      
+
       // App info
-      info += 'App Version: ${packageInfo.version} (${packageInfo.buildNumber})\n';
+      info +=
+          'App Version: ${packageInfo.version} (${packageInfo.buildNumber})\n';
       info += 'Package: ${packageInfo.packageName}\n\n';
-      
+
       // Platform-specific device info
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
@@ -239,7 +245,7 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
         info += 'Device: ${iosInfo.model}\n';
         info += 'Name: ${iosInfo.name}\n';
       }
-      
+
       return info;
     } catch (e) {
       return 'Unable to collect device info: $e';
@@ -248,19 +254,19 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
 
   String _getErrorDetails() {
     String details = '';
-    
+
     if (widget.errorContext != null) {
       details += 'Context: ${widget.errorContext}\n\n';
     }
-    
+
     if (widget.errorMessage != null) {
       details += 'Error Message:\n${widget.errorMessage}\n\n';
     }
-    
+
     if (widget.stackTrace != null) {
       details += 'Stack Trace:\n${widget.stackTrace.toString()}\n';
     }
-    
+
     return details;
   }
 
@@ -270,31 +276,31 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
     required String errorDetails,
   }) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('IPlay Problem Report');
     buffer.writeln('=' * 50);
     buffer.writeln();
-    
+
     if (description.isNotEmpty) {
       buffer.writeln('User Description:');
       buffer.writeln(description);
       buffer.writeln();
     }
-    
+
     if (deviceInfo.isNotEmpty) {
       buffer.writeln('Device Information:');
       buffer.writeln(deviceInfo);
       buffer.writeln();
     }
-    
+
     if (errorDetails.isNotEmpty) {
       buffer.writeln('Error Details:');
       buffer.writeln(errorDetails);
       buffer.writeln();
     }
-    
+
     buffer.writeln('Timestamp: ${DateTime.now().toIso8601String()}');
-    
+
     return buffer.toString();
   }
 
@@ -314,14 +320,17 @@ class _ReportProblemDialogState extends State<ReportProblemDialog> {
       }
       return false;
     } catch (e) {
-      // print('Error launching email: $e');
+      if (kDebugMode) print('Error launching email: $e');
       return false;
     }
   }
 
   String _encodeQueryParameters(Map<String, String> params) {
     return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
         .join('&');
   }
 
@@ -335,11 +344,7 @@ class CompactReportButton extends StatelessWidget {
   final String? errorMessage;
   final String? errorContext;
 
-  const CompactReportButton({
-    super.key,
-    this.errorMessage,
-    this.errorContext,
-  });
+  const CompactReportButton({super.key, this.errorMessage, this.errorContext});
 
   @override
   Widget build(BuildContext context) {

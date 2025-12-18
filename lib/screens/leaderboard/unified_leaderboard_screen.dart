@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
-import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/loading_skeleton.dart';
 
@@ -12,14 +11,15 @@ class UnifiedLeaderboardScreen extends StatefulWidget {
   const UnifiedLeaderboardScreen({super.key});
 
   @override
-  State<UnifiedLeaderboardScreen> createState() => _UnifiedLeaderboardScreenState();
+  State<UnifiedLeaderboardScreen> createState() =>
+      _UnifiedLeaderboardScreenState();
 }
 
-class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen> 
+class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isLoading = true;
-  
+
   // User info
   String? _currentUserId;
   String? _userRole;
@@ -28,7 +28,7 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   String? _userSchoolId;
   String? _userState;
   List<String> _teacherClassroomIds = [];
-  
+
   // Data
   List<Map<String, dynamic>> _students = [];
   List<String> _tabs = [];
@@ -54,44 +54,46 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
           .collection('users')
           .doc(_currentUserId)
           .get();
-      
+
       if (userDoc.exists) {
         final userData = userDoc.data()!;
         _userRole = userData['role'];
         _isPrincipal = userData['isPrincipal'] ?? false;
         _userState = userData['state'];
         _userSchoolId = userData['schoolId'];
-        
+
         // Get user's classroom(s)
         final classroomIds = userData['classroomIds'] as List?;
         if (classroomIds != null && classroomIds.isNotEmpty) {
           _userClassroomId = classroomIds.first;
-          
+
           // If student doesn't have schoolId, get it from their classroom
           if (_userSchoolId == null && _userRole == 'student') {
             final classroomDoc = await FirebaseFirestore.instance
                 .collection('classrooms')
                 .doc(_userClassroomId)
                 .get();
-            
+
             if (classroomDoc.exists) {
               _userSchoolId = classroomDoc.data()?['schoolId'];
             }
           }
         }
-        
+
         // For teachers, get all their classrooms
         if (_userRole == 'teacher') {
           final classroomsSnapshot = await FirebaseFirestore.instance
               .collection('classrooms')
               .where('teacherId', isEqualTo: _currentUserId)
               .get();
-          _teacherClassroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
+          _teacherClassroomIds = classroomsSnapshot.docs
+              .map((doc) => doc.id)
+              .toList();
         }
-        
+
         // Determine tabs based on role
         _determineTabs();
-        
+
         // Initialize tab controller
         _tabController = TabController(length: _tabs.length, vsync: this);
         _tabController.addListener(() {
@@ -99,11 +101,11 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
             _loadLeaderboardData();
           }
         });
-        
+
         // Load initial data
         await _loadLeaderboardData();
       }
-      
+
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -117,7 +119,7 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
 
   void _determineTabs() {
     _tabs = [];
-    
+
     if (_userRole == 'student') {
       // STUDENT: Show classroom, school, state, national
       if (_userClassroomId != null) _tabs.add('Classroom');
@@ -144,14 +146,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
 
   Future<void> _loadLeaderboardData() async {
     if (_tabs.isEmpty || !mounted) return;
-    
+
     if (mounted) {
       setState(() => _isLoading = true);
     }
-    
+
     try {
       final currentTab = _tabs[_tabController.index];
-      
+
       // Route to appropriate loader based on tab and role
       if (currentTab == 'Classroom' || currentTab == 'My Classroom') {
         await _loadClassroomLeaderboard();
@@ -164,7 +166,7 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
       } else if (currentTab == 'National') {
         await _loadNationalLeaderboard();
       }
-      
+
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -177,127 +179,137 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   }
 
   Future<void> _loadClassroomLeaderboard() async {
-    final classroomId = _teacherClassroomIds.isNotEmpty 
-        ? _teacherClassroomIds.first 
+    final classroomId = _teacherClassroomIds.isNotEmpty
+        ? _teacherClassroomIds.first
         : _userClassroomId;
-    
+
     if (classroomId == null) return;
-    
+
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('classroomIds', arrayContains: classroomId)
         .where('role', isEqualTo: 'student')
         .get();
-    
+
     // Filter out deleted users and sort by totalXP in descending order
     final studentsList = studentsSnapshot.docs
         .where((doc) => doc.data()['isDeleted'] != true)
-        .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        }).toList();
-    
-    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
-    
+        .map((doc) => {'id': doc.id, ...doc.data()})
+        .toList();
+
+    studentsList.sort(
+      (a, b) =>
+          ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num),
+    );
+
     _students = studentsList.take(100).toList();
   }
 
   Future<void> _loadTeacherAllStudents() async {
     if (_teacherClassroomIds.isEmpty) return;
-    
+
     // Get all students from teacher's classrooms
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'student')
         .get();
-    
+
     // Filter students who are in teacher's classrooms, not deleted, and sort by XP
     final studentsList = studentsSnapshot.docs
         .where((doc) {
           final data = doc.data();
           final isDeleted = data['isDeleted'] == true;
           if (isDeleted) return false;
-          
+
           final studentClassrooms = data['classroomIds'] as List?;
-          return studentClassrooms?.any((id) => _teacherClassroomIds.contains(id)) ?? false;
+          return studentClassrooms?.any(
+                (id) => _teacherClassroomIds.contains(id),
+              ) ??
+              false;
         })
-        .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        })
+        .map((doc) => {'id': doc.id, ...doc.data()})
         .toList();
-    
-    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
-    
+
+    studentsList.sort(
+      (a, b) =>
+          ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num),
+    );
+
     _students = studentsList.take(200).toList();
   }
 
   Future<void> _loadSchoolLeaderboard() async {
     if (_userSchoolId == null) return;
-    
+
     // First, get all classrooms in this school
     final classroomsSnapshot = await FirebaseFirestore.instance
         .collection('classrooms')
         .where('schoolId', isEqualTo: _userSchoolId)
         .get();
-    
-    final schoolClassroomIds = classroomsSnapshot.docs.map((doc) => doc.id).toList();
-    
+
+    final schoolClassroomIds = classroomsSnapshot.docs
+        .map((doc) => doc.id)
+        .toList();
+
     if (schoolClassroomIds.isEmpty) {
       _students = [];
       return;
     }
-    
+
     // Get all students
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'student')
         .get();
-    
+
     // Filter students who are in school classrooms or have schoolId, not deleted, and sort by XP
     final studentsList = studentsSnapshot.docs
         .where((doc) {
           final data = doc.data();
           final isDeleted = data['isDeleted'] == true;
           if (isDeleted) return false;
-          
+
           // Check if student has schoolId directly
           if (data['schoolId'] == _userSchoolId) return true;
-          
+
           // Check if student is in any classroom of this school
           final studentClassrooms = data['classroomIds'] as List?;
-          return studentClassrooms?.any((id) => schoolClassroomIds.contains(id)) ?? false;
+          return studentClassrooms?.any(
+                (id) => schoolClassroomIds.contains(id),
+              ) ??
+              false;
         })
-        .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        })
+        .map((doc) => {'id': doc.id, ...doc.data()})
         .toList();
-    
-    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
-    
+
+    studentsList.sort(
+      (a, b) =>
+          ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num),
+    );
+
     _students = studentsList.take(100).toList();
   }
 
   Future<void> _loadStateLeaderboard() async {
     if (_userState == null) return;
-    
+
     final studentsSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('state', isEqualTo: _userState)
         .where('role', isEqualTo: 'student')
         .get();
-    
+
     // Filter out deleted users and sort by totalXP in descending order
     final studentsList = studentsSnapshot.docs
         .where((doc) => doc.data()['isDeleted'] != true)
-        .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        }).toList();
-    
-    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
-    
+        .map((doc) => {'id': doc.id, ...doc.data()})
+        .toList();
+
+    studentsList.sort(
+      (a, b) =>
+          ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num),
+    );
+
     _students = studentsList.take(100).toList();
   }
 
@@ -306,17 +318,18 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
         .collection('users')
         .where('role', isEqualTo: 'student')
         .get();
-    
+
     // Filter out deleted users and sort by totalXP in descending order
     final studentsList = studentsSnapshot.docs
         .where((doc) => doc.data()['isDeleted'] != true)
-        .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        }).toList();
-    
-    studentsList.sort((a, b) => ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num));
-    
+        .map((doc) => {'id': doc.id, ...doc.data()})
+        .toList();
+
+    studentsList.sort(
+      (a, b) =>
+          ((b['totalXP'] ?? 0) as num).compareTo((a['totalXP'] ?? 0) as num),
+    );
+
     _students = studentsList.take(100).toList();
   }
 
@@ -342,13 +355,19 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 12,
+                    ),
                     child: Row(
                       children: [
                         // Show back button only if this screen was pushed (not in bottom nav)
                         if (ModalRoute.of(context)?.canPop ?? false)
                           IconButton(
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
                             onPressed: () => Navigator.pop(context),
                           )
                         else
@@ -381,18 +400,19 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                 ],
               ),
             ),
-            
+
             // Body
             Expanded(
-              child:
-              _isLoading
+              child: _isLoading
                   ? const ListSkeleton(itemCount: 5)
                   : _tabs.length > 1
-                      ? TabBarView(
-                          controller: _tabController,
-                          children: _tabs.map((_) => _buildLeaderboardList()).toList(),
-                        )
-                      : _buildLeaderboardList(),
+                  ? TabBarView(
+                      controller: _tabController,
+                      children: _tabs
+                          .map((_) => _buildLeaderboardList())
+                          .toList(),
+                    )
+                  : _buildLeaderboardList(),
             ),
           ],
         ),
@@ -412,16 +432,24 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.emoji_events_outlined, size: 64, color: AppDesignSystem.textTertiary),
+                    Icon(
+                      Icons.emoji_events_outlined,
+                      size: 64,
+                      color: AppDesignSystem.textTertiary,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       'No students found',
-                      style: AppDesignSystem.h3.copyWith(color: AppDesignSystem.textSecondary),
+                      style: AppDesignSystem.h3.copyWith(
+                        color: AppDesignSystem.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Pull down to refresh',
-                      style: AppDesignSystem.bodySmall.copyWith(color: AppDesignSystem.textTertiary),
+                      style: AppDesignSystem.bodySmall.copyWith(
+                        color: AppDesignSystem.textTertiary,
+                      ),
                     ),
                   ],
                 ),
@@ -441,17 +469,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
           final student = _students[index];
           final rank = index + 1;
           final isCurrentUser = student['id'] == _currentUserId;
-          
+
           return Container(
             margin: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
               gradient: isCurrentUser
                   ? AppDesignSystem.gradientSuccess
                   : LinearGradient(
-                      colors: [
-                        Colors.white,
-                        AppDesignSystem.backgroundLight,
-                      ],
+                      colors: [Colors.white, AppDesignSystem.backgroundLight],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -510,7 +535,7 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  
+
                   // Avatar
                   Container(
                     decoration: BoxDecoration(
@@ -529,7 +554,7 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                     ),
                   ),
                   const SizedBox(width: 8),
-                  
+
                   // Name and details
                   Expanded(
                     child: Column(
@@ -540,7 +565,9 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: isCurrentUser ? Colors.white : AppDesignSystem.textPrimary,
+                            color: isCurrentUser
+                                ? Colors.white
+                                : AppDesignSystem.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -560,11 +587,14 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                       ],
                     ),
                   ),
-                  
+
                   // You badge
                   if (isCurrentUser) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(10),
@@ -580,10 +610,13 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                     ),
                     const SizedBox(width: 8),
                   ],
-                  
+
                   // XP
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: isCurrentUser
                           ? Colors.white.withValues(alpha: 0.25)
@@ -606,7 +639,9 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
-                            color: isCurrentUser ? Colors.white : AppDesignSystem.primaryAmber,
+                            color: isCurrentUser
+                                ? Colors.white
+                                : AppDesignSystem.primaryAmber,
                           ),
                         ),
                       ],
@@ -624,13 +659,13 @@ class _UnifiedLeaderboardScreenState extends State<UnifiedLeaderboardScreen>
   String _formatXP(int xp) {
     if (xp >= 1000000) {
       final value = xp / 1000000;
-      return value >= 10 
-          ? '${value.toStringAsFixed(0)}M' 
+      return value >= 10
+          ? '${value.toStringAsFixed(0)}M'
           : '${value.toStringAsFixed(1)}M';
     } else if (xp >= 1000) {
       final value = xp / 1000;
-      return value >= 10 
-          ? '${value.toStringAsFixed(0)}K' 
+      return value >= 10
+          ? '${value.toStringAsFixed(0)}K'
           : '${value.toStringAsFixed(1)}K';
     }
     return xp.toString();

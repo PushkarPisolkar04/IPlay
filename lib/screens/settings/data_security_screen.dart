@@ -34,7 +34,11 @@ class DataSecurityScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
@@ -59,132 +63,171 @@ class DataSecurityScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CleanCard(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.shield, color: AppDesignSystem.primaryIndigo, size: 32),
-                        SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'How We Protect Your Data',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: AppDesignSystem.textPrimary,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(
+                                  Icons.shield,
+                                  color: AppDesignSystem.primaryIndigo,
+                                  size: 32,
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'How We Protect Your Data',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppDesignSystem.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    
-                    _buildSection(
-                      'Data Encryption',
-                      'All data transmitted between your device and our servers is encrypted using industry-standard SSL/TLS protocols.',
-                      Icons.lock,
-                      const Color(0xFF10B981),
-                    ),
-                    
-                    _buildSection(
-                      'Secure Storage',
-                      'Your data is stored on Google Firebase servers with multiple layers of security and automatic backups.',
-                      Icons.cloud_done,
-                      const Color(0xFF3B82F6),
-                    ),
-                    
-                    _buildSection(
-                      'Authentication',
-                      'We use Firebase Authentication to securely manage your login credentials with email verification and secure password storage.',
-                      Icons.verified_user,
-                      const Color(0xFF8B5CF6),
-                    ),
-                    
-                    _buildSection(
-                      'Access Control',
-                      'Your personal data is only accessible to you and authorized school administrators. Teachers can only see data of students in their classrooms.',
-                      Icons.admin_panel_settings,
-                      const Color(0xFFF59E0B),
-                    ),
-                    
-                    _buildSection(
-                      'Data Minimization',
-                      'We only collect the minimum data necessary to provide our educational services.',
-                      Icons.minimize,
-                      const Color(0xFF06B6D4),
-                    ),
-                    
-                    _buildSection(
-                      'Regular Audits',
-                      'We regularly review and update our security practices to protect against new threats.',
-                      Icons.security,
-                      const Color(0xFFEC4899),
-                    ),
-                    
-                    const SizedBox(height: 24),
-                    const Text(
-                      'What Data We Collect',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppDesignSystem.primaryIndigo,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    _buildDataItem('Account Information', 'Name, email, state'),
-                    _buildDataItem('Profile Data', 'Display name, avatar, preferences'),
-                    _buildDataItem('Progress Data', 'Scores, achievements, completed levels'),
-                    _buildDataItem('School Data', 'School affiliation, classroom membership'),
-                    _buildDataItem('Usage Data', 'App activity, last login date'),
-                    
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Your Rights',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppDesignSystem.primaryIndigo,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    _buildRightItem('Access Your Data', 'View all data we have about you'),
-                    _buildRightItem('Download Your Data', 'Export your progress and achievements'),
-                    _buildRightItem('Update Your Data', 'Correct or update your information'),
-                    _buildRightItem('Delete Your Data', 'Permanently remove your account'),
-                    
-                    const SizedBox(height: 24),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3)),
-                      ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.info_outline, color: AppDesignSystem.primaryIndigo),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'If you have any questions about data security, please contact us at support@iplay.example.com',
+                            const SizedBox(height: 24),
+
+                            _buildSection(
+                              'Data Encryption',
+                              'All data transmitted between your device and our servers is encrypted using industry-standard SSL/TLS protocols.',
+                              Icons.lock,
+                              const Color(0xFF10B981),
+                            ),
+
+                            _buildSection(
+                              'Secure Storage',
+                              'Your data is stored on Google Firebase servers with multiple layers of security and automatic backups.',
+                              Icons.cloud_done,
+                              const Color(0xFF3B82F6),
+                            ),
+
+                            _buildSection(
+                              'Authentication',
+                              'We use Firebase Authentication to securely manage your login credentials with email verification and secure password storage.',
+                              Icons.verified_user,
+                              const Color(0xFF8B5CF6),
+                            ),
+
+                            _buildSection(
+                              'Access Control',
+                              'Your personal data is only accessible to you and authorized school administrators. Teachers can only see data of students in their classrooms.',
+                              Icons.admin_panel_settings,
+                              const Color(0xFFF59E0B),
+                            ),
+
+                            _buildSection(
+                              'Data Minimization',
+                              'We only collect the minimum data necessary to provide our educational services.',
+                              Icons.minimize,
+                              const Color(0xFF06B6D4),
+                            ),
+
+                            _buildSection(
+                              'Regular Audits',
+                              'We regularly review and update our security practices to protect against new threats.',
+                              Icons.security,
+                              const Color(0xFFEC4899),
+                            ),
+
+                            const SizedBox(height: 24),
+                            const Text(
+                              'What Data We Collect',
                               style: TextStyle(
-                                fontSize: 14,
-                                color: AppDesignSystem.textPrimary,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppDesignSystem.primaryIndigo,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 16),
+
+                            _buildDataItem(
+                              'Account Information',
+                              'Name, email, state',
+                            ),
+                            _buildDataItem(
+                              'Profile Data',
+                              'Display name, avatar, preferences',
+                            ),
+                            _buildDataItem(
+                              'Progress Data',
+                              'Scores, achievements, completed levels',
+                            ),
+                            _buildDataItem(
+                              'School Data',
+                              'School affiliation, classroom membership',
+                            ),
+                            _buildDataItem(
+                              'Usage Data',
+                              'App activity, last login date',
+                            ),
+
+                            const SizedBox(height: 24),
+                            const Text(
+                              'Your Rights',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppDesignSystem.primaryIndigo,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            _buildRightItem(
+                              'Access Your Data',
+                              'View all data we have about you',
+                            ),
+                            _buildRightItem(
+                              'Download Your Data',
+                              'Export your progress and achievements',
+                            ),
+                            _buildRightItem(
+                              'Update Your Data',
+                              'Correct or update your information',
+                            ),
+                            _buildRightItem(
+                              'Delete Your Data',
+                              'Permanently remove your account',
+                            ),
+
+                            const SizedBox(height: 24),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: AppDesignSystem.primaryIndigo.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: AppDesignSystem.primaryIndigo
+                                      .withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: const Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: AppDesignSystem.primaryIndigo,
+                                  ),
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      'If you have any questions about data security, please contact us at support@iplay.example.com',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppDesignSystem.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
                     const SizedBox(height: AppSpacing.xl),
                   ],
                 ),
@@ -196,7 +239,12 @@ class DataSecurityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, String content, IconData icon, Color color) {
+  Widget _buildSection(
+    String title,
+    String content,
+    IconData icon,
+    Color color,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20),
       child: Row(
@@ -245,7 +293,11 @@ class DataSecurityScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: AppDesignSystem.success, size: 20),
+          const Icon(
+            Icons.check_circle,
+            color: AppDesignSystem.success,
+            size: 20,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -278,7 +330,11 @@ class DataSecurityScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const Icon(Icons.arrow_right, color: AppDesignSystem.primaryIndigo, size: 24),
+          const Icon(
+            Icons.arrow_right,
+            color: AppDesignSystem.primaryIndigo,
+            size: 24,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -306,4 +362,3 @@ class DataSecurityScreen extends StatelessWidget {
     );
   }
 }
-

@@ -12,7 +12,7 @@ class TopBarWithAvatar extends StatelessWidget {
   final VoidCallback? onAvatarTap;
   final bool showNotificationBell;
   final bool showMessages;
-  
+
   const TopBarWithAvatar({
     super.key,
     this.avatarUrl,
@@ -22,7 +22,7 @@ class TopBarWithAvatar extends StatelessWidget {
     this.showNotificationBell = true,
     this.showMessages = true,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,10 +30,7 @@ class TopBarWithAvatar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          if (showMessages) ...[
-            const MessagesIcon(),
-            const SizedBox(width: 8),
-          ],
+          if (showMessages) ...[const MessagesIcon(), const SizedBox(width: 8)],
           if (showNotificationBell) ...[
             const NotificationBellIcon(),
             const SizedBox(width: 8),
@@ -51,4 +48,3 @@ class TopBarWithAvatar extends StatelessWidget {
     );
   }
 }
-

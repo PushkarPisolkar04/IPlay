@@ -71,7 +71,9 @@ class DetectiveCase {
     if (id.isEmpty) throw ArgumentError('Case id cannot be empty');
     if (caseNumber.isEmpty) throw ArgumentError('Case number cannot be empty');
     if (clues.isEmpty) throw ArgumentError('Clues cannot be empty');
-    if (suspects.length < 2) throw ArgumentError('Must have at least 2 suspects');
+    if (suspects.length < 2) {
+      throw ArgumentError('Must have at least 2 suspects');
+    }
     if (correctIndex < 0 || correctIndex >= suspects.length) {
       throw ArgumentError('Correct index out of range');
     }
@@ -81,7 +83,7 @@ class DetectiveCase {
   /// Calculate points based on clues revealed
   int calculatePoints(int cluesRevealed) {
     if (cluesRevealed <= 0) return points;
-    
+
     // Bonus for solving with fewer clues
     final bonusMultiplier = (clues.length - cluesRevealed + 1) / clues.length;
     return (points * bonusMultiplier).round().clamp(points ~/ 2, points);
@@ -97,7 +99,9 @@ class DetectiveCase {
       clues: List<String>.from(json['clues'] as List),
       suspects: List<String>.from(json['suspects'] as List),
       correctIndex: json['correctIndex'] as int,
-      patentInfo: PatentInfo.fromJson(json['patentInfo'] as Map<String, dynamic>),
+      patentInfo: PatentInfo.fromJson(
+        json['patentInfo'] as Map<String, dynamic>,
+      ),
       explanation: json['explanation'] as String,
     );
   }
@@ -123,6 +127,7 @@ class PatentDetectiveGame extends GameModel {
   final List<DetectiveCase> cases;
   final int casesPerGame;
   final bool randomSelection;
+  @override
   final bool allowRetry;
 
   PatentDetectiveGame({
@@ -198,7 +203,9 @@ class PatentDetectiveGame extends GameModel {
       xpReward: json['xpReward'] as int,
       estimatedMinutes: json['estimatedMinutes'] as int,
       rewards: GameRewards.fromJson(json['rewards'] as Map<String, dynamic>),
-      leaderboard: LeaderboardConfig.fromJson(json['leaderboard'] as Map<String, dynamic>),
+      leaderboard: LeaderboardConfig.fromJson(
+        json['leaderboard'] as Map<String, dynamic>,
+      ),
       version: json['version'] as String,
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       cases: (json['cases'] as List)

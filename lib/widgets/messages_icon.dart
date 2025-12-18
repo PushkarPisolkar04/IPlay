@@ -35,7 +35,8 @@ class MessagesIcon extends StatelessWidget {
         if (snapshot.hasData) {
           for (var doc in snapshot.data!.docs) {
             final data = doc.data() as Map<String, dynamic>;
-            final unreadMap = data['unreadCount'] as Map<String, dynamic>? ?? {};
+            final unreadMap =
+                data['unreadCount'] as Map<String, dynamic>? ?? {};
             unreadCount += (unreadMap[currentUserId] as int? ?? 0);
           }
         }
@@ -61,10 +62,7 @@ class MessagesIcon extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppDesignSystem.primaryIndigo,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 2,
-                    ),
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
                   constraints: const BoxConstraints(
                     minWidth: 18,

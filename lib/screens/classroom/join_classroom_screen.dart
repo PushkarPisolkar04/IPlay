@@ -28,7 +28,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
     super.initState();
     // Check if we received a code from deep link
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+      final args =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
       if (args != null && args['code'] != null) {
         _codeController.text = args['code'];
         _inviteSource = args['source'] ?? 'link';
@@ -50,13 +51,13 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
 
     try {
       final code = _codeController.text.trim().toUpperCase();
-      
+
       final query = await FirebaseFirestore.instance
           .collection('classrooms')
           .where('joinCode', isEqualTo: code)
           .limit(1)
           .get();
-      
+
       if (query.docs.isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -68,7 +69,7 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
         setState(() => _isLoading = false);
         return;
       }
-      
+
       setState(() {
         _foundClassroom = query.docs.first.data();
         _isLoading = false;
@@ -101,9 +102,9 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           .collection('users')
           .doc(user.uid)
           .get();
-      
+
       if (!userDoc.exists) throw Exception('User not found');
-      
+
       final studentName = userDoc.data()?['displayName'] ?? 'Student';
       final classroomId = _foundClassroom!['id'];
       final requiresApproval = _foundClassroom!['requiresApproval'] ?? false;
@@ -113,12 +114,12 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
 
       if (requiresApproval) {
         // print('Creating join request (requires approval)...');
-        
+
         // Create join request with proper ID
         final requestRef = FirebaseFirestore.instance
             .collection('join_requests')
             .doc(); // Generate a new document reference with ID
-        
+
         await requestRef.set({
           'id': requestRef.id, // Store the ID in the document
           'classroomId': classroomId,
@@ -134,24 +135,24 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
         });
 
         // print('Join request created, adding to pendingStudentIds and pendingClassroomRequests...');
-        
+
         // Add student to pending list in classroom
         await FirebaseFirestore.instance
             .collection('classrooms')
             .doc(classroomId)
             .update({
-          'pendingStudentIds': FieldValue.arrayUnion([user.uid]),
-          'updatedAt': Timestamp.now(),
-        });
+              'pendingStudentIds': FieldValue.arrayUnion([user.uid]),
+              'updatedAt': Timestamp.now(),
+            });
 
         // Add classroom to student's pending requests
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
             .update({
-          'pendingClassroomRequests': FieldValue.arrayUnion([classroomId]),
-          'updatedAt': Timestamp.now(),
-        });
+              'pendingClassroomRequests': FieldValue.arrayUnion([classroomId]),
+              'updatedAt': Timestamp.now(),
+            });
 
         // print('Successfully added to pending list!');
 
@@ -165,19 +166,19 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
         );
       } else {
         // print('Direct join (no approval needed)...');
-        
+
         // Get classroom's schoolId and schoolTag to update student profile
         final schoolId = _foundClassroom!['schoolId'];
         final schoolTag = _foundClassroom!['schoolTag'];
-        
+
         // Direct join (no approval needed)
         await FirebaseFirestore.instance
             .collection('classrooms')
             .doc(classroomId)
             .update({
-          'studentIds': FieldValue.arrayUnion([user.uid]),
-          'updatedAt': Timestamp.now(),
-        });
+              'studentIds': FieldValue.arrayUnion([user.uid]),
+              'updatedAt': Timestamp.now(),
+            });
 
         // print('Added to studentIds, updating user profile...');
 
@@ -186,15 +187,15 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           'classroomIds': FieldValue.arrayUnion([classroomId]),
           'updatedAt': Timestamp.now(),
         };
-        
+
         if (schoolId != null) {
           updateData['schoolId'] = schoolId;
         }
-        
+
         if (schoolTag != null) {
           updateData['schoolTag'] = schoolTag;
         }
-        
+
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -207,8 +208,8 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
             .collection('analytics')
             .doc('invite_sources')
             .set({
-          _inviteSource: FieldValue.increment(1),
-        }, SetOptions(merge: true));
+              _inviteSource: FieldValue.increment(1),
+            }, SetOptions(merge: true));
 
         // print('Successfully joined classroom with schoolId: $schoolId!');
 
@@ -220,18 +221,18 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
           ),
         );
       }
-      
+
       Navigator.pop(context, true);
     } catch (e) {
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
-      
+
       setState(() => _isLoading = false);
     }
   }
@@ -257,7 +258,10 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -284,222 +288,241 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
             // Body content
             Expanded(
               child: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                      AppDesignSystem.primaryPink.withValues(alpha: 0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.2),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.group_add,
-                        color: AppDesignSystem.primaryIndigo,
-                        size: 24,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Enter the join code provided by your teacher',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppDesignSystem.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: AppSpacing.xl),
-              
-              TextFormField(
-                controller: _codeController,
-                textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(
-                  labelText: 'Classroom Code',
-                  hintText: 'CLS-XXXXX',
-                  prefixIcon: Icon(Icons.vpn_key),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a classroom code';
-                  }
-                  if (!RegExp(r'^CLS-[A-Z0-9]{5}$').hasMatch(value.toUpperCase())) {
-                    return 'Invalid code format (CLS-XXXXX)';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() => _foundClassroom = null);
-                },
-              ),
-              
-              const SizedBox(height: AppSpacing.md),
-              
-              if (_foundClassroom == null) ...[
-                PrimaryButton(
-                  text: _isLoading ? 'Searching...' : 'Search Classroom',
-                  onPressed: _isLoading ? () {} : _searchClassroom,
-                  fullWidth: true,
-                ),
-                
-                const SizedBox(height: AppSpacing.md),
-                
-                // QR Scanner Button
-                OutlinedButton.icon(
-                  onPressed: _isLoading ? null : () async {
-                    final scannedCode = await Navigator.push<String>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const QRScannerScreen(),
-                      ),
-                    );
-                    
-                    if (scannedCode != null && mounted) {
-                      _codeController.text = scannedCode;
-                      _inviteSource = 'qr';
-                      _searchClassroom();
-                    }
-                  },
-                  icon: const Icon(Icons.qr_code_scanner),
-                  label: const Text('Scan QR Code'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                    side: const BorderSide(color: AppDesignSystem.primaryIndigo),
-                    foregroundColor: AppDesignSystem.primaryIndigo,
-                  ),
-                ),
-              ],
-              
-              const SizedBox(height: AppSpacing.xl),
-              
-              // Found classroom
-              if (_foundClassroom != null) ...[
-                Text(
-                  'Classroom Found',
-                  style: AppTextStyles.sectionHeader,
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                
-                CleanCard(
-                  color: AppDesignSystem.success.withValues(alpha: 0.1),
+                padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              color: AppDesignSystem.primaryIndigo,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Icon(
-                              Icons.school,
-                              color: Colors.white,
-                              size: 32,
-                            ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppDesignSystem.primaryIndigo.withValues(
+                                alpha: 0.1,
+                              ),
+                              AppDesignSystem.primaryPink.withValues(
+                                alpha: 0.1,
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _foundClassroom!['name'],
-                                  style: AppTextStyles.cardTitle,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Teacher: ${_foundClassroom!['teacherName']}',
-                                  style: AppTextStyles.bodySmall,
-                                ),
-                              ],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppDesignSystem.primaryIndigo.withValues(
+                              alpha: 0.2,
                             ),
+                            width: 1,
                           ),
-                        ],
-                      ),
-                      
-                      const SizedBox(height: 12),
-                      
-                      if (_foundClassroom!['schoolTag'] != null) ...[
-                        const Divider(),
-                        Row(
+                        ),
+                        child: Row(
                           children: [
-                            const Icon(
-                              Icons.location_city,
-                              size: 16,
-                              color: AppDesignSystem.textSecondary,
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppDesignSystem.primaryIndigo.withValues(
+                                  alpha: 0.1,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.group_add,
+                                color: AppDesignSystem.primaryIndigo,
+                                size: 24,
+                              ),
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _foundClassroom!['schoolTag'],
-                              style: AppTextStyles.bodySmall,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Enter the join code provided by your teacher',
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppDesignSystem.textPrimary,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ],
-                      
-                      const Divider(),
-                      
-                      Row(
-                        children: [
-                          Icon(
-                            _foundClassroom!['requiresApproval'] 
-                                ? Icons.lock 
-                                : Icons.lock_open,
-                            size: 16,
-                            color: AppDesignSystem.textSecondary,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _foundClassroom!['requiresApproval']
-                                ? 'Requires teacher approval'
-                                : 'Join instantly',
-                            style: AppTextStyles.bodySmall,
-                          ),
-                        ],
                       ),
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      TextFormField(
+                        controller: _codeController,
+                        textCapitalization: TextCapitalization.characters,
+                        decoration: const InputDecoration(
+                          labelText: 'Classroom Code',
+                          hintText: 'CLS-XXXXX',
+                          prefixIcon: Icon(Icons.vpn_key),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a classroom code';
+                          }
+                          if (!RegExp(
+                            r'^CLS-[A-Z0-9]{5}$',
+                          ).hasMatch(value.toUpperCase())) {
+                            return 'Invalid code format (CLS-XXXXX)';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) {
+                          setState(() => _foundClassroom = null);
+                        },
+                      ),
+
+                      const SizedBox(height: AppSpacing.md),
+
+                      if (_foundClassroom == null) ...[
+                        PrimaryButton(
+                          text: _isLoading
+                              ? 'Searching...'
+                              : 'Search Classroom',
+                          onPressed: _isLoading ? () {} : _searchClassroom,
+                          fullWidth: true,
+                        ),
+
+                        const SizedBox(height: AppSpacing.md),
+
+                        // QR Scanner Button
+                        OutlinedButton.icon(
+                          onPressed: _isLoading
+                              ? null
+                              : () async {
+                                  final scannedCode =
+                                      await Navigator.push<String>(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const QRScannerScreen(),
+                                        ),
+                                      );
+
+                                  if (scannedCode != null && mounted) {
+                                    _codeController.text = scannedCode;
+                                    _inviteSource = 'qr';
+                                    _searchClassroom();
+                                  }
+                                },
+                          icon: const Icon(Icons.qr_code_scanner),
+                          label: const Text('Scan QR Code'),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 48),
+                            side: const BorderSide(
+                              color: AppDesignSystem.primaryIndigo,
+                            ),
+                            foregroundColor: AppDesignSystem.primaryIndigo,
+                          ),
+                        ),
+                      ],
+
+                      const SizedBox(height: AppSpacing.xl),
+
+                      // Found classroom
+                      if (_foundClassroom != null) ...[
+                        Text(
+                          'Classroom Found',
+                          style: AppTextStyles.sectionHeader,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        CleanCard(
+                          color: AppDesignSystem.success.withValues(alpha: 0.1),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 56,
+                                    height: 56,
+                                    decoration: BoxDecoration(
+                                      color: AppDesignSystem.primaryIndigo,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.school,
+                                      color: Colors.white,
+                                      size: 32,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _foundClassroom!['name'],
+                                          style: AppTextStyles.cardTitle,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Teacher: ${_foundClassroom!['teacherName']}',
+                                          style: AppTextStyles.bodySmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              if (_foundClassroom!['schoolTag'] != null) ...[
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.location_city,
+                                      size: 16,
+                                      color: AppDesignSystem.textSecondary,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      _foundClassroom!['schoolTag'],
+                                      style: AppTextStyles.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ],
+
+                              const Divider(),
+
+                              Row(
+                                children: [
+                                  Icon(
+                                    _foundClassroom!['requiresApproval']
+                                        ? Icons.lock
+                                        : Icons.lock_open,
+                                    size: 16,
+                                    color: AppDesignSystem.textSecondary,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _foundClassroom!['requiresApproval']
+                                        ? 'Requires teacher approval'
+                                        : 'Join instantly',
+                                    style: AppTextStyles.bodySmall,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: AppSpacing.lg),
+
+                        PrimaryButton(
+                          text: _isLoading ? 'Joining...' : 'Join Classroom',
+                          onPressed: _isLoading ? () {} : _joinClassroom,
+                          fullWidth: true,
+                        ),
+                      ],
+
+                      const SizedBox(height: AppSpacing.xl),
                     ],
                   ),
                 ),
-                
-                const SizedBox(height: AppSpacing.lg),
-                
-                PrimaryButton(
-                  text: _isLoading ? 'Joining...' : 'Join Classroom',
-                  onPressed: _isLoading ? () {} : _joinClassroom,
-                  fullWidth: true,
-                ),
-              ],
-              
-              const SizedBox(height: AppSpacing.xl),
-            ],
-          ),
-        ),
               ),
             ),
           ],
@@ -508,4 +531,3 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
     );
   }
 }
-

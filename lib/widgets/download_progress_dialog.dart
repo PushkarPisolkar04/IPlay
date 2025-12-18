@@ -24,9 +24,7 @@ class DownloadProgressDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -49,11 +47,7 @@ class DownloadProgressDialog extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Title
-            Text(
-              title,
-              style: AppTextStyles.h3,
-              textAlign: TextAlign.center,
-            ),
+            Text(title, style: AppTextStyles.h3, textAlign: TextAlign.center),
 
             // Subtitle
             if (subtitle != null) ...[
@@ -114,9 +108,7 @@ class DownloadProgressDialog extends StatelessWidget {
                 onPressed: onCancel,
                 child: Text(
                   'Cancel',
-                  style: TextStyle(
-                    color: AppDesignSystem.error,
-                  ),
+                  style: TextStyle(color: AppDesignSystem.error),
                 ),
               ),
             ],

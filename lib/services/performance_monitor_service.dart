@@ -3,15 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
 /// Performance level enum for adaptive quality
-enum PerformanceLevel {
-  high,
-  medium,
-  low,
-}
+enum PerformanceLevel { high, medium, low }
 
 /// Service for monitoring app performance and adapting quality settings
 class PerformanceMonitorService {
-  static final PerformanceMonitorService _instance = PerformanceMonitorService._internal();
+  static final PerformanceMonitorService _instance =
+      PerformanceMonitorService._internal();
   factory PerformanceMonitorService() => _instance;
   PerformanceMonitorService._internal();
 
@@ -63,7 +60,8 @@ class PerformanceMonitorService {
   void _updatePerformanceLevel() {
     if (_frameTimes.length < _sampleSize ~/ 2) return;
 
-    final avgFrameTime = _frameTimes.reduce((a, b) => a + b) / _frameTimes.length;
+    final avgFrameTime =
+        _frameTimes.reduce((a, b) => a + b) / _frameTimes.length;
     final fps = 1000.0 / avgFrameTime;
 
     if (fps >= 55) {
@@ -93,7 +91,8 @@ class PerformanceMonitorService {
   }
 
   /// Check if high quality effects should be enabled
-  bool get shouldUseHighQualityEffects => _performanceLevel == PerformanceLevel.high;
+  bool get shouldUseHighQualityEffects =>
+      _performanceLevel == PerformanceLevel.high;
 
   /// Check if animations should be reduced
   bool get shouldReduceAnimations => _performanceLevel == PerformanceLevel.low;

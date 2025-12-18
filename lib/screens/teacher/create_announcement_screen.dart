@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,7 +19,8 @@ class CreateAnnouncementScreen extends StatefulWidget {
   });
 
   @override
-  State<CreateAnnouncementScreen> createState() => _CreateAnnouncementScreenState();
+  State<CreateAnnouncementScreen> createState() =>
+      _CreateAnnouncementScreenState();
 }
 
 class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
@@ -64,10 +66,13 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
           _selectedClassroomId = _classrooms[0]['id'];
         }
       });
-      
-      print('Loaded ${_classrooms.length} classrooms');
+      if (kDebugMode) {
+        print('Loaded ${_classrooms.length} classrooms');
+      }
     } catch (e) {
-      print('Error loading classrooms: $e');
+      if (kDebugMode) {
+        print('Error loading classrooms: $e');
+      }
     }
   }
 
@@ -112,7 +117,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
       if (widget.isSchoolWide && isPrincipal) {
         // School-wide announcement
         final schoolId = userData['principalOfSchool'];
-        if (schoolId == null) throw Exception('Principal not associated with a school');
+        if (schoolId == null) {
+          throw Exception('Principal not associated with a school');
+        }
 
         announcementData['schoolId'] = schoolId;
 
@@ -127,7 +134,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
             .get();
 
         if (schoolDoc.exists) {
-          final studentIds = List<String>.from(schoolDoc.data()?['studentIds'] ?? []);
+          final studentIds = List<String>.from(
+            schoolDoc.data()?['studentIds'] ?? [],
+          );
 
           if (studentIds.isNotEmpty) {
             await _notificationService.sendToUsers(
@@ -136,10 +145,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
               body: _messageController.text.trim().length > 100
                   ? '${_messageController.text.trim().substring(0, 100)}...'
                   : _messageController.text.trim(),
-              data: {
-                'type': 'announcement',
-                'schoolId': schoolId,
-              },
+              data: {'type': 'announcement', 'schoolId': schoolId},
             );
           }
         }
@@ -161,7 +167,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
             .get();
 
         if (classroomDoc.exists) {
-          final studentIds = List<String>.from(classroomDoc.data()?['studentIds'] ?? []);
+          final studentIds = List<String>.from(
+            classroomDoc.data()?['studentIds'] ?? [],
+          );
 
           if (studentIds.isNotEmpty) {
             await _notificationService.sendToUsers(
@@ -170,10 +178,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
               body: _messageController.text.trim().length > 100
                   ? '${_messageController.text.trim().substring(0, 100)}...'
                   : _messageController.text.trim(),
-              data: {
-                'type': 'announcement',
-                'classroomId': classroomId,
-              },
+              data: {'type': 'announcement', 'classroomId': classroomId},
             );
           }
         }
@@ -191,10 +196,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -226,7 +228,10 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -236,7 +241,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                     Expanded(
                       child: Center(
                         child: Text(
-                          widget.isSchoolWide ? 'School Announcement' : 'New Announcement',
+                          widget.isSchoolWide
+                              ? 'School Announcement'
+                              : 'New Announcement',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 22,
@@ -259,9 +266,10 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-
                     // Classroom Selector for Teachers
-                    if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                    if (!widget.isSchoolWide &&
+                        widget.classroomId == null &&
+                        _classrooms.isNotEmpty)
                       CleanCard(
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -285,7 +293,10 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: BorderSide.none,
                                   ),
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
                                 ),
                                 items: _classrooms.map((classroom) {
                                   return DropdownMenuItem<String>(
@@ -309,7 +320,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                           ),
                         ),
                       ),
-                    if (!widget.isSchoolWide && widget.classroomId == null && _classrooms.isNotEmpty)
+                    if (!widget.isSchoolWide &&
+                        widget.classroomId == null &&
+                        _classrooms.isNotEmpty)
                       const SizedBox(height: 16),
 
                     CleanCard(
@@ -394,7 +407,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : const Text(

@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'dart:io';
+import 'dart:typed_data';
 import '../../widgets/clean_card.dart';
 import '../../core/services/report_service.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../widgets/export_format_dialog.dart';
+import '../../core/services/export_service.dart';
+import '../../core/services/error_handler_service.dart';
+import '../../widgets/error_dialog.dart';
+import '../../core/services/file_download_service.dart';
 
 class PrincipalGenerateReportScreen extends StatefulWidget {
   final String schoolId;
-  
-  const PrincipalGenerateReportScreen({
-    super.key,
-    required this.schoolId,
-  });
+
+  const PrincipalGenerateReportScreen({super.key, required this.schoolId});
 
   @override
-  State<PrincipalGenerateReportScreen> createState() => _PrincipalGenerateReportScreenState();
+  State<PrincipalGenerateReportScreen> createState() =>
+      _PrincipalGenerateReportScreenState();
 }
 
-class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportScreen> {
+class _PrincipalGenerateReportScreenState
+    extends State<PrincipalGenerateReportScreen> {
   final List<Map<String, dynamic>> _classrooms = [];
   final List<Map<String, dynamic>> _students = [];
   String? _selectedClassroomId;
   String? _selectedStudentId;
   bool _isLoading = true;
   bool _isGenerating = false;
-  String _reportType = 'school'; // 'school', 'classroom', 'student', 'comparison'
+  String _reportType =
+      'school'; // 'school', 'classroom', 'student', 'comparison'
   final ReportService _reportService = ReportService();
 
   @override
@@ -37,7 +40,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       // Get all classrooms in the school
       final classroomsSnapshot = await FirebaseFirestore.instance
@@ -47,7 +50,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
 
       _classrooms.clear();
       Set<String> allStudentIds = {};
-      
+
       for (var doc in classroomsSnapshot.docs) {
         final classData = doc.data();
         _classrooms.add({
@@ -56,14 +59,16 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
           'teacherName': classData['teacherName'] ?? 'Unknown',
           'studentCount': (classData['studentIds'] as List?)?.length ?? 0,
         });
-        
+
         final studentIds = List<String>.from(classData['studentIds'] ?? []);
         allStudentIds.addAll(studentIds);
       }
 
-      _classrooms.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      _classrooms.sort(
+        (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+      );
 
-      // Get all students
+      // Get all students (excluding deleted ones)
       _students.clear();
       for (String studentId in allStudentIds) {
         final userDoc = await FirebaseFirestore.instance
@@ -73,15 +78,21 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
 
         if (userDoc.exists) {
           final userData = userDoc.data()!;
-          _students.add({
-            'id': studentId,
-            'name': userData['displayName'] ?? 'Unknown',
-            'email': userData['email'] ?? '',
-          });
+          // Skip deleted students
+          final isDeleted = userData['isDeleted'] == true;
+          if (!isDeleted) {
+            _students.add({
+              'id': studentId,
+              'name': userData['displayName'] ?? 'Unknown',
+              'email': userData['email'] ?? '',
+            });
+          }
         }
       }
 
-      _students.sort((a, b) => (a['name'] as String).compareTo(b['name'] as String));
+      _students.sort(
+        (a, b) => (a['name'] as String).compareTo(b['name'] as String),
+      );
 
       if (mounted) setState(() => _isLoading = false);
     } catch (e) {
@@ -92,12 +103,12 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
 
   Future<void> _generateReport() async {
     if (_reportType == 'student' && _selectedStudentId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a student')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please select a student')));
       return;
     }
-    
+
     if (_reportType == 'classroom' && _selectedClassroomId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a classroom')),
@@ -105,304 +116,221 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
       return;
     }
 
-    setState(() => _isGenerating = true);
-
-    try {
-      if (_reportType == 'school') {
-        await _generateSchoolReport();
-      } else if (_reportType == 'student') {
-        await _generateStudentReport();
-      } else if (_reportType == 'classroom') {
-        await _generateClassroomReport();
-      } else if (_reportType == 'comparison') {
-        await _generateComparisonReport();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
-    } finally {
-      setState(() => _isGenerating = false);
-    }
-  }
-
-  Future<void> _generateSchoolReport() async {
-    try {
-      // Show loading
-      if (mounted) {
+    // Validate classroom has students
+    if (_reportType == 'classroom') {
+      final classroom = _classrooms.firstWhere(
+        (c) => c['id'] == _selectedClassroomId,
+      );
+      if (classroom['studentCount'] == 0) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Text('Generating school-wide report...'),
-              ],
-            ),
-            duration: Duration(seconds: 3),
+            content: Text('This classroom has no active students. Cannot generate report.'),
+            backgroundColor: Color(0xFFEF4444),
           ),
         );
+        return;
       }
-      
-      // Generate CSV for school analytics
-      final csvData = await _reportService.exportSchoolAnalyticsCSV(widget.schoolId);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'school_analytics_${DateTime.now().millisecondsSinceEpoch}.csv';
-      final file = File('${directory.path}/$fileName');
-      
-      // Write CSV to file
-      await file.writeAsString(csvData);
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text('School report saved to: ${file.path}'),
-                ),
-              ],
-            ),
-            backgroundColor: const Color(0xFF10B981),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Share',
-              textColor: Colors.white,
-              onPressed: () async {
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: 'School Analytics Report',
-                );
-              },
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      // print('Error generating school report: $e');
-      rethrow;
     }
-  }
 
-  Future<void> _generateStudentReport() async {
-    try {
-      // Show loading
-      if (mounted) {
+    // Validate school has classrooms for school and comparison reports
+    if (_reportType == 'school' || _reportType == 'comparison') {
+      if (_classrooms.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Text('Generating student report...'),
-              ],
-            ),
-            duration: Duration(seconds: 2),
+            content: Text('No classrooms found. Cannot generate report.'),
+            backgroundColor: Color(0xFFEF4444),
           ),
         );
+        return;
       }
-      
-      // Generate PDF
-      final pdfBytes = await _reportService.generateStudentReport(_selectedStudentId!);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
+    }
+
+    // Show ExportFormatDialog for all report types
+    if (_reportType == 'school') {
+      _showExportFormatDialog('school', {'schoolId': widget.schoolId});
+    } else if (_reportType == 'student') {
       final student = _students.firstWhere((s) => s['id'] == _selectedStudentId);
-      final fileName = 'student_report_${student['name'].replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-      final file = File('${directory.path}/$fileName');
-      
-      // Write PDF to file
-      await file.writeAsBytes(pdfBytes);
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text('Report saved to: ${file.path}'),
-                ),
-              ],
-            ),
-            backgroundColor: const Color(0xFF10B981),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Share',
-              textColor: Colors.white,
-              onPressed: () async {
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: 'Student Progress Report for ${student['name']}',
-                );
-              },
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      // print('Error generating student report: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _generateClassroomReport() async {
-    try {
-      // Show loading
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Text('Generating classroom report...'),
-              ],
-            ),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-      
-      // Generate PDF
-      final pdfBytes = await _reportService.generateClassroomReport(_selectedClassroomId!);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
+      _showExportFormatDialog('student', student);
+    } else if (_reportType == 'classroom') {
       final classroom = _classrooms.firstWhere((c) => c['id'] == _selectedClassroomId);
-      final fileName = 'classroom_report_${classroom['name'].replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}.pdf';
-      final file = File('${directory.path}/$fileName');
-      
-      // Write PDF to file
-      await file.writeAsBytes(pdfBytes);
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text('Report saved to: ${file.path}'),
-                ),
-              ],
-            ),
-            backgroundColor: const Color(0xFF10B981),
-            duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Share',
-              textColor: Colors.white,
-              onPressed: () async {
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: 'Classroom Performance Report for ${classroom['name']}',
-                );
-              },
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      // print('Error generating classroom report: $e');
-      rethrow;
+      _showExportFormatDialog('classroom', classroom);
+    } else if (_reportType == 'comparison') {
+      _showExportFormatDialog('comparison', {'schoolId': widget.schoolId});
     }
   }
 
-  Future<void> _generateComparisonReport() async {
+
+
+
+
+
+
+
+
+  /// Show export format selection dialog
+  void _showExportFormatDialog(String reportType, Map<String, dynamic> data) {
+    showDialog(
+      context: context,
+      builder: (context) => ExportFormatDialog(
+        title: 'Export ${reportType.replaceAll('_', ' ').toUpperCase()} Report',
+        onPdfExport: () => _exportPDF(reportType, data),
+        onCsvExport: () => _exportCSV(reportType, data),
+        onExcelExport: () => _exportExcel(reportType, data),
+      ),
+    );
+  }
+
+  /// Export to PDF
+  Future<void> _exportPDF(String reportType, Map<String, dynamic> data) async {
     try {
-      // Show loading
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Row(
-              children: [
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Text('Generating classroom comparison report...'),
-              ],
-            ),
-            duration: Duration(seconds: 3),
-          ),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating PDF...')),
+      );
+
+      final reportService = ReportService();
+      Uint8List pdfBytes;
+      
+      // Generate PDF based on report type
+      if (reportType == 'school') {
+        // For school report, use classroom report with aggregated data
+        pdfBytes = await reportService.generateClassroomReport(widget.schoolId);
+      } else if (reportType == 'classroom') {
+        pdfBytes = await reportService.generateClassroomReport(data['id'] ?? '');
+      } else if (reportType == 'student') {
+        pdfBytes = await reportService.generateStudentReport(data['id'] ?? '');
+      } else {
+        throw Exception('Unknown report type: $reportType');
       }
-      
-      // Generate CSV for comparison
-      final csvData = await _reportService.exportSchoolAnalyticsCSV(widget.schoolId);
-      
-      // Get directory to save
-      final directory = await getApplicationDocumentsDirectory();
-      final fileName = 'classroom_comparison_${DateTime.now().millisecondsSinceEpoch}.csv';
-      final file = File('${directory.path}/$fileName');
-      
-      // Write CSV to file
-      await file.writeAsString(csvData);
-      
-      if (mounted) {
+
+      final fileDownloadService = FileDownloadService();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final savedPath = await fileDownloadService.saveFile(
+        bytes: pdfBytes,
+        suggestedName: '${reportType}_report_$timestamp.pdf',
+        mimeType: 'application/pdf',
+      );
+
+      if (mounted && savedPath != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text('Comparison report saved to: ${file.path}'),
-                ),
-              ],
-            ),
+            content: Text('PDF saved to: $savedPath'),
             backgroundColor: const Color(0xFF10B981),
             duration: const Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'Share',
-              textColor: Colors.white,
-              onPressed: () async {
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: 'Classroom Comparison Report',
-                );
-              },
-            ),
           ),
         );
       }
     } catch (e) {
-      // print('Error generating comparison report: $e');
-      rethrow;
+      if (mounted) {
+        ErrorSnackbar.show(context, message: ErrorHandlerService.handleError(e));
+      }
+    }
+  }
+
+  /// Export to CSV
+  Future<void> _exportCSV(String reportType, Map<String, dynamic> data) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating CSV...')),
+      );
+
+      final exportService = ExportService();
+      String? savedPath;
+
+      if (reportType == 'school') {
+        savedPath = await exportService.exportClassroomAnalyticsToCSV(
+          'School Report',
+          data,
+        );
+      } else if (reportType == 'classroom') {
+        savedPath = await exportService.exportClassroomAnalyticsToCSV(
+          data['name'] ?? 'Classroom',
+          data,
+        );
+      } else if (reportType == 'student') {
+        savedPath = await exportService.exportStudentsToCSV([data]);
+      }
+
+      if (mounted) {
+        if (savedPath != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('CSV saved to: $savedPath'),
+              backgroundColor: const Color(0xFF10B981),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Export cancelled or failed'),
+              backgroundColor: Color(0xFFF59E0B),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting CSV: ${e.toString()}'),
+            backgroundColor: const Color(0xFFEF4444),
+          ),
+        );
+      }
+    }
+  }
+
+  /// Export to Excel
+  Future<void> _exportExcel(String reportType, Map<String, dynamic> data) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Generating Excel...')),
+      );
+
+      final exportService = ExportService();
+      String? savedPath;
+
+      if (reportType == 'school') {
+        savedPath = await exportService.exportClassroomAnalyticsToExcel(
+          'School Report',
+          data,
+        );
+      } else if (reportType == 'classroom') {
+        savedPath = await exportService.exportClassroomAnalyticsToExcel(
+          data['name'] ?? 'Classroom',
+          data,
+        );
+      } else if (reportType == 'student') {
+        savedPath = await exportService.exportStudentsToExcel([data]);
+      }
+
+      if (mounted) {
+        if (savedPath != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Excel saved to: $savedPath'),
+              backgroundColor: const Color(0xFF10B981),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Export cancelled or failed'),
+              backgroundColor: Color(0xFFF59E0B),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error exporting Excel: ${e.toString()}'),
+            backgroundColor: const Color(0xFFEF4444),
+          ),
+        );
+      }
     }
   }
 
@@ -433,7 +361,11 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                       const SizedBox(width: 8),
@@ -479,11 +411,20 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                       padding: EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 60,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                           SizedBox(height: 16),
-                          LoadingSkeleton(height: 200, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 200,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                           SizedBox(height: 16),
-                          LoadingSkeleton(height: 60, borderRadius: BorderRadius.all(Radius.circular(12))),
+                          LoadingSkeleton(
+                            height: 60,
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
                         ],
                       ),
                     )
@@ -502,7 +443,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                             ),
                           ),
                           const SizedBox(height: 12),
-                          
+
                           // Report type buttons in a grid
                           GridView.count(
                             crossAxisCount: 2,
@@ -538,13 +479,16 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                               ),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 24),
-                          
+
                           // Selection area based on report type
-                          if (_reportType == 'classroom' || _reportType == 'student') ...[
+                          if (_reportType == 'classroom' ||
+                              _reportType == 'student') ...[
                             Text(
-                              _reportType == 'classroom' ? 'Select Classroom' : 'Select Student',
+                              _reportType == 'classroom'
+                                  ? 'Select Classroom'
+                                  : 'Select Student',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -552,15 +496,15 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                               ),
                             ),
                             const SizedBox(height: 16),
-                            
+
                             if (_reportType == 'classroom')
                               ..._buildClassroomList()
                             else
                               ..._buildStudentList(),
-                            
+
                             const SizedBox(height: 24),
                           ],
-                          
+
                           // Generate Button
                           Container(
                             width: double.infinity,
@@ -572,7 +516,9 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                               borderRadius: BorderRadius.circular(14),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF9333EA).withValues(alpha: 0.4),
+                                  color: const Color(
+                                    0xFF9333EA,
+                                  ).withValues(alpha: 0.4),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -591,7 +537,9 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                                     )
                                   : const Icon(Icons.picture_as_pdf, size: 24),
                               label: Text(
-                                _isGenerating ? 'Generating...' : 'Generate Report',
+                                _isGenerating
+                                    ? 'Generating...'
+                                    : 'Generate Report',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -617,7 +565,12 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
     );
   }
 
-  Widget _buildReportTypeButton(String label, String type, IconData icon, String subtitle) {
+  Widget _buildReportTypeButton(
+    String label,
+    String type,
+    IconData icon,
+    String subtitle,
+  ) {
     final isSelected = _reportType == type;
     return GestureDetector(
       onTap: () {
@@ -706,13 +659,13 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
         ),
       ];
     }
-    
+
     return _classrooms.map((classroom) {
       final isSelected = _selectedClassroomId == classroom['id'];
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: CleanCard(
-          color: isSelected 
+          color: isSelected
               ? const Color(0xFF9333EA).withValues(alpha: 0.1)
               : Colors.white,
           onTap: () {
@@ -741,11 +694,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                     ],
                   ),
                   child: const Center(
-                    child: Icon(
-                      Icons.class_,
-                      color: Colors.white,
-                      size: 28,
-                    ),
+                    child: Icon(Icons.class_, color: Colors.white, size: 28),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -764,10 +713,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                       const SizedBox(height: 4),
                       Text(
                         '${classroom['studentCount']} students • ${classroom['teacherName']}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -824,13 +770,13 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
         ),
       ];
     }
-    
+
     return _students.map((student) {
       final isSelected = _selectedStudentId == student['id'];
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: CleanCard(
-          color: isSelected 
+          color: isSelected
               ? const Color(0xFF9333EA).withValues(alpha: 0.1)
               : Colors.white,
           onTap: () {
@@ -885,10 +831,7 @@ class _PrincipalGenerateReportScreenState extends State<PrincipalGenerateReportS
                       const SizedBox(height: 4),
                       Text(
                         student['email'],
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                       ),
                     ],
                   ),

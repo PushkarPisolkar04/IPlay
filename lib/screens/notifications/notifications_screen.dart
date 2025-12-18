@@ -96,7 +96,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     // Back button on left
@@ -128,7 +131,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             SnackBar(
                               content: const Row(
                                 children: [
-                                  Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                   SizedBox(width: 8),
                                   Text('All marked as read'),
                                 ],
@@ -159,134 +166,156 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     _buildFilterChip('all', 'All', Icons.notifications_active),
                     const SizedBox(width: 10),
                     if (_userRole == 'teacher') ...[
-                      _buildFilterChip('join_request', 'Join Requests', Icons.person_add),
+                      _buildFilterChip(
+                        'join_request',
+                        'Join Requests',
+                        Icons.person_add,
+                      ),
                       const SizedBox(width: 10),
-                      _buildFilterChip('announcement', 'Announcements', Icons.campaign),
+                      _buildFilterChip(
+                        'announcement',
+                        'Announcements',
+                        Icons.campaign,
+                      ),
                       const SizedBox(width: 10),
                       _buildFilterChip('message', 'Messages', Icons.message),
                     ] else ...[
                       _buildFilterChip('badge', 'Badges', Icons.emoji_events),
                       const SizedBox(width: 10),
-                      _buildFilterChip('announcement', 'Announcements', Icons.campaign),
+                      _buildFilterChip(
+                        'announcement',
+                        'Announcements',
+                        Icons.campaign,
+                      ),
                       const SizedBox(width: 10),
                       _buildFilterChip('message', 'Messages', Icons.message),
                       const SizedBox(width: 10),
-                      _buildFilterChip('certificate', 'Certificates', Icons.workspace_premium),
+                      _buildFilterChip(
+                        'certificate',
+                        'Certificates',
+                        Icons.workspace_premium,
+                      ),
                     ],
                   ],
                 ),
               ),
             ),
-            
+
             // Notifications list
             Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _notificationService.getNotificationsStream(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const ListSkeleton(itemCount: 5);
-                }
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _notificationService.getNotificationsStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const ListSkeleton(itemCount: 5);
+                  }
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: AppDesignSystem.textSecondary,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Error loading notifications',
-                          style: TextStyle(
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline,
+                            size: 64,
                             color: AppDesignSystem.textSecondary,
-                            fontSize: 16,
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Error loading notifications',
+                            style: TextStyle(
+                              color: AppDesignSystem.textSecondary,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.notifications_none,
+                            size: 80,
+                            color: AppDesignSystem.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No notifications yet',
+                            style: TextStyle(
+                              color: AppDesignSystem.textSecondary,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'You\'ll see updates about badges,\nassignments, and more here',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppDesignSystem.textSecondary.withValues(
+                                alpha: 0.7,
+                              ),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  // Filter notifications
+                  final allNotifications = snapshot.data!.docs;
+                  final filteredNotifications = _selectedFilter == 'all'
+                      ? allNotifications
+                      : allNotifications.where((doc) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          final type = data['data']?['type'] ?? 'default';
+                          return type == _selectedFilter;
+                        }).toList();
+
+                  if (filteredNotifications.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.filter_list_off,
+                            size: 64,
+                            color: AppDesignSystem.textSecondary.withValues(
+                              alpha: 0.5,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No $_selectedFilter notifications',
+                            style: TextStyle(
+                              color: AppDesignSystem.textSecondary,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: filteredNotifications.length,
+                    itemBuilder: (context, index) {
+                      final doc = filteredNotifications[index];
+                      final data = doc.data() as Map<String, dynamic>;
+                      return _buildNotificationTile(doc.id, data);
+                    },
                   );
-                }
-
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.notifications_none,
-                          size: 80,
-                          color: AppDesignSystem.textSecondary.withValues(alpha: 0.5),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No notifications yet',
-                          style: TextStyle(
-                            color: AppDesignSystem.textSecondary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'You\'ll see updates about badges,\nassignments, and more here',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: AppDesignSystem.textSecondary.withValues(alpha: 0.7),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                // Filter notifications
-                final allNotifications = snapshot.data!.docs;
-                final filteredNotifications = _selectedFilter == 'all'
-                    ? allNotifications
-                    : allNotifications.where((doc) {
-                        final data = doc.data() as Map<String, dynamic>;
-                        final type = data['data']?['type'] ?? 'default';
-                        return type == _selectedFilter;
-                      }).toList();
-
-                if (filteredNotifications.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.filter_list_off,
-                          size: 64,
-                          color: AppDesignSystem.textSecondary.withValues(alpha: 0.5),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No $_selectedFilter notifications',
-                          style: TextStyle(
-                            color: AppDesignSystem.textSecondary,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: filteredNotifications.length,
-                  itemBuilder: (context, index) {
-                    final doc = filteredNotifications[index];
-                    final data = doc.data() as Map<String, dynamic>;
-                    return _buildNotificationTile(doc.id, data);
-                  },
-                );
-              },
-            ),
+                },
+              ),
             ),
           ],
         ),
@@ -331,7 +360,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? Colors.white : AppDesignSystem.textSecondary,
+                color: isSelected
+                    ? Colors.white
+                    : AppDesignSystem.textSecondary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 fontSize: 13,
               ),
@@ -342,7 +373,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  Widget _buildNotificationTile(String notificationId, Map<String, dynamic> data) {
+  Widget _buildNotificationTile(
+    String notificationId,
+    Map<String, dynamic> data,
+  ) {
     final title = data['title'] ?? 'Notification';
     var body = data['body'] ?? '';
     final isRead = data['read'] ?? false;
@@ -353,7 +387,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     // Add badge/certificate details to body if available
     if (type == 'badge' && notificationData['badgeName'] != null) {
       body = 'You earned: ${notificationData['badgeName']}';
-    } else if (type == 'certificate' && notificationData['certificateName'] != null) {
+    } else if (type == 'certificate' &&
+        notificationData['certificateName'] != null) {
       body = 'Certificate: ${notificationData['certificateName']}';
     }
 
@@ -370,17 +405,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           color: AppDesignSystem.secondaryRed,
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
+        child: const Icon(Icons.delete, color: Colors.white),
       ),
       onDismissed: (direction) async {
         await FirebaseFirestore.instance
             .collection('notifications')
             .doc(notificationId)
             .delete();
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -396,10 +428,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           gradient: isRead
               ? null
               : LinearGradient(
-                  colors: [
-                    Colors.white,
-                    color.withValues(alpha: 0.03),
-                  ],
+                  colors: [Colors.white, color.withValues(alpha: 0.03)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -458,14 +487,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         width: 1.5,
                       ),
                     ),
-                    child: Icon(
-                      icon,
-                      color: color,
-                      size: 24,
-                    ),
+                    child: Icon(icon, color: color, size: 24),
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Content
                   Expanded(
                     child: Column(
@@ -479,17 +504,25 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 style: TextStyle(
                                   color: AppDesignSystem.textPrimary,
                                   fontSize: 16,
-                                  fontWeight: isRead ? FontWeight.w600 : FontWeight.bold,
+                                  fontWeight: isRead
+                                      ? FontWeight.w600
+                                      : FontWeight.bold,
                                   letterSpacing: -0.3,
                                 ),
                               ),
                             ),
                             if (!isRead)
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [color, color.withValues(alpha: 0.8)],
+                                    colors: [
+                                      color,
+                                      color.withValues(alpha: 0.8),
+                                    ],
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
@@ -558,7 +591,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   void _handleNotificationTap(Map<String, dynamic> data) {
     final type = data['type'] ?? '';
-    
+
     switch (type) {
       case 'badge':
         Navigator.pushNamed(context, '/badges');

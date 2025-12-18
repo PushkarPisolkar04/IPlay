@@ -12,7 +12,8 @@ class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({super.key});
 
   @override
-  State<EmailVerificationScreen> createState() => _EmailVerificationScreenState();
+  State<EmailVerificationScreen> createState() =>
+      _EmailVerificationScreenState();
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
@@ -25,9 +26,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   void initState() {
     super.initState();
-    
-    _isEmailVerified = FirebaseAuth.instance.currentUser?.emailVerified ?? false;
-    
+
+    _isEmailVerified =
+        FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+
     if (_isEmailVerified) {
       // Already verified, navigate immediately
       _navigateToNext();
@@ -49,9 +51,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   Future<void> _checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser?.reload();
-    
+
     setState(() {
-      _isEmailVerified = FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+      _isEmailVerified =
+          FirebaseAuth.instance.currentUser?.emailVerified ?? false;
     });
 
     if (_isEmailVerified) {
@@ -63,7 +66,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Future<void> _resendVerificationEmail() async {
     try {
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
-      
+
       setState(() {
         _canResendEmail = false;
         _resendCountdown = 60;
@@ -107,7 +110,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    
+
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
       appBar: AppBar(
@@ -129,7 +132,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
         child: Column(
           children: [
             const SizedBox(height: AppSpacing.xl),
-            
+
             // Icon
             Container(
               width: 120,
@@ -144,17 +147,17 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 color: AppDesignSystem.primaryAmber,
               ),
             ),
-            
+
             const SizedBox(height: AppSpacing.xl),
-            
+
             Text(
               'Verify Your Email',
               style: AppTextStyles.h1,
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             Text(
               'We\'ve sent a verification email to:',
               style: AppTextStyles.bodyMedium.copyWith(
@@ -162,9 +165,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: AppSpacing.sm),
-            
+
             Text(
               user?.email ?? '',
               style: AppTextStyles.bodyLarge.copyWith(
@@ -173,9 +176,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: AppSpacing.xl),
-            
+
             CleanCard(
               color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
               child: Column(
@@ -202,9 +205,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: AppSpacing.xl),
-            
+
             // Resend button
             if (_canResendEmail || _resendCountdown == 0)
               PrimaryButton(
@@ -230,9 +233,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
-            
+
             const SizedBox(height: AppSpacing.md),
-            
+
             // Skip for now button
             TextButton(
               onPressed: _navigateToNext,
@@ -244,7 +247,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: AppSpacing.xl),
           ],
         ),
@@ -252,4 +255,3 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     );
   }
 }
-

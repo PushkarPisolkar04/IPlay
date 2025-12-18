@@ -11,7 +11,6 @@ import '../leaderboard/unified_leaderboard_screen.dart';
 import '../profile/profile_screen.dart';
 import '../teacher/teacher_dashboard_screen.dart';
 import '../principal/principal_dashboard_screen.dart';
-import '../chat/chat_list_screen.dart';
 
 /// Main screen with bottom navigation - Role-based tabs
 class MainScreen extends StatefulWidget {
@@ -41,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
             .collection('users')
             .doc(currentUser.uid)
             .get();
-        
+
         if (doc.exists && mounted) {
           setState(() {
             _user = UserModel.fromMap(doc.data()!);
@@ -102,11 +101,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     // If teacher/principal, show their dedicated dashboard

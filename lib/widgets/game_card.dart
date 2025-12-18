@@ -62,13 +62,10 @@ class GameCard extends StatelessWidget {
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        icon,
-                        style: const TextStyle(fontSize: 48),
-                      ),
+                      child: Text(icon, style: const TextStyle(fontSize: 48)),
                     ),
                   ),
-                  
+
                   // Coming Soon badge
                   if (!isImplemented)
                     Positioned(
@@ -92,7 +89,7 @@ class GameCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                  
+
                   // High score badge
                   if (isImplemented && highScore != null)
                     Positioned(
@@ -129,7 +126,7 @@ class GameCard extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               // Content
               Padding(
                 padding: const EdgeInsets.all(AppDesignSystem.spacingMD),
@@ -146,7 +143,7 @@ class GameCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: AppDesignSystem.spacingSM),
-                    
+
                     // Description
                     Text(
                       description,
@@ -157,7 +154,7 @@ class GameCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: AppDesignSystem.spacingMD),
-                    
+
                     // Metadata
                     Wrap(
                       spacing: AppDesignSystem.spacingSM,
@@ -207,11 +204,7 @@ class GameCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 12,
-            color: color,
-          ),
+          Icon(icon, size: 12, color: color),
           const SizedBox(width: 4),
           Text(
             label,

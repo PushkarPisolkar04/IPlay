@@ -371,7 +371,7 @@
       "description": "Login for 100 consecutive days",
       "category": "streak",
       "rarity": "legendary",
-      "iconPath": "assets/badges/leagendary_streak.png",
+      "iconPath": "assets/badges/legendary_streak.png",
       "xpBonus": 180,
       "unlockCondition": {
         "type": "streak_days",

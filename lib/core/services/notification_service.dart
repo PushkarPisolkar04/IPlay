@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Stream subscriptions for proper disposal
   StreamSubscription<String>? _tokenRefreshSubscription;
   StreamSubscription<RemoteMessage>? _foregroundMessageSubscription;
@@ -30,7 +30,8 @@ class NotificationService {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         // print('User granted notification permission');
-      } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
         // print('User granted provisional notification permission');
       } else {
         // print('User declined or has not accepted notification permission');
@@ -39,7 +40,7 @@ class NotificationService {
 
       // Get FCM token
       String? token = await _fcm.getToken();
-      
+
       if (token != null) {
         // Save token to user document
         final user = FirebaseAuth.instance.currentUser;
@@ -63,7 +64,9 @@ class NotificationService {
       });
 
       // Handle foreground messages
-      _foregroundMessageSubscription = FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _foregroundMessageSubscription = FirebaseMessaging.onMessage.listen((
+        RemoteMessage message,
+      ) {
         // print('Got a message whilst in the foreground!');
         // print('Message data: ${message.data}');
 
@@ -74,10 +77,11 @@ class NotificationService {
       });
 
       // Handle background message tap
-      _messageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        // print('Message clicked!');
-        _handleNotificationTap(message);
-      });
+      _messageOpenedAppSubscription = FirebaseMessaging.onMessageOpenedApp
+          .listen((RemoteMessage message) {
+            // print('Message clicked!');
+            _handleNotificationTap(message);
+          });
 
       // Check if app was opened from notification
       RemoteMessage? initialMessage = await _fcm.getInitialMessage();
@@ -99,7 +103,7 @@ class NotificationService {
   }) async {
     try {
       final sender = FirebaseAuth.instance.currentUser;
-      
+
       await _firestore.collection('notifications').add({
         'toUserId': userId,
         'fromUserId': sender?.uid,
@@ -156,7 +160,7 @@ class NotificationService {
         .get();
 
     final studentIds = List<String>.from(classroom.data()?['studentIds'] ?? []);
-    
+
     await sendToUsers(
       userIds: studentIds,
       title: title,
@@ -180,10 +184,10 @@ class NotificationService {
 
   /// Mark notification as read
   Future<void> markAsRead(String notificationId) async {
-    await _firestore
-        .collection('notifications')
-        .doc(notificationId)
-        .update({'read': true, 'readAt': Timestamp.now()});
+    await _firestore.collection('notifications').doc(notificationId).update({
+      'read': true,
+      'readAt': Timestamp.now(),
+    });
   }
 
   /// Mark all notifications as read
@@ -217,7 +221,7 @@ class NotificationService {
     // Navigate to appropriate screen based on notification data
     // This can be handled in main.dart with a global navigator key
   }
-  
+
   /// Dispose and clean up subscriptions
   void dispose() {
     _tokenRefreshSubscription?.cancel();

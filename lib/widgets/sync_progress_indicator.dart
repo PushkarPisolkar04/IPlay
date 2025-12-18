@@ -139,9 +139,7 @@ class CompactSyncIndicator extends StatelessWidget {
             ),
           const SizedBox(width: 6),
           Text(
-            isSyncing
-                ? 'Syncing...'
-                : '$pendingCount pending',
+            isSyncing ? 'Syncing...' : '$pendingCount pending',
             style: AppTextStyles.caption.copyWith(
               fontWeight: FontWeight.bold,
               color: isSyncing
@@ -212,11 +210,7 @@ class SyncBanner extends StatelessWidget {
                 ),
               ),
               if (onTap != null)
-                const Icon(
-                  Icons.chevron_right,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                const Icon(Icons.chevron_right, color: Colors.white, size: 20),
             ],
           ),
         ),

@@ -53,8 +53,8 @@ class ErrorScreen extends StatelessWidget {
               Text(
                 isNetworkError ? 'Connection Error' : 'Something Went Wrong',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -66,9 +66,9 @@ class ErrorScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 suggestedAction,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -94,10 +94,7 @@ class ErrorScreen extends StatelessWidget {
               ],
               if (onGoBack != null) ...[
                 const SizedBox(height: 16),
-                TextButton(
-                  onPressed: onGoBack,
-                  child: const Text('Go Back'),
-                ),
+                TextButton(onPressed: onGoBack, child: const Text('Go Back')),
               ],
             ],
           ),
@@ -144,10 +141,7 @@ class InlineErrorWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 errorMessage,
-                style: TextStyle(
-                  color: Colors.red[900],
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.red[900], fontSize: 14),
               ),
             ),
             if (onRetry != null) ...[
@@ -227,10 +221,7 @@ class ErrorHandlerBuilder<T> extends StatelessWidget {
 
         if (snapshot.hasError) {
           return errorBuilder?.call(context, snapshot.error) ??
-              InlineErrorWidget(
-                error: snapshot.error,
-                onRetry: onRetry,
-              );
+              InlineErrorWidget(error: snapshot.error, onRetry: onRetry);
         }
 
         if (snapshot.hasData) {
@@ -272,10 +263,7 @@ class ErrorHandlerStreamBuilder<T> extends StatelessWidget {
 
         if (snapshot.hasError) {
           return errorBuilder?.call(context, snapshot.error) ??
-              InlineErrorWidget(
-                error: snapshot.error,
-                onRetry: onRetry,
-              );
+              InlineErrorWidget(error: snapshot.error, onRetry: onRetry);
         }
 
         if (snapshot.hasData) {

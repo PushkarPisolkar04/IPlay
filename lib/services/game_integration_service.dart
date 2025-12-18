@@ -2,15 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../core/constants/app_constants.dart';
 import '../models/game_progress_model.dart';
 import '../core/models/user_model.dart';
 import '../core/services/badge_service.dart';
+import '../core/services/xp_service.dart';
 import 'streak_service.dart';
 
 /// Service for integrating games with core systems (XP, progress, leaderboards, analytics)
 class GameIntegrationService {
-  static final GameIntegrationService _instance = GameIntegrationService._internal();
+  static final GameIntegrationService _instance =
+      GameIntegrationService._internal();
   factory GameIntegrationService() => _instance;
   GameIntegrationService._internal();
 
@@ -18,19 +21,20 @@ class GameIntegrationService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   final StreakService _streakService = StreakService();
+  final XPService _xpService = XPService();
 
   /// Get current user ID
   String? get _currentUserId => _auth.currentUser?.uid;
 
   /// Award XP to user after game completion
-  /// 
+  ///
   /// Parameters:
   /// - [gameId]: The game identifier
   /// - [baseXP]: Base XP from game model
   /// - [score]: User's score (0-100)
   /// - [isPerfectScore]: Whether user achieved perfect score
   /// - [isFirstCompletion]: Whether this is first time completing the game
-  /// 
+  ///
   /// Returns map with 'xp' (total XP awarded) and 'newBadges' (list of badge IDs)
   Future<Map<String, dynamic>> awardGameXP({
     required String gameId,
@@ -56,6 +60,13 @@ class GameIntegrationService {
         totalXP += baseXP;
       }
 
+      // Enforce daily XP cap
+      final xpCapResult = await _xpService.calculateAwardedXP(
+        userId: _currentUserId!,
+        earnedXP: totalXP,
+      );
+      final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
+
       // Update user's total XP in Firestore
       final userRef = _firestore
           .collection(AppConstants.collectionUsers)
@@ -63,13 +74,13 @@ class GameIntegrationService {
 
       await _firestore.runTransaction((transaction) async {
         final userDoc = await transaction.get(userRef);
-        
+
         if (!userDoc.exists) {
           throw Exception('User document not found');
         }
 
         final currentXP = userDoc.data()?['totalXP'] ?? 0;
-        final newTotalXP = currentXP + totalXP;
+        final newTotalXP = currentXP + xpToAward;
 
         // DON'T update lastActiveDate here - let StreakService handle it
         transaction.update(userRef, {
@@ -86,14 +97,19 @@ class GameIntegrationService {
       final progressRef = _firestore
           .collection('game_progress')
           .doc('${_currentUserId}__$gameId');
-      
+
       final progressDoc = await progressRef.get();
-      final currentGameXP = (progressDoc.data()?['totalXPEarned'] as num?)?.toInt() ?? 0;
-      
-      print('✅ Awarding $totalXP XP for $gameId (previous: $currentGameXP, new total: ${currentGameXP + totalXP})');
-      
+      final currentGameXP =
+          (progressDoc.data()?['totalXPEarned'] as num?)?.toInt() ?? 0;
+
+      if (kDebugMode) {
+        print(
+          '✅ Awarding $xpToAward XP for $gameId (previous: $currentGameXP, new total: ${currentGameXP + xpToAward})',
+        );
+      }
+
       await progressRef.set({
-        'totalXPEarned': currentGameXP + totalXP,
+        'totalXPEarned': currentGameXP + xpToAward,
         'updatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
@@ -101,19 +117,19 @@ class GameIntegrationService {
       final badgeService = BadgeService();
       final newBadges = await badgeService.checkAndAwardBadges(_currentUserId!);
 
-      return {
-        'xp': totalXP,
-        'newBadges': newBadges,
-      };
+      return {'xp': xpToAward, 'newBadges': newBadges};
     } catch (e) {
       throw Exception('Failed to award XP: $e');
     }
   }
 
   /// Show badge animations for newly unlocked badges (call this after game results are shown)
-  Future<void> showBadgeAnimations(BuildContext context, List<String> badgeIds) async {
+  Future<void> showBadgeAnimations(
+    BuildContext context,
+    List<String> badgeIds,
+  ) async {
     if (badgeIds.isEmpty) return;
-    
+
     try {
       final badgeService = BadgeService();
       for (final badgeId in badgeIds) {
@@ -124,7 +140,7 @@ class GameIntegrationService {
         }
       }
     } catch (e) {
-      print('Error showing badge animations: $e');
+      if (kDebugMode) print('Error showing badge animations: $e');
     }
   }
 
@@ -155,7 +171,7 @@ class GameIntegrationService {
   // ============================================================================
 
   /// Save game progress after completion
-  /// 
+  ///
   /// Parameters:
   /// - [gameId]: The game identifier
   /// - [score]: User's score (0-100)
@@ -183,7 +199,8 @@ class GameIntegrationService {
 
       final int gamesPlayed = (existingData?['gamesPlayed'] ?? 0) + 1;
       final int highScore = existingData?['highScore'] ?? 0;
-      final int totalTimeSpent = (existingData?['totalTimeSpent'] ?? 0) + timeSpentSeconds;
+      final int totalTimeSpent =
+          (existingData?['totalTimeSpent'] ?? 0) + timeSpentSeconds;
       final int totalScore = (existingData?['totalScore'] ?? 0) + score;
       final bool wasCompleted = existingData?['completed'] ?? false;
 
@@ -199,7 +216,9 @@ class GameIntegrationService {
         'averageScore': averageScore.round(),
         'totalScore': totalScore,
         'totalTimeSpent': totalTimeSpent,
-        'totalXPEarned': existingData?['totalXPEarned'] ?? 0, // Initialize to 0 if not exists
+        'totalXPEarned':
+            existingData?['totalXPEarned'] ??
+            0, // Initialize to 0 if not exists
         'completed': completed || wasCompleted,
         'lastPlayedAt': FieldValue.serverTimestamp(),
         if (!wasCompleted && completed)
@@ -248,7 +267,7 @@ class GameIntegrationService {
           .get();
 
       final Map<String, GameProgress> progressMap = {};
-      
+
       for (final doc in progressSnapshot.docs) {
         final data = doc.data();
         final gameId = data['gameId'] as String?;
@@ -274,7 +293,7 @@ class GameIntegrationService {
   // ============================================================================
 
   /// Submit score to leaderboards
-  /// 
+  ///
   /// Parameters:
   /// - [gameId]: The game identifier
   /// - [score]: User's score
@@ -307,11 +326,13 @@ class GameIntegrationService {
       }
 
       // Default scopes if not provided
-      final targetScopes = scopes ?? [
-        AppConstants.leaderboardSchool,
-        AppConstants.leaderboardState,
-        AppConstants.leaderboardNational,
-      ];
+      final targetScopes =
+          scopes ??
+          [
+            AppConstants.leaderboardSchool,
+            AppConstants.leaderboardState,
+            AppConstants.leaderboardNational,
+          ];
 
       // Prepare leaderboard entry data
       final entryData = {
@@ -366,7 +387,7 @@ class GameIntegrationService {
   }
 
   /// Get leaderboard entries for a game
-  /// 
+  ///
   /// Parameters:
   /// - [gameId]: The game identifier
   /// - [scope]: Leaderboard scope (class, school, state, national)
@@ -529,13 +550,13 @@ class GameIntegrationService {
       }
 
       // Calculate percentile (higher is better)
-      final percentile = ((totalCount.count! - rank + 1) / totalCount.count!) * 100;
+      final percentile =
+          ((totalCount.count! - rank + 1) / totalCount.count!) * 100;
       return percentile;
     } catch (e) {
       return null;
     }
   }
-
 
   // ============================================================================
   // ANALYTICS
@@ -554,7 +575,7 @@ class GameIntegrationService {
       );
     } catch (e) {
       // Analytics errors should not break the app
-      print('Analytics error: $e');
+      if (kDebugMode) print('Analytics error: $e');
     }
   }
 
@@ -578,7 +599,7 @@ class GameIntegrationService {
         },
       );
     } catch (e) {
-      print('Analytics error: $e');
+      if (kDebugMode) print('Analytics error: $e');
     }
   }
 
@@ -594,7 +615,7 @@ class GameIntegrationService {
         },
       );
     } catch (e) {
-      print('Analytics error: $e');
+      if (kDebugMode) print('Analytics error: $e');
     }
   }
 
@@ -616,7 +637,7 @@ class GameIntegrationService {
         },
       );
     } catch (e) {
-      print('Analytics error: $e');
+      if (kDebugMode) print('Analytics error: $e');
     }
   }
 
@@ -662,16 +683,18 @@ class GameIntegrationService {
         if (userId.isNotEmpty) uniquePlayers.add(userId);
       }
 
-      final completionRate = uniquePlayers.isEmpty 
-          ? 0.0 
+      final completionRate = uniquePlayers.isEmpty
+          ? 0.0
           : (completedGames / uniquePlayers.length) * 100;
 
       final averageScore = totalPlays == 0 ? 0.0 : totalScore / totalPlays;
-      final averageTimeSpent = totalPlays == 0 ? 0 : totalTimeSpent ~/ totalPlays;
-      
+      final averageTimeSpent = totalPlays == 0
+          ? 0
+          : totalTimeSpent ~/ totalPlays;
+
       // Retry rate: (total plays - unique players) / unique players
-      final retryRate = uniquePlayers.isEmpty 
-          ? 0.0 
+      final retryRate = uniquePlayers.isEmpty
+          ? 0.0
           : ((totalPlays - uniquePlayers.length) / uniquePlayers.length) * 100;
 
       return GameAnalytics(
@@ -692,9 +715,7 @@ class GameIntegrationService {
   Future<List<String>> getPopularGames({int limit = 10}) async {
     try {
       // Get all game progress documents
-      final progressSnapshot = await _firestore
-          .collectionGroup('games')
-          .get();
+      final progressSnapshot = await _firestore.collectionGroup('games').get();
 
       // Aggregate plays by game ID
       final Map<String, int> gamePlays = {};
@@ -712,10 +733,7 @@ class GameIntegrationService {
       final sortedGames = gamePlays.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
 
-      return sortedGames
-          .take(limit)
-          .map((e) => e.key)
-          .toList();
+      return sortedGames.take(limit).map((e) => e.key).toList();
     } catch (e) {
       throw Exception('Failed to get popular games: $e');
     }

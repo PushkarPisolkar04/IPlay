@@ -24,7 +24,7 @@ class JoinRequestsScreen extends StatefulWidget {
 
 class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
   final JoinRequestService _requestService = JoinRequestService();
-  
+
   List<JoinRequestModel> _pendingRequests = [];
   bool _isLoading = true;
   String? _error;
@@ -45,7 +45,7 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
       final requests = await _requestService.getPendingRequests(
         widget.classroomId,
       );
-      
+
       setState(() {
         _pendingRequests = requests;
         _isLoading = false;
@@ -60,8 +60,11 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
 
   Future<void> _approveRequest(JoinRequestModel request) async {
     try {
-      final teacherId = Provider.of<AuthProvider>(context, listen: false).currentUser!.uid;
-      
+      final teacherId = Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).currentUser!.uid;
+
       await _requestService.approveRequest(
         requestId: request.id,
         teacherId: teacherId,
@@ -73,9 +76,9 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
 
       _loadRequests(); // Reload list
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error approving request: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error approving request: $e')));
     }
   }
 
@@ -89,23 +92,26 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
     if (result == null) return; // User cancelled
 
     try {
-      final teacherId = Provider.of<AuthProvider>(context, listen: false).currentUser!.uid;
-      
+      final teacherId = Provider.of<AuthProvider>(
+        context,
+        listen: false,
+      ).currentUser!.uid;
+
       await _requestService.rejectRequest(
         requestId: request.id,
         teacherId: teacherId,
         reason: result.isEmpty ? null : result,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Request rejected')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Request rejected')));
 
       _loadRequests(); // Reload list
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error rejecting request: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error rejecting request: $e')));
     }
   }
 
@@ -130,7 +136,10 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
             child: SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 12,
+                ),
                 child: Row(
                   children: [
                     IconButton(
@@ -169,10 +178,10 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
             child: _isLoading
                 ? const ListSkeleton(itemCount: 5)
                 : _error != null
-                    ? _buildErrorState()
-                    : _pendingRequests.isEmpty
-                        ? _buildEmptyState()
-                        : _buildRequestsList(),
+                ? _buildErrorState()
+                : _pendingRequests.isEmpty
+                ? _buildEmptyState()
+                : _buildRequestsList(),
           ),
         ],
       ),
@@ -186,7 +195,11 @@ class _JoinRequestsScreenState extends State<JoinRequestsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: AppDesignSystem.textSecondary),
+            const Icon(
+              Icons.error_outline,
+              size: 64,
+              color: AppDesignSystem.textSecondary,
+            ),
             const SizedBox(height: 16),
             Text(
               _error!,
@@ -333,7 +346,7 @@ class _RequestCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                
+
                 // Student info
                 Expanded(
                   child: Column(
@@ -360,7 +373,7 @@ class _RequestCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Action buttons
             Row(
               children: [
@@ -449,4 +462,3 @@ class _RejectDialogState extends State<_RejectDialog> {
     );
   }
 }
-

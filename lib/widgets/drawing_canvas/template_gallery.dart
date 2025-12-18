@@ -18,7 +18,7 @@ class TemplateGallery extends StatefulWidget {
 
 class _TemplateGalleryState extends State<TemplateGallery> {
   String _selectedCategory = 'all';
-  
+
   List<String> get _categories {
     final categories = <String>{'all'};
     for (var template in widget.templates) {
@@ -121,9 +121,7 @@ class _TemplateGalleryState extends State<TemplateGallery> {
                     topRight: Radius.circular(12),
                   ),
                 ),
-                child: Center(
-                  child: _buildTemplateThumbnail(template),
-                ),
+                child: Center(child: _buildTemplateThumbnail(template)),
               ),
             ),
 
@@ -145,10 +143,7 @@ class _TemplateGalleryState extends State<TemplateGallery> {
                   const SizedBox(height: 4),
                   Text(
                     template.description,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -158,11 +153,7 @@ class _TemplateGalleryState extends State<TemplateGallery> {
                       _buildDifficultyBadge(template.difficulty),
                       const Spacer(),
                       if (template.templateData.gridEnabled)
-                        const Icon(
-                          Icons.grid_on,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
+                        const Icon(Icons.grid_on, size: 16, color: Colors.grey),
                     ],
                   ),
                 ],
@@ -208,11 +199,7 @@ class _TemplateGalleryState extends State<TemplateGallery> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          icon,
-          size: 48,
-          color: iconColor,
-        ),
+        Icon(icon, size: 48, color: iconColor),
         if (template.templateData.gridEnabled) ...[
           const SizedBox(height: 8),
           Container(
@@ -297,10 +284,7 @@ class _TemplateGalleryState extends State<TemplateGallery> {
 class TemplateSelectionDialog extends StatelessWidget {
   final List<DesignTemplate> templates;
 
-  const TemplateSelectionDialog({
-    super.key,
-    required this.templates,
-  });
+  const TemplateSelectionDialog({super.key, required this.templates});
 
   @override
   Widget build(BuildContext context) {
@@ -316,10 +300,7 @@ class TemplateSelectionDialog extends StatelessWidget {
               children: [
                 const Text(
                   'Choose a Template',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
                 IconButton(
@@ -374,10 +355,7 @@ class GridToggle extends StatelessWidget {
             const SizedBox(width: 8),
             const Text(
               'Show Grid',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             const Spacer(),
             Switch(
@@ -392,10 +370,7 @@ class GridToggle extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              const Text(
-                'Grid Size',
-                style: TextStyle(fontSize: 12),
-              ),
+              const Text('Grid Size', style: TextStyle(fontSize: 12)),
               const SizedBox(width: 12),
               Expanded(
                 child: Slider(
@@ -408,10 +383,7 @@ class GridToggle extends StatelessWidget {
                   activeColor: Colors.teal,
                 ),
               ),
-              Text(
-                '$gridSize',
-                style: const TextStyle(fontSize: 12),
-              ),
+              Text('$gridSize', style: const TextStyle(fontSize: 12)),
             ],
           ),
         ],
@@ -425,11 +397,7 @@ class TemplatePreview extends StatelessWidget {
   final DesignTemplate template;
   final VoidCallback? onUse;
 
-  const TemplatePreview({
-    super.key,
-    required this.template,
-    this.onUse,
-  });
+  const TemplatePreview({super.key, required this.template, this.onUse});
 
   @override
   Widget build(BuildContext context) {
@@ -446,10 +414,7 @@ class TemplatePreview extends StatelessWidget {
           // Template name
           Text(
             template.name,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 8),
@@ -457,10 +422,7 @@ class TemplatePreview extends StatelessWidget {
           // Description
           Text(
             template.description,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
           ),
 
           const SizedBox(height: 16),
@@ -521,13 +483,7 @@ class TemplatePreview extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: Colors.grey[700]),
           const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[700],
-            ),
-          ),
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
         ],
       ),
     );

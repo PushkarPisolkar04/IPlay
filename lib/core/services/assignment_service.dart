@@ -76,7 +76,9 @@ class AssignmentService {
   }
 
   /// Get all assignments for a classroom
-  Future<List<AssignmentModel>> getClassroomAssignments(String classroomId) async {
+  Future<List<AssignmentModel>> getClassroomAssignments(
+    String classroomId,
+  ) async {
     try {
       final query = await _firestore
           .collection('assignments')
@@ -112,10 +114,13 @@ class AssignmentService {
   }
 
   /// Update assignment
-  Future<void> updateAssignment(String assignmentId, Map<String, dynamic> updates) async {
+  Future<void> updateAssignment(
+    String assignmentId,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       updates['updatedAt'] = Timestamp.now();
-      
+
       await _firestore
           .collection('assignments')
           .doc(assignmentId)
@@ -128,10 +133,7 @@ class AssignmentService {
   /// Delete assignment (soft delete)
   Future<void> deleteAssignment(String assignmentId) async {
     try {
-      await _firestore
-          .collection('assignments')
-          .doc(assignmentId)
-          .update({
+      await _firestore.collection('assignments').doc(assignmentId).update({
         'isActive': false,
         'updatedAt': Timestamp.now(),
       });
@@ -160,7 +162,9 @@ class AssignmentService {
           .get();
 
       if (existing.docs.isNotEmpty) {
-        throw Exception('Assignment already submitted. Use updateSubmission to edit.');
+        throw Exception(
+          'Assignment already submitted. Use updateSubmission to edit.',
+        );
       }
 
       final submission = AssignmentSubmissionModel(
@@ -185,7 +189,8 @@ class AssignmentService {
   }
 
   /// Update a submission (before grading)
-  Future<void> updateSubmission(String submissionId, {
+  Future<void> updateSubmission(
+    String submissionId, {
     required String submissionText,
     List<String>? attachmentUrls,
   }) async {
@@ -201,7 +206,7 @@ class AssignmentService {
       }
 
       final submission = AssignmentSubmissionModel.fromFirestore(doc.data()!);
-      
+
       if (submission.gradedAt != null) {
         throw Exception('Cannot update submission after it has been graded');
       }
@@ -210,10 +215,10 @@ class AssignmentService {
           .collection('assignment_submissions')
           .doc(submissionId)
           .update({
-        'submissionText': submissionText,
-        'attachmentUrls': attachmentUrls,
-        'submittedAt': Timestamp.now(), // Update submission timestamp
-      });
+            'submissionText': submissionText,
+            'attachmentUrls': attachmentUrls,
+            'submittedAt': Timestamp.now(), // Update submission timestamp
+          });
     } catch (e) {
       throw Exception('Failed to update submission: $e');
     }
@@ -257,7 +262,9 @@ class AssignmentService {
   }
 
   /// Get all submissions for an assignment
-  Future<List<AssignmentSubmissionModel>> getAssignmentSubmissions(String assignmentId) async {
+  Future<List<AssignmentSubmissionModel>> getAssignmentSubmissions(
+    String assignmentId,
+  ) async {
     try {
       final query = await _firestore
           .collection('assignment_submissions')
@@ -274,7 +281,9 @@ class AssignmentService {
   }
 
   /// Get all submissions by a student
-  Future<List<AssignmentSubmissionModel>> getStudentSubmissions(String studentId) async {
+  Future<List<AssignmentSubmissionModel>> getStudentSubmissions(
+    String studentId,
+  ) async {
     try {
       final query = await _firestore
           .collection('assignment_submissions')
@@ -302,11 +311,11 @@ class AssignmentService {
           .collection('assignment_submissions')
           .doc(submissionId)
           .update({
-        'score': score,
-        'feedback': feedback,
-        'gradedAt': Timestamp.now(),
-        'gradedBy': teacherId,
-      });
+            'score': score,
+            'feedback': feedback,
+            'gradedAt': Timestamp.now(),
+            'gradedBy': teacherId,
+          });
     } catch (e) {
       throw Exception('Failed to grade submission: $e');
     }
@@ -316,11 +325,13 @@ class AssignmentService {
   Future<Map<String, dynamic>> getAssignmentStats(String assignmentId) async {
     try {
       final submissions = await getAssignmentSubmissions(assignmentId);
-      
+
       final totalSubmissions = submissions.length;
-      final gradedSubmissions = submissions.where((s) => s.score != null).length;
+      final gradedSubmissions = submissions
+          .where((s) => s.score != null)
+          .length;
       final ungradedSubmissions = totalSubmissions - gradedSubmissions;
-      
+
       double? averageScore;
       if (gradedSubmissions > 0) {
         final totalScore = submissions
@@ -340,4 +351,3 @@ class AssignmentService {
     }
   }
 }
-

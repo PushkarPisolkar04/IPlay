@@ -12,9 +12,9 @@ class ObjectPool<T> {
     void Function(T)? reset,
     int initialSize = 0,
     int maxSize = 100,
-  })  : _factory = factory,
-        _reset = reset,
-        _maxSize = maxSize {
+  }) : _factory = factory,
+       _reset = reset,
+       _maxSize = maxSize {
     for (int i = 0; i < initialSize; i++) {
       _pool.add(_factory());
     }
@@ -84,18 +84,19 @@ class ParticlePool {
   final ObjectPool<PooledParticle> _pool;
 
   ParticlePool({int initialSize = 50, int maxSize = 200})
-      : _pool = ObjectPool<PooledParticle>(
-          factory: () => PooledParticle(),
-          reset: (p) => p.reset(),
-          initialSize: initialSize,
-          maxSize: maxSize,
-        );
+    : _pool = ObjectPool<PooledParticle>(
+        factory: () => PooledParticle(),
+        reset: (p) => p.reset(),
+        initialSize: initialSize,
+        maxSize: maxSize,
+      );
 
   PooledParticle acquire() => _pool.acquire();
 
   void release(PooledParticle particle) => _pool.release(particle);
 
-  void releaseAll(List<PooledParticle> particles) => _pool.releaseAll(particles);
+  void releaseAll(List<PooledParticle> particles) =>
+      _pool.releaseAll(particles);
 
   void clear() => _pool.clear();
 
