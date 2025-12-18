@@ -160,16 +160,27 @@ class _MyAppState extends State<MyApp> {
           theme: AppTheme.lightTheme,
           initialRoute: '/',
           // Support text scaling with maximum limit to prevent layout breaks
+          // AND add responsive width constraints for web
           builder: (context, child) {
             final mediaQueryData = MediaQuery.of(context);
             final constrainedTextScaleFactor = mediaQueryData.textScaleFactor
                 .clamp(1.0, 2.0);
+            final screenWidth = mediaQueryData.size.width;
 
+            // Constrain width on large screens (web/desktop)
+            // Mobile-first design: max 600px width, centered on larger screens
             return MediaQuery(
               data: mediaQueryData.copyWith(
                 textScaler: TextScaler.linear(constrainedTextScaleFactor),
               ),
-              child: child!,
+              child: screenWidth > 600
+                  ? Center(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: child!,
+                      ),
+                    )
+                  : child!,
             );
           },
           onGenerateRoute: (settings) {
