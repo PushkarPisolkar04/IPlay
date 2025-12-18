@@ -1,47 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- SEO Meta Tags -->
-  <meta name="description" content="IPlay - Learn Intellectual Property Rights the fun way! Interactive gamified learning platform with 6 IP realms, quizzes, badges, and premium certificates.">
-  <meta name="keywords" content="IP Rights, Intellectual Property, Learning, Education, Gamification, Copyright, Trademark, Patent">
+  <meta name="description"
+    content="IPlay - Learn Intellectual Property Rights the fun way! Interactive gamified learning platform with 6 IP realms, quizzes, badges, and premium certificates.">
+  <meta name="keywords"
+    content="IP Rights, Intellectual Property, Learning, Education, Gamification, Copyright, Trademark, Patent">
   <meta name="author" content="Pushkar Pisolkar">
-  
+
   <!-- Open Graph / Social Media Meta Tags -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="IPlay - Learn IP Rights the Fun Way">
-  <meta property="og:description" content="Transform complex IP law into an exciting learning adventure with interactive games, quizzes, and premium certificates.">
+  <meta property="og:description"
+    content="Transform complex IP law into an exciting learning adventure with interactive games, quizzes, and premium certificates.">
   <meta property="og:image" content="icons/Icon-512.png">
-  
+
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="IPlay - Learn IP Rights the Fun Way">
   <meta name="twitter:description" content="Interactive gamified learning platform for Intellectual Property Rights">
-  
+
   <!-- Theme Color -->
   <meta name="theme-color" content="#6366F1">
-
-  <!-- Google Sign-In Client ID - Replace YOUR_CLIENT_ID with actual OAuth client ID from Firebase Console -->
-  <!-- Get it from: Firebase Console > Authentication > Sign-in method > Google > Web SDK configuration -->
-  <!-- <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"> -->
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -51,68 +38,26 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon - Multiple sizes for better compatibility -->
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png"/>
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png"/>
-  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png"/>
-  <link rel="icon" type="image/png" sizes="512x512" href="icons/Icon-512.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/Icon-512.png" />
 
   <!-- Page Title -->
   <title>IPlay - Learn IP Rights the Fun Way 🎮</title>
-  
+
   <!-- Web App Manifest -->
   <link rel="manifest" href="manifest.json">
-  
+
   <!-- Preconnect to Firebase for faster loading -->
   <link rel="preconnect" href="https://firebasestorage.googleapis.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
+
 <body>
-  <!-- Loading indicator -->
-  <div id="loading" style="
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  ">
-    <img src="icons/Icon-192.png" alt="IPlay Logo" style="width: 120px; height: 120px; margin-bottom: 20px; animation: pulse 2s infinite;">
-    <h1 style="color: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; font-size: 32px;">IPlay</h1>
-    <p style="color: rgba(255,255,255,0.8); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin-top: 10px;">Learn IP Rights the Fun Way</p>
-    <div style="margin-top: 30px; width: 200px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; overflow: hidden;">
-      <div style="width: 100%; height: 100%; background: white; animation: loading 1.5s infinite;"></div>
-    </div>
-  </div>
-  
-  <style>
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-    @keyframes loading {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-  </style>
-  
-  <script>
-    // Hide loading screen when Flutter app is ready
-    window.addEventListener('flutter-first-frame', function() {
-      const loading = document.getElementById('loading');
-      if (loading) {
-        loading.style.opacity = '0';
-        loading.style.transition = 'opacity 0.5s';
-        setTimeout(() => loading.remove(), 500);
-      }
-    });
-  </script>
-  
+  <!-- Flutter app will load here with its own splash screen -->
   <script src="flutter_bootstrap.js" async></script>
 </body>
+
 </html>
