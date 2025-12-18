@@ -1,13 +1,17 @@
 {
-    "name": "iplay",
-    "short_name": "iplay",
+    "name": "IPlay - Learn IP Rights the Fun Way",
+    "short_name": "IPlay",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#6366F1",
+    "theme_color": "#6366F1",
+    "description": "Interactive gamified learning platform for Intellectual Property Rights. Master 6 IP realms with quizzes, games, and earn premium certificates!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
+    "categories": [
+        "education",
+        "games"
+    ],
     "icons": [
         {
             "src": "icons/Icon-192.png",
