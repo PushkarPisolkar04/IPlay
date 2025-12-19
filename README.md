@@ -134,9 +134,9 @@ IPlay is an **interactive gamified learning platform** that makes understanding 
     <td><img src="screenshots/student/01-dashboard.png" alt="Student Dashboard" width="250"/><br/><b>Dashboard</b></td>
     <td><img src="screenshots/student/02-realms.png" alt="IP Realms" width="250"/><br/><b>6 IP Realms</b></td>
     <td><img src="screenshots/student/03-quiz.png" alt="Interactive Quiz" width="250"/><br/><b>Interactive Quizzes</b></td>
+    <td><img src="screenshots/student/04-certificate.png" alt="Premium Certificate" width="250"/><br/><b>Premium Certificates</b></td>
   </tr>
   <tr>
-    <td><img src="screenshots/student/04-certificate.png" alt="Premium Certificate" width="250"/><br/><b>Premium Certificates</b></td>
     <td><img src="screenshots/student/05-leaderboard.png" alt="Leaderboard" width="250"/><br/><b>Leaderboards</b></td>
     <td><img src="screenshots/student/06-profile.png" alt="Profile" width="250"/><br/><b>Student Profile</b></td>
     <td><img src="screenshots/student/07-badges.png" alt="Badges" width="250"/><br/><b>Student Badges</b></td>
