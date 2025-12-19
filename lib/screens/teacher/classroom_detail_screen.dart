@@ -3,15 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../core/design/app_design_system.dart';
-import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../models/classroom_model.dart';
-import '../../widgets/clean_card.dart';
-import '../../widgets/top_bar_with_avatar.dart';
+import '../../widgets/qr_code_widget.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
 import '../announcements/unified_announcements_screen.dart';
 import '../classroom/join_requests_screen.dart';
@@ -81,127 +78,13 @@ class _ClassroomDetailScreenState extends State<ClassroomDetailScreen> {
     showDialog(
       context: context,
       builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header with gradient background
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [const Color(0xFF6366F1), const Color(0xFF8B5CF6)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    const Icon(Icons.qr_code_2, color: Colors.white, size: 40),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Scan to Join',
-                      style: AppTextStyles.h3.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.classroom.name,
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: Colors.white.withOpacity(0.9),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              // QR Code
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppDesignSystem.primaryIndigo.withOpacity(0.2),
-                    width: 2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: QrImageView(
-                  data: widget.classroom.joinCode,
-                  version: QrVersions.auto,
-                  size: 200,
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Join Code
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF6366F1).withOpacity(0.1),
-                      const Color(0xFF8B5CF6).withOpacity(0.1),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  widget.classroom.joinCode,
-                  style: AppTextStyles.h3.copyWith(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 4,
-                    color: AppDesignSystem.primaryIndigo,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Close Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppDesignSystem.primaryIndigo,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: QrCodeWidget(
+          type: 'classroom',
+          code: widget.classroom.joinCode,
+          name: widget.classroom.name,
         ),
       ),
     );

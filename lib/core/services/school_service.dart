@@ -153,7 +153,9 @@ class SchoolService {
 
       // Update teacher's user document
       await _firestore.collection('users').doc(teacherId).update({
-        'schoolTag': schoolId,
+        'schoolId': schoolId,
+        'schoolTag': schoolId, // Fallback/Duplicate as per established pattern
+        'pendingSchoolId': FieldValue.delete(),
       });
     } catch (e) {
       throw Exception('Failed to add teacher to school: $e');
@@ -170,6 +172,7 @@ class SchoolService {
 
       // Update teacher's user document
       await _firestore.collection('users').doc(teacherId).update({
+        'schoolId': FieldValue.delete(),
         'schoolTag': FieldValue.delete(),
       });
     } catch (e) {

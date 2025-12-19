@@ -213,7 +213,7 @@ class ReportService {
         .get();
 
     List<List<dynamic>> rows = [
-      ['Classroom', 'Teacher', 'Students', 'Total XP', 'Avg XP'],
+      ['Classroom', 'Teacher', 'Active Students', 'Total XP', 'Avg XP'],
     ];
 
     for (var classroom in classrooms.docs) {
@@ -221,18 +221,24 @@ class ReportService {
       final studentIds = List<String>.from(classData['studentIds']);
 
       int totalXP = 0;
+      int activeStudents = 0;
+      
       for (String studentId in studentIds) {
         final user = await _firestore.collection('users').doc(studentId).get();
-        totalXP += (user.data()?['totalXP'] ?? 0) as int;
+        // Skip deleted students
+        if (user.exists && user.data()?['isDeleted'] != true) {
+          activeStudents++;
+          totalXP += (user.data()?['totalXP'] ?? 0) as int;
+        }
       }
 
       rows.add([
         classData['name'],
         classData['teacherName'],
-        studentIds.length,
+        activeStudents,
         totalXP,
-        studentIds.isNotEmpty
-            ? (totalXP / studentIds.length).toStringAsFixed(1)
+        activeStudents > 0
+            ? (totalXP / activeStudents).toStringAsFixed(1)
             : '0',
       ]);
     }
@@ -412,6 +418,117 @@ class ReportService {
           pw.Text(
             'Report Generated: ${DateTime.now().toString().split('.')[0]}',
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+          ),
+        ],
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  /// Generate School Analytics Report (PDF) - All classrooms
+  Future<Uint8List> generateSchoolReport(String schoolId) async {
+    final classrooms = await _firestore
+        .collection('classrooms')
+        .where('schoolId', isEqualTo: schoolId)
+        .get();
+
+    final pdf = pw.Document();
+
+    // Gather school-wide data
+    int totalStudents = 0;
+    int totalXP = 0;
+    int totalStreak = 0;
+    int totalBadges = 0;
+    List<Map<String, dynamic>> classroomData = [];
+
+    for (var classroom in classrooms.docs) {
+      final classData = classroom.data();
+      final studentIds = List<String>.from(classData['studentIds'] ?? []);
+
+      int classXP = 0;
+      int classStreak = 0;
+      int classBadges = 0;
+      int activeStudents = 0;
+
+      for (String studentId in studentIds) {
+        final user = await _firestore.collection('users').doc(studentId).get();
+        if (user.exists && user.data()?['isDeleted'] != true) {
+          activeStudents++;
+          classXP += (user.data()?['totalXP'] ?? 0) as int;
+          classStreak += (user.data()?['currentStreak'] ?? 0) as int;
+          classBadges += ((user.data()?['badges'] as List?)?.length ?? 0);
+        }
+      }
+
+      totalStudents += activeStudents;
+      totalXP += classXP;
+      totalStreak += classStreak;
+      totalBadges += classBadges;
+
+      classroomData.add({
+        'name': classData['name'] ?? 'Unknown',
+        'teacher': classData['teacherName'] ?? 'Unknown',
+        'students': activeStudents,
+        'xp': classXP,
+        'avgXP': activeStudents > 0 ? (classXP / activeStudents).toStringAsFixed(1) : '0',
+        'avgStreak': activeStudents > 0 ? (classStreak / activeStudents).toStringAsFixed(1) : '0',
+      });
+    }
+
+    // Sort by total XP
+    classroomData.sort((a, b) => (b['xp'] as int).compareTo(a['xp'] as int));
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) => [
+          // Header
+          pw.Header(
+            level: 0,
+            child: pw.Text(
+              'School Analytics Report',
+              style: pw.TextStyle(fontSize: 28, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.SizedBox(height: 10),
+          pw.Divider(thickness: 2),
+          pw.SizedBox(height: 20),
+
+          // School Summary
+          pw.Header(level: 1, child: pw.Text('School Summary', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold))),
+          pw.SizedBox(height: 10),
+          pw.Table.fromTextArray(
+            headers: ['Metric', 'Total', 'Average'],
+            data: [
+              ['Total Classrooms', classrooms.docs.length.toString(), '-'],
+              ['Total Students', totalStudents.toString(), '-'],
+              ['Total XP', totalXP.toString(), totalStudents > 0 ? (totalXP / totalStudents).toStringAsFixed(1) : '0'],
+              ['Total Streak', totalStreak.toString(), totalStudents > 0 ? (totalStreak / totalStudents).toStringAsFixed(1) : '0'],
+              ['Total Badges', totalBadges.toString(), totalStudents > 0 ? (totalBadges / totalStudents).toStringAsFixed(1) : '0'],
+            ],
+            cellAlignment: pw.Alignment.centerLeft,
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            cellHeight: 25,
+          ),
+          pw.SizedBox(height: 20),
+
+          // Classroom Breakdown
+          pw.Header(level: 1, child: pw.Text('Classroom Performance', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold))),
+          pw.SizedBox(height: 10),
+          pw.TableHelper.fromTextArray(
+            headers: ['Classroom', 'Teacher', 'Students', 'Total XP', 'Avg XP', 'Avg Streak'],
+            data: classroomData.map((c) => [
+              c['name'],
+              c['teacher'],
+              c['students'].toString(),
+              c['xp'].toString(),
+              c['avgXP'],
+              c['avgStreak'],
+            ]).toList(),
+            cellAlignment: pw.Alignment.centerLeft,
+            headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+            cellHeight: 25,
           ),
         ],
       ),

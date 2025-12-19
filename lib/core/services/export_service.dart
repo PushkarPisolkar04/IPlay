@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:csv/csv.dart';
 import 'package:excel/excel.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'file_download_service.dart';
@@ -266,6 +264,119 @@ class ExportService {
       return savedPath;
     } catch (e) {
       throw Exception('Failed to export analytics Excel: $e');
+    }
+  }
+
+  /// Export school analytics to Excel (all classrooms)
+  Future<String?> exportSchoolAnalyticsToExcel(
+    String reportName,
+    String schoolId,
+  ) async {
+    try {
+      final excel = Excel.createExcel();
+      final sheet = excel['School Analytics'];
+
+      // Header row with styling
+      sheet.appendRow([
+        TextCellValue('Classroom'),
+        TextCellValue('Teacher'),
+        TextCellValue('Active Students'),
+        TextCellValue('Total XP'),
+        TextCellValue('Avg XP'),
+        TextCellValue('Avg Streak'),
+      ]);
+
+      // Get all classrooms in the school
+      final classrooms = await FirebaseFirestore.instance
+          .collection('classrooms')
+          .where('schoolId', isEqualTo: schoolId)
+          .get();
+
+      int totalStudents = 0;
+      int totalXP = 0;
+      int totalStreak = 0;
+
+      for (var classroom in classrooms.docs) {
+        final classData = classroom.data();
+        final studentIds = List<String>.from(classData['studentIds'] ?? []);
+
+        int classXP = 0;
+        int classStreak = 0;
+        int activeStudents = 0;
+
+        for (String studentId in studentIds) {
+          final user = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          
+          if (user.exists && user.data()?['isDeleted'] != true) {
+            activeStudents++;
+            classXP += (user.data()?['totalXP'] ?? 0) as int;
+            classStreak += (user.data()?['currentStreak'] ?? 0) as int;
+          }
+        }
+
+        totalStudents += activeStudents;
+        totalXP += classXP;
+        totalStreak += classStreak;
+
+        final avgXP = activeStudents > 0
+            ? (classXP / activeStudents).toStringAsFixed(1)
+            : '0';
+        final avgStreak = activeStudents > 0
+            ? (classStreak / activeStudents).toStringAsFixed(1)
+            : '0';
+
+        sheet.appendRow([
+          TextCellValue(classData['name'] ?? 'Unknown'),
+          TextCellValue(classData['teacherName'] ?? 'Unknown'),
+          IntCellValue(activeStudents),
+          IntCellValue(classXP),
+          TextCellValue(avgXP),
+          TextCellValue(avgStreak),
+        ]);
+      }
+
+      // Add summary row
+      sheet.appendRow([]);
+      final overallAvgXP = totalStudents > 0
+          ? (totalXP / totalStudents).toStringAsFixed(1)
+          : '0';
+      final overallAvgStreak = totalStudents > 0
+          ? (totalStreak / totalStudents).toStringAsFixed(1)
+          : '0';
+
+      sheet.appendRow([
+        TextCellValue('TOTAL'),
+        TextCellValue(''),
+        IntCellValue(totalStudents),
+        IntCellValue(totalXP),
+        TextCellValue(overallAvgXP),
+        TextCellValue(overallAvgStreak),
+      ]);
+
+      // Delete default sheet
+      excel.delete('Sheet1');
+
+      // Save file
+      final fileBytes = excel.save();
+      if (fileBytes == null) {
+        throw Exception('Failed to encode Excel file');
+      }
+
+      final fileDownloadService = FileDownloadService();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final savedPath = await fileDownloadService.saveFile(
+        bytes: Uint8List.fromList(fileBytes),
+        suggestedName: '${reportName.replaceAll(' ', '_')}_$timestamp.xlsx',
+        mimeType:
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      );
+
+      return savedPath;
+    } catch (e) {
+      throw Exception('Failed to export school analytics to Excel: $e');
     }
   }
 

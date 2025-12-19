@@ -9,6 +9,7 @@ import '../../core/services/certificate_service.dart';
 import '../../core/models/certificate_model.dart';
 import '../../widgets/loading_skeleton.dart';
 import 'package:intl/intl.dart';
+import 'certificate_viewer_screen.dart';
 
 class CertificatesScreen extends StatefulWidget {
   const CertificatesScreen({super.key});
@@ -79,42 +80,18 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         ),
       );
 
-      // Get PDF bytes from Firestore
-      final pdfBytes = await _certificateService.getCertificatePdfBytes(
+      // Use certificate service download which uses FileDownloadService
+      final savedPath = await _certificateService.downloadCertificate(
         certificate.id,
       );
 
-      if (pdfBytes == null) {
-        throw Exception('Certificate PDF not found');
-      }
-
-      // Get downloads directory
-      Directory? directory;
-      if (Platform.isAndroid) {
-        directory = await getExternalStorageDirectory();
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-      }
-
-      if (directory == null) {
-        throw Exception('Could not access storage');
-      }
-
-      // Create file path
-      final fileName = 'IPlay_Certificate_${certificate.certificateNumber}.pdf';
-      final filePath = '${directory.path}/$fileName';
-
-      // Write PDF to file
-      final file = File(filePath);
-      await file.writeAsBytes(pdfBytes);
-
       // Show success message
-      if (mounted) {
+      if (mounted && savedPath != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Certificate saved to: $filePath'),
+            content: Text('Certificate saved to Downloads folder!'),
             backgroundColor: AppDesignSystem.success,
-            duration: const Duration(seconds: 4),
+            duration: const Duration(seconds: 3),
             action: SnackBarAction(
               label: 'Share',
               textColor: Colors.white,
@@ -128,6 +105,85 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Download failed: ${e.toString()}'),
+            backgroundColor: AppDesignSystem.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _regenerateCertificate(CertificateModel certificate) async {
+    try {
+      // Show confirmation dialog
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Regenerate Certificate?'),
+          content: const Text(
+            'This will regenerate your certificate with the latest design and data. '
+            'Your certificate number will remain the same.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppDesignSystem.primaryIndigo,
+              ),
+              child: const Text('Regenerate'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirm != true) return;
+
+      // Show loading
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+              SizedBox(width: 16),
+              Text('Regenerating certificate...'),
+            ],
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+
+      // Regenerate by generating a new certificate for the same realm
+      await _certificateService.generateRealmCertificate(
+        realmId: certificate.realmId,
+        realmName: certificate.realmName,
+      );
+
+      // Reload certificates
+      await _loadCertificates();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Certificate regenerated successfully!'),
+            backgroundColor: AppDesignSystem.success,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Regeneration failed: ${e.toString()}'),
             backgroundColor: AppDesignSystem.error,
           ),
         );
@@ -199,49 +255,15 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
   }
 
   Future<void> _viewCertificate(CertificateModel certificate) async {
-    try {
-      final url = await _certificateService.getCertificateDownloadUrl(
-        certificate.id,
-      );
-
-      // Show certificate details dialog
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(certificate.realmName),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Certificate Number: ${certificate.certificateNumber}'),
-              const SizedBox(height: 8),
-              Text(
-                'Issued: ${DateFormat('MMM dd, yyyy').format(certificate.issuedAt)}',
-              ),
-              const SizedBox(height: 8),
-              Text('Type: ${certificate.certificateType.toUpperCase()}'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _downloadCertificate(certificate);
-              },
-              child: const Text('Download'),
-            ),
-          ],
+    // Navigate to certificate viewer screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CertificateViewerScreen(
+          certificate: certificate,
         ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
-    }
+      ),
+    );
   }
 
   @override
@@ -334,6 +356,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
           onTap: () => _viewCertificate(certificate),
           onDownload: () => _downloadCertificate(certificate),
           onShare: () => _shareCertificate(certificate),
+          onRegenerate: () => _regenerateCertificate(certificate),
         );
       },
     );
@@ -345,12 +368,14 @@ class _CertificateCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDownload;
   final VoidCallback onShare;
+  final VoidCallback onRegenerate;
 
   const _CertificateCard({
     required this.certificate,
     required this.onTap,
     required this.onDownload,
     required this.onShare,
+    required this.onRegenerate,
   });
 
   String _getRealmLogo(String realmId) {
@@ -375,60 +400,71 @@ class _CertificateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 12.0),
+      elevation: 2,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Realm logo
                   Container(
-                    width: 60,
-                    height: 60,
+                    width: 50,
+                    height: 50,
                     decoration: BoxDecoration(
                       color: AppDesignSystem.primaryIndigo.withValues(
                         alpha: 0.1,
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(6.0),
                       child: Image.asset(
                         _getRealmLogo(certificate.realmId),
                         fit: BoxFit.contain,
                         errorBuilder: (_, __, ___) => const Icon(
                           Icons.workspace_premium,
-                          size: 32,
+                          size: 28,
                           color: AppDesignSystem.primaryIndigo,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
 
-                  // Certificate info
+                  // Certificate info - Expanded to prevent overflow
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(certificate.realmName, style: AppTextStyles.h3),
-                        const SizedBox(height: 4),
                         Text(
-                          'Certificate #${certificate.certificateNumber}',
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppDesignSystem.textSecondary,
-                          ),
+                          certificate.realmName,
+                          style: AppTextStyles.h3.copyWith(fontSize: 15),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: 3),
                         Text(
-                          'Issued: ${DateFormat('MMM dd, yyyy').format(certificate.issuedAt)}',
+                          'Cert #${certificate.certificateNumber}',
                           style: AppTextStyles.bodySmall.copyWith(
                             color: AppDesignSystem.textSecondary,
+                            fontSize: 11,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          DateFormat('MMM dd, yyyy').format(certificate.issuedAt),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppDesignSystem.textSecondary,
+                            fontSize: 11,
                           ),
                         ),
                       ],
@@ -438,60 +474,82 @@ class _CertificateCard extends StatelessWidget {
                   // Type badge
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: 8,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: AppDesignSystem.success.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       certificate.certificateType.toUpperCase(),
                       style: AppTextStyles.bodySmall.copyWith(
                         color: AppDesignSystem.success,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
 
-              // Action buttons
+              // Action buttons - 3 buttons in a row
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onDownload,
-                      icon: const Icon(Icons.download, size: 16),
+                      icon: const Icon(Icons.download, size: 14),
                       label: const Text(
                         'Download',
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 11),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 12,
+                          horizontal: 4,
+                          vertical: 8,
                         ),
+                        minimumSize: const Size(0, 32),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 6),
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: onShare,
-                      icon: const Icon(Icons.share, size: 16),
+                      icon: const Icon(Icons.share, size: 14),
                       label: const Text(
                         'Share',
-                        style: TextStyle(fontSize: 13),
+                        style: TextStyle(fontSize: 11),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppDesignSystem.primaryIndigo,
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 12,
+                          horizontal: 4,
+                          vertical: 8,
                         ),
+                        minimumSize: const Size(0, 32),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onRegenerate,
+                      icon: const Icon(Icons.refresh, size: 14),
+                      label: const Text(
+                        'Regen',
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppDesignSystem.primaryPink,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 8,
+                        ),
+                        minimumSize: const Size(0, 32),
                       ),
                     ),
                   ),

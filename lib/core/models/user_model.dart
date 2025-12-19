@@ -11,7 +11,9 @@ class UserModel {
   final String? username;
   final String? avatarUrl;
   final String state;
-  final String? schoolTag;
+  final String? schoolId; // The actual document ID of the school
+  final String? schoolTag; // The display code/tag of the school
+  final String? pendingSchoolId; // ID of school where join request is pending
 
   // Role-specific
   final bool isPrincipal;
@@ -52,7 +54,9 @@ class UserModel {
     this.username,
     this.avatarUrl,
     required this.state,
+    this.schoolId,
     this.schoolTag,
+    this.pendingSchoolId,
     this.isPrincipal = false,
     this.principalOfSchool,
     this.classroomIds = const [],
@@ -82,7 +86,9 @@ class UserModel {
       'username': username,
       'avatarUrl': avatarUrl,
       'state': state,
+      'schoolId': schoolId,
       'schoolTag': schoolTag,
+      'pendingSchoolId': pendingSchoolId,
       'isPrincipal': isPrincipal,
       'principalOfSchool': principalOfSchool,
       'classroomIds': classroomIds,
@@ -119,7 +125,9 @@ class UserModel {
       username: data['username'],
       avatarUrl: data['avatarUrl'],
       state: data['state'] ?? '',
+      schoolId: data['schoolId'],
       schoolTag: data['schoolTag'],
+      pendingSchoolId: data['pendingSchoolId'],
       isPrincipal: data['isPrincipal'] ?? false,
       principalOfSchool: data['principalOfSchool'],
       classroomIds: List<String>.from(data['classroomIds'] ?? []),
@@ -162,7 +170,9 @@ class UserModel {
       username: data['username'],
       avatarUrl: data['avatarUrl'],
       state: data['state'] ?? '',
+      schoolId: data['schoolId'],
       schoolTag: data['schoolTag'],
+      pendingSchoolId: data['pendingSchoolId'],
       isPrincipal: data['isPrincipal'] ?? false,
       principalOfSchool: data['principalOfSchool'],
       classroomIds: List<String>.from(data['classroomIds'] ?? []),
@@ -202,7 +212,9 @@ class UserModel {
     String? username,
     String? avatarUrl,
     String? state,
+    String? schoolId,
     String? schoolTag,
+    String? pendingSchoolId,
     int? totalXP,
     int? currentStreak,
     DateTime? lastActiveDate,
@@ -218,7 +230,9 @@ class UserModel {
       username: username ?? this.username,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       state: state ?? this.state,
+      schoolId: schoolId ?? this.schoolId,
       schoolTag: schoolTag ?? this.schoolTag,
+      pendingSchoolId: pendingSchoolId ?? this.pendingSchoolId,
       isPrincipal: isPrincipal,
       principalOfSchool: principalOfSchool,
       classroomIds: classroomIds ?? this.classroomIds,

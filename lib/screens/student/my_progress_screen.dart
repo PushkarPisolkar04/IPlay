@@ -1051,8 +1051,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
     if (idLower == 'social_learner') return Icons.people;
     if (idLower == 'early_adopter') return Icons.access_time;
     if (idLower == 'night_owl') return Icons.nightlight_round;
-    if (idLower == 'first_step' || idLower == 'first_steps')
+    if (idLower == 'first_step' || idLower == 'first_steps') {
       return Icons.directions_walk;
+    }
     if (idLower == 'level_explorer') return Icons.explore;
     if (idLower == 'first_quiz') return Icons.quiz;
     if (idLower == 'xp_collector') return Icons.stars;
@@ -1089,21 +1090,24 @@ class _MyProgressScreenState extends State<MyProgressScreen>
     if (idLower.contains('streak')) return const Color(0xFFF59E0B);
 
     // Master/Champion badges - Purple
-    if (idLower.contains('master') || idLower.contains('champion'))
+    if (idLower.contains('master') || idLower.contains('champion')) {
       return const Color(0xFF8B5CF6);
+    }
 
     // Explorer badges - Cyan
     if (idLower.contains('explorer')) return const Color(0xFF06B6D4);
 
     // Social/People badges - Pink
-    if (idLower.contains('social') || idLower.contains('genius'))
+    if (idLower.contains('social') || idLower.contains('genius')) {
       return const Color(0xFFEC4899);
+    }
 
     // First/Start badges - Green
     if (idLower.contains('first') ||
         idLower.contains('start') ||
-        idLower.contains('step'))
+        idLower.contains('step')) {
       return const Color(0xFF10B981);
+    }
 
     // Quiz badges - Red
     if (idLower.contains('quiz')) return const Color(0xFFEF4444);
@@ -1111,14 +1115,16 @@ class _MyProgressScreenState extends State<MyProgressScreen>
     // Night/Time badges - Indigo
     if (idLower.contains('night') ||
         idLower.contains('owl') ||
-        idLower.contains('early'))
+        idLower.contains('early')) {
       return const Color(0xFF6366F1);
+    }
 
     // Copyright/Legal badges - Purple
     if (idLower.contains('copyright') ||
         idLower.contains('patent') ||
-        idLower.contains('trademark'))
+        idLower.contains('trademark')) {
       return const Color(0xFF8B5CF6);
+    }
 
     // Default - Blue
     return const Color(0xFF6366F1);
@@ -1223,8 +1229,9 @@ class _MyProgressScreenState extends State<MyProgressScreen>
 
     if (_isGame(itemName)) {
       if (nameLower.contains('trademark')) return const Color(0xFFEC4899);
-      if (nameLower.contains('ip') || nameLower.contains('defender'))
+      if (nameLower.contains('ip') || nameLower.contains('defender')) {
         return const Color(0xFF6366F1);
+      }
       if (nameLower.contains('patent')) return const Color(0xFF8B5CF6);
       if (nameLower.contains('spot')) return const Color(0xFFF59E0B);
       if (nameLower.contains('gi')) return const Color(0xFF14B8A6);

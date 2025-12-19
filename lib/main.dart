@@ -32,6 +32,7 @@ import 'screens/chat/chat_screen.dart';
 import 'screens/notifications/notifications_screen.dart';
 import 'screens/daily_challenge/daily_challenge_screen.dart';
 import 'screens/announcements/unified_announcements_screen.dart';
+import 'screens/student/qr_scanner_screen.dart';
 import 'core/models/realm_model.dart';
 import 'services/deep_link_service.dart';
 import 'package:app_links/app_links.dart';
@@ -212,6 +213,12 @@ class _MyAppState extends State<MyApp> {
               case '/email-verification':
                 return MaterialPageRoute(
                   builder: (_) => const EmailVerificationScreen(),
+                );
+              case '/qr-scanner':
+                final args = settings.arguments as Map<String, dynamic>?;
+                final scanOnly = args?['scanOnly'] as bool? ?? false;
+                return MaterialPageRoute(
+                  builder: (_) => QrScannerScreen(scanOnly: scanOnly),
                 );
               case '/main':
                 return MaterialPageRoute(builder: (_) => const MainScreen());

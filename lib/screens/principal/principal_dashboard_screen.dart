@@ -6,6 +6,8 @@ import '../../core/models/user_model.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../widgets/qr_code_widget.dart';
+import '../../widgets/notification_bell_icon.dart';
 import '../settings/settings_screen.dart';
 import '../leaderboard/unified_leaderboard_screen.dart';
 import 'school_settings_screen.dart';
@@ -394,71 +396,7 @@ class _PrincipalOverviewTabState extends State<_PrincipalOverviewTab> {
                           ),
                           Row(
                             children: [
-                              StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('notifications')
-                                    .where(
-                                      'toUserId',
-                                      isEqualTo: FirebaseAuth
-                                          .instance
-                                          .currentUser
-                                          ?.uid,
-                                    )
-                                    .where('read', isEqualTo: false)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  final unreadCount = snapshot.hasData
-                                      ? snapshot.data!.docs.length
-                                      : 0;
-
-                                  return Stack(
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.notifications_outlined,
-                                          color: Colors.white,
-                                          size: 26,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            '/notifications',
-                                          );
-                                        },
-                                      ),
-                                      if (unreadCount > 0)
-                                        Positioned(
-                                          right: 8,
-                                          top: 8,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            constraints: const BoxConstraints(
-                                              minWidth: 18,
-                                              minHeight: 18,
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                unreadCount > 99
-                                                    ? '99+'
-                                                    : unreadCount.toString(),
-                                                style: const TextStyle(
-                                                  color: Color(0xFF6B46C1),
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                },
-                              ),
+                              const NotificationBellIcon(color: Colors.white),
                               const SizedBox(width: 8),
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -1085,7 +1023,11 @@ class _SchoolTeachersTabState extends State<_SchoolTeachersTab> {
           });
 
       // CRITICAL FIX: Update teacher's user profile with schoolId and schoolTag
-      final updateData = {'schoolId': _schoolId, 'updatedAt': Timestamp.now()};
+      final updateData = {
+        'schoolId': _schoolId,
+        'pendingSchoolId': FieldValue.delete(), // Remove pending status
+        'updatedAt': Timestamp.now()
+      };
 
       if (schoolTag != null) {
         updateData['schoolTag'] = schoolTag;
@@ -1978,6 +1920,39 @@ class _SchoolClassroomsTabState extends State<_SchoolClassroomsTab> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
+                            const SizedBox(height: 12),
+                            // Show QR Code Button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(24),
+                                      ),
+                                      child: QrCodeWidget(
+                                        type: 'classroom',
+                                        code: classroom['joinCode'] ?? '',
+                                        name: classroom['name'] ?? 'Classroom',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.qr_code_2, size: 20),
+                                label: const Text('Show QR Code'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF8B5CF6),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  elevation: 0,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       );

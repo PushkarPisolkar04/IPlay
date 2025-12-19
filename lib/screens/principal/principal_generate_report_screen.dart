@@ -27,7 +27,7 @@ class _PrincipalGenerateReportScreenState
   String? _selectedClassroomId;
   String? _selectedStudentId;
   bool _isLoading = true;
-  bool _isGenerating = false;
+  final bool _isGenerating = false;
   String _reportType =
       'school'; // 'school', 'classroom', 'student', 'comparison'
   final ReportService _reportService = ReportService();
@@ -53,14 +53,27 @@ class _PrincipalGenerateReportScreenState
 
       for (var doc in classroomsSnapshot.docs) {
         final classData = doc.data();
+        final studentIds = List<String>.from(classData['studentIds'] ?? []);
+        
+        // Count only non-deleted students
+        int activeStudentCount = 0;
+        for (String studentId in studentIds) {
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(studentId)
+              .get();
+          if (userDoc.exists && userDoc.data()?['isDeleted'] != true) {
+            activeStudentCount++;
+          }
+        }
+        
         _classrooms.add({
           'id': doc.id,
           'name': classData['name'] ?? 'Unknown',
           'teacherName': classData['teacherName'] ?? 'Unknown',
-          'studentCount': (classData['studentIds'] as List?)?.length ?? 0,
+          'studentCount': activeStudentCount,
         });
 
-        final studentIds = List<String>.from(classData['studentIds'] ?? []);
         allStudentIds.addAll(studentIds);
       }
 
@@ -191,9 +204,9 @@ class _PrincipalGenerateReportScreenState
       Uint8List pdfBytes;
       
       // Generate PDF based on report type
-      if (reportType == 'school') {
-        // For school report, use classroom report with aggregated data
-        pdfBytes = await reportService.generateClassroomReport(widget.schoolId);
+      if (reportType == 'school' || reportType == 'comparison') {
+        // Use school report for both school and comparison
+        pdfBytes = await reportService.generateSchoolReport(data['schoolId']);
       } else if (reportType == 'classroom') {
         pdfBytes = await reportService.generateClassroomReport(data['id'] ?? '');
       } else if (reportType == 'student') {
@@ -236,10 +249,16 @@ class _PrincipalGenerateReportScreenState
       final exportService = ExportService();
       String? savedPath;
 
-      if (reportType == 'school') {
-        savedPath = await exportService.exportClassroomAnalyticsToCSV(
-          'School Report',
-          data,
+      if (reportType == 'school' || reportType == 'comparison') {
+        // For school/comparison reports, export school analytics
+        final reportService = ReportService();
+        final csvContent = await reportService.exportSchoolAnalyticsCSV(data['schoolId']);
+        final fileDownloadService = FileDownloadService();
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        savedPath = await fileDownloadService.saveFile(
+          bytes: Uint8List.fromList(csvContent.codeUnits),
+          suggestedName: '${reportType}_report_$timestamp.csv',
+          mimeType: 'text/csv',
         );
       } else if (reportType == 'classroom') {
         savedPath = await exportService.exportClassroomAnalyticsToCSV(
@@ -290,10 +309,11 @@ class _PrincipalGenerateReportScreenState
       final exportService = ExportService();
       String? savedPath;
 
-      if (reportType == 'school') {
-        savedPath = await exportService.exportClassroomAnalyticsToExcel(
-          'School Report',
-          data,
+      if (reportType == 'school' || reportType == 'comparison') {
+        // For school/comparison reports, export all classrooms data
+        savedPath = await exportService.exportSchoolAnalyticsToExcel(
+          reportType == 'school' ? 'School Report' : 'Comparison Report',
+          data['schoolId'],
         );
       } else if (reportType == 'classroom') {
         savedPath = await exportService.exportClassroomAnalyticsToExcel(

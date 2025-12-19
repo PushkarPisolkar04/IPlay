@@ -19,13 +19,22 @@ class NotificationProvider with ChangeNotifier {
 
   /// Initialize notification listener
   void initialize() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    // Listen to auth state changes to handle login/logout automatically
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      _notificationSubscription?.cancel();
+      if (user != null) {
+        _setupNotificationListener(user.uid);
+      } else {
+        _unreadCount = 0;
+        notifyListeners();
+      }
+    });
+  }
 
-    // Set up real-time listener with caching
+  void _setupNotificationListener(String userId) {
     _notificationSubscription = _firestore
         .collection('notifications')
-        .where('toUserId', isEqualTo: user.uid)
+        .where('toUserId', isEqualTo: userId)
         .where('read', isEqualTo: false)
         .snapshots()
         .listen(

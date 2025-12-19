@@ -53,7 +53,7 @@ flutter {
 }
 
 dependencies {
-    // Firebase BoM - Latest version
+    // Firebase BoM - Updated to match Firebase v4+ packages
     implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")

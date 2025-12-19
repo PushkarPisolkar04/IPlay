@@ -5,11 +5,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/material.dart' show Color;
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:io';
 import '../models/certificate_model.dart';
 import 'file_download_service.dart';
 
@@ -90,15 +87,163 @@ class CertificateService {
           .get();
       if (!doc.exists) return null;
 
-      final localPath = doc.data()?['localPath'] as String?;
-      if (localPath == null) return null;
-
-      final file = File(localPath);
-      if (!await file.exists()) return null;
-
-      return await file.readAsBytes();
+      final data = doc.data()!;
+      
+      // Regenerate PDF from metadata
+      return await _regenerateCertificatePdf(data);
     } catch (e) {
       throw Exception('Failed to get PDF: $e');
+    }
+  }
+
+  /// Regenerate certificate PDF from stored metadata
+  Future<Uint8List> _regenerateCertificatePdf(Map<String, dynamic> certData) async {
+    final realmId = certData['realmId'] as String;
+    final realmName = certData['realmName'] as String;
+    final studentName = certData['studentName'] as String;
+    final certificateNumber = certData['certificateNumber'] as String;
+    final levelsCompleted = certData['levelsCompleted'] as int? ?? 0;
+    final totalLevels = certData['totalLevels'] as int? ?? 10;
+    final averageStars = (certData['averageStars'] as num?)?.toDouble() ?? 0.0;
+    
+    print('🎓 REGENERATING CERTIFICATE:');
+    print('   Certificate Number: $certificateNumber');
+    print('   Average Stars: $averageStars');
+    print('   Student: $studentName');
+
+    // Realm Config (same as in generateRealmCertificate)
+    final realmConfig = {
+      'realm_copyright': {
+        'color': PdfColor.fromHex('#EC4899'),
+        'accent': PdfColor.fromHex('#FFD700'),
+        'logo': 'assets/logos/copyright_logo.png',
+      },
+      'realm_trademark': {
+        'color': PdfColor.fromHex('#10B981'),
+        'accent': PdfColor.fromHex('#FFD700'),
+        'logo': 'assets/logos/trademark_logo.png',
+      },
+      'realm_patent': {
+        'color': PdfColor.fromHex('#6366F1'),
+        'accent': PdfColor.fromHex('#FFD700'),
+        'logo': 'assets/logos/patent_logo.png',
+      },
+      'realm_industrial_design': {
+        'color': PdfColor.fromHex('#F59E0B'),
+        'accent': PdfColor.fromHex('#FFD700'),
+        'logo': 'assets/logos/design_logo.png',
+      },
+      'realm_geographical_indications': {
+        'color': PdfColor.fromHex('#14B8A6'),
+        'accent': PdfColor.fromHex('#8B4513'),
+        'logo': 'assets/logos/gi_logo.png',
+      },
+      'realm_trade_secrets': {
+        'color': PdfColor.fromHex('#8B5CF6'),
+        'accent': PdfColor.fromHex('#FFD700'),
+        'logo': 'assets/logos/trade_secrets_logo.png',
+      },
+    };
+
+    final config = realmConfig[realmId] ?? {
+      'color': PdfColors.indigo800,
+      'accent': PdfColors.amber,
+      'logo': 'assets/logos/logo.png',
+    };
+
+    final realmColor = config['color'] as PdfColor;
+    final accentColor = config['accent'] as PdfColor;
+    final realmLogoPath = config['logo'] as String;
+
+    // Load Fonts
+    final poppinsBold = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/Poppins-Bold.ttf"),
+    );
+    final poppins = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/Poppins-Regular.ttf"),
+    );
+    final poppinsItalic = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/Poppins-Italic.ttf"),
+    );
+    final dancingScript = pw.Font.ttf(
+      await rootBundle.load("assets/fonts/DancingScript-Bold.ttf"),
+    );
+
+    // Load Images
+    final appLogoImage = pw.MemoryImage(
+      (await rootBundle.load('assets/logos/logo.png')).buffer.asUint8List(),
+    );
+
+    pw.MemoryImage? realmLogoImage;
+    try {
+      final bytes = await rootBundle.load(realmLogoPath);
+      realmLogoImage = pw.MemoryImage(bytes.buffer.asUint8List());
+    } catch (e) {
+      // Logo load failed
+    }
+
+    // QR Code
+    final qrPainter = QrPainter(
+      data: 'https://iplay.app/verify/$certificateNumber',
+      version: QrVersions.auto,
+      errorCorrectionLevel: QrErrorCorrectLevel.H,
+      eyeStyle: const QrEyeStyle(
+        eyeShape: QrEyeShape.square,
+        color: Color(0xFF000000),
+      ),
+      dataModuleStyle: const QrDataModuleStyle(
+        dataModuleShape: QrDataModuleShape.square,
+        color: Color(0xFF000000),
+      ),
+    );
+    final qrImageData = await qrPainter.toImageData(220);
+    final qrImage = pw.Image(
+      pw.MemoryImage(qrImageData!.buffer.asUint8List()),
+      width: 90,
+      height: 90,
+    );
+
+    // Build PDF
+    final pdf = pw.Document();
+    
+    print('📄 Building enhanced certificate with:');
+    print('   Stars: $averageStars');
+    print('   Watermark: YES');
+    print('   Signature: YES');
+    
+    try {
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4.landscape,
+          margin: pw.EdgeInsets.zero,
+          build: (context) => _buildEnhancedCertificate(
+            realmColor: realmColor,
+            accentColor: accentColor,
+            appLogoImage: appLogoImage,
+            realmLogoImage: realmLogoImage,
+            realmName: realmName,
+            studentName: studentName,
+            certificateNumber: certificateNumber,
+            levelsCompleted: levelsCompleted,
+            totalLevels: totalLevels,
+            averageStars: averageStars,
+            qrImage: qrImage,
+            poppins: poppins,
+            poppinsBold: poppinsBold,
+            poppinsItalic: poppinsItalic,
+            dancingScript: dancingScript,
+          ),
+        ),
+      );
+      
+      print('✅ PDF page added successfully');
+      final bytes = await pdf.save();
+      print('✅ PDF saved successfully, size: ${bytes.length} bytes');
+      return bytes;
+    } catch (e, stackTrace) {
+      print('❌ Error building PDF: $e');
+      print('Stack trace: $stackTrace');
+      rethrow;
     }
   }
 
@@ -151,13 +296,13 @@ class CertificateService {
           doc.data()?['certificateNumber'] ?? 'certificate';
       final realmName = doc.data()?['realmName'] ?? 'Realm';
 
-      final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/$certificateNumber.pdf');
-      await tempFile.writeAsBytes(pdfBytes);
-
-      await Share.shareXFiles([
-        XFile(tempFile.path),
-      ], text: 'My $realmName Certificate - $certificateNumber');
+      // Use FileDownloadService for platform-safe sharing
+      final fileDownloadService = FileDownloadService();
+      await fileDownloadService.shareFile(
+        bytes: pdfBytes,
+        fileName: '$certificateNumber.pdf',
+        shareText: 'My $realmName Certificate - $certificateNumber',
+      );
     } catch (e) {
       throw Exception('Failed to share certificate: $e');
     }
@@ -244,6 +389,9 @@ class CertificateService {
       final poppinsItalic = pw.Font.ttf(
         await rootBundle.load("assets/fonts/Poppins-Italic.ttf"),
       );
+      final dancingScript = pw.Font.ttf(
+        await rootBundle.load("assets/fonts/DancingScript-Bold.ttf"),
+      );
 
       // Load Images
       final appLogoImage = pw.MemoryImage(
@@ -300,9 +448,26 @@ class CertificateService {
           .get();
       int levelsCompleted = 0;
       int totalLevels = 10;
+      double averageStars = 0.0;
       if (progressDoc.exists) {
         levelsCompleted =
             (progressDoc.data()?['completedLevels'] as List?)?.length ?? 0;
+        
+        // Calculate average stars from levelStars map
+        final levelStars = progressDoc.data()?['levelStars'] as Map<String, dynamic>?;
+        if (levelStars != null && levelStars.isNotEmpty) {
+          int totalStars = 0;
+          int levelCount = 0;
+          levelStars.forEach((key, value) {
+            if (value is int) {
+              totalStars += value;
+              levelCount++;
+            }
+          });
+          if (levelCount > 0) {
+            averageStars = totalStars / levelCount;
+          }
+        }
       }
 
       // ENHANCED PDF with Premium Design
@@ -322,34 +487,31 @@ class CertificateService {
             certificateNumber: certificateNumber,
             levelsCompleted: levelsCompleted,
             totalLevels: totalLevels,
+            averageStars: averageStars,
             qrImage: qrImage,
             poppins: poppins,
             poppinsBold: poppinsBold,
             poppinsItalic: poppinsItalic,
+            dancingScript: dancingScript,
           ),
         ),
       );
 
-      // Save PDF
+      // Generate PDF bytes for preview/validation but don't store
       final pdfBytes = await pdf.save();
-      final directory = await getApplicationDocumentsDirectory();
-      final certificatesDir = Directory('${directory.path}/certificates');
-      if (!await certificatesDir.exists()) {
-        await certificatesDir.create(recursive: true);
-      }
-
-      final pdfFile = File('${certificatesDir.path}/$certificateNumber.pdf');
-      await pdfFile.writeAsBytes(pdfBytes);
-
-      // Store metadata
+      
+      // Store only metadata - PDF will be regenerated on-demand
       final certificateData = {
         'id': certificateId,
         'userId': user.uid,
         'certificateType': 'realm',
         'realmId': realmId,
         'realmName': realmName,
+        'studentName': userData['displayName'] ?? 'Outstanding Learner',
         'certificateNumber': certificateNumber,
-        'localPath': pdfFile.path,
+        'levelsCompleted': levelsCompleted,
+        'totalLevels': totalLevels,
+        'averageStars': averageStars,
         'issuedAt': Timestamp.now(),
         'status': 'generated',
       };
@@ -368,92 +530,364 @@ class CertificateService {
     }
   }
 
-  /// Build Enhanced Certificate with Premium Design
+  /// Build Professional Certificate with Modern Design
   pw.Widget _buildEnhancedCertificate({
-    required PdfColor realmColor,
-    required PdfColor accentColor,
-    required pw.MemoryImage appLogoImage,
-    pw.MemoryImage? realmLogoImage,
-    required String realmName,
-    required String studentName,
-    required String certificateNumber,
-    required int levelsCompleted,
-    required int totalLevels,
-    required pw.Image qrImage,
-    required pw.Font poppins,
-    required pw.Font poppinsBold,
-    required pw.Font poppinsItalic,
-  }) {
-    return pw.Stack(
-      children: [
-        // Premium Gradient Background
-        pw.Container(
-          decoration: pw.BoxDecoration(
-            gradient: pw.LinearGradient(
-              colors: [
-                PdfColor.fromHex('#FFFBF0'),
-                PdfColors.white,
-                PdfColor.fromHex('#F0F9FF'),
-              ],
-              begin: pw.Alignment.topLeft,
-              end: pw.Alignment.bottomRight,
-            ),
+  required PdfColor realmColor,
+  required PdfColor accentColor,
+  required pw.MemoryImage appLogoImage,
+  pw.MemoryImage? realmLogoImage,
+  required String realmName,
+  required String studentName,
+  required String certificateNumber,
+  required int levelsCompleted,
+  required int totalLevels,
+  required double averageStars,
+  required pw.Image qrImage,
+  required pw.Font poppins,
+  required pw.Font poppinsBold,
+  required pw.Font poppinsItalic,
+  required pw.Font dancingScript,
+}) {
+  print('🎨 Building certificate layout...');
+  
+  // Define elegant color palette
+  final goldAccent = PdfColor.fromHex('#D4AF37'); // Gold
+  final darkGrey = PdfColor.fromHex('#2C3E50');
+  final lightGrey = PdfColor.fromHex('#95A5A6');
+  
+  return pw.Container(
+    decoration: pw.BoxDecoration(
+      color: PdfColors.white,
+      border: pw.Border.all(
+        color: goldAccent,
+        width: 4,
+      ),
+    ),
+    child: pw.Container(
+      margin: const pw.EdgeInsets.all(4),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(
+          color: realmColor,
+          width: 2,
+        ),
+      ),
+      child: pw.Container(
+        margin: const pw.EdgeInsets.all(3),
+        decoration: pw.BoxDecoration(
+          border: pw.Border.all(
+            color: PdfColors.grey300,
+            width: 1,
           ),
         ),
-
-        // Double Border with Shadow Effect
-        pw.Container(
-          margin: const pw.EdgeInsets.all(25),
-          decoration: pw.BoxDecoration(
-            border: pw.Border.all(color: accentColor, width: 8),
-            borderRadius: pw.BorderRadius.circular(24),
-          ),
-          child: pw.Container(
-            margin: const pw.EdgeInsets.all(5),
-            decoration: pw.BoxDecoration(
-              color: PdfColors.white,
-              borderRadius: pw.BorderRadius.circular(20),
-              border: pw.Border.all(color: realmColor, width: 4),
-            ),
-            padding: const pw.EdgeInsets.all(45),
-            child: pw.Column(
+        padding: const pw.EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            // Header with Logo and Verified Badge
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                // Enhanced Header
-                _buildHeader(appLogoImage, accentColor, realmColor, poppinsBold),
-                pw.SizedBox(height: 28),
-
-                // Title with Divider
-                _buildTitle(realmColor, accentColor, poppinsBold, poppinsItalic),
-                pw.SizedBox(height: 35),
-
-                // Student Name
-                _buildStudentName(studentName, accentColor, poppinsBold),
-                pw.SizedBox(height: 32),
-
-                // Realm Badge
-                _buildRealmBadge(realmName, realmColor, realmLogoImage, poppinsBold),
-                pw.SizedBox(height: 18),
-
-                // Completion Stats
-                _buildCompletionStats(levelsCompleted, totalLevels, realmColor, poppins, poppinsBold),
-                pw.SizedBox(height: 35),
-
-                // Footer
-                _buildFooter(certificateNumber, accentColor, realmColor, appLogoImage, qrImage, poppins, poppinsBold, poppinsItalic),
+                pw.Container(
+                  width: 55,
+                  height: 55,
+                  child: pw.Image(appLogoImage),
+                ),
+                // Verified Badge - Classic blue checkmark design
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColor.fromHex('#1E88E5'), // Blue
+                    borderRadius: pw.BorderRadius.circular(12),
+                  ),
+                  child: pw.Row(
+                    mainAxisSize: pw.MainAxisSize.min,
+                    children: [
+                      // Blue circle with white checkmark
+                      pw.Container(
+                        width: 16,
+                        height: 16,
+                        decoration: pw.BoxDecoration(
+                          color: PdfColor.fromHex('#1976D2'), // Darker blue
+                          shape: pw.BoxShape.circle,
+                          border: pw.Border.all(color: PdfColors.white, width: 1.5),
+                        ),
+                        child: pw.Center(
+                          child: pw.Container(
+                            width: 8,
+                            height: 8,
+                            decoration: pw.BoxDecoration(
+                              color: PdfColors.white,
+                              shape: pw.BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                      pw.SizedBox(width: 6),
+                      pw.Text(
+                        'VERIFIED',
+                        style: pw.TextStyle(
+                          font: poppinsBold,
+                          fontSize: 10,
+                          color: PdfColors.white,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
+            
+            pw.SizedBox(height: 18),
+            
+            // Title with gradient-like effect
+            pw.Text(
+              'Certificate of Completion',
+              style: pw.TextStyle(
+                font: poppinsBold,
+                fontSize: 42,
+                color: darkGrey,
+              ),
+            ),
+            
+            pw.SizedBox(height: 8),
+            
+            // Decorative line with gold
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Container(width: 60, height: 2, color: goldAccent),
+                pw.SizedBox(width: 10),
+                pw.Container(
+                  width: 8,
+                  height: 8,
+                  decoration: pw.BoxDecoration(
+                    color: realmColor,
+                    shape: pw.BoxShape.circle,
+                  ),
+                ),
+                pw.SizedBox(width: 10),
+                pw.Container(width: 60, height: 2, color: goldAccent),
+              ],
+            ),
+            
+            pw.SizedBox(height: 20),
+            
+            // Subtitle
+            pw.Text(
+              'This is to certify that',
+              style: pw.TextStyle(
+                font: poppinsItalic,
+                fontSize: 12,
+                color: lightGrey,
+              ),
+            ),
+            
+            pw.SizedBox(height: 14),
+            
+            // Student Name - Bold with gold underline
+            pw.Container(
+              padding: const pw.EdgeInsets.only(bottom: 8),
+              decoration: pw.BoxDecoration(
+                border: pw.Border(
+                  bottom: pw.BorderSide(
+                    color: goldAccent,
+                    width: 3,
+                  ),
+                ),
+              ),
+              child: pw.Text(
+                studentName,
+                style: pw.TextStyle(
+                  font: poppinsBold,
+                  fontSize: 38,
+                  color: realmColor,
+                ),
+              ),
+            ),
+            
+            pw.SizedBox(height: 18),
+            
+            // Achievement - More detailed with color
+            pw.Container(
+              width: 450,
+              child: pw.RichText(
+                textAlign: pw.TextAlign.center,
+                text: pw.TextSpan(
+                  style: pw.TextStyle(
+                    font: poppins,
+                    fontSize: 14,
+                    color: darkGrey,
+                    height: 1.5,
+                  ),
+                  children: [
+                    pw.TextSpan(text: 'has successfully completed the '),
+                    pw.TextSpan(
+                      text: realmName,
+                      style: pw.TextStyle(
+                        font: poppinsBold,
+                        color: realmColor,
+                      ),
+                    ),
+                    pw.TextSpan(text: '\n\nThis achievement represents the completion of '),
+                    pw.TextSpan(
+                      text: '$totalLevels comprehensive levels',
+                      style: pw.TextStyle(
+                        font: poppinsBold,
+                        color: goldAccent,
+                      ),
+                    ),
+                    pw.TextSpan(text: ', demonstrating exceptional dedication and mastery of the subject matter.'),
+                  ],
+                ),
+              ),
+            ),
+            
+            pw.SizedBox(height: 22),
+            
+            // Performance Rating - Creative Progress Bar
+            pw.Column(
+              children: [
+                pw.Text(
+                  'PERFORMANCE RATING',
+                  style: pw.TextStyle(
+                    font: poppins,
+                    fontSize: 9,
+                    color: lightGrey,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                pw.SizedBox(height: 12),
+                // Progress bar with segments
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  children: [
+                    // 5 segments
+                    for (int i = 0; i < 5; i++) ...[
+                      pw.Container(
+                        width: 35,
+                        height: 8,
+                        decoration: pw.BoxDecoration(
+                          color: i < averageStars.round()
+                              ? goldAccent
+                              : PdfColors.grey300,
+                          borderRadius: pw.BorderRadius.circular(4),
+                        ),
+                      ),
+                      if (i < 4) pw.SizedBox(width: 4),
+                    ],
+                  ],
+                ),
+                pw.SizedBox(height: 10),
+                // Rating badge
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  decoration: pw.BoxDecoration(
+                    color: realmColor,
+                    borderRadius: pw.BorderRadius.circular(20),
+                  ),
+                  child: pw.Text(
+                    '${averageStars.toStringAsFixed(1)} / 5.0',
+                    style: pw.TextStyle(
+                      font: poppinsBold,
+                      fontSize: 14,
+                      color: PdfColors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            pw.SizedBox(height: 24),
+            
+            // Decorative bottom border with gold
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Container(width: 40, height: 1, color: goldAccent),
+                pw.SizedBox(width: 8),
+                pw.Container(
+                  width: 6,
+                  height: 6,
+                  decoration: pw.BoxDecoration(
+                    color: realmColor,
+                    shape: pw.BoxShape.circle,
+                  ),
+                ),
+                pw.SizedBox(width: 8),
+                pw.Container(width: 40, height: 1, color: goldAccent),
+              ],
+            ),
+            
+            pw.SizedBox(height: 16),
+            
+            // Footer with signature
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: pw.CrossAxisAlignment.end,
+              children: [
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      'IPlay',
+                      style: pw.TextStyle(
+                        font: poppinsBold,
+                        fontSize: 24,
+                        color: realmColor,
+                      ),
+                    ),
+                    pw.Container(
+                      width: 110,
+                      height: 2,
+                      color: goldAccent,
+                    ),
+                    pw.SizedBox(height: 3),
+                    pw.Text(
+                      'IPlay Education',
+                      style: pw.TextStyle(
+                        font: poppins,
+                        fontSize: 9,
+                        color: darkGrey,
+                      ),
+                    ),
+                    pw.Text(
+                      _formatDate(DateTime.now()),
+                      style: pw.TextStyle(
+                        font: poppins,
+                        fontSize: 8,
+                        color: lightGrey,
+                      ),
+                    ),
+                  ],
+                ),
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Container(
+                      width: 110,
+                      height: 2,
+                      color: goldAccent,
+                    ),
+                    pw.SizedBox(height: 3),
+                    pw.Text(
+                      certificateNumber,
+                      style: pw.TextStyle(
+                        font: poppins,
+                        fontSize: 8,
+                        color: lightGrey,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-
-        // Watermark
-        _buildWatermark(realmColor, poppinsBold),
-
-        // Decorative Corners
-        ..._buildDecorativeCorners(accentColor),
-      ],
-    );
-  }
-
+      ),
+    ),
+  );
+}
   pw.Widget _buildHeader(pw.MemoryImage logo, PdfColor accent, PdfColor realm, pw.Font font) {
     return pw.Stack(
       alignment: pw.Alignment.center,
@@ -497,29 +931,53 @@ class CertificateService {
     return pw.Column(
       children: [
         pw.Text(
-          'CERTIFICATE OF MASTERY',
+          'CERTIFICATE OF COMPLETION',
           style: pw.TextStyle(
             font: bold,
-            fontSize: 50,
+            fontSize: 42,
             fontWeight: pw.FontWeight.bold,
             color: realm,
-            letterSpacing: 3,
+            letterSpacing: 2,
           ),
         ),
-        pw.SizedBox(height: 10),
-        pw.Container(
-          height: 3,
-          width: 250,
-          color: accent,
+        pw.SizedBox(height: 12),
+        // Decorative line with dots
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.center,
+          children: [
+            pw.Container(
+              width: 12,
+              height: 12,
+              decoration: pw.BoxDecoration(
+                color: accent,
+                shape: pw.BoxShape.circle,
+              ),
+            ),
+            pw.SizedBox(width: 20),
+            pw.Container(
+              height: 2,
+              width: 180,
+              color: accent,
+            ),
+            pw.SizedBox(width: 20),
+            pw.Container(
+              width: 12,
+              height: 12,
+              decoration: pw.BoxDecoration(
+                color: accent,
+                shape: pw.BoxShape.circle,
+              ),
+            ),
+          ],
         ),
-        pw.SizedBox(height: 10),
+        pw.SizedBox(height: 8),
         pw.Text(
-          '★  Intellectual Property Realm Completion  ★',
+          'THIS CERTIFICATE IS PROUDLY PRESENTED TO',
           style: pw.TextStyle(
-            font: italic,
-            fontSize: 19,
-            color: PdfColors.grey700,
-            fontStyle: pw.FontStyle.italic,
+            font: bold,
+            fontSize: 12,
+            color: PdfColors.grey600,
+            letterSpacing: 2,
           ),
         ),
       ],
@@ -600,6 +1058,77 @@ class CertificateService {
     );
   }
 
+  pw.Widget _buildStarRating(double averageStars, PdfColor accent, pw.Font font) {
+    final fullStars = averageStars.floor();
+    final hasHalfStar = (averageStars - fullStars) >= 0.5;
+    
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.center,
+      children: [
+        pw.Text(
+          'Performance: ',
+          style: pw.TextStyle(
+            font: font,
+            fontSize: 16,
+            color: PdfColors.grey700,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+        pw.SizedBox(width: 8),
+        // Stars
+        ...List.generate(5, (index) {
+          if (index < fullStars) {
+            // Full star
+            return pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 2),
+              child: pw.Text(
+                '★',
+                style: pw.TextStyle(
+                  fontSize: 24,
+                  color: accent,
+                ),
+              ),
+            );
+          } else if (index == fullStars && hasHalfStar) {
+            // Half star (using a lighter color to simulate half)
+            return pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 2),
+              child: pw.Text(
+                '★',
+                style: pw.TextStyle(
+                  fontSize: 24,
+                  color: PdfColor(accent.red, accent.green, accent.blue, 0.5),
+                ),
+              ),
+            );
+          } else {
+            // Empty star
+            return pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 2),
+              child: pw.Text(
+                '☆',
+                style: pw.TextStyle(
+                  fontSize: 24,
+                  color: PdfColors.grey400,
+                ),
+              ),
+            );
+          }
+        }),
+        pw.SizedBox(width: 8),
+        pw.Text(
+          '${averageStars.toStringAsFixed(1)}/5.0',
+          style: pw.TextStyle(
+            font: font,
+            fontSize: 16,
+            color: PdfColors.grey700,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   pw.Widget _buildCompletionStats(int completed, int total, PdfColor color, pw.Font regular, pw.Font bold) {
     return pw.Column(
       children: [
@@ -621,7 +1150,7 @@ class CertificateService {
             border: pw.Border.all(color: color, width: 2),
           ),
           child: pw.Text(
-            '★  $completed of $total Levels Completed  ★',
+            '$completed of $total Levels Completed',
             style: pw.TextStyle(
               font: bold,
               fontSize: 17,
@@ -643,6 +1172,7 @@ class CertificateService {
     pw.Font regular,
     pw.Font bold,
     pw.Font italic,
+    pw.Font dancingScript,
   ) {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -658,27 +1188,27 @@ class CertificateService {
         ),
         pw.Column(
           children: [
-            pw.Container(height: 2, width: 190, color: PdfColors.grey700),
-            pw.SizedBox(height: 8),
+            // Handwritten Signature
             pw.Text(
-              'Authorized by IPlay',
+              'IPlay',
               style: pw.TextStyle(
-                font: italic,
-                fontSize: 12,
-                color: PdfColors.grey700,
-                fontStyle: pw.FontStyle.italic,
-                letterSpacing: 0.8,
+                font: dancingScript,
+                fontSize: 52,
+                color: realm,
+                fontWeight: pw.FontWeight.bold,
               ),
             ),
+            pw.SizedBox(height: 4),
+            pw.Container(height: 2, width: 180, color: PdfColors.grey700),
             pw.SizedBox(height: 6),
-            pw.Container(
-              padding: const pw.EdgeInsets.all(6),
-              decoration: pw.BoxDecoration(
-                color: PdfColors.white,
-                borderRadius: pw.BorderRadius.circular(8),
-                border: pw.Border.all(color: accent, width: 2),
+            pw.Text(
+              'Program Director',
+              style: pw.TextStyle(
+                font: regular,
+                fontSize: 11,
+                color: PdfColors.grey600,
+                letterSpacing: 0.5,
               ),
-              child: pw.Image(logo, width: 32, height: 32),
             ),
           ],
         ),
@@ -711,82 +1241,154 @@ class CertificateService {
 
   pw.Widget _infoBox(String label, String value, pw.Font regular, pw.Font bold, PdfColor color) {
     return pw.Container(
-      padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const pw.EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: pw.BoxDecoration(
-        color: PdfColors.grey100,
-        borderRadius: pw.BorderRadius.circular(8),
-        border: pw.Border.all(color: color, width: 1),
+        color: PdfColor(color.red, color.green, color.blue, 0.1),
+        borderRadius: pw.BorderRadius.circular(12),
       ),
-      child: pw.RichText(
-        text: pw.TextSpan(
-          children: [
-            pw.TextSpan(
-              text: '$label\n',
-              style: pw.TextStyle(
-                font: regular,
-                fontSize: 10,
-                color: PdfColors.grey600,
-              ),
+      child: pw.Column(
+        children: [
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              font: regular,
+              fontSize: 10,
+              color: PdfColors.grey600,
+              letterSpacing: 0.5,
             ),
-            pw.TextSpan(
-              text: value,
-              style: pw.TextStyle(
-                font: bold,
-                fontSize: 12,
-                color: color,
-                fontWeight: pw.FontWeight.bold,
-              ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            value,
+            style: pw.TextStyle(
+              font: bold,
+              fontSize: 18,
+              color: color,
+              fontWeight: pw.FontWeight.bold,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  pw.Widget _buildWatermark(PdfColor color, pw.Font font) {
-    return pw.Center(
-      child: pw.Transform.rotate(
-        angle: -0.3,
-        child: pw.Opacity(
-          opacity: 0.04,
-          child: pw.Text(
-            'IPlay CERTIFIED',
+  // New helper for modern stat boxes
+  pw.Widget _buildStatBox(String label, String value, PdfColor color, pw.Font regular, pw.Font bold) {
+    return pw.Container(
+      padding: const pw.EdgeInsets.all(20),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColor(color.red, color.green, color.blue, 0.3), width: 2),
+        borderRadius: pw.BorderRadius.circular(12),
+      ),
+      child: pw.Column(
+        children: [
+          pw.Text(
+            label.toUpperCase(),
             style: pw.TextStyle(
-              font: font,
-              fontSize: 150,
-              fontWeight: pw.FontWeight.bold,
-              color: color,
-              letterSpacing: 8,
+              font: regular,
+              fontSize: 10,
+              color: PdfColors.grey600,
+              letterSpacing: 1,
             ),
           ),
+          pw.SizedBox(height: 8),
+          pw.Text(
+            value,
+            style: pw.TextStyle(
+              font: bold,
+              fontSize: 24,
+              color: color,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper to build star rating display
+  List<pw.Widget> _buildStars(double rating, PdfColor color) {
+    final List<pw.Widget> stars = [];
+    final fullStars = rating.floor();
+    final decimal = rating - fullStars;
+    final hasHalfStar = decimal >= 0.3 && decimal < 0.8; // Show half star for 0.3-0.7 range
+    
+    print('⭐ _buildStars called:');
+    print('   Rating: $rating');
+    print('   fullStars: $fullStars');
+    print('   decimal: $decimal');
+    print('   hasHalfStar: $hasHalfStar');
+    
+    // Add full stars (filled circles)
+    for (int i = 0; i < fullStars; i++) {
+      stars.add(
+        pw.Container(
+          width: 18,
+          height: 18,
+          margin: const pw.EdgeInsets.symmetric(horizontal: 2),
+          decoration: pw.BoxDecoration(
+            color: color,
+            shape: pw.BoxShape.circle,
+          ),
+        ),
+      );
+    }
+    
+    // Add half star (semi-transparent circle)
+    if (hasHalfStar && fullStars < 5) {
+      print('   Adding half star!');
+      stars.add(
+        pw.Container(
+          width: 18,
+          height: 18,
+          margin: const pw.EdgeInsets.symmetric(horizontal: 2),
+          decoration: pw.BoxDecoration(
+            color: PdfColor(color.red, color.green, color.blue, 0.25),
+            shape: pw.BoxShape.circle,
+          ),
+        ),
+      );
+    }
+    
+    // Add empty stars (outlined circles)
+    final emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    print('   emptyStars: $emptyStars');
+    print('   Total stars: ${stars.length + emptyStars}');
+    
+    for (int i = 0; i < emptyStars; i++) {
+      stars.add(
+        pw.Container(
+          width: 18,
+          height: 18,
+          margin: const pw.EdgeInsets.symmetric(horizontal: 2),
+          decoration: pw.BoxDecoration(
+            border: pw.Border.all(color: PdfColors.grey400, width: 1.5),
+            shape: pw.BoxShape.circle,
+          ),
+        ),
+      );
+    }
+    
+    return stars;
+  }
+
+  pw.Widget _buildWatermark(pw.MemoryImage logo) {
+    return pw.Center(
+      child: pw.Opacity(
+        opacity: 0.18,
+        child: pw.Image(
+          logo,
+          width: 400,
+          height: 400,
+          fit: pw.BoxFit.contain,
         ),
       ),
     );
   }
 
   List<pw.Widget> _buildDecorativeCorners(PdfColor color) {
-    return [
-      pw.Positioned(
-        top: 40,
-        left: 40,
-        child: pw.Text('★', style: pw.TextStyle(fontSize: 32, color: color)),
-      ),
-      pw.Positioned(
-        top: 40,
-        right: 40,
-        child: pw.Text('★', style: pw.TextStyle(fontSize: 32, color: color)),
-      ),
-      pw.Positioned(
-        bottom: 40,
-        left: 40,
-        child: pw.Text('★', style: pw.TextStyle(fontSize: 32, color: color)),
-      ),
-      pw.Positioned(
-        bottom: 40,
-        right: 40,
-        child: pw.Text('★', style: pw.TextStyle(fontSize: 32, color: color)),
-      ),
-    ];
+    // Removed star decorations to avoid font issues
+    return [];
   }
 
   String _formatDate(DateTime date) {

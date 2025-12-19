@@ -36,6 +36,15 @@ class _MainScreenState extends State<MainScreen> {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
+        // SECURITY: Check email verification before loading user data
+        if (!currentUser.emailVerified) {
+          // Redirect to email verification screen
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, '/email-verification');
+          }
+          return;
+        }
+
         final doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser.uid)

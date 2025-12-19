@@ -6,7 +6,6 @@ import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/clean_card.dart';
-import 'qr_scanner_screen.dart';
 
 /// Join Classroom Screen - For students to join classrooms using codes
 class JoinClassroomScreen extends StatefulWidget {
@@ -388,19 +387,19 @@ class _JoinClassroomScreenState extends State<JoinClassroomScreen> {
                           onPressed: _isLoading
                               ? null
                               : () async {
-                                  final scannedCode =
-                                      await Navigator.push<String>(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const QRScannerScreen(),
-                                        ),
-                                      );
+                                  final result = await Navigator.pushNamed(
+                                    context,
+                                    '/qr-scanner',
+                                  );
 
-                                  if (scannedCode != null && mounted) {
-                                    _codeController.text = scannedCode;
-                                    _inviteSource = 'qr';
-                                    _searchClassroom();
+                                  if (result != null && result is Map && mounted) {
+                                    final type = result['type'] as String?;
+                                    final id = result['id'] as String?;
+                                    
+                                    if (type == 'classroom' && id != null) {
+                                      // QR scanner already joined the classroom
+                                      Navigator.pop(context, true);
+                                    }
                                   }
                                 },
                           icon: const Icon(Icons.qr_code_scanner),

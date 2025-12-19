@@ -538,18 +538,80 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                       if (_hasClassroomCode) ...[
                         const SizedBox(height: AppSpacing.md),
 
-                        // Classroom Code
-                        TextFormField(
-                          controller: _classroomCodeController,
-                          textCapitalization: TextCapitalization.characters,
-                          decoration: const InputDecoration(
-                            labelText: 'Classroom Code',
-                            hintText: 'CLS-XXXXX',
-                            prefixIcon: Icon(
-                              Icons.class_,
-                              color: AppDesignSystem.success,
+                        // Classroom Code with QR Scanner
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _classroomCodeController,
+                                textCapitalization: TextCapitalization.characters,
+                                decoration: const InputDecoration(
+                                  labelText: 'Classroom Code',
+                                  hintText: 'CLS-XXXXX',
+                                  prefixIcon: Icon(
+                                    Icons.class_,
+                                    color: AppDesignSystem.success,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 12),
+                            // QR Scanner Button
+                            Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () async {
+                                    // Navigate to QR scanner in scan-only mode
+                                    final result = await Navigator.pushNamed(
+                                      context,
+                                      '/qr-scanner',
+                                      arguments: {'scanOnly': true},
+                                    );
+                                    
+                                    if (result != null && result is Map && mounted) {
+                                      final type = result['type'] as String?;
+                                      final code = result['code'] as String?;
+                                      
+                                      if (type == 'classroom' && code != null) {
+                                        // Fill the classroom code field
+                                        _classroomCodeController.text = code;
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Classroom code scanned! Complete signup to join.'),
+                                            backgroundColor: Color(0xFF10B981),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: const Icon(
+                                      Icons.qr_code_scanner,
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: AppSpacing.sm),
@@ -569,7 +631,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'Your school and state will be auto-fetched from the classroom',
+                                  'Enter code manually or scan QR code to join classroom',
                                   style: AppTextStyles.bodySmall,
                                 ),
                               ),

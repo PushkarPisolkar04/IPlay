@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:file_saver/file_saver.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,31 +17,41 @@ class FileDownloadService {
     String? dialogTitle,
   }) async {
     try {
-      if (kIsWeb) {
-        // Web: Direct download
-        await FileSaver.instance.saveFile(
-          name: suggestedName,
+      if (Platform.isAndroid) {
+        // On Android 10+, save directly to Downloads using file_saver
+        // This works without special permissions using MediaStore
+        final ext = _getExtension(suggestedName);
+        final nameWithoutExt = suggestedName.replaceAll('.$ext', '');
+        
+        final filePath = await FileSaver.instance.saveAs(
+          name: nameWithoutExt,
           bytes: bytes,
+          ext: ext,
           mimeType: _getMimeTypeEnum(suggestedName),
         );
-        return suggestedName;
-      } else if (Platform.isAndroid || Platform.isIOS) {
-        // Mobile: Show file picker
-        final path = await FileSaver.instance.saveAs(
-          name: suggestedName,
-          bytes: bytes,
-          ext: _getExtension(suggestedName),
-          mimeType: _getMimeTypeEnum(suggestedName),
-        );
-        return path;
+        
+        if (kDebugMode) {
+          print('File saved to: $filePath');
+        }
+        
+        return filePath;
       } else {
-        // Desktop: Show save dialog
-        final path = await FileSaver.instance.saveFile(
-          name: suggestedName,
-          bytes: bytes,
-          mimeType: _getMimeTypeEnum(suggestedName),
+        // On iOS/Desktop, let user pick location
+        final String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+          dialogTitle: dialogTitle ?? 'Choose where to save',
         );
-        return path;
+
+        if (selectedDirectory == null) {
+          // User cancelled
+          return null;
+        }
+
+        // Create the file in the selected directory
+        final filePath = '$selectedDirectory/$suggestedName';
+        final file = File(filePath);
+        await file.writeAsBytes(bytes);
+        
+        return filePath;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -58,7 +70,7 @@ class FileDownloadService {
     bool autoShare = false,
   }) async {
     try {
-      // First save to temp directory for sharing
+      // Android: Use temp directory for sharing
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/$suggestedName');
       await tempFile.writeAsBytes(bytes);
@@ -92,6 +104,7 @@ class FileDownloadService {
     String? shareText,
   }) async {
     try {
+      // Android: Use temp directory for sharing
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/$fileName');
       await tempFile.writeAsBytes(bytes);

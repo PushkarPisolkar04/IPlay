@@ -55,9 +55,16 @@ class _SplashScreenState extends State<SplashScreen>
       // print('🔍 Splash: User authentication status: ${user != null ? "Logged in" : "Not logged in"}');
 
       if (user != null) {
-        // User is logged in, go to main screen
-        // print('📱 Splash: Navigating to main screen');
-        Navigator.pushReplacementNamed(context, '/main');
+        // Check if email is verified
+        if (!user.emailVerified) {
+          // Email not verified - redirect to verification screen
+          // print('📧 Splash: Email not verified, redirecting to verification screen');
+          Navigator.pushReplacementNamed(context, '/email-verification');
+        } else {
+          // User is logged in and verified, go to main screen
+          // print('📱 Splash: Navigating to main screen');
+          Navigator.pushReplacementNamed(context, '/main');
+        }
       } else {
         // Not logged in, go to auth screen (sign in or create account)
         // print('🔐 Splash: Navigating to auth screen');

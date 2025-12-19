@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../core/design/app_design_system.dart';
 import '../../widgets/clean_card.dart';
 import '../../widgets/loading_skeleton.dart';
+import '../../widgets/qr_code_widget.dart';
 
 class SchoolSettingsScreen extends StatefulWidget {
   final String schoolId;
@@ -228,12 +229,41 @@ class _SchoolSettingsScreenState extends State<SchoolSettingsScreen> {
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(height: 8),
+                                      const SizedBox(height: 12),
                                       Text(
                                         'Share this code with teachers to join your school',
                                         style: TextStyle(
                                           fontSize: 13,
                                           color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      // Show QR Code Button
+                                      ElevatedButton.icon(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(24),
+                                              ),
+                                              child: QrCodeWidget(
+                                                type: 'school',
+                                                code: _schoolCode ?? '',
+                                                name: _nameController.text,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.qr_code_2),
+                                        label: const Text('Show QR Code'),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: const Color(0xFF8B5CF6),
+                                          foregroundColor: Colors.white,
+                                          minimumSize: const Size(double.infinity, 48),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
                                         ),
                                       ),
                                     ],

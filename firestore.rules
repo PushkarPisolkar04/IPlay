@@ -83,9 +83,10 @@ service cloud.firestore {
       allow update: if isOwner(userId) && 
                        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isPrincipal']);
       
-      // Teachers/Principals can update student data in their scope
-      allow update: if (isTeacher() && isClassroomTeacher(resource.data.classroomId)) ||
-                       (isPrincipal() && isInSchool(resource.data.schoolId));
+      // Teachers/Principals can update student data (e.g. adding to classroom/school)
+      // We prevent privilege escalation by checking affectedKeys
+      allow update: if (isTeacher() || isPrincipal()) && 
+                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isPrincipal', 'isAdmin']);
       
       // Users can delete their own account
       allow delete: if isOwner(userId);
@@ -255,11 +256,17 @@ service cloud.firestore {
     // ANNOUNCEMENTS COLLECTION
     // ============================================================================
     match /announcements/{announcementId} {
-      // Students can read announcements in their classrooms
-      allow read: if isStudent() && isInClassroom(resource.data.classroomId);
+      // Students can read announcements in their classrooms OR school-wide
+      allow read: if isStudent() && (
+        isInClassroom(resource.data.classroomId) || 
+        isInSchool(resource.data.schoolId)
+      );
       
-      // Teachers can read their own announcements
-      allow read: if isTeacher() && isClassroomTeacher(resource.data.classroomId);
+      // Teachers can read announcements in their classrooms OR school-wide
+      allow read: if isTeacher() && (
+        isClassroomTeacher(resource.data.classroomId) || 
+        isInSchool(resource.data.schoolId)
+      );
       
       // Principals can read announcements in their school
       allow read: if isPrincipal() && isInSchool(resource.data.schoolId);

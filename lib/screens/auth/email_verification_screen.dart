@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../core/design/app_design_system.dart';
-import '../../core/constants/app_spacing.dart';
 import '../../core/constants/app_text_styles.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/clean_card.dart';
 
 /// Email Verification Screen - Prompt user to verify their email
 class EmailVerificationScreen extends StatefulWidget {
@@ -34,11 +31,42 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       // Already verified, navigate immediately
       _navigateToNext();
     } else {
+      // Send verification email automatically on first load
+      _sendInitialVerificationEmail();
+      
       // Start checking for verification
       _timer = Timer.periodic(
         const Duration(seconds: 3),
         (_) => _checkEmailVerified(),
       );
+    }
+  }
+
+  Future<void> _sendInitialVerificationEmail() async {
+    try {
+      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+      
+      // Start resend countdown
+      setState(() {
+        _canResendEmail = false;
+        _resendCountdown = 60;
+      });
+
+      _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          if (_resendCountdown > 0) {
+            _resendCountdown--;
+          } else {
+            _canResendEmail = true;
+            timer.cancel();
+          }
+        });
+      });
+    } catch (e) {
+      // Silently fail - user can use resend button if needed
+      setState(() {
+        _canResendEmail = true;
+      });
     }
   }
 
@@ -59,7 +87,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
     if (_isEmailVerified) {
       _timer?.cancel();
-      _navigateToNext();
+      // Use post-frame callback to avoid Navigator lock
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _navigateToNext();
+        }
+      });
     }
   }
 
@@ -103,152 +136,287 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   }
 
   void _navigateToNext() {
-    // Navigate to profile setup or role selection based on whether profile exists
-    Navigator.pushReplacementNamed(context, '/profile-setup');
+    // Navigate to main screen after verification
+    Navigator.pushReplacementNamed(context, '/main');
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       backgroundColor: AppDesignSystem.backgroundLight,
-      appBar: AppBar(
-        title: const Text('Verify Your Email'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () async {
-            // Sign out and go back to signin
-            await FirebaseAuth.instance.signOut();
-            if (!mounted) return;
-            Navigator.pushReplacementNamed(context, '/signin');
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.screenHorizontal),
+      body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: AppSpacing.xl),
-
-            // Icon
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: AppDesignSystem.primaryAmber.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.email_outlined,
-                size: 64,
-                color: AppDesignSystem.primaryAmber,
-              ),
-            ),
-
-            const SizedBox(height: AppSpacing.xl),
-
-            Text(
-              'Verify Your Email',
-              style: AppTextStyles.h1,
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: AppSpacing.md),
-
-            Text(
-              'We\'ve sent a verification email to:',
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppDesignSystem.textSecondary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: AppSpacing.sm),
-
-            Text(
-              user?.email ?? '',
-              style: AppTextStyles.bodyLarge.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppDesignSystem.primaryIndigo,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: AppSpacing.xl),
-
-            CleanCard(
-              color: AppDesignSystem.primaryPink.withValues(alpha: 0.1),
-              child: Column(
+            // App Bar
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
-                  const Icon(
-                    Icons.info_outline,
-                    color: AppDesignSystem.primaryPink,
-                    size: 32,
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      // Just go back, don't sign out
+                      Navigator.pop(context);
+                    },
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(width: 8),
                   Text(
-                    'Please check your email and click the verification link to continue.',
-                    style: AppTextStyles.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Don\'t forget to check your spam folder!',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppDesignSystem.textSecondary,
+                    'Verify Your Email',
+                    style: AppTextStyles.h2.copyWith(
+                      color: AppDesignSystem.primaryIndigo,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: AppSpacing.xl),
+            // Main Content - Centered without scrolling
+            Expanded(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Icon with gradient background - smaller
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppDesignSystem.primaryIndigo,
+                              AppDesignSystem.primaryPink,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.mark_email_unread_rounded,
+                          size: 50,
+                          color: Colors.white,
+                        ),
+                      ),
 
-            // Resend button
-            if (_canResendEmail || _resendCountdown == 0)
-              PrimaryButton(
-                text: 'Resend Verification Email',
-                onPressed: _resendVerificationEmail,
-                fullWidth: true,
-              )
-            else
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 16,
-                  horizontal: 24,
-                ),
-                decoration: BoxDecoration(
-                  color: AppDesignSystem.backgroundGrey,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Resend available in $_resendCountdown seconds',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppDesignSystem.textSecondary,
+                      const SizedBox(height: 24),
+
+                      Text(
+                        'Check Your Email',
+                        style: AppTextStyles.h1.copyWith(
+                          color: AppDesignSystem.primaryIndigo,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Text(
+                        'We\'ve sent a verification link to:',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppDesignSystem.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          user?.email ?? '',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppDesignSystem.primaryIndigo,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Info card - more compact
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppDesignSystem.primaryPink,
+                              AppDesignSystem.primaryAmber,
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.all(2),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                color: AppDesignSystem.primaryPink,
+                                size: 28,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Click the verification link in your email to continue',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Check your spam folder too!',
+                                style: AppTextStyles.caption.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Resend button or countdown
+                      if (_canResendEmail || _resendCountdown == 0)
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppDesignSystem.primaryIndigo,
+                                AppDesignSystem.primaryPink,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppDesignSystem.primaryIndigo.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: _resendVerificationEmail,
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                  horizontal: 20,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.refresh_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Resend Email',
+                                      style: AppTextStyles.bodyMedium.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppDesignSystem.backgroundGrey,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.timer_outlined,
+                                color: AppDesignSystem.textSecondary,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Resend in $_resendCountdown seconds',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppDesignSystem.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      const SizedBox(height: 16),
+
+                      // Sign out button
+                      TextButton(
+                        onPressed: () async {
+                          await FirebaseAuth.instance.signOut();
+                          if (!mounted) return;
+                          // Use post-frame callback to avoid Navigator lock
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/auth',
+                                (route) => false,
+                              );
+                            }
+                          });
+                        },
+                        child: Text(
+                          'Sign Out',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppDesignSystem.textSecondary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-            const SizedBox(height: AppSpacing.md),
-
-            // Skip for now button
-            TextButton(
-              onPressed: _navigateToNext,
-              child: Text(
-                'I\'ll verify later',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppDesignSystem.textSecondary,
-                  decoration: TextDecoration.underline,
                 ),
               ),
             ),
-
-            const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),

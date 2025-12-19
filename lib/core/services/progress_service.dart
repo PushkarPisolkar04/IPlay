@@ -91,6 +91,9 @@ class ProgressService {
     int stars = quizScore.clamp(0, 5);
 
     try {
+      // No daily XP cap - award full XP amount
+      final xpToAward = xpEarned;
+
       // Firebase will queue writes when offline and sync when online
       final batch = _firestore.batch();
 
@@ -172,7 +175,8 @@ class ProgressService {
         };
 
         if (isNewCompletion) {
-          updateMap['xpEarned'] = FieldValue.increment(xpEarned);
+          updateMap['xpEarned'] = FieldValue.increment(xpToAward);
+          updateMap['lastAttemptAt'] = Timestamp.now(); // Track when XP was earned for daily cap
         }
 
         batch.update(progressRef, updateMap);
@@ -184,7 +188,8 @@ class ProgressService {
           'completedLevels': [levelNumber],
           'levelStars': {'level_$levelNumber': stars},
           'currentLevelNumber': levelNumber + 1,
-          'xpEarned': xpEarned,
+          'xpEarned': xpToAward, // Use capped XP value
+          'lastAttemptAt': Timestamp.now(), // Track when XP was earned for daily cap
           'lastAccessedAt': Timestamp.now(),
         };
 
@@ -194,21 +199,6 @@ class ProgressService {
 
         batch.set(progressRef, newProgress);
       }
-
-      // Enforce daily XP cap for this award
-      final xpCapResult = await _xpService.calculateAwardedXP(
-        userId: userId,
-        earnedXP: xpEarned,
-      );
-      final xpToAward = (xpCapResult['xpToAward'] as int?) ?? 0;
-      final warning = (xpCapResult['warning'] as bool?) ?? false;
-      final cappedAmount = (xpCapResult['cappedAmount'] as int?) ?? 0;
-
-      // Get current daily XP stats for popup
-      final xpStats = await _xpService.getTodayXPStats(userId);
-      final currentDailyXP = (xpStats['currentDailyXP'] as int?) ?? 0;
-      final dailyCap = (xpStats['dailyXPCap'] as int?) ?? 1000;
-      final isFullyCapped = (xpStats['hasReachedCap'] as bool?) ?? false;
 
       // Update user's total XP and progressSummary
       final userRef = _firestore.collection('users').doc(userId);
@@ -314,14 +304,11 @@ class ProgressService {
 
       return {
         'badges': newBadges,
-        'warning':
-            warning && isNewCompletion, // Only warn if XP was actually awarded
-        'currentDailyXP':
-            currentDailyXP +
-            (isNewCompletion ? xpToAward : 0), // Updated after award
-        'dailyCap': dailyCap,
-        'cappedAmount': isNewCompletion ? cappedAmount : 0,
-        'isFullyCapped': isFullyCapped,
+        'warning': false, // No XP cap warnings
+        'currentDailyXP': 0, // Not tracking daily XP anymore
+        'dailyCap': 0,
+        'cappedAmount': 0,
+        'isFullyCapped': false,
       };
     } catch (e) {
       print('Error completing level: $e');

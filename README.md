@@ -9,11 +9,11 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.8.0+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Enabled-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Web App](https://img.shields.io/badge/Web-Live-blue)](https://your-app.vercel.app)
+[![Android](https://img.shields.io/badge/Platform-Android-green?logo=android)](https://www.android.com)
 
 **Transform complex IP law into an exciting learning adventure** 🚀
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Download](#-download) • [Deployment](#-deployment) • [Tech Stack](#-tech-stack)
+[Features](#-features) • [Screenshots](#-screenshots) • [Download](#-download) • [Tech Stack](#-tech-stack)
 
 </div>
 
@@ -31,7 +31,7 @@ IPlay is an **interactive gamified learning platform** that makes understanding 
 📊 **Detailed Reports** - PDF, CSV, Excel with enhanced data  
 🎓 **Multi-Role** - Student, Teacher, Principal support  
 🔒 **Secure & Private** - Firebase-powered backend  
-🌐 **Cross-Platform** - Web, Android, iOS
+📱 **Android Platform** - Optimized for Android devices
 
 ---
 
@@ -139,6 +139,7 @@ IPlay is an **interactive gamified learning platform** that makes understanding 
     <td><img src="screenshots/student/04-certificate.png" alt="Premium Certificate" width="250"/><br/><b>Premium Certificates</b></td>
     <td><img src="screenshots/student/05-leaderboard.png" alt="Leaderboard" width="250"/><br/><b>Leaderboards</b></td>
     <td><img src="screenshots/student/06-profile.png" alt="Profile" width="250"/><br/><b>Student Profile</b></td>
+    <td><img src="screenshots/student/07-badges.png" alt="Badges" width="250"/><br/><b>Student Badges</b></td>
   </tr>
 </table>
 
@@ -151,7 +152,7 @@ IPlay is an **interactive gamified learning platform** that makes understanding 
 <table>
   <tr>
     <td><img src="screenshots/teacher/01-classroom.png" alt="Classroom Management" width="250"/><br/><b>Classroom Management</b></td>
-    <td><img src="screenshots/teacher/02-analytics.png" alt="Analytics Dashboard" width="250"/><br/><b>Detailed Analytics</b></td>
+    <td><img src="screenshots/teacher/02-announcements.png" alt="Announcements" width="250"/><br/><b>Announcements</b></td>
     <td><img src="screenshots/teacher/03-reports.png" alt="Report Generation" width="250"/><br/><b>Enhanced Reports</b></td>
   </tr>
   <tr>
@@ -171,63 +172,31 @@ IPlay is an **interactive gamified learning platform** that makes understanding 
   <tr>
     <td><img src="screenshots/principal/01-overview.png" alt="School Overview" width="250"/><br/><b>School Overview</b></td>
     <td><img src="screenshots/principal/02-analytics.png" alt="School Analytics" width="250"/><br/><b>School Analytics</b></td>
-    <td><img src="screenshots/principal/03-comparison.png" alt="Classroom Comparison" width="250"/><br/><b>Classroom Comparison</b></td>
+    <td><img src="screenshots/principal/03-teachers.png" alt="Teacher Management" width="250"/><br/><b>Teacher Management</b></td>
   </tr>
 </table>
 
-> **Note:** Add your screenshots to the `screenshots/` folder following the structure above.
+
 
 ---
 
 ## 🚀 Download
 
-### 🌐 Web App (Live)
-[![Deploy with Vercel](https://vercel.com/button)](https://your-app.vercel.app)
-
-**Access instantly:** [https://your-app.vercel.app](https://your-app.vercel.app)
-
 ### 📱 Android APK
 
 **Download latest version:**
 - [GitHub Releases](https://github.com/PushkarPisolkar04/IPlay/releases) - Direct APK download
-- APKPure - Coming soon
+
 
 **Current Version:** v1.0.0
 
----
-
-## 🛠️ Deployment
-
-### For Web (Vercel)
-
-See detailed guide: [DEPLOYMENT_WEB.md](DEPLOYMENT_WEB.md)
-
-**Quick Deploy:**
-```bash
-# Build Flutter web
-flutter build web --release --web-renderer canvaskit
-
-# Deploy to Vercel
-vercel --prod
-```
-
-### For Android (APK)
-
-See detailed guide: [DEPLOYMENT_MOBILE.md](DEPLOYMENT_MOBILE.md)
-
-**Quick Build:**
+**Build APK:**
 ```bash
 # Build release APK
 flutter build apk --release
 
 # Output: build/app/outputs/flutter-apk/app-release.apk
 ```
-
-**Distribution Options:**
-- ✅ **GitHub Releases** (Recommended - Free)
-- ✅ **APKPure** (Wider reach)
-- ✅ **Google Play Store** ($25 one-time fee)
-
 ---
 
 ## 💻 Tech Stack
@@ -257,9 +226,7 @@ flutter build apk --release
 - **QR Flutter** - QR code generation
 - **Share Plus** - Social sharing
 
-### Deployment
-- **Vercel** - Web hosting
-- **GitHub Releases** - APK distribution
+
 
 ---
 
@@ -318,8 +285,6 @@ We welcome contributions! Feel free to:
 - 🔧 Submit pull requests
 - 📖 Improve documentation
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
 ---
 
 ## 📄 License
@@ -333,7 +298,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Pushkar Pisolkar**
 
 - GitHub: [@PushkarPisolkar04](https://github.com/PushkarPisolkar04)
-- Email: pushkarpisolkar04@gmail.com
+- Email: pushkarppisolkar@gmail.com
 
 ---
 
@@ -347,7 +312,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### 🎯 Learn IP Rights • 🏆 Earn Badges • 📜 Get Certified
 
-[![Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](DEPLOYMENT_WEB.md)
 [![Download APK](https://img.shields.io/badge/Download-APK-green?logo=android)](https://github.com/PushkarPisolkar04/IPlay/releases)
 
 </div>

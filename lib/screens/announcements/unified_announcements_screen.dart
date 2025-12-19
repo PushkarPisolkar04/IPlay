@@ -389,6 +389,7 @@ class _UnifiedAnnouncementsScreenState
                             MaterialPageRoute(
                               builder: (context) => CreateAnnouncementScreen(
                                 schoolId: _userSchoolId,
+                                isSchoolWide: _isPrincipal,
                               ),
                             ),
                           );

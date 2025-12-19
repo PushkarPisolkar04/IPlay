@@ -77,8 +77,12 @@ class AppUpdateService {
       final currentParts = currentVersion.split('.').map(int.parse).toList();
 
       // Pad with zeros if needed
-      while (newParts.length < 3) newParts.add(0);
-      while (currentParts.length < 3) currentParts.add(0);
+      while (newParts.length < 3) {
+        newParts.add(0);
+      }
+      while (currentParts.length < 3) {
+        currentParts.add(0);
+      }
 
       // Compare major.minor.patch
       for (int i = 0; i < 3; i++) {

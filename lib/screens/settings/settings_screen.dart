@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/design/app_design_system.dart';
@@ -800,6 +801,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   // Perform Account Deletion
   Future<void> _performDeleteAccount() async {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    // Step 0: Re-authenticate first to prevent "requires-recent-login" errors
+    // This ensures we don't end up with a zombie account (Firestore deleted but Auth remains)
+    bool reauthSuccess = await _reauthenticateUser(currentUser);
+    if (!reauthSuccess) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Verification failed. Account deletion cancelled.'),
+          backgroundColor: AppDesignSystem.error,
+        ),
+      );
+      return;
+    }
+
     try {
       showDialog(
         context: context,
@@ -809,16 +827,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         },
       );
 
-      final currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) return;
+      final userId = currentUser.uid;
 
-      // Delete user data from Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.uid)
-          .delete();
+      // Step 1: Delete Firestore data FIRST
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .delete();
+      } catch (firestoreError) {
+        throw Exception('Failed to delete user data: ${firestoreError.toString()}');
+      }
 
-      // Delete the user's authentication account
+      // Step 2: Delete the Firebase Auth account
       await currentUser.delete();
 
       if (!mounted) return;
@@ -836,31 +857,104 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       );
     } catch (e) {
-      // print('Error during account deletion: $e');
       if (!mounted) return;
       Navigator.of(context).pop(); // Close loading
-
-      // If error is due to recent sign-in requirement
-      if (e.toString().contains('requires-recent-login')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Please sign out and sign in again before deleting your account',
-            ),
-            backgroundColor: AppDesignSystem.error,
-            duration: Duration(seconds: 4),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Account deletion failed: ${e.toString()}'),
-            backgroundColor: AppDesignSystem.error,
-          ),
-        );
-      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: AppDesignSystem.error,
+        ),
+      );
     }
   }
+
+  // Helper to re-authenticate user based on provider
+  Future<bool> _reauthenticateUser(User user) async {
+    try {
+      for (final provider in user.providerData) {
+        if (provider.providerId == 'password') {
+          // Email/Password provider
+          final password = await _promptForPassword();
+          if (password == null) return false; // User cancelled
+          
+          final credential = EmailAuthProvider.credential(
+            email: user.email!,
+            password: password,
+          );
+          await user.reauthenticateWithCredential(credential);
+          return true;
+        } else if (provider.providerId == 'google.com') {
+          // Google provider
+          final GoogleSignIn googleSignIn = GoogleSignIn();
+          final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+          if (googleUser == null) return false;
+          
+          final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+          final credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          await user.reauthenticateWithCredential(credential);
+          return true;
+        }
+      }
+      // If no sensitive provider found (e.g. anonymous), proceed
+      return true;
+    } catch (e) {
+      if (mounted) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Authentication check failed: $e')),
+        );
+      }
+      return false;
+    }
+  }
+
+  // Prompt for password
+  Future<String?> _promptForPassword() async {
+    String? password;
+    final controller = TextEditingController();
+    
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Verify Password'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Please enter your password to confirm deletion.'),
+              const SizedBox(height: 16),
+              TextField(
+                controller: controller,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                password = controller.text;
+                Navigator.pop(context);
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        );
+      },
+    );
+    return password;
+  }
+
 }
 
 /// Settings tile widget

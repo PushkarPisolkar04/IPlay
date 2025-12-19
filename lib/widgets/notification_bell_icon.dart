@@ -5,7 +5,12 @@ import '../core/providers/notification_provider.dart';
 
 /// Notification bell icon with cached unread count badge
 class NotificationBellIcon extends StatelessWidget {
-  const NotificationBellIcon({super.key});
+  final Color? color;
+
+  const NotificationBellIcon({
+    super.key,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +21,9 @@ class NotificationBellIcon extends StatelessWidget {
         return Stack(
           children: [
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.notifications_outlined,
-                color: AppDesignSystem.textPrimary,
+                color: color ?? AppDesignSystem.textPrimary,
                 size: 26,
               ),
               onPressed: () {

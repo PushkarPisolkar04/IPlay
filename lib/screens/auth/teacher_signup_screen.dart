@@ -708,25 +708,87 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                       const SizedBox(height: AppSpacing.sm),
 
                       if (_hasSchoolCode) ...[
-                        // School Code Input
-                        TextFormField(
-                          controller: _schoolCodeController,
-                          textCapitalization: TextCapitalization.characters,
-                          decoration: const InputDecoration(
-                            labelText: 'School Code',
-                            hintText: 'SCH-XXXXX',
-                            prefixIcon: Icon(
-                              Icons.school,
-                              color: AppDesignSystem.success,
+                        // School Code Input with QR Scanner
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _schoolCodeController,
+                                textCapitalization: TextCapitalization.characters,
+                                decoration: const InputDecoration(
+                                  labelText: 'School Code',
+                                  hintText: 'SCH-XXXXX',
+                                  prefixIcon: Icon(
+                                    Icons.school,
+                                    color: AppDesignSystem.success,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (_hasSchoolCode &&
+                                      (value == null || value.isEmpty)) {
+                                    return 'Please enter school code';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
-                          ),
-                          validator: (value) {
-                            if (_hasSchoolCode &&
-                                (value == null || value.isEmpty)) {
-                              return 'Please enter school code';
-                            }
-                            return null;
-                          },
+                            const SizedBox(width: 12),
+                            // QR Scanner Button
+                            Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () async {
+                                    // Navigate to QR scanner in scan-only mode
+                                    final result = await Navigator.pushNamed(
+                                      context,
+                                      '/qr-scanner',
+                                      arguments: {'scanOnly': true},
+                                    );
+                                    
+                                    if (result != null && result is Map && mounted) {
+                                      final type = result['type'] as String?;
+                                      final code = result['code'] as String?;
+                                      
+                                      if (type == 'school' && code != null) {
+                                        // Fill the school code field
+                                        _schoolCodeController.text = code;
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('School code scanned! Complete signup to join.'),
+                                            backgroundColor: Color(0xFF10B981),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: const Icon(
+                                      Icons.qr_code_scanner,
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
                         const SizedBox(height: AppSpacing.sm),
@@ -746,7 +808,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'You\'ll join as a teacher (not principal)',
+                                  'Enter code manually or scan QR code to join school',
                                   style: AppTextStyles.bodySmall,
                                 ),
                               ),
